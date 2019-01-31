@@ -42,6 +42,9 @@ type Client struct {
 	Prompt Line
 }
 
+func New() *Client {
+	return &Client{}
+}
 func (c *Client) NewLine(line *Line) {
 	c.Lock.Lock()
 	defer c.Lock.Unlock()

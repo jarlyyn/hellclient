@@ -75,7 +75,7 @@ func (conn *Conn) Receiver() {
 	}
 }
 func (conn *Conn) Send(cmd string) error {
-	b, err := FromUTF8("gb18030", []byte(cmd))
+	b, err := FromUTF8(conn.charset, []byte(cmd))
 	if err != nil {
 		return err
 	}
