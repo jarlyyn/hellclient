@@ -1,0 +1,12 @@
+##Enabled if csrf middleware is enabled
+Enabled=false
+##Name of cookie which the token stored in.Default value is "herb-csrf-token".
+#CookieName="herb-csrf-token"
+##Path of cookie the token stored in.Default value is "/".
+#CookiePath="/"
+##Name of Header which the token stroed in.Default value is "X-CSRF-TOKEN".
+#HeaderName ="X-CSRF-TOKEN"
+##Field name of post form which the token stroed in.Default value is "X-CSRF-TOKEN".
+# FormField="X-CSRF-TOKEN"
+##Http status code returned when csrf verify failed.Default value is  http.StatusBadRequest (int 400).
+#FailStatus=400

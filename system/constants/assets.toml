@@ -1,0 +1,7 @@
+#Assets system params config file.
+
+#Url prefix which used in router.
+#If Urlprefix is empty,assets router will be disabled.
+URLPrefix="/public"
+#Filepath relative to resources folder
+Location="/public/"
