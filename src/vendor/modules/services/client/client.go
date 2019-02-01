@@ -265,12 +265,14 @@ func (c *Client) NewLine(line *Line) {
 	c.Lines = c.Lines.Next()
 }
 func (c *Client) ConvertLines() []*Line {
-	result := make([]*Line, c.Lines.Len())
+	result := []*Line{}
 	c.Lock.RLock()
 	defer c.Lock.RUnlock()
-	var i = 0
 	c.Lines.Do(func(x interface{}) {
-		result[i] = x.(*Line)
+		line, ok := x.(*Line)
+		if ok && line != nil {
+			result = append(result, line)
+		}
 	})
 	return result
 }

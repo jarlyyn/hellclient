@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"modules/app"
 	"modules/services/client"
+	"time"
 
 	"github.com/herb-go/herbgo/util"
 	"github.com/herb-go/herbgo/util/config"
@@ -48,7 +50,12 @@ func main() {
 	m := client.DefaultManager
 	m.NewClient("hell", config)
 	c := m.Client("hell")
-	m.SetCurrent("hell")
+	// m.SetCurrent("hell")
 	util.Must(c.Connect())
+	time.Sleep(3 * time.Second)
+	lines := c.ConvertLines()
+	for _, v := range lines {
+		fmt.Println(v.Plain())
+	}
 	run()
 }
