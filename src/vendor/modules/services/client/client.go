@@ -53,14 +53,19 @@ func New() *Client {
 }
 
 type Client struct {
-	ID     string
-	World  World
-	Conn   *conn.Conn
-	Lock   sync.RWMutex
-	Lines  *ring.Ring
-	Prompt Line
+	ID      string
+	Manager *Manager
+	World   World
+	Conn    *conn.Conn
+	Lock    sync.RWMutex
+	Lines   *ring.Ring
+	Prompt  Line
+	Exit    chan int
 }
 
+func (c *Client) Init() {
+	c.Lines = ring.New(1000)
+}
 func (c *Client) ConvertToLine(msg []byte) *Line {
 	w := Word{}
 	line := NewLine(false)
@@ -72,7 +77,7 @@ func (c *Client) ConvertToLine(msg []byte) *Line {
 			line.Append(w)
 		}
 		if s.Type == "CSI" {
-			fmt.Println("CSI", s.Params)
+			// fmt.Println("CSI", s.Params)
 			for _, v := range s.Params {
 				switch v {
 				case "0":
@@ -237,11 +242,8 @@ func (c *Client) ConvertToLine(msg []byte) *Line {
 	return line
 }
 func (c *Client) onPrompt(msg []byte) {
-	if len(msg) == 0 {
-		return
-	}
 	line := c.ConvertToLine(msg)
-	fmt.Println("Prompt", line.Plain())
+	c.Manager.OnPrompt(c.ID, line)
 }
 
 func (c *Client) onMsg(msg []byte) {
@@ -249,8 +251,9 @@ func (c *Client) onMsg(msg []byte) {
 		return
 	}
 	line := c.ConvertToLine(msg)
-	fmt.Println(line.Plain())
-	fmt.Println(line)
+	c.NewLine(line)
+	c.Manager.OnLine(c.ID, line)
+
 }
 func (c *Client) onError(err error) {
 	fmt.Println(err.Error())

@@ -40,10 +40,15 @@ func main() {
 	loadConfigs()
 	initModules()
 	app.Development.MustNotInitializing()
-	c := client.New()
-	c.World.Host = "220.165.145.126"
-	c.World.Port = "3001"
-	c.World.Charset = "gbk"
+	// c := client.New()
+	config := client.ClientConfig{}
+	config.World.Host = "220.165.145.126"
+	config.World.Port = "3001"
+	config.World.Charset = "gbk"
+	m := client.DefaultManager
+	m.NewClient("hell", config)
+	c := m.Client("hell")
+	m.SetCurrent("hell")
 	util.Must(c.Connect())
 	run()
 }
