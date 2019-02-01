@@ -2,6 +2,7 @@ package main
 
 import (
 	"modules/app"
+	"modules/services/client"
 
 	"github.com/herb-go/herbgo/util"
 	"github.com/herb-go/herbgo/util/config"
@@ -39,5 +40,10 @@ func main() {
 	loadConfigs()
 	initModules()
 	app.Development.MustNotInitializing()
+	c := client.New()
+	c.World.Host = "220.165.145.126"
+	c.World.Port = "3001"
+	c.World.Charset = "gbk"
+	util.Must(c.Connect())
 	run()
 }

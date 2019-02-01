@@ -6,6 +6,10 @@ import (
 	"io"
 	"io/ioutil"
 	"strings"
+	"sync"
+	"time"
+
+	"github.com/herb-go/misc/debounce"
 
 	"github.com/ziutek/telnet"
 	"golang.org/x/text/encoding/japanese"
@@ -14,6 +18,8 @@ import (
 	"golang.org/x/text/encoding/traditionalchinese"
 	"golang.org/x/text/transform"
 )
+
+const DefaultDebounceDuration = 200 * time.Millisecond
 
 //Conn :mud conn
 type Conn struct {
@@ -24,16 +30,34 @@ type Conn struct {
 	Running   bool
 	OnReceive func(msg []byte)
 	OnError   func(err error)
+	OnPrompt  func(msg []byte)
+	buffer    []byte
+	Lock      sync.RWMutex
+	Debounce  *debounce.Debounce
 }
 
 func New(host string, charset string) *Conn {
-	return &Conn{
+	c := &Conn{
 		host:    host,
 		charset: charset,
 		telnet:  nil,
 		c:       make(chan int),
 		Running: false,
 	}
+	d := debounce.New(DefaultDebounceDuration, c.UpdatePrompt)
+	d.MaxDuration = 0
+	c.Debounce = d
+	return c
+}
+func (conn *Conn) UpdatePrompt() {
+	conn.Lock.Lock()
+	defer conn.Lock.Unlock()
+	b, err := ToUTF8(conn.charset, conn.buffer)
+	if err != nil {
+		conn.OnError(err)
+		return
+	}
+	conn.OnPrompt(b)
 }
 
 //Connect :connect to mud
@@ -42,6 +66,7 @@ func (conn *Conn) Connect() error {
 	if err != nil {
 		return err
 	}
+	conn.buffer = make([]byte, 1024)
 	conn.telnet = t
 	go conn.Receiver()
 	return nil
@@ -55,9 +80,10 @@ func (conn *Conn) Close() error {
 	return err
 }
 func (conn *Conn) Receiver() {
-	del := string(byte(10))
+	del := byte(10)
+	// del2 := byte(27)
 	for {
-		s, err := conn.telnet.ReadUntil(del)
+		s, err := conn.telnet.ReadByte()
 		if err == io.EOF {
 			close(conn.c)
 			return
@@ -66,13 +92,28 @@ func (conn *Conn) Receiver() {
 			conn.OnError(err)
 			return
 		}
-		b, err := ToUTF8(conn.charset, s)
-		if err != nil {
-			conn.OnError(err)
-			return
+		if s == del {
+			b, err := ToUTF8(conn.charset, conn.buffer)
+			if err != nil {
+				conn.OnError(err)
+				return
+			}
+
+			conn.OnReceive(b)
+			conn.Lock.Lock()
+			conn.buffer = []byte{}
+			conn.Lock.Unlock()
 		}
-		conn.OnReceive(b)
+		conn.Lock.Lock()
+		conn.buffer = append(conn.buffer, s)
+		conn.Lock.Unlock()
+		conn.Debounce.Exec()
 	}
+}
+func (conn *Conn) Buffer() ([]byte, error) {
+	conn.Lock.RLock()
+	defer conn.Lock.RUnlock()
+	return ToUTF8(conn.charset, conn.buffer)
 }
 func (conn *Conn) Send(cmd string) error {
 	b, err := FromUTF8(conn.charset, []byte(cmd))
