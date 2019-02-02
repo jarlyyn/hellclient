@@ -4,6 +4,8 @@ import (
 	//"modules/actions"
 	"modules/app"
 
+	uiactions "modules/services/ui/actions"
+
 	"github.com/herb-go/herb/file/simplehttpserver"
 	"github.com/herb-go/herb/middleware/router"
 	"github.com/herb-go/herb/middleware/router/httprouter"
@@ -26,7 +28,8 @@ func New() router.Router {
 	Router.StripPrefix("/api").
 		Use(APIMiddlewares()...).
 		Handle(RouterAPI)
-
+	Router.GET("/ws").HandleFunc(uiactions.WebsocketAction)
+	Router.GET("/").HandleFunc(simplehttpserver.ServeFile(util.Resource("defaultui", "index.html")))
 	//var RouterHTML = newHTMLRouter()
 	//Router.StripPrefix("/page").Use(HTMLMiddlewares()...).Handle(RouterHTML)
 

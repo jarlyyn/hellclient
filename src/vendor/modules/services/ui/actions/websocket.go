@@ -9,7 +9,7 @@ import (
 
 var upgrader = websocket.Upgrader{} // use default options
 
-func SocketAction(w http.ResponseWriter, r *http.Request) {
+func WebsocketAction(w http.ResponseWriter, r *http.Request) {
 	err := ui.Enter(w, r)
 	if err != nil {
 		panic(err)
