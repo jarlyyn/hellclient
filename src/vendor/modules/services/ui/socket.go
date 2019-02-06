@@ -5,15 +5,15 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/jarlyyn/herb-go-experimental/websocketmanager"
-	"github.com/jarlyyn/herb-go-experimental/websocketmanager/websocket"
+	"github.com/jarlyyn/herb-go-experimental/connections"
+	"github.com/jarlyyn/herb-go-experimental/connections/websocket"
 )
 
-var Current *websocketmanager.RegisteredConn
+var Current *connections.Conn
 var Locker sync.RWMutex
-var socketmamager = websocketmanager.New()
+var gateway = connections.NewGateway()
 
-func OnMsg(msg *websocketmanager.ConnMessage) {
+func OnMsg(msg *connections.Message) {
 	fmt.Println(string(msg.Message))
 }
 func Send(data []byte) error {
@@ -26,10 +26,10 @@ func Send(data []byte) error {
 	return c.Send(data)
 }
 
-var OnErr func(err *websocketmanager.ConnError)
+var OnErr func(err *connections.Error)
 
 func init() {
-	OnErr = func(err *websocketmanager.ConnError) {
+	OnErr = func(err *connections.Error) {
 		fmt.Println(*err)
 	}
 }
@@ -40,7 +40,7 @@ var Enter = func(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	c, err := socketmamager.Register(wc)
+	c, err := gateway.Register(wc)
 	if err != nil {
 		return err
 	}
@@ -60,9 +60,9 @@ var Enter = func(w http.ResponseWriter, r *http.Request) error {
 func Listen() {
 	for {
 		select {
-		case m := <-socketmamager.ConnMessages:
+		case m := <-gateway.Messages:
 			OnMsg(m)
-		case err := <-socketmamager.ConnErrors:
+		case err := <-gateway.Errors:
 			OnErr(err)
 		}
 	}
