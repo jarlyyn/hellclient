@@ -9,7 +9,7 @@ import (
 	"github.com/jarlyyn/herb-go-experimental/connections/websocket"
 )
 
-var Current *connections.Conn
+var Current connections.ConnectionOutput
 var Locker sync.RWMutex
 var gateway = connections.NewGateway()
 
@@ -60,9 +60,9 @@ var Enter = func(w http.ResponseWriter, r *http.Request) error {
 func Listen() {
 	for {
 		select {
-		case m := <-gateway.Messages:
+		case m := <-gateway.Messages():
 			OnMsg(m)
-		case err := <-gateway.Errors:
+		case err := <-gateway.Errors():
 			OnErr(err)
 		}
 	}
