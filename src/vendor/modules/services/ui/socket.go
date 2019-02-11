@@ -3,7 +3,6 @@ package ui
 import (
 	"fmt"
 	"net/http"
-	"sync"
 
 	"github.com/jarlyyn/herb-go-experimental/connections"
 	"github.com/jarlyyn/herb-go-experimental/connections/identifier"
@@ -11,18 +10,10 @@ import (
 )
 
 var users = identifier.NewMap()
-var Current connections.ConnectionOutput
-var Locker sync.RWMutex
 var gateway = connections.NewGateway()
 
 func Send(data []byte) error {
-	Locker.Lock()
-	c := Current
-	Locker.Unlock()
-	if c == nil {
-		return nil
-	}
-	return c.Send(data)
+	return users.SendByID("user", data)
 }
 
 var Enter = func(w http.ResponseWriter, r *http.Request) error {
