@@ -6,16 +6,15 @@ import (
 	"sync"
 
 	"github.com/jarlyyn/herb-go-experimental/connections"
+	"github.com/jarlyyn/herb-go-experimental/connections/identifier"
 	"github.com/jarlyyn/herb-go-experimental/connections/websocket"
 )
 
+var users = identifier.NewMap()
 var Current connections.ConnectionOutput
 var Locker sync.RWMutex
 var gateway = connections.NewGateway()
 
-func OnMsg(msg *connections.Message) {
-	fmt.Println(string(msg.Message))
-}
 func Send(data []byte) error {
 	Locker.Lock()
 	c := Current
@@ -24,14 +23,6 @@ func Send(data []byte) error {
 		return nil
 	}
 	return c.Send(data)
-}
-
-var OnErr func(err *connections.Error)
-
-func init() {
-	OnErr = func(err *connections.Error) {
-		fmt.Println(*err)
-	}
 }
 
 var Enter = func(w http.ResponseWriter, r *http.Request) error {
@@ -44,29 +35,24 @@ var Enter = func(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return err
 	}
-	Locker.Lock()
-	old := Current
-	Current = c
-	Locker.Unlock()
-	go func() {
-		<-c.C()
-	}()
-	if old != nil {
-		old.Close()
-	}
+	users.Login("user", c)
 	return nil
 }
 
-func Listen() {
-	for {
-		select {
-		case m := <-gateway.Messages():
-			OnMsg(m)
-		case err := <-gateway.Errors():
-			OnErr(err)
-		}
-	}
+type Engine struct {
+	connections.EmptyConsumer
 }
+
+func (e *Engine) OnMessage(msg *connections.Message) {
+	fmt.Println(string(msg.Message))
+
+}
+func (e *Engine) OnError(err *connections.Error) {
+	fmt.Println(*err)
+}
+
+var CurretEngine = &Engine{}
+
 func init() {
-	go Listen()
+	go connections.Consume(gateway, CurretEngine)
 }
