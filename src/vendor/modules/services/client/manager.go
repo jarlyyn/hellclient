@@ -20,7 +20,6 @@ type ClientConfig struct {
 type Manager struct {
 	Clients       map[string]*Client
 	Lock          sync.RWMutex
-	currentClient *Client
 	CommandOutput chan Command
 }
 
@@ -49,36 +48,21 @@ func (m *Manager) Client(id string) *Client {
 	defer m.Lock.Unlock()
 	return m.Clients[id]
 }
-func (m *Manager) SetCurrent(id string) {
-	m.Lock.Lock()
-	defer m.Lock.Unlock()
-	c, ok := m.Clients[id]
-	if ok {
-		m.currentClient = c
+func (m *Manager) Connect(id string) error {
+	c := m.Client(id)
+	if c == nil {
+		return nil
 	}
+	return c.Connect()
 }
-
-func (m *Manager) Current() *Client {
-	m.Lock.Lock()
-	defer m.Lock.Unlock()
-	return m.currentClient
-}
-
 func (m *Manager) OnLine(id string, line *Line) {
 	m.Lock.Lock()
 	defer m.Lock.Unlock()
-	if m.currentClient == nil || id != m.currentClient.ID {
-		return
-	}
 	fmt.Println(line.Plain())
 	fmt.Println(line)
 }
 
 func (m *Manager) OnPrompt(id string, line *Line) {
-	if m.currentClient == nil || id != m.currentClient.ID {
-		return
-	}
-
 	fmt.Println("Prompt", line.Plain())
 
 }

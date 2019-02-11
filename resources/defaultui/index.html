@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>Hellclient</title>
+    </head>
+    <script>
+        var ws=new WebSocket("ws:"+location.host+"/ws");
+        ws.onclose=function(){
+            alert("closed")
+        }
+        ws.onmessage = function(event) {
+            console.log(event.data)
+        }
+ 
+    </script>
+</html>
