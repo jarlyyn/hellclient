@@ -70,5 +70,11 @@ func (m *Manager) ExecConnect(id string) {
 		c.Connect()
 	}
 }
+func (m *Manager) Send(id string, msg []byte) {
+	c := m.Client(id)
+	if c != nil {
+		c.Send(msg)
+	}
+}
 
 var DefaultManager = NewManger()

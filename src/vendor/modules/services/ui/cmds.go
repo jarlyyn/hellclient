@@ -35,8 +35,15 @@ var onCmdConnect = func(conn connections.ConnectionOutput, cmd command.Command) 
 	return nil
 }
 
+var onCmdSend = func(conn connections.ConnectionOutput, cmd command.Command) error {
+	id := current.Load().(string)
+	client.DefaultManager.Send(id, cmd.Data())
+	return nil
+}
+
 func init() {
 	handlers.Add("change", onCmdChange)
 	handlers.Add("connect", onCmdConnect)
+	handlers.Add("send", onCmdSend)
 
 }

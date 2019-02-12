@@ -67,9 +67,7 @@ func init() {
 		for {
 			select {
 			case m := <-client.DefaultManager.CommandOutput:
-				go func() {
-					DefaultAdapter.Exec(m)
-				}()
+				DefaultAdapter.Exec(m)
 			}
 		}
 	}()

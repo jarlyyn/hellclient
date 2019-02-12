@@ -1,13 +1,22 @@
 package client
 
 import (
+	"bytes"
 	"container/ring"
+	"errors"
 	"fmt"
+	"io/ioutil"
 	"modules/services/conn"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/jarlyyn/ansi"
+	"golang.org/x/text/encoding/japanese"
+	"golang.org/x/text/encoding/korean"
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/encoding/traditionalchinese"
+	"golang.org/x/text/transform"
 )
 
 type World struct {
@@ -73,7 +82,12 @@ func (c *Client) ConvertToLine(msg []byte) *Line {
 		out, s, err := ansi.Decode(msg)
 		msg = out
 		if s != nil && s.Type == "" {
-			w.Text = string(s.Code)
+			b, err := ToUTF8(c.World.Charset, []byte(s.Code))
+			if err != nil {
+				c.onError(err)
+				continue
+			}
+			w.Text = string(b)
 			line.Append(w)
 		}
 		if s != nil && s.Type == "CSI" {
@@ -83,7 +97,7 @@ func (c *Client) ConvertToLine(msg []byte) *Line {
 				case "0":
 					{
 						w.Color = ""
-						w.Background = ""
+						w.Background = "BG-"
 						w.Bold = false
 					}
 				case "1":
@@ -128,35 +142,35 @@ func (c *Client) ConvertToLine(msg []byte) *Line {
 					}
 				case "40":
 					{
-						w.Background = "Black"
+						w.Background = "BG-Black"
 					}
 				case "41":
 					{
-						w.Background = "Red"
+						w.Background = "BG-Red"
 					}
 				case "42":
 					{
-						w.Background = "Green"
+						w.Background = "BG-Green"
 					}
 				case "43":
 					{
-						w.Background = "Yellow"
+						w.Background = "BG-Yellow"
 					}
 				case "44":
 					{
-						w.Background = "Blue"
+						w.Background = "BG-Blue"
 					}
 				case "45":
 					{
-						w.Background = "Magenta"
+						w.Background = "BG-Magenta"
 					}
 				case "46":
 					{
-						w.Background = "Cyan"
+						w.Background = "BG-Cyan"
 					}
 				case "47":
 					{
-						w.Background = "White"
+						w.Background = "BG-White"
 					}
 				case "90":
 					{
@@ -192,41 +206,43 @@ func (c *Client) ConvertToLine(msg []byte) *Line {
 					}
 				case "100":
 					{
-						w.Background = "Bright-Black"
+						w.Background = "BG-Bright-Black"
 					}
 				case "101":
 					{
-						w.Background = "Bright-Red"
+						w.Background = "BG-Bright-Red"
 					}
 				case "102":
 					{
-						w.Background = "Bright-Green"
+						w.Background = "BG-Bright-Green"
 					}
 				case "103":
 					{
-						w.Background = "Bright-Yellow"
+						w.Background = "BG-Bright-Yellow"
 					}
 				case "104":
 					{
-						w.Background = "Bright-Blue"
+						w.Background = "BG-Bright-Blue"
 					}
 				case "105":
 					{
-						w.Background = "Bright-Magenta"
+						w.Background = "BG-Bright-Magenta"
 					}
 				case "106":
 					{
-						w.Background = "Bright-Cyan"
+						w.Background = "BG-Bright-Cyan"
 					}
 				case "107":
 					{
-						w.Background = "Bright-White"
+						w.Background = "BG-Bright-White"
 					}
+				case "256":
+					line = NewLine(false)
+
 				}
 			}
-
-			// fmt.Println(string(msg))
 		}
+
 		if err != nil {
 			c.onError(err)
 			// return
@@ -281,12 +297,81 @@ func (c *Client) Connect() error {
 	c.Lock.Lock()
 	c.Lock.Unlock()
 	if c.Conn == nil {
-		c.Conn = conn.New(c.World.Host+":"+c.World.Port, c.World.Charset)
+		c.Conn = conn.New(c.World.Host + ":" + c.World.Port)
 		c.Conn.OnReceive = c.onMsg
 		c.Conn.OnError = c.onError
 		c.Conn.OnPrompt = c.onPrompt
 	}
 	return c.Conn.Connect()
+}
+func (c *Client) Send(cmd []byte) error {
+	c.Lock.Lock()
+	c.Lock.Unlock()
+	b, err := FromUTF8(c.World.Charset, []byte(cmd))
+	if err != nil {
+		return err
+	}
+	return c.Conn.Send(b)
+}
+
+//ToUTF8 : convert from CJK encoding to UTF-8
+func ToUTF8(from string, s []byte) ([]byte, error) {
+	var reader *transform.Reader
+	switch strings.ToLower(from) {
+	case "gbk", "cp936", "windows-936":
+		reader = transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewDecoder())
+	case "gb18030":
+		reader = transform.NewReader(bytes.NewReader(s), simplifiedchinese.GB18030.NewDecoder())
+	case "gb2312":
+		reader = transform.NewReader(bytes.NewReader(s), simplifiedchinese.HZGB2312.NewDecoder())
+	case "big5", "big-5", "cp950":
+		reader = transform.NewReader(bytes.NewReader(s), traditionalchinese.Big5.NewDecoder())
+	case "euc-kr", "euckr", "cp949":
+		reader = transform.NewReader(bytes.NewReader(s), korean.EUCKR.NewDecoder())
+	case "euc-jp", "eucjp":
+		reader = transform.NewReader(bytes.NewReader(s), japanese.EUCJP.NewDecoder())
+	case "shift-jis":
+		reader = transform.NewReader(bytes.NewReader(s), japanese.ShiftJIS.NewDecoder())
+	case "iso-2022-jp", "cp932", "windows-31j":
+		reader = transform.NewReader(bytes.NewReader(s), japanese.ISO2022JP.NewDecoder())
+	default:
+		return s, errors.New("Unsupported encoding " + from)
+	}
+	d, e := ioutil.ReadAll(reader)
+	if e != nil {
+		return nil, e
+	}
+	return d, nil
+}
+
+// FromUTF8 convert from UTF-8 encoding to CJK encoding
+func FromUTF8(to string, s []byte) ([]byte, error) {
+	var reader *transform.Reader
+	switch strings.ToLower(to) {
+	case "gbk", "cp936", "windows-936":
+		reader = transform.NewReader(bytes.NewReader(s), simplifiedchinese.GBK.NewEncoder())
+	case "gb18030":
+		reader = transform.NewReader(bytes.NewReader(s), simplifiedchinese.GB18030.NewEncoder())
+	case "gb2312":
+		reader = transform.NewReader(bytes.NewReader(s), simplifiedchinese.HZGB2312.NewEncoder())
+	case "big5", "big-5", "cp950":
+		reader = transform.NewReader(bytes.NewReader(s), traditionalchinese.Big5.NewEncoder())
+	case "euc-kr", "euckr", "cp949":
+		reader = transform.NewReader(bytes.NewReader(s), korean.EUCKR.NewEncoder())
+	case "euc-jp", "eucjp":
+		reader = transform.NewReader(bytes.NewReader(s), japanese.EUCJP.NewEncoder())
+	case "shift-jis":
+		reader = transform.NewReader(bytes.NewReader(s), japanese.ShiftJIS.NewEncoder())
+	case "iso-2022-jp", "cp932", "windows-31j":
+		reader = transform.NewReader(bytes.NewReader(s), japanese.ISO2022JP.NewEncoder())
+	default:
+		return s, errors.New("Unsupported encoding " + to)
+	}
+	d, e := ioutil.ReadAll(reader)
+	if e != nil {
+		return nil, e
+	}
+	return d, nil
 }
 
 func init() {

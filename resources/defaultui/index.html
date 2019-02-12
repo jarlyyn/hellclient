@@ -1,9 +1,72 @@
 <html>
     <head>
         <title>Hellclient</title>
-    </head>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+        <style>
 
+            body{background: black;color:white;font-family: monospace;margin:0;padding:0}
+            ul,li{padding:0;margin:0;list-style: none}
+            ul#lines{white-space: pre}
+            ul#lines li{max-width: 80em;overflow: hidden;}
+            .words .Black{color:rgb(0,0,0)}
+            .words .Red{color:rgb(127,0,0)}
+            .words .Green{color:rgb(0,147,0)}
+            .words .Yellow{color:rgb(252,127,0)}
+            .words .Blue{color:rgb(0,0,127)}
+            .words .Magenta{color:rgb(156,0,156)}
+            .words .Cyan{color:rgb(0,147,147)}
+            .words .White{color:rgb(210,210,210)}
+            .words .Bright-Black{color:rgb(127,127,127)}
+            .words .Bright-Red{color:rgb(255,0,0)}
+            .words .Bright-Green{color:rgb(0,252,0)}
+            .words .Bright-Yellow{color:rgb(255,255,0)}
+            .words .Bright-Blue{color:rgb(0,0,252)}
+            .words .Bright-Magenta{color:rgb(255,0,255)}
+            .words .Bright-Cyan{color:rgb(0,255,255)}
+            .words .Bright-White{color:rgb(255,255,255)}
+            .words .BG-Black{background:rgb(0,0,0)}
+            .words .BG-Red{background:rgb(127,0,0)}
+            .words .BG-Green{background:rgb(0,147,0)}
+            .words .BG-Yellow{background:rgb(252,127,0)}
+            .words .BG-Blue{background:rgb(0,0,127)}
+            .words .BG-Magenta{background:rgb(156,0,156)}
+            .words .BG-Cyan{background:rgb(0,147,147)}
+            .words .BG-White{background:rgb(210,210,210)}
+            .words .BG-Bright-Black{background:rgb(127,127,127)}
+            .words .BG-Bright-Red{background:rgb(255,0,0)}
+            .words .BG-Bright-Green{background:rgb(0,252,0)}
+            .words .BG-Bright-Yellow{background:rgb(255,255,0)}
+            .words .BG-Bright-Blue{background:rgb(0,0,252)}
+            .words .BG-Bright-Magenta{background:rgb(255,0,255)}
+            .words .BG-Bright-Cyan{background:rgb(0,255,255)}
+            .words .BG-Bright-White{background:rgb(255,255,255)}
+            .words .bold{font-weight: bold}
+            ul#lines{padding-bottom: 40px;margin-bottom:-32px}
+            #user-input{position: fixed;bottom:0;height: 32px;left:0;width:100%;}
+            #user-input span{height:32px;line-height:32px}
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <p>{{current}}</p>
+        <ul id="lines">
+            <li class="words" v-for="line in lines">
+                <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.IsPrint?' print':'')" v-for="word in line.Words" >{{word.Text}}</span>
+            </li>
+        </ul>
+        <div  id="user-input" v-on:keyup.13="send">
+        <el-input size="small" placeholder="请输入命令" v-model="cmd" >
+                <template  v-if="prompt" slot="prepend">          <div class="words">      <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.IsPrint?' print':'')" v-for="word in prompt.Words" >{{word.Text}}</span></div>
+                </template>
+              </el-input>            
+            </div>
+    </div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script>
+     var   body=document.getElementsByTagName("body")[0]
+    </script>
     <script>
         var handlers={}
         var current=""
@@ -32,13 +95,43 @@
     </script>
     <script>
         handlers.current=function(data){
-            console.log("current "+data)
+            vm.current=data
         }
         handlers.line=function(data){
-            console.log(data)
+            var lines=vm.lines
+            lines.push(data)
+            if (lines.length>500){
+                lines.shift()
+            }else{
+                setTimeout(function(){
+                body.scrollTo(body.offsetLeft,body.offsetHeight)
+                },0)
+            }
+            vm.lines=lines
         }
         handlers.prompt=function(data){
-            console.log(data)
+            vm.prompt=data
         }
+    </script>
+    <script>
+        var data={
+            current:"",
+            lines:[],
+            prompt:"",
+            cmd:"",
+        }
+        var vm = new Vue({
+            el:"#app",
+            data: data,
+            methods:{
+                send:function(){
+                    if (this.cmd){
+                     ws.send("send "+this.cmd)
+                     document.getElementById("user-input").getElementsByTagName("input")[0].select()
+                    }
+                }
+            }
+        })
+
     </script>
 </html>
