@@ -125,10 +125,8 @@
             data: data,
             methods:{
                 send:function(){
-                    if (this.cmd){
                      ws.send("send "+this.cmd)
                      document.getElementById("user-input").getElementsByTagName("input")[0].select()
-                    }
                 }
             }
         })
