@@ -72,11 +72,11 @@ func (c *Client) ConvertToLine(msg []byte) *Line {
 	for {
 		out, s, err := ansi.Decode(msg)
 		msg = out
-		if s.Type == "" {
+		if s != nil && s.Type == "" {
 			w.Text = string(s.Code)
 			line.Append(w)
 		}
-		if s.Type == "CSI" {
+		if s != nil && s.Type == "CSI" {
 			// fmt.Println("CSI", s.Params)
 			for _, v := range s.Params {
 				switch v {

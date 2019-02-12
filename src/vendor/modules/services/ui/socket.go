@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"sync"
@@ -14,13 +14,21 @@ import (
 	"github.com/jarlyyn/herb-go-experimental/connections/websocket"
 )
 
+func Send(conn connections.ConnectionOutput, msgtype string, data interface{}) error {
+	bs, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	return conn.Send([]byte(msgtype + " " + string(bs)))
+}
+
 var users = identifier.NewMap()
 var gateway = connections.NewGateway()
 var rooms = room.NewRooms()
 var current = &atomic.Value{}
 var gamelock = sync.Mutex{}
 
-func Send(data []byte) error {
+func SendToUser(data []byte) error {
 	return users.SendByID("user", data)
 }
 
@@ -42,22 +50,44 @@ type Engine struct {
 	contexts.Contexts
 }
 
+func (e *Engine) Location(conn connections.ConnectionOutput) *room.Location {
+	ctx := e.Context(conn.ID())
+	v, _ := ctx.Data.Load("rooms")
+	return v.(*room.Location)
+}
+func (e *Engine) OnClose(conn connections.ConnectionOutput) {
+	ctx := e.Context(conn.ID())
+	ctx.Lock.Lock()
+	defer ctx.Lock.Unlock()
+	v, _ := ctx.Data.Load("rooms")
+	r := v.(*room.Location)
+	r.LeaveAll()
+	e.Contexts.OnClose(conn)
+}
 func (e *Engine) OnOpen(conn connections.ConnectionOutput) {
+	e.Contexts.OnOpen(conn)
+	ctx := e.Context(conn.ID())
+	ctx.Lock.Lock()
+	defer ctx.Lock.Unlock()
+	r := room.NewLocation(conn, rooms)
+	var crid string
 	v := current.Load()
 	if v != nil {
-		crid := v.(string)
-		conn.Send([]byte("current " + crid))
+		crid = v.(string)
+		Send(conn, "current", crid)
 	}
+	if crid != "" {
+		r.Join(crid)
+	}
+	ctx.Data.Store("rooms", r)
 }
 func (e *Engine) OnMessage(msg *connections.Message) {
-	cmd := ParseCmd(msg.Message)
-	switch string(cmd[0]) {
-	case CmdsChange:
-		Change(string(cmd[1]))
-		msg.Conn.Send([]byte("current " + string(cmd[1])))
-	case CmdsConnect:
-
-	}
+	go func() {
+		_, _, cerr := handlers.Exec(msg)
+		if cerr != nil {
+			e.OnError(cerr)
+		}
+	}()
 }
 func (e *Engine) OnError(err *connections.Error) {
 	fmt.Println(*err)
@@ -66,34 +96,23 @@ func (e *Engine) OnError(err *connections.Error) {
 var CurretEngine = &Engine{}
 
 var Change = func(roomid string) {
+	var conn connections.ConnectionOutput
 	gamelock.Lock()
 	defer gamelock.Unlock()
 	v, _ := users.Identities.Load("user")
 	if v != nil {
-		conn := v.(connections.ConnectionOutput)
+		conn = v.(connections.ConnectionOutput)
+		location := CurretEngine.Location(conn)
 		v := current.Load()
 		if v != nil {
 			crid := v.(string)
 			if crid != "" {
-				rooms.Leave(crid, conn)
+				location.Leave(crid)
 			}
-			rooms.Join(roomid, conn)
+			location.Join(roomid)
 		}
 	}
 	current.Store(roomid)
-}
-var cmdsep = []byte(" ")
-
-func ParseCmd(data []byte) [2][]byte {
-	var result [2][]byte
-	cmds := bytes.SplitN(data, cmdsep, 2)
-	if len(cmds) > 0 {
-		result[0] = cmds[0]
-	}
-	if len(cmds) > 1 {
-		result[1] = cmds[1]
-	}
-	return result
 }
 
 func init() {

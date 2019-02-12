@@ -2,14 +2,43 @@
     <head>
         <title>Hellclient</title>
     </head>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue.js"></script>
+
     <script>
+        var handlers={}
+        var current=""
         var ws=new WebSocket("ws:"+location.host+"/ws");
+        var msgreg=/^(?<type>[^\s]*)(\s(?<data>.*)){0,1}$/;
+        var convertmsg=function(data){
+            var result=data.match(msgreg).groups
+            msg={
+                type:result.type
+            }
+            if (result.data){
+                msg.data=JSON.parse(result.data)
+            }
+            return msg
+        }
         ws.onclose=function(){
             alert("closed")
         }
         ws.onmessage = function(event) {
-            console.log(event.data)
+            data=convertmsg(event.data);
+            var f=handlers[data.type];
+            if (f){
+                f(data.data)
+            }
         }
- 
+    </script>
+    <script>
+        handlers.current=function(data){
+            console.log("current "+data)
+        }
+        handlers.line=function(data){
+            console.log(data)
+        }
+        handlers.prompt=function(data){
+            console.log(data)
+        }
     </script>
 </html>

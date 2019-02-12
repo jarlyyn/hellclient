@@ -103,6 +103,7 @@ func (conn *Conn) Receiver() {
 			conn.Lock.Lock()
 			conn.buffer = []byte{}
 			conn.Lock.Unlock()
+			continue
 		}
 		conn.Lock.Lock()
 		conn.buffer = append(conn.buffer, s)
