@@ -2,6 +2,7 @@ package conn
 
 import (
 	"io"
+	"net"
 	"sync"
 	"time"
 
@@ -24,6 +25,18 @@ type Conn struct {
 	buffer    []byte
 	Lock      sync.RWMutex
 	Debounce  *debounce.Debounce
+}
+
+func isClosedError(err error) bool {
+	if err == io.EOF {
+		return true
+	}
+	if operr, ok := err.(*net.OpError); ok {
+		if operr.Err.Error() == "use of closed network connection" {
+			return true
+		}
+	}
+	return false
 }
 
 func New(host string) *Conn {
@@ -84,12 +97,16 @@ func (conn *Conn) Receiver() {
 	del := byte(10)
 	// del2 := byte(27)
 	for {
-		s, err := conn.telnet.ReadByte()
-		if err == io.EOF {
-			conn.Close()
+		running := conn.Running()
+		if !running {
 			return
 		}
+		s, err := conn.telnet.ReadByte()
 		if err != nil {
+			if isClosedError(err) {
+				conn.Close()
+				return
+			}
 			conn.OnError(err)
 			return
 		}
