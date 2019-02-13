@@ -340,13 +340,13 @@ func (c *Client) Connect() error {
 	if err == nil {
 		go func() {
 			c.Manager.OnConnected(c.ID)
-			c.Print(app.Time.Datetime(time.Now()) + ":成功连接服务器。")
+			c.Print(app.Time.Datetime(time.Now()) + "  成功连接服务器")
 		}()
 	}
 	go func() {
 		<-c.Conn.C()
 		c.Manager.OnDisconnected(c.ID)
-		c.Print(app.Time.Datetime(time.Now()) + ":与服务器断开连接接。")
+		c.Print(app.Time.Datetime(time.Now()) + "  与服务器断开连接接 ")
 	}()
 	return err
 }
