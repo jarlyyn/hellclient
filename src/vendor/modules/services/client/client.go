@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"modules/app"
 	"modules/services/conn"
 	"strings"
 	"sync"
@@ -61,6 +62,10 @@ func New() *Client {
 	return &Client{}
 }
 
+type ClientInfo struct {
+	ID      string
+	Running bool
+}
 type Client struct {
 	ID      string
 	Manager *Manager
@@ -68,16 +73,25 @@ type Client struct {
 	Conn    *conn.Conn
 	Lock    sync.RWMutex
 	Lines   *ring.Ring
-	Prompt  Line
+	Prompt  *Line
 	Exit    chan int
 }
 
+func (c *Client) Info() *ClientInfo {
+	return &ClientInfo{
+		ID:      c.ID,
+		Running: c.Conn.Running(),
+	}
+}
 func (c *Client) Init() {
 	c.Lines = ring.New(1000)
 }
 func (c *Client) ConvertToLine(msg []byte) *Line {
 	w := Word{}
 	line := NewLine(false)
+	if len(msg) == 0 {
+		return line
+	}
 	for {
 		out, s, err := ansi.Decode(msg)
 		msg = out
@@ -259,6 +273,9 @@ func (c *Client) ConvertToLine(msg []byte) *Line {
 }
 func (c *Client) onPrompt(msg []byte) {
 	line := c.ConvertToLine(msg)
+	c.Lock.Lock()
+	defer c.Lock.Unlock()
+	c.Prompt = line
 	c.Manager.OnPrompt(c.ID, line)
 }
 
@@ -292,21 +309,53 @@ func (c *Client) ConvertLines() []*Line {
 	})
 	return result
 }
+func (c *Client) Print(msg string) {
+	line := NewLine(true)
+	w := Word{
+		Text: msg,
+	}
+	line.Append(w)
+	c.NewLine(line)
+	c.Manager.OnLine(c.ID, line)
 
+}
+func (c *Client) Disconnect() error {
+	c.Lock.Lock()
+	defer c.Lock.Unlock()
+	if c.Conn == nil {
+		return nil
+	}
+	return c.Conn.Close()
+}
 func (c *Client) Connect() error {
 	c.Lock.Lock()
-	c.Lock.Unlock()
+	defer c.Lock.Unlock()
 	if c.Conn == nil {
 		c.Conn = conn.New(c.World.Host + ":" + c.World.Port)
 		c.Conn.OnReceive = c.onMsg
 		c.Conn.OnError = c.onError
 		c.Conn.OnPrompt = c.onPrompt
 	}
-	return c.Conn.Connect()
+	err := c.Conn.Connect()
+	if err == nil {
+		go func() {
+			c.Manager.OnConnected(c.ID)
+			c.Print(app.Time.Datetime(time.Now()) + ":成功连接服务器。")
+		}()
+	}
+	go func() {
+		<-c.Conn.C()
+		c.Manager.OnDisconnected(c.ID)
+		c.Print(app.Time.Datetime(time.Now()) + ":与服务器断开连接接。")
+	}()
+	return err
 }
 func (c *Client) Send(cmd []byte) error {
 	c.Lock.Lock()
-	c.Lock.Unlock()
+	defer c.Lock.Unlock()
+	if c.Conn == nil {
+		return nil
+	}
 	b, err := FromUTF8(c.World.Charset, []byte(cmd))
 	if err != nil {
 		return err

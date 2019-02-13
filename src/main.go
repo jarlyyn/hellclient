@@ -49,6 +49,8 @@ func main() {
 	config.World.Charset = "gbk"
 	m := client.DefaultManager
 	m.NewClient("hell", config)
+	m.NewClient("hell2", config)
+	m.NewClient("hell3", config)
 	// util.Must(c.Connect())
 
 	run()

@@ -2,6 +2,8 @@ package client
 
 import (
 	"sync"
+
+	"github.com/jarlyyn/herb-go-experimental/connections/room/message"
 )
 
 type ClientConfig struct {
@@ -10,13 +12,13 @@ type ClientConfig struct {
 type Manager struct {
 	Clients       map[string]*Client
 	Lock          sync.RWMutex
-	CommandOutput chan *Command
+	CommandOutput chan *message.Message
 }
 
 func NewManger() *Manager {
 	return &Manager{
 		Clients:       map[string]*Client{},
-		CommandOutput: make(chan *Command),
+		CommandOutput: make(chan *message.Message),
 	}
 }
 func (m *Manager) NewClient(id string, config ClientConfig) *Client {
@@ -47,28 +49,85 @@ func (m *Manager) Connect(id string) error {
 	return c.Connect()
 }
 func (m *Manager) OnLine(id string, line *Line) {
-	cmd := &Command{
-		Type: "line",
-		Room: id,
-		Data: line,
-	}
-	m.CommandOutput <- cmd
+	msg := message.New()
+	msg.Type = "line"
+	msg.Room = id
+	msg.Data = line
+	m.CommandOutput <- msg
 }
-
+func newMsg(msgtype string, room string, data interface{}) *message.Message {
+	msg := message.New()
+	msg.Type = msgtype
+	msg.Room = room
+	msg.Data = data
+	return msg
+}
+func (m *Manager) OnConnected(id string) {
+	msg := newMsg("connected", "", id)
+	go func() {
+		m.CommandOutput <- msg
+	}()
+}
+func (m *Manager) OnDisconnected(id string) {
+	msg := newMsg("disconnected", "", id)
+	go func() {
+		m.CommandOutput <- msg
+	}()
+}
 func (m *Manager) OnPrompt(id string, line *Line) {
-	cmd := &Command{
-		Type: "prompt",
-		Room: id,
-		Data: line,
-	}
-	m.CommandOutput <- cmd
+	msg := newMsg("prompt", id, line)
+	go func() {
+		m.CommandOutput <- msg
+	}()
 
+}
+func (m *Manager) ExecPrompt(id string) {
+	c := m.Client(id)
+	var prompt = &Line{}
+	if c != nil {
+		prompt = c.Prompt
+	}
+	msg := newMsg("prompt", id, prompt)
+	go func() {
+		m.CommandOutput <- msg
+	}()
 }
 func (m *Manager) ExecConnect(id string) {
 	c := m.Client(id)
 	if c != nil {
 		c.Connect()
 	}
+}
+func (m *Manager) ExecDisconnect(id string) {
+	c := m.Client(id)
+	if c != nil {
+		c.Disconnect()
+	}
+}
+func (m *Manager) ExecLines(id string) {
+	c := m.Client(id)
+	var lines = []*Line{}
+	if c != nil {
+		lines = c.ConvertLines()
+	}
+	msg := newMsg("lines", id, lines)
+	go func() {
+		m.CommandOutput <- msg
+	}()
+}
+func (m *Manager) ExecClients() {
+	m.Lock.Lock()
+	defer m.Lock.Unlock()
+	var result = make([]*ClientInfo, len(m.Clients))
+	var i = 0
+	for _, v := range m.Clients {
+		result[i] = v.Info()
+		i++
+	}
+	msg := newMsg("clients", "", result)
+	go func() {
+		m.CommandOutput <- msg
+	}()
 }
 func (m *Manager) Send(id string, msg []byte) {
 	c := m.Client(id)

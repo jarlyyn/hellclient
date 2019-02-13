@@ -3,6 +3,7 @@ package ui
 import (
 	"encoding/json"
 	"fmt"
+	"modules/services/client"
 	"net/http"
 	"sync"
 	"sync/atomic"
@@ -79,6 +80,8 @@ func (e *Engine) OnOpen(conn connections.ConnectionOutput) {
 	if crid != "" {
 		r.Join(crid)
 	}
+	client.DefaultManager.ExecClients()
+	client.DefaultManager.ExecPrompt(crid)
 	ctx.Data.Store("rooms", r)
 }
 func (e *Engine) OnMessage(msg *connections.Message) {
@@ -113,6 +116,10 @@ var Change = func(roomid string) {
 		}
 	}
 	current.Store(roomid)
+	go func() {
+		client.DefaultManager.ExecLines(roomid)
+		client.DefaultManager.ExecPrompt(roomid)
+	}()
 }
 
 func init() {

@@ -34,7 +34,11 @@ var onCmdConnect = func(conn connections.ConnectionOutput, cmd command.Command) 
 	client.DefaultManager.ExecConnect(id)
 	return nil
 }
-
+var onCmdDisconnect = func(conn connections.ConnectionOutput, cmd command.Command) error {
+	id := string(cmd.Data())
+	client.DefaultManager.ExecDisconnect(id)
+	return nil
+}
 var onCmdSend = func(conn connections.ConnectionOutput, cmd command.Command) error {
 	id := current.Load().(string)
 	client.DefaultManager.Send(id, cmd.Data())
@@ -44,6 +48,7 @@ var onCmdSend = func(conn connections.ConnectionOutput, cmd command.Command) err
 func init() {
 	handlers.Add("change", onCmdChange)
 	handlers.Add("connect", onCmdConnect)
+	handlers.Add("disconnect", onCmdDisconnect)
 	handlers.Add("send", onCmdSend)
 
 }

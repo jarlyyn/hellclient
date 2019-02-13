@@ -40,23 +40,56 @@
             .words .BG-Bright-Magenta{background:rgb(255,0,255)}
             .words .BG-Bright-Cyan{background:rgb(0,255,255)}
             .words .BG-Bright-White{background:rgb(255,255,255)}
+            .words.print{color: red;}
             .words .bold{font-weight: bold}
-            ul#lines{padding-bottom: 40px;margin-bottom:-32px}
+            ul#lines{padding-bottom: 40px;margin-bottom:-32px;padding-top: 90px;margin-top:-80px}
             #user-input{position: fixed;bottom:0;height: 32px;left:0;width:100%;}
+            #user-input .el-input-group__prepend{background: black}
             #user-input span{height:32px;line-height:32px}
+            #user-input .el-input__inner{background: black;color:white;border-bottom: none}
+            #top{position: fixed;top:0;left:0;width: 100%;height:80px;background: white}
+            #top .el-tabs__header{margin:0}
+            #bottons{padding:4px}
+            .el-tooltip__popper{color:black}
+            #current{font-weight: bold;color:#333333;line-height: 28px;padding-left:1em}
         </style>
     </head>
     <body>
         <div id="app">
+            <div id="top">
+                <el-tabs v-model="current" type="card" :before-leave="onChange">
+                        <el-tab-pane  v-for="client in clients" :label="running[client.ID]? '▶️ '+client.ID:'⏸️ '+client.ID" :name="client.ID"></el-tab-pane>
+                      </el-tabs>
+            <div id="bottons">
+                    <el-button-group>
+                    <el-tooltip class="item" effect="light" content="添加游戏" placement="bottom">
+                    <el-button size="mini" type="primary" icon="el-icon-plus"></el-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="light" content="删除游戏" placement="bottom">
+                    <el-button size="mini" type="danger" icon="el-icon-delete"></el-button>
+                    </el-tooltip>
+                    </el-button-group>
+                    <span id="current">{{current}}</span>
+                    <el-button-group v-if="current">
+                            <el-tooltip class="item" effect="light" content="连线"  placement="bottom">
+                                    <el-button v-if="!running[current]" @click="onButton('connect')" size="mini" type="success" icon="el-icon-arrow-right"></el-button>
+                                    </el-tooltip>
+                                    <el-tooltip class="item" effect="light" content="断线"  placement="bottom">
+                                    <el-button v-if="running[current]" @click="onButton('disconnect')" size="mini" type="danger" icon="el-icon-close"></el-button>
+                                    </el-tooltip>                            
+                    </el-button-group>
+            </div>
+            </div>
             <p>{{current}}</p>
         <ul id="lines">
-            <li class="words" v-for="line in lines">
-                <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.IsPrint?' print':'')" v-for="word in line.Words" >{{word.Text}}</span>
+            <li v-bind:class="'words '+ (line.IsPrint?' print':'')" v-for="line in lines">
+                <span v-if="line.IsPrint">🗨️</span>
+                <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') " v-for="word in line.Words" >{{word.Text}}</span>
             </li>
         </ul>
         <div  id="user-input" v-on:keyup.13="send">
         <el-input size="small" placeholder="请输入命令" v-model="cmd" >
-                <template  v-if="prompt" slot="prepend">          <div class="words">      <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.IsPrint?' print':'')" v-for="word in prompt.Words" >{{word.Text}}</span></div>
+                <template  v-if="prompt &&  prompt.Words.length" slot="prepend">          <div class="words">      <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.IsPrint?' print':'')" v-for="word in prompt.Words" >{{word.Text}}</span></div>
                 </template>
               </el-input>            
             </div>
@@ -69,21 +102,37 @@
     </script>
     <script>
         var handlers={}
+        var onButton={}
         var current=""
         var ws=new WebSocket("ws:"+location.host+"/ws");
-        var msgreg=/^(?<type>[^\s]*)(\s(?<data>.*)){0,1}$/;
+        
         var convertmsg=function(data){
-            var result=data.match(msgreg).groups
-            msg={
-                type:result.type
+            var sep=data.indexOf(" ")
+            var msg
+            if (sep>0){
+                msg={
+                    type:data.substr(0,sep),
+                }
+                var msgdata =data.substr(sep+1)
+                if (msgdata){
+                msg.data=JSON.parse(msgdata)
+                }
+            }else{
+                msg={
+                    type:data
+                }
             }
-            if (result.data){
-                msg.data=JSON.parse(result.data)
-            }
+
             return msg
         }
         ws.onclose=function(){
-            alert("closed")
+            vm.$alert('你与程序的被断开了，可能是通过别的页面打开/程序发生错误/程序死机，需要重连才能继续操作', '连接断开', {
+          confirmButtonText: '重新连接',
+          showClose:false,
+          callback: function(){
+            location.reload()
+          }
+        });
         }
         ws.onmessage = function(event) {
             data=convertmsg(event.data);
@@ -91,6 +140,19 @@
             if (f){
                 f(data.data)
             }
+        }
+        var send=function(cmd,data){
+            if (ws.readyState){
+                ws.send(cmd+" "+data)
+            }
+        }
+    </script>
+    <script>
+        onButton.connect=function(){
+            send("connect",vm.current)
+        }
+        onButton.disconnect=function(){
+            send("disconnect",vm.current)
         }
     </script>
     <script>
@@ -112,6 +174,31 @@
         handlers.prompt=function(data){
             vm.prompt=data
         }
+        handlers.clients=function(data){
+            vm.clients=data
+            data.forEach(function(client) {
+                vm.running[client.ID]=client.Running
+            })
+        }
+        handlers.lines=function(data){
+            var lines=[]
+            data.forEach(function(element) {
+                lines.push(element)
+            if (lines.length>500){
+                lines.shift()
+            }
+            })
+            vm.lines=lines
+            setTimeout(function(){
+                body.scrollTo(body.offsetLeft,body.offsetHeight)
+                },0)
+        }
+        handlers.connected=function(data){
+            vm.running[data]=true
+        }
+        handlers.disconnected=function(data){
+            vm.running[data]=false
+        }
     </script>
     <script>
         var data={
@@ -119,14 +206,22 @@
             lines:[],
             prompt:"",
             cmd:"",
+            running:{},
+            clients:[],
         }
         var vm = new Vue({
             el:"#app",
             data: data,
             methods:{
                 send:function(){
-                     ws.send("send "+this.cmd)
+                     send("send",this.cmd)
                      document.getElementById("user-input").getElementsByTagName("input")[0].select()
+                },
+                onChange:function(current){
+                    send("change",current)
+                },
+                onButton:function(data){
+                    onButton[data]()
                 }
             }
         })

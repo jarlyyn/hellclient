@@ -5,69 +5,66 @@ import (
 	"modules/services/client"
 
 	"github.com/jarlyyn/herb-go-experimental/connections/command"
+	"github.com/jarlyyn/herb-go-experimental/connections/room/message"
 )
 
-type adapter map[string]func(*client.Command) error
-
-func (a adapter) Exec(cmd *client.Command) (bool, error) {
-	handler, ok := a[cmd.Type]
-	if ok == false {
-		return false, nil
+func newRoomAdapter(cmdtype string) func(m *message.Message) error {
+	return func(m *message.Message) error {
+		var err error
+		if m.Room != "" {
+			data := command.New()
+			data.CommandType = cmdtype
+			data.CommandData, err = json.Marshal(m.Data)
+			if err != nil {
+				return err
+			}
+			msg, err := data.Encode()
+			if err != nil {
+				return err
+			}
+			rooms.Broadcast(m.Room, msg)
+		}
+		return nil
 	}
-	err := handler(cmd)
-	if err != nil {
-		return true, err
-	}
-	return true, nil
-
 }
 
-var PromptAdapter = func(cmd *client.Command) error {
-	var err error
-	if cmd.Room != "" {
-		data := command.New()
-		data.CommandType = "prompt"
-		data.CommandData, err = json.Marshal(cmd.Data)
-		if err != nil {
-			return err
+func newUserAdapter(cmdtype string) func(m *message.Message) error {
+	return func(m *message.Message) error {
+		var err error
+		if m.Room == "" {
+			data := command.New()
+			data.CommandType = cmdtype
+			data.CommandData, err = json.Marshal(m.Data)
+			if err != nil {
+				return err
+			}
+			msg, err := data.Encode()
+			if err != nil {
+				return err
+			}
+			return SendToUser(msg)
 		}
-		msg, err := data.Encode()
-		if err != nil {
-			return err
-		}
-		rooms.Broadcast(cmd.Room, msg)
+		return nil
 	}
-	return nil
-}
-var LineAdapter = func(cmd *client.Command) error {
-	var err error
-	if cmd.Room != "" {
-		data := command.New()
-		data.CommandType = "line"
-		data.CommandData, err = json.Marshal(cmd.Data)
-		if err != nil {
-			return err
-		}
-		msg, err := data.Encode()
-		if err != nil {
-			return err
-		}
-		rooms.Broadcast(cmd.Room, msg)
-	}
-	return nil
 }
 
-var DefaultAdapter = adapter{}
+var adapter = message.NewAdapter()
 
 func init() {
-	DefaultAdapter["line"] = LineAdapter
-	DefaultAdapter["prompt"] = PromptAdapter
-
+	adapter["line"] = newRoomAdapter("line")
+	adapter["lines"] = newRoomAdapter("lines")
+	adapter["prompt"] = newRoomAdapter("prompt")
+	adapter["clients"] = newUserAdapter("clients")
+	adapter["connected"] = newUserAdapter("connected")
+	adapter["disconnected"] = newUserAdapter("disconnected")
 	go func() {
 		for {
 			select {
-			case m := <-client.DefaultManager.CommandOutput:
-				DefaultAdapter.Exec(m)
+			case m, ok := <-client.DefaultManager.CommandOutput:
+				if ok == false {
+					return
+				}
+				adapter.Exec(m)
 			}
 		}
 	}()

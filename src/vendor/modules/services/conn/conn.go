@@ -17,7 +17,7 @@ type Conn struct {
 	host      string
 	telnet    *telnet.Conn
 	c         chan int
-	Running   bool
+	running   bool
 	OnReceive func(msg []byte)
 	OnError   func(err error)
 	OnPrompt  func(msg []byte)
@@ -31,26 +31,35 @@ func New(host string) *Conn {
 		host:    host,
 		telnet:  nil,
 		c:       make(chan int),
-		Running: false,
+		running: false,
 	}
 	d := debounce.New(DefaultDebounceDuration, c.UpdatePrompt)
 	d.MaxDuration = 0
 	c.Debounce = d
 	return c
 }
+func (conn *Conn) C() chan int {
+	return conn.c
+}
 func (conn *Conn) UpdatePrompt() {
 	conn.Lock.Lock()
 	defer conn.Lock.Unlock()
-	// b, err := ToUTF8(conn.charset, conn.buffer)
 	conn.OnPrompt(conn.buffer)
 }
 
 //Connect :connect to mud
 func (conn *Conn) Connect() error {
+	conn.Lock.Lock()
+	defer conn.Lock.Unlock()
+	if conn.running == true {
+		return nil
+	}
 	t, err := telnet.Dial("tcp", conn.host)
 	if err != nil {
 		return err
 	}
+	conn.running = true
+	conn.c = make(chan int)
 	conn.buffer = make([]byte, 1024)
 	conn.telnet = t
 	go conn.Receiver()
@@ -59,8 +68,15 @@ func (conn *Conn) Connect() error {
 
 //Close :close mud conn
 func (conn *Conn) Close() error {
+	conn.Lock.Lock()
+	defer conn.Lock.Unlock()
+	if conn.running == false {
+		return nil
+	}
+	conn.running = false
+	conn.buffer = []byte{}
 	close(conn.c)
-	conn.Running = false
+
 	err := conn.telnet.Close()
 	return err
 }
@@ -69,18 +85,19 @@ func (conn *Conn) Receiver() {
 	// del2 := byte(27)
 	for {
 		s, err := conn.telnet.ReadByte()
-		conn.Lock.Lock()
 		if err == io.EOF {
+			conn.Close()
 			return
 		}
 		if err != nil {
 			conn.OnError(err)
 			return
 		}
+		conn.Lock.Lock()
 		if s == del {
 			if err != nil {
-				conn.OnError(err)
 				conn.Lock.Unlock()
+				conn.OnError(err)
 				return
 			}
 			conn.OnReceive(conn.buffer)
@@ -93,12 +110,24 @@ func (conn *Conn) Receiver() {
 		conn.Debounce.Exec()
 	}
 }
+func (conn *Conn) Running() bool {
+	if conn == nil {
+		return false
+	}
+	conn.Lock.Lock()
+	defer conn.Lock.Unlock()
+
+	return conn.running
+}
 func (conn *Conn) Buffer() []byte {
 	conn.Lock.RLock()
 	defer conn.Lock.RUnlock()
 	return conn.buffer
 }
 func (conn *Conn) Send(cmd []byte) error {
+	if conn.telnet == nil {
+		return nil
+	}
 	_, err := conn.telnet.Conn.Write(cmd)
 	if err != nil {
 		return err
