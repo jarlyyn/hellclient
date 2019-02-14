@@ -80,7 +80,7 @@ type Client struct {
 }
 
 func (c *Client) Save() error {
-	path := filepath.Join(WorldsPath, c.ID)
+	path := filepath.Join(WorldsPath, c.ID+".toml")
 	return tomlconfig.Save(path, c.World)
 }
 func (c *Client) Info() *ClientInfo {

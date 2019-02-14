@@ -8,9 +8,6 @@ import (
 	"github.com/jarlyyn/herb-go-experimental/connections/room/message"
 )
 
-type ClientConfig struct {
-	World World
-}
 type Manager struct {
 	Clients       map[string]*Client
 	Lock          sync.RWMutex
@@ -23,10 +20,10 @@ func NewManger() *Manager {
 		CommandOutput: make(chan *message.Message),
 	}
 }
-func (m *Manager) NewClient(id string, config ClientConfig) *Client {
+func (m *Manager) NewClient(id string, world *World) *Client {
 	client := New()
 	client.ID = id
-	client.World = config.World
+	client.World = *world
 	client.Exit = make(chan int)
 	client.Manager = m
 	client.Init()
