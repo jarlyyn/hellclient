@@ -56,7 +56,7 @@ func (f *CreateGameForm) InitWithRequest(r *http.Request) error {
 	return nil
 }
 
-func CreageGame(data []byte) {
+func CreateGame(data []byte) {
 	client.DefaultManager.Lock.Lock()
 	defer client.DefaultManager.Lock.Unlock()
 	form := NewCreateGameForm()
@@ -68,9 +68,17 @@ func CreageGame(data []byte) {
 	if err != nil {
 		return
 	}
+	errors := form.Errors()
+	if len(errors) != 0 {
+		client.DefaultManager.OnCreateFail(errors)
+		return
+	}
 	c := client.ClientConfig{}
 	c.World.Host = form.Host
 	c.World.Port = form.Port
 	c.World.Charset = form.Charset
 	client.DefaultManager.NewClient(form.ID, c)
+	go func() {
+		client.DefaultManager.ExecClients()
+	}()
 }

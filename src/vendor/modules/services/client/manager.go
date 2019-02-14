@@ -3,6 +3,8 @@ package client
 import (
 	"sync"
 
+	"github.com/herb-go/herb/model"
+
 	"github.com/jarlyyn/herb-go-experimental/connections/room/message"
 )
 
@@ -28,9 +30,7 @@ func (m *Manager) NewClient(id string, config ClientConfig) *Client {
 	client.Exit = make(chan int)
 	client.Manager = m
 	client.Init()
-	m.Lock.Lock()
 	m.Clients[id] = client
-	m.Lock.Unlock()
 	go func() {
 		<-client.Exit
 	}()
@@ -68,6 +68,13 @@ func (m *Manager) OnConnected(id string) {
 		m.CommandOutput <- msg
 	}()
 }
+func (m *Manager) OnCreateFail(errors []model.FieldError) {
+	msg := newMsg("createFail", "", errors)
+	go func() {
+		m.CommandOutput <- msg
+	}()
+}
+
 func (m *Manager) OnDisconnected(id string) {
 	msg := newMsg("disconnected", "", id)
 	go func() {
