@@ -197,7 +197,6 @@
         onButton.createGameSubmit=function(){
             send("createGame",JSON.stringify(vm.gameCreateForm))
         }
-
     </script>
     <script>
         handlers.current=function(data){
@@ -247,6 +246,12 @@
         handlers.createFail=function(data){
             vm.createFail=data
         }
+        handlers.createSuccess=function(data){
+            vm.gameCreateFormVisible=false;
+            send("change",data)
+        }
+        
+
     </script>
     <script>
         var data={

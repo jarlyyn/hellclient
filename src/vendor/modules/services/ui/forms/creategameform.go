@@ -43,6 +43,8 @@ var createFormIDReg = regexp.MustCompile(`^[0-9a-zA-Z\-\_\@\.]*$`)
 //Validate Validate form and return any error if raised.
 func (f *CreateGameForm) Validate() error {
 	f.ValidateFieldf(len(f.ID) > 2, "ID", "名称至少需要2个字符")
+	f.ValidateFieldf(len(f.ID) < 64, "ID", "名称不能超过64个字符")
+
 	f.ValidateFieldf(createFormIDReg.MatchString(f.ID), "ID", "名称只能包含数字，字母，- _ @ .")
 	f.ValidateFieldf(f.Host != "", "Host", "网址不能为空")
 	f.ValidateFieldf(f.Port != "", "Port", "端口不能为空")
@@ -82,8 +84,13 @@ func CreateGame(data []byte) {
 	c.World.Host = form.Host
 	c.World.Port = form.Port
 	c.World.Charset = form.Charset
-	client.DefaultManager.NewClient(form.ID, c)
+	cli := client.DefaultManager.NewClient(form.ID, c)
+	err = cli.Save()
+	if err != nil {
+		return
+	}
 	go func() {
+		client.DefaultManager.OnCreateSuccess(form.ID)
 		client.DefaultManager.ExecClients()
 	}()
 }

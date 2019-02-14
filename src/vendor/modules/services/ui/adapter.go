@@ -58,6 +58,7 @@ func init() {
 	adapter["connected"] = newUserAdapter("connected")
 	adapter["disconnected"] = newUserAdapter("disconnected")
 	adapter["createFail"] = newUserAdapter("createFail")
+	adapter["createSuccess"] = newUserAdapter("createSuccess")
 
 	go func() {
 		for {

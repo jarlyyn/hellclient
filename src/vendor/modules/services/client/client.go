@@ -8,9 +8,12 @@ import (
 	"io/ioutil"
 	"modules/app"
 	"modules/services/conn"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/herb-go/herbgo/util/config/tomlconfig"
 
 	"github.com/jarlyyn/ansi"
 	"golang.org/x/text/encoding/japanese"
@@ -21,10 +24,9 @@ import (
 )
 
 type World struct {
-	Host     string
-	Port     string
-	Charset  string
-	MaxLines int
+	Host    string
+	Port    string
+	Charset string
 }
 
 type Word struct {
@@ -77,6 +79,10 @@ type Client struct {
 	Exit    chan int
 }
 
+func (c *Client) Save() error {
+	path := filepath.Join(WorldsPath, c.ID)
+	return tomlconfig.Save(path, c.World)
+}
 func (c *Client) Info() *ClientInfo {
 	return &ClientInfo{
 		ID:      c.ID,

@@ -2,7 +2,6 @@ package main
 
 import (
 	"modules/app"
-	"modules/services/client"
 
 	// "modules/services/ui"
 
@@ -44,14 +43,14 @@ func main() {
 	app.Development.MustNotInitializing()
 	util.MustLoadRegisteredFolders()
 	// ui.Change("hell")
-	config := client.ClientConfig{}
-	config.World.Host = "220.165.145.126"
-	config.World.Port = "3001"
-	config.World.Charset = "gbk"
-	m := client.DefaultManager
-	m.NewClient("hell", config)
-	m.NewClient("hell2", config)
-	m.NewClient("hell3", config)
+	// config := client.ClientConfig{}
+	// config.World.Host = "220.165.145.126"
+	// config.World.Port = "3001"
+	// config.World.Charset = "gbk"
+	// m := client.DefaultManager
+	// m.NewClient("hell", config)
+	// m.NewClient("hell2", config)
+	// m.NewClient("hell3", config)
 
 	run()
 }

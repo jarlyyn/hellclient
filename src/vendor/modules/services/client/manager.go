@@ -74,6 +74,12 @@ func (m *Manager) OnCreateFail(errors []*model.FieldError) {
 		m.CommandOutput <- msg
 	}()
 }
+func (m *Manager) OnCreateSuccess(id string) {
+	msg := newMsg("createSuccess", "", id)
+	go func() {
+		m.CommandOutput <- msg
+	}()
+}
 
 func (m *Manager) OnDisconnected(id string) {
 	msg := newMsg("disconnected", "", id)
