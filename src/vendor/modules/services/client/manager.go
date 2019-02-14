@@ -68,7 +68,7 @@ func (m *Manager) OnConnected(id string) {
 		m.CommandOutput <- msg
 	}()
 }
-func (m *Manager) OnCreateFail(errors []model.FieldError) {
+func (m *Manager) OnCreateFail(errors []*model.FieldError) {
 	msg := newMsg("createFail", "", errors)
 	go func() {
 		m.CommandOutput <- msg

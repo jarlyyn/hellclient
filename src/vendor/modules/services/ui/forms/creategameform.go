@@ -3,6 +3,7 @@ package forms
 import (
 	"encoding/json"
 	"net/http"
+	"regexp"
 
 	"modules/services/client"
 
@@ -37,13 +38,17 @@ func NewCreateGameForm() *CreateGameForm {
 	return form
 }
 
+var createFormIDReg = regexp.MustCompile(`^[0-9a-zA-Z\-\_\@\.]*$`)
+
 //Validate Validate form and return any error if raised.
 func (f *CreateGameForm) Validate() error {
 	f.ValidateFieldf(len(f.ID) > 2, "ID", "名称至少需要2个字符")
+	f.ValidateFieldf(createFormIDReg.MatchString(f.ID), "ID", "名称只能包含数字，字母，- _ @ .")
 	f.ValidateFieldf(f.Host != "", "Host", "网址不能为空")
 	f.ValidateFieldf(f.Port != "", "Port", "端口不能为空")
 	f.ValidateFieldf(f.Charset != "", "Charset", "字符编码不能为空")
 	if !f.HasError() {
+
 		f.ValidateFieldf(client.DefaultManager.Clients[f.ID] == nil, "ID", "名称已经存在")
 	}
 	return nil
