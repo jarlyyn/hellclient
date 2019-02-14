@@ -81,6 +81,7 @@ func (e *Engine) OnOpen(conn connections.ConnectionOutput) {
 		r.Join(crid)
 	}
 	client.DefaultManager.ExecClients()
+	client.DefaultManager.ExecLines(crid)
 	client.DefaultManager.ExecPrompt(crid)
 	ctx.Data.Store("rooms", r)
 }

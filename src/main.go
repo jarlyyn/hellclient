@@ -2,9 +2,9 @@ package main
 
 import (
 	"modules/app"
-
 	"modules/services/client"
-	"modules/services/ui"
+
+	// "modules/services/ui"
 
 	"github.com/herb-go/herbgo/util"
 	"github.com/herb-go/herbgo/util/config"
@@ -42,7 +42,8 @@ func main() {
 	loadConfigs()
 	initModules()
 	app.Development.MustNotInitializing()
-	ui.Change("hell")
+	util.MustLoadRegisteredFolders()
+	// ui.Change("hell")
 	config := client.ClientConfig{}
 	config.World.Host = "220.165.145.126"
 	config.World.Port = "3001"
@@ -51,7 +52,6 @@ func main() {
 	m.NewClient("hell", config)
 	m.NewClient("hell2", config)
 	m.NewClient("hell3", config)
-	// util.Must(c.Connect())
 
 	run()
 }

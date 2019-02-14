@@ -50,5 +50,5 @@ func init() {
 	handlers.Add("connect", onCmdConnect)
 	handlers.Add("disconnect", onCmdDisconnect)
 	handlers.Add("send", onCmdSend)
-
+	current.Store("")
 }

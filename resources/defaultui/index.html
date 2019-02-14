@@ -42,7 +42,7 @@
             .words .BG-Bright-White{background:rgb(255,255,255)}
             .words.print{color: red;}
             .words .bold{font-weight: bold}
-            ul#lines{padding-bottom: 40px;margin-bottom:-32px;padding-top: 90px;margin-top:-80px}
+            ul#lines{padding-bottom: 40px;margin-bottom:-32px;padding-top: 90px}
             #footer{position: fixed;bottom:0;height: 32px;left:0;width:100%;background:black}
             #user-input{height: 32px;padding-left: 8em;padding-right:8em;position: relative;}
             #user-input .el-input-group__prepend{background: black}
@@ -55,18 +55,23 @@
             #current{z-index: 1;position:relative;font-weight:  bold;line-height: 32px;float: left;width:7em;margin-right:-8em;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;text-align:left;text-decoration: underline;padding: 0 0.5em 0 0.5em;background: black}
             #current:hover{width: 100%;margin-right: -100%}
             #main-button{padding-right: 2em}
+            #tabs{height:43px}
+            #no-clients{color:black;font-weight: bold;line-height:43px;text-indent: 0.5em}
         </style>
     </head>
     <body>
         <div id="app">
             <div id="top">
-                <el-tabs v-model="current" type="card" :before-leave="onChange">
+                <div id="tabs">
+                    <div id="no-clients" v-if="!clients.length">还未创建游戏，请点击下方按钮创建新游戏</div>
+                <el-tabs v-if="clients.length" v-model="currenttab" type="card"@tab-click="onChange">
                         <el-tab-pane  v-for="client in clients" :label="running[client.ID]? '▶️ '+client.ID:'⏸️ '+client.ID" :name="client.ID"></el-tab-pane>
                       </el-tabs>
+                    </div>
             <div id="buttons">
                     <el-button-group id="main-button">
                     <el-tooltip class="item" effect="light" content="添加游戏" placement="bottom">
-                    <el-button size="mini" type="primary" icon="el-icon-plus"></el-button>
+                    <el-button @click="onButton('createGame')" size="mini" type="primary" icon="el-icon-plus"></el-button>
                     </el-tooltip>
                     </el-button-group >
                     <el-button-group v-if="current">
@@ -85,13 +90,36 @@
                 <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') " v-for="word in line.Words" >{{word.Text}}</span>
             </li>
         </ul>
+        <el-dialog title="创建游戏" :visible.sync="gameCreateFormVisible">
+                <el-form :model="gameCreateForm">
+                        <el-form-item label="名称" label-width="80">
+                                <el-input v-model="gameCreateForm.ID" autocomplete="off"></el-input>
+                        </el-form-item>                    
+                  <el-form-item label="网址" label-width="80">
+                    <el-input v-model="gameCreateForm.Host" autocomplete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="端口" label-width="80">
+                        <el-input v-model="gameCreateForm.Port" autocomplete="off"></el-input>
+                      </el-form-item>
+                  <el-form-item label="字符编码" label-width="80">
+                    <el-select v-model="gameCreateForm.Charset" placeholder="请选字符编码">
+                      <el-option label="GBK" value="gbk"></el-option>
+                      <el-option label="UTF8" value="utf8"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="gameCreateFormVisible = false">取 消</el-button>
+                  <el-button type="primary" @click="onButton('createGameSubmit')">确 定</el-button>
+                </div>
+              </el-dialog>              
         <div id="footer">
                 <div id="current">
                     {{current}}
                 </div>
         <div  id="user-input" v-on:keyup.13="send">
         <el-input size="small" placeholder="请输入命令" v-model="cmd" >
-                <template  v-if="prompt &&  prompt.Words.length" slot="prepend">          <div class="words">      <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.IsPrint?' print':'')" v-for="word in prompt.Words" >{{word.Text}}</span></div>
+                <template  v-if="prompt &&  prompt.Words &&  prompt.Words.length" slot="prepend">          <div class="words">      <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.IsPrint?' print':'')" v-for="word in prompt.Words" >{{word.Text}}</span></div>
                 </template>
               </el-input>            
             </div>
@@ -157,10 +185,19 @@
         onButton.disconnect=function(){
             send("disconnect",vm.current)
         }
+        onButton.createGame=function(){
+            vm.gameCreateForm={};
+            vm.gameCreateFormVisible=true;
+        }
+        onButton.createGameSubmit=function(){
+            send("createGame",JSON.stringify(vm.gameCreateForm))
+        }
+
     </script>
     <script>
         handlers.current=function(data){
             vm.current=data
+            vm.currenttab=data
         }
         handlers.line=function(data){
             var lines=vm.lines
@@ -206,11 +243,14 @@
     <script>
         var data={
             current:"",
+            currenttab:"",
             lines:[],
-            prompt:"",
+            prompt:{},
             cmd:"",
             running:{},
             clients:[],
+            gameCreateFormVisible:false,
+            gameCreateForm:{}
         }
         var vm = new Vue({
             el:"#app",
@@ -221,7 +261,10 @@
                      document.getElementById("user-input").getElementsByTagName("input")[0].select()
                 },
                 onChange:function(current){
-                    send("change",current)
+                    if (vm.clients.length){
+                    send("change",current.name)
+                    }
+                    return false
                 },
                 onButton:function(data){
                     onButton[data]()
