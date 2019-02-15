@@ -80,7 +80,7 @@ func CreateGame(data []byte) {
 		client.DefaultManager.OnCreateFail(errors)
 		return
 	}
-	w := &client.World{}
+	w := client.NewWorld()
 	w.Host = form.Host
 	w.Port = form.Port
 	w.Charset = form.Charset

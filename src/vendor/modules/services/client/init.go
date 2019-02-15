@@ -25,9 +25,10 @@ func MustLoadWorlds() {
 		filename := f.Name()
 		if strings.HasSuffix(filename, ".toml") {
 			id := filename[:len(filename)-5]
-			world := &World{}
+			world := NewWorld()
 			tomlconfig.MustLoad(filepath.Join(WorldsPath, filename), world)
-			DefaultManager.NewClient(id, world)
+			client := DefaultManager.NewClient(id, world)
+			client.Script.Triggers.LoadWorldTrigger(world.Triggers)
 		}
 	}
 

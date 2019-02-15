@@ -25,9 +25,16 @@ import (
 )
 
 type World struct {
-	Host    string
-	Port    string
-	Charset string
+	Host     string
+	Port     string
+	Charset  string
+	Triggers []*script.WorldTrigger
+}
+
+func NewWorld() *World {
+	return &World{
+		Triggers: []*script.WorldTrigger{},
+	}
 }
 
 type Word struct {
@@ -292,7 +299,12 @@ func (c *Client) onPrompt(msg []byte) {
 	c.Manager.OnPrompt(c.ID, line)
 }
 func (c *Client) Match(line string) {
-	c.Script.Triggers.Match(line)
+	results := c.Script.Triggers.Match(line)
+	for _, v := range results {
+		if v.Trigger.Commnd != "" {
+			c.Send([]byte(v.Trigger.Commnd))
+		}
+	}
 }
 func (c *Client) onMsg(msg []byte) {
 	if len(msg) == 0 {

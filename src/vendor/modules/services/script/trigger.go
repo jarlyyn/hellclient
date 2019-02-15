@@ -112,6 +112,12 @@ type Triggers struct {
 	Enabled         bool
 }
 
+func (t *Triggers) LoadWorldTrigger(triggers []*WorldTrigger) {
+	for _, v := range triggers {
+		trigger := v.Trigger()
+		t.Add(trigger)
+	}
+}
 func (t *Triggers) EnableWorldTrigger(name string, enabled bool) {
 	trigger := t.WorldTriggers[name]
 	if trigger != nil {

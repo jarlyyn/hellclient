@@ -95,7 +95,7 @@ func (conn *Conn) Close() error {
 }
 func (conn *Conn) Receiver() {
 	del := byte(10)
-	// del2 := byte(27)
+	del2 := byte(13)
 	for {
 		running := conn.Running()
 		if !running {
@@ -111,6 +111,10 @@ func (conn *Conn) Receiver() {
 			return
 		}
 		conn.Lock.Lock()
+		if s == del2 {
+			conn.Lock.Unlock()
+			continue
+		}
 		if s == del {
 			if err != nil {
 				conn.Lock.Unlock()
