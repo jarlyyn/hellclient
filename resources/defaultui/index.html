@@ -40,7 +40,7 @@
             .words .BG-Bright-Magenta{background:rgb(255,0,255)}
             .words .BG-Bright-Cyan{background:rgb(0,255,255)}
             .words .BG-Bright-White{background:rgb(255,255,255)}
-            .words.print{color: red;}
+            .words.system{color: red;}
             .words .bold{font-weight: bold}
             ul#lines{padding-bottom: 40px;margin-bottom:-32px;padding-top: 90px}
             #footer{position: fixed;bottom:0;height: 32px;left:0;width:100%;background:black}
@@ -85,8 +85,8 @@
             </div>
             </div>
         <ul id="lines">
-            <li v-bind:class="'words '+ (line.IsPrint?' print':'')" v-for="line in lines">
-                <span v-if="line.IsPrint">🗨️</span>
+            <li v-bind:class="'words '+ (line.IsPrint?' print':'') + (line.IsSystem?' system':'')" v-for="line in lines">
+                <span v-if="line.IsSystem">🗨️</span>
                 <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') " v-for="word in line.Words" >{{word.Text}}</span>
             </li>
         </ul>

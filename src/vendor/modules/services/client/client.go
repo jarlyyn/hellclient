@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"modules/app"
 	"modules/services/conn"
+	"modules/services/script"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -37,9 +38,10 @@ type Word struct {
 }
 
 type Line struct {
-	Words   []Word
-	Time    int64
-	IsPrint bool
+	Words    []Word
+	Time     int64
+	IsPrint  bool
+	IsSystem bool
 }
 
 func (l *Line) Append(w Word) {
@@ -53,15 +55,19 @@ func (l *Line) Plain() string {
 	return output
 }
 
-func NewLine(isPrint bool) *Line {
+func NewLine() *Line {
 	return &Line{
-		Words:   []Word{},
-		Time:    time.Now().Unix(),
-		IsPrint: isPrint,
+		Words:    []Word{},
+		Time:     time.Now().Unix(),
+		IsPrint:  false,
+		IsSystem: false,
 	}
 }
 func New() *Client {
-	return &Client{}
+	return &Client{
+		Exit:   make(chan int),
+		Script: script.New(),
+	}
 }
 
 type ClientInfo struct {
@@ -76,6 +82,7 @@ type Client struct {
 	Lock    sync.RWMutex
 	Lines   *ring.Ring
 	Prompt  *Line
+	Script  *script.Script
 	Exit    chan int
 }
 
@@ -94,7 +101,7 @@ func (c *Client) Init() {
 }
 func (c *Client) ConvertToLine(msg []byte) *Line {
 	w := Word{}
-	line := NewLine(false)
+	line := NewLine()
 	if len(msg) == 0 {
 		return line
 	}
@@ -257,7 +264,7 @@ func (c *Client) ConvertToLine(msg []byte) *Line {
 						w.Background = "BG-Bright-White"
 					}
 				case "256":
-					line = NewLine(false)
+					line = NewLine()
 
 				}
 			}
@@ -284,7 +291,9 @@ func (c *Client) onPrompt(msg []byte) {
 	c.Prompt = line
 	c.Manager.OnPrompt(c.ID, line)
 }
-
+func (c *Client) Match(line string) {
+	c.Script.Triggers.Match(line)
+}
 func (c *Client) onMsg(msg []byte) {
 	if len(msg) == 0 {
 		return
@@ -292,7 +301,7 @@ func (c *Client) onMsg(msg []byte) {
 	line := c.ConvertToLine(msg)
 	c.NewLine(line)
 	c.Manager.OnLine(c.ID, line)
-
+	c.Match(line.Plain())
 }
 func (c *Client) onError(err error) {
 	fmt.Println(err.Error())
@@ -315,15 +324,27 @@ func (c *Client) ConvertLines() []*Line {
 	})
 	return result
 }
-func (c *Client) Print(msg string) {
-	line := NewLine(true)
+
+func (c *Client) SendSystem(msg string) {
+	line := NewLine()
+	line.IsSystem = true
 	w := Word{
 		Text: msg,
 	}
 	line.Append(w)
 	c.NewLine(line)
 	c.Manager.OnLine(c.ID, line)
+}
 
+func (c *Client) Print(msg string) {
+	line := NewLine()
+	line.IsPrint = true
+	w := Word{
+		Text: msg,
+	}
+	line.Append(w)
+	c.NewLine(line)
+	c.Manager.OnLine(c.ID, line)
 }
 func (c *Client) Disconnect() error {
 	c.Lock.Lock()
@@ -346,13 +367,13 @@ func (c *Client) Connect() error {
 	if err == nil {
 		go func() {
 			c.Manager.OnConnected(c.ID)
-			c.Print(app.Time.Datetime(time.Now()) + "  成功连接服务器")
+			c.SendSystem(app.Time.Datetime(time.Now()) + "  成功连接服务器")
 		}()
 	}
 	go func() {
 		<-c.Conn.C()
 		c.Manager.OnDisconnected(c.ID)
-		c.Print(app.Time.Datetime(time.Now()) + "  与服务器断开连接接 ")
+		c.SendSystem(app.Time.Datetime(time.Now()) + "  与服务器断开连接接 ")
 	}()
 	return err
 }

@@ -24,7 +24,6 @@ func (m *Manager) NewClient(id string, world *World) *Client {
 	client := New()
 	client.ID = id
 	client.World = *world
-	client.Exit = make(chan int)
 	client.Manager = m
 	client.Init()
 	m.Clients[id] = client
