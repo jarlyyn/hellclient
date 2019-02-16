@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"encoding/json"
 	"modules/services/client"
 	"modules/services/ui/forms"
 
@@ -25,24 +26,42 @@ var onCmdChange = func(conn connections.ConnectionOutput, cmd command.Command) e
 	}
 	j := v.(*room.Location)
 	j.Leave(current.Load().(string))
-	data := string(cmd.Data())
-	Change(data)
-	j.Join(data)
-	return Send(conn, "current", data)
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	Change(msg)
+	j.Join(msg)
+	return Send(conn, "current", msg)
 }
 var onCmdConnect = func(conn connections.ConnectionOutput, cmd command.Command) error {
-	id := string(cmd.Data())
-	client.DefaultManager.ExecConnect(id)
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	client.DefaultManager.ExecConnect(msg)
 	return nil
 }
 var onCmdDisconnect = func(conn connections.ConnectionOutput, cmd command.Command) error {
-	id := string(cmd.Data())
-	client.DefaultManager.ExecDisconnect(id)
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	client.DefaultManager.ExecDisconnect(msg)
 	return nil
 }
 var onCmdSend = func(conn connections.ConnectionOutput, cmd command.Command) error {
 	id := current.Load().(string)
-	client.DefaultManager.Send(id, cmd.Data())
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	client.DefaultManager.Send(id, []byte(msg))
+	return nil
+}
+var onCmdTriggers = func(conn connections.ConnectionOutput, cmd command.Command) error {
+	id := current.Load().(string)
+	client.DefaultManager.ExecTriggers(id)
 	return nil
 }
 var onCmdCreateGame = func(conn connections.ConnectionOutput, cmd command.Command) error {
@@ -54,6 +73,7 @@ func init() {
 	handlers.Add("change", onCmdChange)
 	handlers.Add("connect", onCmdConnect)
 	handlers.Add("disconnect", onCmdDisconnect)
+	handlers.Add("triggers", onCmdTriggers)
 	handlers.Add("send", onCmdSend)
 	handlers.Add("createGame", onCmdCreateGame)
 	current.Store("")

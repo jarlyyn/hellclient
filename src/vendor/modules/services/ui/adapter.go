@@ -54,6 +54,7 @@ func init() {
 	adapter["line"] = newRoomAdapter("line")
 	adapter["lines"] = newRoomAdapter("lines")
 	adapter["prompt"] = newRoomAdapter("prompt")
+	adapter["triggers"] = newRoomAdapter("triggers")
 	adapter["clients"] = newUserAdapter("clients")
 	adapter["connected"] = newUserAdapter("connected")
 	adapter["disconnected"] = newUserAdapter("disconnected")

@@ -178,7 +178,7 @@
         }
         var send=function(cmd,data){
             if (ws.readyState){
-                ws.send(cmd+" "+data)
+                ws.send(cmd+" "+JSON.stringify(data))
             }
         }
     </script>
@@ -195,7 +195,7 @@
             vm.gameCreateFormVisible=true;
         }
         onButton.createGameSubmit=function(){
-            send("createGame",JSON.stringify(vm.gameCreateForm))
+            send("createGame",vm.gameCreateForm)
         }
     </script>
     <script>
@@ -250,7 +250,9 @@
             vm.gameCreateFormVisible=false;
             send("change",data)
         }
-        
+        handlers.triggers=function(data){
+            console.log(data)
+        }
 
     </script>
     <script>

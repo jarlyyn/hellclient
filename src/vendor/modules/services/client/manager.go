@@ -1,6 +1,7 @@
 package client
 
 import (
+	"modules/services/script"
 	"sync"
 
 	"github.com/herb-go/herb/model"
@@ -120,6 +121,19 @@ func (m *Manager) ExecLines(id string) {
 		lines = c.ConvertLines()
 	}
 	msg := newMsg("lines", id, lines)
+	go func() {
+		m.CommandOutput <- msg
+	}()
+}
+func (m *Manager) ExecTriggers(id string) {
+	c := m.Client(id)
+	var triggers = []*script.WorldTrigger{}
+	if c != nil {
+		c.Lock.Lock()
+		defer c.Lock.Unlock()
+		triggers = c.World.Triggers
+	}
+	msg := newMsg("triggers", id, triggers)
 	go func() {
 		m.CommandOutput <- msg
 	}()
