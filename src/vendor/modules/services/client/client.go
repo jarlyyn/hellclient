@@ -301,8 +301,8 @@ func (c *Client) onPrompt(msg []byte) {
 func (c *Client) Match(line string) {
 	results := c.Script.Triggers.Match(line)
 	for _, v := range results {
-		if v.Trigger.Commnd != "" {
-			c.Send([]byte(v.Trigger.Commnd))
+		if v.Trigger.Command != "" {
+			c.Send([]byte(v.Trigger.Command))
 		}
 	}
 }

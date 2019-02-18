@@ -34,7 +34,7 @@ type Trigger struct {
 	Name        string
 	IsVMTrigger bool
 	Priority    int
-	Commnd      string
+	Command     string
 	Callback    string
 	Finally     bool
 }
@@ -43,7 +43,7 @@ type basicTrigger struct {
 	Pattern  string
 	IsRegExp bool
 	Enabled  bool
-	Commnd   string
+	Command  string
 	Name     string
 	Priority int
 	Finally  bool
@@ -74,7 +74,7 @@ func (t *basicTrigger) newTrigger() *Trigger {
 	}
 	trigger.Enabled = t.Enabled
 	trigger.Priority = t.Priority
-	trigger.Commnd = t.Commnd
+	trigger.Command = t.Command
 	trigger.Name = t.Name
 	trigger.Finally = t.Finally
 	return trigger
