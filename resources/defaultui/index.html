@@ -171,42 +171,51 @@
                 width="60"
                 >
             </el-table-column>
-
+            <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+            <template slot-scope="scope">
+              <el-button @click="onUpdateTrigger(scope.row)" type="text" size="small">编辑</el-button>
+              <el-button type="text" size="small">删除</el-button>
+            </template>
+          </el-table-column>
+      
               </el-table>
                   <el-dialog
     
       title="编辑触发器"
-      :visible.sync="triggerSaveFromVisible"
+      :visible.sync="triggerSaveFormVisible"
       append-to-body>
       <div v-if="createTriggerFail">
         <el-alert v-for="err in createTriggerFail" :title="err.Msg" type="error" show-icon> </el-alert>
     
 </div>
-    <el-form :model="triggerSaveFrom">
+    <el-form :model="triggerSaveForm">
            
       <el-form-item label="匹配项" label-width="80">
-        <el-input v-model="triggerSaveFrom.Pattern" autocomplete="off"></el-input>
+        <el-input v-model="triggerSaveForm.Pattern" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="有效" label-width="80">
-            <el-switch  v-model="triggerSaveFrom.Enabled" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
+            <el-switch  v-model="triggerSaveForm.Enabled" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
         </el-form-item>
         <el-form-item label="正则" label-width="80">
-                <el-switch  v-model="triggerSaveFrom.IsRegExp" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
+                <el-switch  v-model="triggerSaveForm.IsRegExp" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
             </el-form-item>
             <el-form-item label="命令" label-width="80">
-                    <el-input v-model="triggerSaveFrom.Command" autocomplete="off"></el-input>
+                    <el-input v-model="triggerSaveForm.Command" autocomplete="off"></el-input>
                   </el-form-item>            
                   <el-form-item label="停止" label-width="80">
-                        <el-switch  v-model="triggerSaveFrom.Finally" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
+                        <el-switch  v-model="triggerSaveForm.Finally" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
                       </el-form-item>           
                       <el-form-item label="优先级" label-width="80">
-                            <el-input v-model="triggerSaveFrom.Priority" autocomplete="off"></el-input>
+                            <el-input v-model="triggerSaveForm.Priority" autocomplete="off"></el-input>
                           </el-form-item>                       
                                       
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="triggerSaveFromVisible = false">取 消</el-button>
-      <el-button type="primary" @click="onButton('triggerSaveFromSubmit')">确 定</el-button>
+      <el-button @click="triggerSaveFormVisible = false">取 消</el-button>
+      <el-button type="primary" @click="onButton('triggerSaveFormSubmit')">确 定</el-button>
     </div>
 
     </el-dialog>
@@ -331,9 +340,9 @@
             send("triggers",current)
         }
         onButton.createTrigger=function(){
-            vm.triggerSaveFromVisible=true
+            vm.triggerSaveFormVisible=true
             vm.triggerName=""
-            vm.triggerSaveFrom={}
+            vm.triggerSaveForm={}
         }
     </script>
     <script>
@@ -409,8 +418,8 @@
             triggers:null,
             triggerName:"",
             triggersVisible:false,
-            triggerSaveFromVisible:false,
-            triggerSaveFrom:{},
+            triggerSaveFormVisible:false,
+            triggerSaveForm:{},
             createTriggerFail:[],
         }
         var vm = new Vue({
@@ -429,6 +438,12 @@
                 },
                 onButton:function(data){
                     onButton[data]()
+                },
+                onUpdateTrigger:function(data){
+                    vm.triggerName=data.Name;
+                    vm.triggerSaveForm=data;
+                    vm.triggerSaveFormVisible=true;
+                    vm.triggersVisible=true;
                 }
             }
         })
