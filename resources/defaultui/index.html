@@ -114,9 +114,9 @@
                 <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') " v-for="word in line.Words" >{{word.Text}}</span>
             </li>
         </ul>
-        <el-dialog width="80%" title="  触发器" :visible.sync="triggersVisible">
+        <el-dialog width="80%"  :fullscreen="true"  title=" 触发器" :visible.sync="triggersVisible">
             <div id="triggers" v-if="triggers!==null">
-                    <el-button-group id="main-button">
+                    <el-button-group >
                             <el-tooltip class="item" effect="light" content="添加" placement="bottom">
                             <el-button @click="onButton('createTrigger')" size="mini" type="primary" icon="el-icon-plus"></el-button>
                             </el-tooltip>
@@ -353,6 +353,7 @@
             gameCreateFormVisible:false,
             gameCreateForm:{},
             triggers:null,
+            triggerName:"",
             triggersVisible:false,
             triggerSaveFromVisible:false,
             triggerSaveFrom:{}
