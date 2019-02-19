@@ -58,6 +58,7 @@
             #tabs{height:43px}
             #no-clients{color:black;font-weight: bold;line-height:43px;text-indent: 0.5em}
             #triggers .el-table .cell{color:#333333}
+            .el-form .el-switch{height:40px;line-height: 40px}
         </style>
     </head>
     <body>
@@ -65,7 +66,7 @@
             <div id="top">
                 <div id="tabs">
                     <div id="no-clients" v-if="!clients.length">还未创建游戏，请点击下方按钮创建新游戏</div>
-                <el-tabs v-if="clients.length" v-model="currenttab" type="card"@tab-click="onChange">
+                <el-tabs v-if="clients.length" v-model="currenttab" type="card" @tab-click="onChange">
                         <el-tab-pane  v-for="client in clients" :label="running[client.ID]? '▶️ '+client.ID:'⏸️ '+client.ID" :name="client.ID"></el-tab-pane>
                       </el-tabs>
                     </div>
@@ -95,6 +96,9 @@
                             <el-tooltip class="item" effect="light" content="脚本"  placement="bottom">
                                     <el-button  @click="onButton('script')" size="mini" icon=" el-icon-setting"></el-button>
                                     </el-tooltip>
+                                    <el-tooltip class="item" effect="light" content="变量"  placement="bottom">
+                                        <el-button  @click="onButton('variable')" size="mini" >?</el-button>
+                                        </el-tooltip>
                         <el-tooltip class="item" effect="light" content="触发器"  placement="bottom">
                             <el-button  @click="onButton('triggers')" size="mini" icon=" el-icon-tickets"></el-button>
                             </el-tooltip>
@@ -120,6 +124,7 @@
                             <el-tooltip class="item" effect="light" content="添加" placement="bottom">
                             <el-button @click="onButton('createTrigger')" size="mini" type="primary" icon="el-icon-plus"></el-button>
                             </el-tooltip>
+                        </el-button-group >
                 <el-table
                 :data="triggers"
                 style="width: 100%">
@@ -160,8 +165,52 @@
                         <span>{{scope.row.Finally ? "是":"否"}}</span>
                    </template>
                 </el-table-column>
+                <el-table-column
+                prop="Priority"
+                label="优先级"
+                width="60"
+                >
+            </el-table-column>
 
               </el-table>
+                  <el-dialog
+    
+      title="编辑触发器"
+      :visible.sync="triggerSaveFromVisible"
+      append-to-body>
+      <div v-if="createTriggerFail">
+        <el-alert v-for="err in createTriggerFail" :title="err.Msg" type="error" show-icon> </el-alert>
+    
+</div>
+    <el-form :model="triggerSaveFrom">
+           
+      <el-form-item label="匹配项" label-width="80">
+        <el-input v-model="triggerSaveFrom.Pattern" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="有效" label-width="80">
+            <el-switch  v-model="triggerSaveFrom.Enabled" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
+        </el-form-item>
+        <el-form-item label="正则" label-width="80">
+                <el-switch  v-model="triggerSaveFrom.IsRegExp" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
+            </el-form-item>
+            <el-form-item label="命令" label-width="80">
+                    <el-input v-model="triggerSaveFrom.Command" autocomplete="off"></el-input>
+                  </el-form-item>            
+                  <el-form-item label="停止" label-width="80">
+                        <el-switch  v-model="triggerSaveFrom.Finally" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
+                      </el-form-item>           
+                      <el-form-item label="优先级" label-width="80">
+                            <el-input v-model="triggerSaveFrom.Priority" autocomplete="off"></el-input>
+                          </el-form-item>                       
+                                      
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="triggerSaveFromVisible = false">取 消</el-button>
+      <el-button type="primary" @click="onButton('triggerSaveFromSubmit')">确 定</el-button>
+    </div>
+
+    </el-dialog>
+
             </div>
                 <div slot="footer" class="dialog-footer">
                   <el-button @click="triggersVisible = false">取 消</el-button>
@@ -281,6 +330,11 @@
             vm.triggersVisible=true
             send("triggers",current)
         }
+        onButton.createTrigger=function(){
+            vm.triggerSaveFromVisible=true
+            vm.triggerName=""
+            vm.triggerSaveFrom={}
+        }
     </script>
     <script>
         handlers.current=function(data){
@@ -356,7 +410,8 @@
             triggerName:"",
             triggersVisible:false,
             triggerSaveFromVisible:false,
-            triggerSaveFrom:{}
+            triggerSaveFrom:{},
+            createTriggerFail:[],
         }
         var vm = new Vue({
             el:"#app",
