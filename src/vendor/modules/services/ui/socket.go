@@ -29,6 +29,9 @@ var rooms = room.NewRooms()
 var current = &atomic.Value{}
 var gamelock = sync.Mutex{}
 
+func CurrentGameID() string {
+	return current.Load().(string)
+}
 func SendToUser(data []byte) error {
 	return users.SendByID("user", data)
 }

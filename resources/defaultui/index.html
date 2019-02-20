@@ -187,8 +187,8 @@
       title="编辑触发器"
       :visible.sync="triggerSaveFormVisible"
       append-to-body>
-      <div v-if="createTriggerFail">
-        <el-alert v-for="err in createTriggerFail" :title="err.Msg" type="error" show-icon> </el-alert>
+      <div v-if="saveTriggerFail">
+        <el-alert v-for="err in saveTriggerFail" :title="err.Msg" type="error" show-icon> </el-alert>
     
 </div>
     <el-form :model="triggerSaveForm">
@@ -215,7 +215,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="triggerSaveFormVisible = false">取 消</el-button>
-      <el-button type="primary" @click="onButton('triggerSaveFormSubmit')">确 定</el-button>
+      <el-button type="primary" @click="onButton('saveTriggerSubmit')">确 定</el-button>
     </div>
 
     </el-dialog>
@@ -315,6 +315,8 @@
         }
         var send=function(cmd,data){
             if (ws.readyState){
+                var msg=JSON.stringify(data)
+                console.log(msg)
                 ws.send(cmd+" "+JSON.stringify(data))
             }
         }
@@ -346,7 +348,8 @@
         }
         onButton.saveTriggerSubmit=function(){
             vm.triggerSaveForm.Name=vm.triggerName
-            send("createGame",vm.triggerSaveForm)
+            vm.triggerSaveForm.Priority=vm.triggerSaveForm.Priority*1;
+            send("saveTrigger",vm.triggerSaveForm)
         }
     </script>
     <script>
@@ -404,12 +407,11 @@
         handlers.triggers=function(data){
             vm.triggers=data
         }
-        handlers.saveTriggerFail=function(data){
+        handlers.triggerFail=function(data){
             vm.saveTriggerFail=data
         }
-        handlers.saveTriggerSuccess=function(data){
+        handlers.triggerSuccess=function(data){
             vm.triggerSaveFormVisible=false;
-            send("change",data)
         }
         
     </script>

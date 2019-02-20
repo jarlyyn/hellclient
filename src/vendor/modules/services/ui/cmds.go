@@ -68,6 +68,10 @@ var onCmdCreateGame = func(conn connections.ConnectionOutput, cmd command.Comman
 	forms.CreateGame(cmd.Data())
 	return nil
 }
+var onCmdSaveTrigger = func(conn connections.ConnectionOutput, cmd command.Command) error {
+	forms.SaveTrigger(CurrentGameID(), cmd.Data())
+	return nil
+}
 
 func init() {
 	handlers.Add("change", onCmdChange)
@@ -76,5 +80,6 @@ func init() {
 	handlers.Add("triggers", onCmdTriggers)
 	handlers.Add("send", onCmdSend)
 	handlers.Add("createGame", onCmdCreateGame)
+	handlers.Add("saveTrigger", onCmdSaveTrigger)
 	current.Store("")
 }

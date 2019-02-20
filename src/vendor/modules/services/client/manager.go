@@ -77,6 +77,18 @@ func (m *Manager) OnCreateSuccess(id string) {
 		m.CommandOutput <- msg
 	}()
 }
+func (m *Manager) OnTriggerFail(current string, errors []*model.FieldError) {
+	msg := newMsg("triggerFail", current, errors)
+	go func() {
+		m.CommandOutput <- msg
+	}()
+}
+func (m *Manager) OnTriggerSuccess(current string) {
+	msg := newMsg("triggerSuccess", current, "ok")
+	go func() {
+		m.CommandOutput <- msg
+	}()
+}
 
 func (m *Manager) OnDisconnected(id string) {
 	msg := newMsg("disconnected", "", id)

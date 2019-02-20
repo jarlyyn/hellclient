@@ -189,6 +189,7 @@ func (t *Triggers) Add(trigger *Trigger) {
 		if ok {
 			t.Remove(old)
 		}
+		t.VMTriggers[trigger.Name] = trigger
 		if trigger.Group != "" {
 			group, ok := t.VMTriggerGroups[trigger.Group]
 			if ok == false {
@@ -203,6 +204,7 @@ func (t *Triggers) Add(trigger *Trigger) {
 		if ok {
 			t.Remove(old)
 		}
+		t.WorldTriggers[trigger.Name] = trigger
 	}
 	e := t.Queue.Front()
 	for {

@@ -60,7 +60,8 @@ func init() {
 	adapter["disconnected"] = newUserAdapter("disconnected")
 	adapter["createFail"] = newUserAdapter("createFail")
 	adapter["createSuccess"] = newUserAdapter("createSuccess")
-
+	adapter["triggerFail"] = newRoomAdapter("triggerFail")
+	adapter["triggerSuccess"] = newRoomAdapter("triggerSuccess")
 	go func() {
 		for {
 			select {
