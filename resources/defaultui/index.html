@@ -344,6 +344,10 @@
             vm.triggerName=""
             vm.triggerSaveForm={}
         }
+        onButton.saveTriggerSubmit=function(){
+            vm.triggerSaveForm.Name=vm.triggerName
+            send("createGame",vm.triggerSaveForm)
+        }
     </script>
     <script>
         handlers.current=function(data){
@@ -399,9 +403,15 @@
         }
         handlers.triggers=function(data){
             vm.triggers=data
-            console.log(data)
         }
-
+        handlers.saveTriggerFail=function(data){
+            vm.saveTriggerFail=data
+        }
+        handlers.saveTriggerSuccess=function(data){
+            vm.triggerSaveFormVisible=false;
+            send("change",data)
+        }
+        
     </script>
     <script>
         var data={
@@ -420,7 +430,7 @@
             triggersVisible:false,
             triggerSaveFormVisible:false,
             triggerSaveForm:{},
-            createTriggerFail:[],
+            saveTriggerFail:[],
         }
         var vm = new Vue({
             el:"#app",
@@ -440,6 +450,7 @@
                     onButton[data]()
                 },
                 onUpdateTrigger:function(data){
+                    vm.saveTriggerFail=[];
                     vm.triggerName=data.Name;
                     vm.triggerSaveForm=data;
                     vm.triggerSaveFormVisible=true;
