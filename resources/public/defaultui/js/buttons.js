@@ -1,3 +1,10 @@
+define(function (require) {
+var app=require("/public/defaultui/js/app.js")
+var vm=require("/public/defaultui/js/vm.js")
+var onButton=app.onButton; 
+var send=app.send;
+
+
 onButton.connect=function(){
     send("connect",vm.current)
 }
@@ -27,3 +34,5 @@ onButton.saveTriggerSubmit=function(){
     vm.triggerSaveForm.Priority=vm.triggerSaveForm.Priority*1;
     send("saveTrigger",vm.triggerSaveForm)
 }
+
+})

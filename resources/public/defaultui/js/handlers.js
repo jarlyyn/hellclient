@@ -1,3 +1,10 @@
+define(function (require) {
+    var app=require("/public/defaultui/js/app.js")
+    var vm=require("/public/defaultui/js/vm.js")
+    var handlers=app.handlers;
+    var send=app.send;
+   
+
 handlers.current=function(data){
     vm.current=data
     vm.currenttab=data
@@ -58,3 +65,5 @@ handlers.triggerFail=function(data){
 handlers.triggerSuccess=function(data){
     vm.triggerSaveFormVisible=false;
 }
+
+})

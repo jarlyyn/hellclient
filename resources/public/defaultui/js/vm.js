@@ -1,5 +1,6 @@
-define(function (require) {
-
+define(["vue","/public/defaultui/js/app.js"],function (Vue,app) {
+    var onButton=app.onButton; 
+    var send=app.send;
 var data={
     current:"",
     currenttab:"",

@@ -1,8 +1,7 @@
-var handlers={}
-var onButton={}
-
+define(function (require) {
 var ws=new WebSocket("ws:"+location.host+"/ws");
-        
+var app=require("/public/defaultui/js/app.js")        
+var handlers=app.handlers;
 var convertmsg=function(data){
     var sep=data.indexOf(" ")
     var msg
@@ -38,10 +37,13 @@ ws.onmessage = function(event) {
         f(data.data)
     }
 }
-var send=function(cmd,data){
+app.send=function(cmd,data){
     if (ws.readyState){
         var msg=JSON.stringify(data)
         console.log(msg)
         ws.send(cmd+" "+JSON.stringify(data))
     }
-}
+};
+
+return ws;
+})
