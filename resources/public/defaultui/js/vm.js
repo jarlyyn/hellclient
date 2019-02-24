@@ -22,6 +22,9 @@ var data={
 var vm = new Vue({
     el:"#app",
     data: data,
+    mounted:function(){
+        document.getElementsByTagName("body")[0].style.visibility="visible";
+    },
     methods:{
         send:function(){
              send("send",this.cmd)

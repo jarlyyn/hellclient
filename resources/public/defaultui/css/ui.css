@@ -1,5 +1,5 @@
 
-            body{background: black;color:white;font-family: monospace;margin:0;padding:0}
+            body{background: black;color:white;font-family: monospace;margin:0;padding:0;visibility: hidden;};
             ul,li{padding:0;margin:0;list-style: none}
             ul#lines{white-space: pre}
             ul#lines li{max-width: 80em;overflow: hidden;}
