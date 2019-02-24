@@ -137,6 +137,18 @@ func (m *Manager) ExecLines(id string) {
 		m.CommandOutput <- msg
 	}()
 }
+
+func (m *Manager) ExecAllLines(id string) {
+	c := m.Client(id)
+	var lines = []*Line{}
+	if c != nil {
+		lines = c.ConvertLines()
+	}
+	msg := newMsg("allLines", id, lines)
+	go func() {
+		m.CommandOutput <- msg
+	}()
+}
 func (m *Manager) ExecTriggers(id string) {
 	c := m.Client(id)
 	var triggers = []*script.WorldTrigger{}

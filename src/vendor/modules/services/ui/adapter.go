@@ -62,6 +62,7 @@ func init() {
 	adapter["createSuccess"] = newUserAdapter("createSuccess")
 	adapter["triggerFail"] = newRoomAdapter("triggerFail")
 	adapter["triggerSuccess"] = newRoomAdapter("triggerSuccess")
+	adapter["allLines"] = newRoomAdapter("allLines")
 	go func() {
 		for {
 			select {

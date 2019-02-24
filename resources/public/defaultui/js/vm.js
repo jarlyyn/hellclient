@@ -18,6 +18,8 @@ var data={
     triggerSaveFormVisible:false,
     triggerSaveForm:{},
     saveTriggerFail:[],
+    allLines:[],
+    allLinesVisible:false,
 }
 var vm = new Vue({
     el:"#app",

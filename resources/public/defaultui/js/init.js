@@ -6,6 +6,7 @@ requirejs.config({
         "html-top":"/public/defaultui/block/top.html",
         "html-triggers":"/public/defaultui/block/triggers.html",
         "html-creategameform":"/public/defaultui/block/creategameform.html",
+        "html-alllines":"/public/defaultui/block/alllines.html",
         "main":"/public/defaultui/js/main"
     },
 });
@@ -16,6 +17,8 @@ define(function (require) {
     document.getElementById("triggers").innerHTML=htmltriggers;
     var htmlcreategameform=require("text!html-creategameform");
     document.getElementById("creategameform").innerHTML=htmlcreategameform;
+    var htmlalllines=require("text!html-alllines");
+    document.getElementById("alllines").innerHTML=htmlalllines;
 
     require(["main"],function(main){
         main()

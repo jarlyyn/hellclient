@@ -26,13 +26,17 @@ onButton.triggers=function(){
 }
 onButton.createTrigger=function(){
     vm.triggerSaveFormVisible=true
-    vm.triggerName=""
-    vm.triggerSaveForm={}
+    vm.triggerName="";
+    vm.triggerSaveForm={};
 }
 onButton.saveTriggerSubmit=function(){
     vm.triggerSaveForm.Name=vm.triggerName
     vm.triggerSaveForm.Priority=vm.triggerSaveForm.Priority*1;
-    send("saveTrigger",vm.triggerSaveForm)
+    send("saveTrigger",vm.triggerSaveForm);
 }
-
+onButton.allLines=function(){
+    vm.alllines=[]
+    vm.allLinesVisible=true;
+    send("allLines");
+}
 })

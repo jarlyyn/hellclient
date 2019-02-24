@@ -65,5 +65,8 @@ handlers.triggerFail=function(data){
 handlers.triggerSuccess=function(data){
     vm.triggerSaveFormVisible=false;
 }
+handlers.allLines=function(data){
+    vm.allLines=data
+}
 
 })

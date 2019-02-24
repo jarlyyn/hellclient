@@ -64,6 +64,11 @@ var onCmdTriggers = func(conn connections.ConnectionOutput, cmd command.Command)
 	client.DefaultManager.ExecTriggers(id)
 	return nil
 }
+var onCmdAllLines = func(conn connections.ConnectionOutput, cmd command.Command) error {
+	id := current.Load().(string)
+	client.DefaultManager.ExecAllLines(id)
+	return nil
+}
 var onCmdCreateGame = func(conn connections.ConnectionOutput, cmd command.Command) error {
 	forms.CreateGame(cmd.Data())
 	return nil
@@ -81,5 +86,6 @@ func init() {
 	handlers.Add("send", onCmdSend)
 	handlers.Add("createGame", onCmdCreateGame)
 	handlers.Add("saveTrigger", onCmdSaveTrigger)
+	handlers.Add("allLines", onCmdAllLines)
 	current.Store("")
 }
