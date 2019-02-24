@@ -1,3 +1,5 @@
+define(function (require) {
+
 var data={
     current:"",
     currenttab:"",
@@ -41,4 +43,6 @@ var vm = new Vue({
             vm.triggersVisible=true;
         }
     }
+})
+    return vm
 })
