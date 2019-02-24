@@ -1,0 +1,107 @@
+<el-dialog width="80%"  :fullscreen="true"  title=" 触发器" :visible.sync="triggersVisible">
+    <div id="triggers" v-if="triggers!==null">
+            <el-button-group >
+                    <el-tooltip class="item" effect="light" content="添加" placement="bottom">
+                    <el-button @click="onButton('createTrigger')" size="mini" type="primary" icon="el-icon-plus"></el-button>
+                    </el-tooltip>
+                </el-button-group >
+        <el-table
+        :data="triggers"
+        style="width: 100%">
+        <el-table-column
+          prop="Pattern"
+          label="匹配项"
+          >
+        </el-table-column>
+        <el-table-column
+          prop="Enabled"
+          label="有效"
+          width="60"
+          >
+          <template slot-scope="scope">
+              <span>{{scope.row.Enabled ? "是":"否"}}</span>
+         </template>
+        </el-table-column>
+        <el-table-column
+          prop="IsRegExp"
+          label="正则"
+          width="60"
+          >
+          <template slot-scope="scope">
+                <span>{{scope.row.IsRegExp ? "是":"否"}}</span>
+           </template>
+        </el-table-column>
+        <el-table-column
+          prop="Command"
+          label="命令"
+          >
+        </el-table-column>
+          <el-table-column
+          prop="Finally"
+          label="停止"
+          width="60"
+          >
+          <template slot-scope="scope">
+                <span>{{scope.row.Finally ? "是":"否"}}</span>
+           </template>
+        </el-table-column>
+        <el-table-column
+        prop="Priority"
+        label="优先级"
+        width="60"
+        >
+    </el-table-column>
+    <el-table-column
+    fixed="right"
+    label="操作"
+    width="100">
+    <template slot-scope="scope">
+      <el-button @click="onUpdateTrigger(scope.row)" type="text" size="small">编辑</el-button>
+      <el-button type="text" size="small">删除</el-button>
+    </template>
+  </el-table-column>
+
+      </el-table>
+          <el-dialog
+
+title="编辑触发器"
+:visible.sync="triggerSaveFormVisible"
+append-to-body>
+<div v-if="saveTriggerFail">
+<el-alert v-for="err in saveTriggerFail" :title="err.Msg" type="error" show-icon> </el-alert>
+
+</div>
+<el-form :model="triggerSaveForm">
+   
+<el-form-item label="匹配项" label-width="80">
+<el-input v-model="triggerSaveForm.Pattern" autocomplete="off"></el-input>
+</el-form-item>
+<el-form-item label="有效" label-width="80">
+    <el-switch  v-model="triggerSaveForm.Enabled" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
+</el-form-item>
+<el-form-item label="正则" label-width="80">
+        <el-switch  v-model="triggerSaveForm.IsRegExp" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
+    </el-form-item>
+    <el-form-item label="命令" label-width="80">
+            <el-input v-model="triggerSaveForm.Command" autocomplete="off"></el-input>
+          </el-form-item>            
+          <el-form-item label="停止" label-width="80">
+                <el-switch  v-model="triggerSaveForm.Finally" active-color="#13ce66" inactive-color="#ff4949"> </el-switch>
+              </el-form-item>           
+              <el-form-item label="优先级" label-width="80">
+                    <el-input v-model="triggerSaveForm.Priority" autocomplete="off"></el-input>
+                  </el-form-item>                       
+                              
+</el-form>
+<div slot="footer" class="dialog-footer">
+<el-button @click="triggerSaveFormVisible = false">取 消</el-button>
+<el-button type="primary" @click="onButton('saveTriggerSubmit')">确 定</el-button>
+</div>
+
+</el-dialog>
+
+    </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="triggersVisible = false">取 消</el-button>
+        </div>
+      </el-dialog>
