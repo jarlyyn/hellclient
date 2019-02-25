@@ -21,6 +21,5 @@ define(function (require) {
     document.getElementById("alllines").innerHTML=htmlalllines;
 
     require(["main"],function(main){
-        main()
     });
 })

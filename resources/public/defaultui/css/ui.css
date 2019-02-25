@@ -2,7 +2,7 @@
             body{background: black;color:white;font-family: monospace;margin:0;padding:0;visibility: hidden;};
             ul,li{padding:0;margin:0;list-style: none}
             ul#lines,ul#alllines{white-space: pre}
-            ul#alllines{background: black;padding:0;margin:0}
+            ul#alllines{background: black;padding:0;margin:0;color:white}
             ul#lines li,ul#alllines li{max-width: 80em;overflow: hidden;}
             ul#lines{padding-bottom: 40px;margin-bottom:-32px;padding-top: 90px;padding-left:0;}
             #footer{position: fixed;bottom:0;height: 32px;left:0;width:100%;background:black}
