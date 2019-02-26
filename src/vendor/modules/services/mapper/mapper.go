@@ -1,38 +1,36 @@
 package mapper
 
 import (
-	"container/list"
 	"io/ioutil"
+	"strconv"
 	"strings"
 )
 
 type Path struct {
-	content     string
-	delay       string
-	from        string
-	to          string
-	tags        map[string]bool
-	excludeTags map[string]bool
+	Command     string
+	Delay       int
+	From        string
+	To          string
+	Tags        map[string]bool
+	ExcludeTags map[string]bool
 }
 
 func NewPath() *Path {
 	return &Path{
-		tags:        map[string]bool{},
-		excludeTags: map[string]bool{},
+		Tags:        map[string]bool{},
+		ExcludeTags: map[string]bool{},
 	}
 }
 
 type Room struct {
-	ID       string
-	Name     string
-	Exits    *list.List
-	TagExits *list.List
+	ID    string
+	Name  string
+	Exits []*Path
 }
 
 func NewRoom() *Room {
 	return &Room{
-		Exits:    list.New(),
-		TagExits: list.New(),
+		Exits: []*Path{},
 	}
 }
 
@@ -90,6 +88,7 @@ func (l *RoomAllIniLoader) readExits(r *Room, line string) {
 		if p == nil {
 			continue
 		}
+		r.Exits = append(r.Exits, p)
 	}
 }
 func (l *RoomAllIniLoader) exitToPath(line string) *Path {
@@ -99,22 +98,37 @@ func (l *RoomAllIniLoader) exitToPath(line string) *Path {
 	if len(PathAndTarget) < 2 || PathAndTarget[1] == "" {
 		return nil
 	}
-	path.to = PathAndTarget[1]
+	path.To = PathAndTarget[1]
 	line = PathAndTarget[0]
+	PathAndWalklength := strings.Split(line, l.TokenBeforeWalkLength)
+	if len(PathAndWalklength) < 2 {
+		path.Delay = 1
+	} else {
+		var err error
+		path.Delay, err = strconv.Atoi(PathAndWalklength[1])
+		if err == nil {
+			path.Delay = 1
+		} else {
+			if path.Delay < 1 {
+				path.Delay = 1
+			}
+		}
+	}
+	line = PathAndWalklength[0]
 	for _, v := range strings.SplitAfter(line, l.TokenExitsAfterTag) {
 		for _, v2 := range strings.SplitAfter(v, l.TokenExitsAfterExcludeTag) {
 			tag := strings.TrimSpace(v2)
 			if tag == "" {
-				path.content = tag
+				path.Command = tag
 				continue
 			}
 			last := tag[len(tag)-1:]
 			if last == l.TokenExitsAfterTag {
-				path.tags[tag[:len(tag)-1]] = true
+				path.Tags[tag[:len(tag)-1]] = true
 			} else if last == l.TokenExitsAfterExcludeTag {
-				path.excludeTags[tag[:len(tag)-1]] = true
+				path.ExcludeTags[tag[:len(tag)-1]] = true
 			} else {
-				path.content = tag
+				path.Command = tag
 			}
 		}
 	}
@@ -127,7 +141,7 @@ var CommonRoomAllIniLoader = &RoomAllIniLoader{
 	TokenExitsSep:             ",",
 	TokenExitsAfterTag:        ">",
 	TokenExitsAfterExcludeTag: "<",
-	TokenBeforeTarget:         ">",
+	TokenBeforeTarget:         ":",
 	TokenBeforeWalkLength:     "%",
 }
 
