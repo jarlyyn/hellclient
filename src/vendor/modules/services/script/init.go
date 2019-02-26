@@ -18,8 +18,10 @@ func init() {
 		//util.RegisterInitiator(ModuleName, "func", func()error{})
 		util.InitOrderByName(ModuleName)
 		Path = util.RegisterDataFolder("scripts")
+		s := New()
 		l := NewLua()
-		err := l.Load(path.Join(Path, "helllua-master", "hell.lua"))
+		l.SetScript(s)
+		err := l.Load(path.Join(Path, "hell", "index.lua"))
 		fmt.Println(err.Error())
 	})
 }
