@@ -28,6 +28,13 @@ func init() {
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-		fmt.Println(m)
+		walking := m.NewWalking()
+		walking.From = "26"
+		walking.To = []string{"100"}
+		steps := walking.Walk()
+		for _, v := range steps {
+			fmt.Println(v.Command)
+		}
+		// fmt.Println(m)
 	})
 }
