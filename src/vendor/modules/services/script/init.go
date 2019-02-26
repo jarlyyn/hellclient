@@ -2,6 +2,7 @@ package script
 
 import (
 	"fmt"
+	"modules/services/mapper"
 	"path"
 
 	"github.com/herb-go/herbgo/util"
@@ -21,7 +22,12 @@ func init() {
 		s := New()
 		l := NewLua()
 		l.SetScript(s)
-		err := l.Load(path.Join(Path, "hell", "index.lua"))
-		fmt.Println(err.Error())
+		// err := l.Load(path.Join(Path, "hell", "index.lua"))
+		// // fmt.Println(err.Error())
+		m, err := mapper.CommonRoomAllIniLoader.Open(path.Join(Path, "hell", "rooms_all.h"))
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		fmt.Println(m)
 	})
 }
