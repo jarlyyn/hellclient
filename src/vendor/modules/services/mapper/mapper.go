@@ -41,6 +41,11 @@ type Mapper struct {
 func (m *Mapper) Clean() {
 	m.Rooms = map[string]*Room{}
 }
+func (m *Mapper) NewWalking() *Walking {
+	walking := NewWalking()
+	walking.Rooms = &m.Rooms
+	return walking
+}
 
 type RoomAllIniLoader struct {
 	TokenAfterRoomID          string
@@ -88,19 +93,20 @@ func (l *RoomAllIniLoader) readExits(r *Room, line string) {
 		if p == nil {
 			continue
 		}
+		p.From = r.ID
 		r.Exits = append(r.Exits, p)
 	}
 }
 func (l *RoomAllIniLoader) exitToPath(line string) *Path {
 	line = strings.TrimSpace(line)
 	path := NewPath()
-	PathAndTarget := strings.Split(line, l.TokenBeforeTarget)
+	PathAndTarget := strings.SplitN(line, l.TokenBeforeTarget, 2)
 	if len(PathAndTarget) < 2 || PathAndTarget[1] == "" {
 		return nil
 	}
-	path.To = PathAndTarget[1]
+	target := PathAndTarget[1]
 	line = PathAndTarget[0]
-	PathAndWalklength := strings.Split(line, l.TokenBeforeWalkLength)
+	PathAndWalklength := strings.SplitN(target, l.TokenBeforeWalkLength, 2)
 	if len(PathAndWalklength) < 2 {
 		path.Delay = 1
 	} else {
@@ -114,7 +120,7 @@ func (l *RoomAllIniLoader) exitToPath(line string) *Path {
 			}
 		}
 	}
-	line = PathAndWalklength[0]
+	path.To = PathAndWalklength[0]
 	for _, v := range strings.SplitAfter(line, l.TokenExitsAfterTag) {
 		for _, v2 := range strings.SplitAfter(v, l.TokenExitsAfterExcludeTag) {
 			tag := strings.TrimSpace(v2)
