@@ -36,15 +36,35 @@ func NewRoom() *Room {
 
 type Mapper struct {
 	Rooms map[string]*Room
+	Tags  []string
+	Fly   []*Path
 }
 
 func (m *Mapper) NewWalking() *Walking {
 	walking := NewWalking()
 	walking.Rooms = &m.Rooms
+	walking.Tags = m.Tags
+	walking.Fly = m.Fly
 	return walking
 }
 
-func(m *Mapper)GetRoomID
+func (m *Mapper) GetRoomID(name string) []string {
+	result := []string{}
+	for _, v := range m.Rooms {
+		if v.Name == name {
+			result = append(result, v.ID)
+		}
+	}
+	return result
+}
+
+func (m *Mapper) GetRoomName(id string) string {
+	result := m.Rooms[id]
+	if result == nil {
+		return ""
+	}
+	return result.Name
+}
 
 type RoomAllIniLoader struct {
 	TokenAfterRoomID          string
@@ -153,5 +173,7 @@ var CommonRoomAllIniLoader = &RoomAllIniLoader{
 func New() *Mapper {
 	return &Mapper{
 		Rooms: map[string]*Room{},
+		Tags:  []string{},
+		Fly:   []*Path{},
 	}
 }
