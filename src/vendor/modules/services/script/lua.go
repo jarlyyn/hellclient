@@ -1,6 +1,8 @@
 package script
 
 import (
+	"fmt"
+	"modules/services/mapper"
 	"path"
 	"regexp"
 
@@ -27,10 +29,39 @@ func (l *Lua) Load(path string) error {
 	l.Lua = lua.NewState()
 	l.Lua.SetGlobal("GetInfo", l.Lua.NewFunction(l.APIGetInfo))
 	l.Lua.SetGlobal("GetVariable", l.Lua.NewFunction(l.APIGetVariable))
+	l.Lua.SetGlobal("Mapper", l.APIMapper())
 	l.Lua.SetGlobal("rex", rex(l.Lua))
 	return l.Lua.DoFile(path)
 }
-
+func (l *Lua) APIMapper() *lua.LTable {
+	m := l.script.Mapper
+	L := l.Lua
+	t := L.NewTable()
+	L.SetFuncs(t, map[string]lua.LGFunction{
+		"openroomsall": func(L *lua.LState) int {
+			filename := L.ToString(-1)
+			err := mapper.CommonRoomAllIniLoader.Load(m, filename)
+			if err != nil {
+				fmt.Println(err)
+				L.Push(lua.LBool(false))
+				return 1
+			}
+			L.Push(lua.LBool(true))
+			return 1
+		},
+		"newarea": func(L *lua.LState) int {
+			size := L.ToInt(-1)
+			result := m.NewArea(size)
+			t := L.NewTable()
+			for _, v := range result {
+				t.Append(lua.LString(v))
+			}
+			L.Push(t)
+			return 1
+		},
+	})
+	return t
+}
 func (l *Lua) APIGetInfo(L *lua.LState) int {
 	var result lua.LValue
 	i := L.ToInt(-1)
