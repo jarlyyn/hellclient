@@ -38,14 +38,13 @@ type Mapper struct {
 	Rooms map[string]*Room
 }
 
-func (m *Mapper) Clean() {
-	m.Rooms = map[string]*Room{}
-}
 func (m *Mapper) NewWalking() *Walking {
 	walking := NewWalking()
 	walking.Rooms = &m.Rooms
 	return walking
 }
+
+func(m *Mapper)GetRoomID
 
 type RoomAllIniLoader struct {
 	TokenAfterRoomID          string
