@@ -4,6 +4,8 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+
+	"github.com/satori/go.uuid"
 )
 
 type Path struct {
@@ -64,6 +66,41 @@ func (m *Mapper) GetRoomName(id string) string {
 		return ""
 	}
 	return result.Name
+}
+func (m *Mapper) AddPath(id string, p *Path) {
+	room := m.Rooms[id]
+	if room == nil {
+		return
+	}
+	room.Exits = append(room.Exits, p)
+}
+func (m *Mapper) ClearRoom(id string) {
+	room := NewRoom()
+	room.ID = id
+	m.Rooms[id] = room
+}
+func (m *Mapper) NewArea(size int) []string {
+	result := []string{}
+	for i := 0; i < size; i++ {
+		uid, _ := uuid.NewV1()
+		id := uid.String()
+		result = append(result, id)
+		m.ClearRoom(id)
+	}
+	return result
+}
+func (m *Mapper) GetExits(id string) []*Path {
+	result := []*Path{}
+	room := m.Rooms[id]
+	if room == nil {
+		return result
+	}
+	for _, v := range room.Exits {
+		if len(v.Tags) == 0 && len(v.ExcludeTags) == 0 {
+			result = append(result, v)
+		}
+	}
+	return result
 }
 
 type RoomAllIniLoader struct {
