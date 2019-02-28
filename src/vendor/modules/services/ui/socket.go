@@ -8,11 +8,11 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/jarlyyn/herb-go-experimental/connections"
-	"github.com/jarlyyn/herb-go-experimental/connections/contexts"
-	"github.com/jarlyyn/herb-go-experimental/connections/identifier"
-	"github.com/jarlyyn/herb-go-experimental/connections/room"
-	"github.com/jarlyyn/herb-go-experimental/connections/websocket"
+	"github.com/herb-go/connections"
+	"github.com/herb-go/connections/contexts"
+	"github.com/herb-go/connections/identifier"
+	"github.com/herb-go/connections/room"
+	"github.com/herb-go/connections/websocket"
 )
 
 func Send(conn connections.ConnectionOutput, msgtype string, data interface{}) error {

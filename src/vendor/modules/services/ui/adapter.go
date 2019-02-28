@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"modules/services/client"
 
-	"github.com/jarlyyn/herb-go-experimental/connections/command"
-	"github.com/jarlyyn/herb-go-experimental/connections/room/message"
+	"github.com/herb-go/connections/command"
+	"github.com/herb-go/connections/room/message"
 )
 
 func newRoomAdapter(cmdtype string) func(m *message.Message) error {
