@@ -29,6 +29,9 @@ func (l *Lua) Load(path string) error {
 	l.Lua = lua.NewState()
 	l.Lua.SetGlobal("GetInfo", l.Lua.NewFunction(l.APIGetInfo))
 	l.Lua.SetGlobal("GetVariable", l.Lua.NewFunction(l.APIGetVariable))
+	l.Lua.SetGlobal("GetTriggerList", l.Lua.NewFunction(l.APIGetTriggerList))
+	l.Lua.SetGlobal("SetTriggerOption", l.Lua.NewFunction(l.APISetTriggerOption))
+
 	l.Lua.SetGlobal("Mapper", l.APIMapper())
 	l.Lua.SetGlobal("rex", rex(l.Lua))
 	return l.Lua.DoFile(path)
@@ -71,10 +74,34 @@ func (l *Lua) APIGetInfo(L *lua.LState) int {
 	L.Push(result)
 	return 1
 }
+func (l *Lua) APISetTriggerOption(L *lua.LState) int {
+	id := L.ToString(-1)
+	trigger := l.script.Triggers.VMTriggers[id]
+	if trigger == nil {
+		return 0
+	}
+	switch L.ToString(-1) {
+	case "":
+	default:
+		return 0
+	}
+
+	l.script.Triggers.Add(trigger)
+	return 0
+}
 func (l *Lua) APIGetVariable(L *lua.LState) int {
 	name := L.ToString(-1)
 	value := l.script.Variables[name]
 	L.Push(lua.LString(value))
+	return 1
+}
+func (l *Lua) APIGetTriggerList(L *lua.LState) int {
+	t := L.NewTable()
+	triggers := l.script.Triggers.VMTriggers
+	for _, v := range triggers {
+		t.Append(lua.LString(v.Name))
+	}
+	L.Push(t)
 	return 1
 }
 
