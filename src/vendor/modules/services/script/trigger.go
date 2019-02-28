@@ -28,15 +28,18 @@ func makeRegexpMatchResult(plain string, matched []string) *MatchResult {
 }
 
 type Trigger struct {
-	Matcher     func(string) *MatchResult
-	Enabled     bool
-	Group       string
-	Name        string
-	IsVMTrigger bool
-	Priority    int
-	Command     string
-	Callback    string
-	Finally     bool
+	Matcher        func(string) *MatchResult
+	Enabled        bool
+	Group          string
+	Name           string
+	IsVMTrigger    bool
+	Priority       int
+	Command        string
+	Callback       string
+	Finally        bool
+	Omit           bool
+	KeepEvaluating bool
+	Temporary      bool
 }
 
 type basicTrigger struct {
