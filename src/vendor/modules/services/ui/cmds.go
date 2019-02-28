@@ -5,10 +5,10 @@ import (
 	"modules/services/client"
 	"modules/services/ui/forms"
 
-	"github.com/jarlyyn/herb-go-experimental/connections"
-	"github.com/jarlyyn/herb-go-experimental/connections/room"
+	"github.com/herb-go/connections"
+	"github.com/herb-go/connections/room"
 
-	"github.com/jarlyyn/herb-go-experimental/connections/command"
+	"github.com/herb-go/connections/command"
 )
 
 const CmdsChange = "change"

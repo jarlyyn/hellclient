@@ -6,7 +6,7 @@ import (
 
 	"github.com/herb-go/herb/model"
 
-	"github.com/jarlyyn/herb-go-experimental/connections/room/message"
+	"github.com/herb-go/connections/room/message"
 )
 
 type Manager struct {
