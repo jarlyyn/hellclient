@@ -16,7 +16,7 @@ const CmdsChange = "change"
 const CmdsConnect = "connect"
 
 var handlers = command.NewHandlers()
-var onCmdChange = func(conn connections.ConnectionOutput, cmd command.Command) error {
+var onCmdChange = func(conn connections.OutputConnection, cmd command.Command) error {
 	ctx := CurretEngine.Context(conn.ID())
 	ctx.Lock.Lock()
 	defer ctx.Lock.Unlock()
@@ -34,7 +34,7 @@ var onCmdChange = func(conn connections.ConnectionOutput, cmd command.Command) e
 	j.Join(msg)
 	return Send(conn, "current", msg)
 }
-var onCmdConnect = func(conn connections.ConnectionOutput, cmd command.Command) error {
+var onCmdConnect = func(conn connections.OutputConnection, cmd command.Command) error {
 	var msg string
 	if json.Unmarshal(cmd.Data(), &msg) != nil {
 		return nil
@@ -42,7 +42,7 @@ var onCmdConnect = func(conn connections.ConnectionOutput, cmd command.Command) 
 	client.DefaultManager.ExecConnect(msg)
 	return nil
 }
-var onCmdDisconnect = func(conn connections.ConnectionOutput, cmd command.Command) error {
+var onCmdDisconnect = func(conn connections.OutputConnection, cmd command.Command) error {
 	var msg string
 	if json.Unmarshal(cmd.Data(), &msg) != nil {
 		return nil
@@ -50,7 +50,7 @@ var onCmdDisconnect = func(conn connections.ConnectionOutput, cmd command.Comman
 	client.DefaultManager.ExecDisconnect(msg)
 	return nil
 }
-var onCmdSend = func(conn connections.ConnectionOutput, cmd command.Command) error {
+var onCmdSend = func(conn connections.OutputConnection, cmd command.Command) error {
 	id := current.Load().(string)
 	var msg string
 	if json.Unmarshal(cmd.Data(), &msg) != nil {
@@ -59,21 +59,21 @@ var onCmdSend = func(conn connections.ConnectionOutput, cmd command.Command) err
 	client.DefaultManager.Send(id, []byte(msg))
 	return nil
 }
-var onCmdTriggers = func(conn connections.ConnectionOutput, cmd command.Command) error {
+var onCmdTriggers = func(conn connections.OutputConnection, cmd command.Command) error {
 	id := current.Load().(string)
 	client.DefaultManager.ExecTriggers(id)
 	return nil
 }
-var onCmdAllLines = func(conn connections.ConnectionOutput, cmd command.Command) error {
+var onCmdAllLines = func(conn connections.OutputConnection, cmd command.Command) error {
 	id := current.Load().(string)
 	client.DefaultManager.ExecAllLines(id)
 	return nil
 }
-var onCmdCreateGame = func(conn connections.ConnectionOutput, cmd command.Command) error {
+var onCmdCreateGame = func(conn connections.OutputConnection, cmd command.Command) error {
 	forms.CreateGame(cmd.Data())
 	return nil
 }
-var onCmdSaveTrigger = func(conn connections.ConnectionOutput, cmd command.Command) error {
+var onCmdSaveTrigger = func(conn connections.OutputConnection, cmd command.Command) error {
 	forms.SaveTrigger(CurrentGameID(), cmd.Data())
 	return nil
 }

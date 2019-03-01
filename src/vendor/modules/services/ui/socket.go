@@ -15,7 +15,7 @@ import (
 	"github.com/herb-go/connections/websocket"
 )
 
-func Send(conn connections.ConnectionOutput, msgtype string, data interface{}) error {
+func Send(conn connections.OutputConnection, msgtype string, data interface{}) error {
 	bs, err := json.Marshal(data)
 	if err != nil {
 		return err
@@ -54,12 +54,12 @@ type Engine struct {
 	contexts.Contexts
 }
 
-func (e *Engine) Location(conn connections.ConnectionOutput) *room.Location {
+func (e *Engine) Location(conn connections.OutputConnection) *room.Location {
 	ctx := e.Context(conn.ID())
 	v, _ := ctx.Data.Load("rooms")
 	return v.(*room.Location)
 }
-func (e *Engine) OnClose(conn connections.ConnectionOutput) {
+func (e *Engine) OnClose(conn connections.OutputConnection) {
 	ctx := e.Context(conn.ID())
 	ctx.Lock.Lock()
 	defer ctx.Lock.Unlock()
@@ -68,7 +68,7 @@ func (e *Engine) OnClose(conn connections.ConnectionOutput) {
 	r.LeaveAll()
 	e.Contexts.OnClose(conn)
 }
-func (e *Engine) OnOpen(conn connections.ConnectionOutput) {
+func (e *Engine) OnOpen(conn connections.OutputConnection) {
 	e.Contexts.OnOpen(conn)
 	ctx := e.Context(conn.ID())
 	ctx.Lock.Lock()
@@ -103,12 +103,12 @@ func (e *Engine) OnError(err *connections.Error) {
 var CurretEngine = &Engine{}
 
 var Change = func(roomid string) {
-	var conn connections.ConnectionOutput
+	var conn connections.OutputConnection
 	gamelock.Lock()
 	defer gamelock.Unlock()
 	v, _ := users.Identities.Load("user")
 	if v != nil {
-		conn = v.(connections.ConnectionOutput)
+		conn = v.(connections.OutputConnection)
 		location := CurretEngine.Location(conn)
 		v := current.Load()
 		if v != nil {
