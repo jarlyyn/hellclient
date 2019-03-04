@@ -79,13 +79,13 @@ var onCmdSaveTrigger = func(conn connections.OutputConnection, cmd command.Comma
 }
 
 func init() {
-	handlers.Add("change", onCmdChange)
-	handlers.Add("connect", onCmdConnect)
-	handlers.Add("disconnect", onCmdDisconnect)
-	handlers.Add("triggers", onCmdTriggers)
-	handlers.Add("send", onCmdSend)
-	handlers.Add("createGame", onCmdCreateGame)
-	handlers.Add("saveTrigger", onCmdSaveTrigger)
-	handlers.Add("allLines", onCmdAllLines)
+	handlers.Register("change", onCmdChange)
+	handlers.Register("connect", onCmdConnect)
+	handlers.Register("disconnect", onCmdDisconnect)
+	handlers.Register("triggers", onCmdTriggers)
+	handlers.Register("send", onCmdSend)
+	handlers.Register("createGame", onCmdCreateGame)
+	handlers.Register("saveTrigger", onCmdSaveTrigger)
+	handlers.Register("allLines", onCmdAllLines)
 	current.Store("")
 }
