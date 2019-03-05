@@ -23,7 +23,7 @@ func Send(conn connections.OutputConnection, msgtype string, data interface{}) e
 	return conn.Send([]byte(msgtype + " " + string(bs)))
 }
 
-var users = identifier.NewMap()
+var users = identifier.New()
 var gateway = connections.NewGateway()
 var rooms = room.NewRooms()
 var current = &atomic.Value{}
