@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"github.com/herb-go/herb/middleware/errorpage"
-	"github.com/herb-go/herbgo/util"
+	"github.com/herb-go/util"
 )
 
 //ModuleName module name used in initing and debuging.

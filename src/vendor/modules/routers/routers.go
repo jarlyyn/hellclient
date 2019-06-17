@@ -9,7 +9,7 @@ import (
 	"github.com/herb-go/herb/file/simplehttpserver"
 	"github.com/herb-go/herb/middleware/router"
 	"github.com/herb-go/herb/middleware/router/httprouter"
-	"github.com/herb-go/herbgo/util"
+	"github.com/herb-go/util"
 )
 
 var AssestsURL = "/public"

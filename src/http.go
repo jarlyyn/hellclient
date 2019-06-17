@@ -6,8 +6,8 @@ import (
 	"modules/routers"
 
 	"github.com/herb-go/herb/middleware"
-	"github.com/herb-go/herbgo/util"
-	"github.com/herb-go/herbgo/util/httpserver"
+	"github.com/herb-go/util"
+	"github.com/herb-go/util/httpserver"
 )
 
 //App Main applactions. to serve http

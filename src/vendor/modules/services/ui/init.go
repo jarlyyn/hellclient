@@ -1,7 +1,7 @@
 package ui
 
 import (
-	"github.com/herb-go/herbgo/util"
+	"github.com/herb-go/util"
 )
 //ModuleName module name
 const ModuleName="900services.ui"

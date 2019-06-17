@@ -5,8 +5,8 @@ import (
 
 	// "modules/services/ui"
 
-	"github.com/herb-go/herbgo/util"
-	"github.com/herb-go/herbgo/util/config"
+	"github.com/herb-go/util"
+	"github.com/herb-go/util/config"
 )
 
 //Must panic if any error rasied

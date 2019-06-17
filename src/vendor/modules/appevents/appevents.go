@@ -1,7 +1,7 @@
 package appevents
 
 import (
-	"github.com/herb-go/herbgo/util"
+	"github.com/herb-go/util"
 )
 
 //ModuleName module name
