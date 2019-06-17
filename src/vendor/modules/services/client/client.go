@@ -14,7 +14,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/herb-go/herbgo/util/config/tomlconfig"
+	"github.com/herb-go/util/config/tomlconfig"
 
 	"github.com/jarlyyn/ansi"
 	"golang.org/x/text/encoding/japanese"

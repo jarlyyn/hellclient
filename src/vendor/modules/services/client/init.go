@@ -5,9 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/herb-go/herbgo/util/config/tomlconfig"
+	"github.com/herb-go/util/config/tomlconfig"
 
-	"github.com/herb-go/herbgo/util"
+	"github.com/herb-go/util"
 )
 
 //ModuleName module name

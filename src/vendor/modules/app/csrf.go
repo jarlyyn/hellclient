@@ -2,9 +2,9 @@ package app
 
 import (
 	"github.com/herb-go/herb/middleware/csrf"
-	"github.com/herb-go/herbgo/util"
-	"github.com/herb-go/herbgo/util/config"
-	"github.com/herb-go/herbgo/util/config/tomlconfig"
+	"github.com/herb-go/util"
+	"github.com/herb-go/util/config"
+	"github.com/herb-go/util/config/tomlconfig"
 )
 
 var Csrf = csrf.Config{}

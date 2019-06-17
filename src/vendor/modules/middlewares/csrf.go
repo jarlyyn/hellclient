@@ -4,7 +4,7 @@ import (
 	"modules/app"
 
 	"github.com/herb-go/herb/middleware/csrf"
-	"github.com/herb-go/herbgo/util"
+	"github.com/herb-go/util"
 )
 
 //Csrf csrf module

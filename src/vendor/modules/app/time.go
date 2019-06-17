@@ -1,10 +1,10 @@
 package app
 
 import (
-	"github.com/herb-go/herbgo/util"
-	"github.com/herb-go/herbgo/util/config"
-	"github.com/herb-go/herbgo/util/config/commonconfig"
-	"github.com/herb-go/herbgo/util/config/tomlconfig"
+	"github.com/herb-go/util"
+	"github.com/herb-go/util/config"
+	"github.com/herb-go/util/config/commonconfig"
+	"github.com/herb-go/util/config/tomlconfig"
 )
 
 //Time app time settigs

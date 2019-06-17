@@ -3,10 +3,10 @@ package app
 import (
 	forwarded "github.com/herb-go/herb/middleware/forwarded"
 	"github.com/herb-go/herb/middleware/misc"
-	"github.com/herb-go/herbgo/util"
-	"github.com/herb-go/herbgo/util/config"
-	"github.com/herb-go/herbgo/util/config/tomlconfig"
-	"github.com/herb-go/herbgo/util/httpserver"
+	"github.com/herb-go/util"
+	"github.com/herb-go/util/config"
+	"github.com/herb-go/util/config/tomlconfig"
+	"github.com/herb-go/util/httpserver"
 )
 
 type HTTPConfig struct {
