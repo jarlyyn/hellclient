@@ -11,7 +11,7 @@ import (
 var Time = commonconfig.TimeConfig{}
 
 func init() {
-	config.RegisterLoader(util.Constants("/time.toml"), func(configpath string) {
+	config.RegisterLoader(util.ConstantsFile("/time.toml"), func(configpath util.FileObject) {
 		util.Must(tomlconfig.Load(configpath, &Time))
 	})
 }

@@ -10,7 +10,7 @@ import (
 var Development = commonconfig.DevelopmentConfig{}
 
 func init() {
-	config.RegisterLoader(util.Config("/development.toml"), func(configpath string) {
+	config.RegisterLoader(util.ConfigFile("/development.toml"), func(configpath util.FileObject) {
 		util.Must(tomlconfig.Load(configpath, &Development))
 		if util.ForceDebug {
 			Development.Debug = true

@@ -22,7 +22,7 @@ var HTTP = &HTTPConfig{
 }
 
 func init() {
-	config.RegisterLoaderAndWatch(util.Config("/http.toml"), func(configpath string) {
+	config.RegisterLoaderAndWatch(util.ConfigFile("/http.toml"), func(configpath util.FileObject) {
 		util.Must(tomlconfig.Load(configpath, HTTP))
 		util.SetWarning("Forwarded", HTTP.Forwarded.Warnings()...)
 	})

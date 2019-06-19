@@ -10,7 +10,7 @@ import (
 var Assets = store.Assets{}
 
 func init() {
-	config.RegisterLoader(util.Constants("/assets.toml"), func(configpath string) {
+	config.RegisterLoader(util.ConstantsFile("/assets.toml"), func(configpath util.FileObject) {
 		util.Must(tomlconfig.Load(configpath, &Assets))
 	})
 }

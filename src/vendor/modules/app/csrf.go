@@ -10,7 +10,7 @@ import (
 var Csrf = csrf.Config{}
 
 func init() {
-	config.RegisterLoader(util.Config("/csrf.toml"), func(configpath string) {
+	config.RegisterLoader(util.ConfigFile("/csrf.toml"), func(configpath util.FileObject) {
 		util.Must(tomlconfig.Load(configpath, &Csrf))
 	})
 }

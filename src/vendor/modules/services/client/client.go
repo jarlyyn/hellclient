@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/herb-go/util"
 	"github.com/herb-go/util/config/tomlconfig"
 
 	"github.com/jarlyyn/ansi"
@@ -95,7 +96,7 @@ type Client struct {
 
 func (c *Client) Save() error {
 	path := filepath.Join(WorldsPath, c.ID+".toml")
-	return tomlconfig.Save(path, c.World)
+	return tomlconfig.Save(util.File(path), c.World)
 }
 func (c *Client) Info() *ClientInfo {
 	return &ClientInfo{
