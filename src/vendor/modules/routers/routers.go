@@ -22,14 +22,14 @@ func New() router.Router {
 	if app.Assets.URLPrefix != "" {
 		Router.StripPrefix(app.Assets.URLPrefix).
 			Use(AssestsMiddlewares()...).
-			HandleFunc(simplehttpserver.ServeFolder(util.Resource(app.Assets.Location)))
+			HandleFunc(simplehttpserver.ServeFolder(util.Resources(app.Assets.Location)))
 	}
 	var RouterAPI = newAPIRouter()
 	Router.StripPrefix("/api").
 		Use(APIMiddlewares()...).
 		Handle(RouterAPI)
 	Router.GET("/ws").HandleFunc(uiactions.WebsocketAction)
-	Router.GET("/").HandleFunc(simplehttpserver.ServeFile(util.Resource("defaultui", "index.html")))
+	Router.GET("/").HandleFunc(simplehttpserver.ServeFile(util.Resources("defaultui", "index.html")))
 	//var RouterHTML = newHTMLRouter()
 	//Router.StripPrefix("/page").Use(HTMLMiddlewares()...).Handle(RouterHTML)
 
