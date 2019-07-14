@@ -40,7 +40,7 @@ func main() {
 	util.MustChRoot()
 	loadConfigs()
 	initModules()
-	app.Development.MustNotInitializing()
+	app.Development.InitializeAndPanicIfNeeded()
 	util.MustLoadRegisteredFolders()
 	// ui.Change("hell")
 	// config := client.ClientConfig{}

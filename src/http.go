@@ -13,6 +13,7 @@ import (
 //App Main applactions. to serve http
 var App = middleware.New()
 
+//AppMiddlewares middlwares will be used in all app router.
 var AppMiddlewares = func() middleware.Middlewares {
 	return middleware.Middlewares{
 		app.HTTP.Forwarded.ServeMiddleware,
@@ -26,7 +27,7 @@ var AppMiddlewares = func() middleware.Middlewares {
 var RunHTTP = func() {
 	defer util.Quit()
 	var Server = app.HTTP.Config.Server()
-	httpserver.MustListenAndServeHTTP(Server, app.HTTP.Config, App)
+	httpserver.MustListenAndServeHTTP(Server, &app.HTTP.Config, App)
 	util.WaitingQuit()
 	defer util.Bye()
 	httpserver.ShutdownHTTP(Server)
