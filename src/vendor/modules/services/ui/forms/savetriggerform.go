@@ -7,9 +7,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 
-	"github.com/herb-go/herb/model/formdata"
+	"github.com/herb-go/herb/ui"
+	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
 //SaveTriggerFormFieldLabels form field labels map.
@@ -40,9 +41,12 @@ const SaveTriggerFormID = "formservices.savetrigger"
 //NewSaveTriggerForm create new save trigger form
 func NewSaveTriggerForm() *SaveTriggerForm {
 	form := &SaveTriggerForm{}
-	form.SetModelID(SaveTriggerFormID)
-	form.SetFieldLabels(SaveTriggerFormFieldLabels)
+	form.SetComponentLabels(ui.MapLabels(SaveTriggerFormFieldLabels))
 	return form
+}
+
+func (f *SaveTriggerForm) ComponentID() string {
+	return SaveTriggerFormID
 }
 
 //Validate Validate form and return any error if raised.

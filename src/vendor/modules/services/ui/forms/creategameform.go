@@ -7,7 +7,8 @@ import (
 
 	"modules/services/client"
 
-	"github.com/herb-go/herb/model/formdata"
+	"github.com/herb-go/herb/ui"
+	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
 //CreateGameFormFieldLabels form field labels map.
@@ -33,12 +34,15 @@ const CreateGameFormID = "formcreategame"
 //NewCreateGameForm create new create game form
 func NewCreateGameForm() *CreateGameForm {
 	form := &CreateGameForm{}
-	form.SetModelID(CreateGameFormID)
-	form.SetFieldLabels(CreateGameFormFieldLabels)
+	form.SetComponentLabels(ui.MapLabels(CreateGameFormFieldLabels))
 	return form
 }
 
 var createFormIDReg = regexp.MustCompile(`^[0-9a-zA-Z\-\_\@\.\[\]\(\)\+]*$`)
+
+func (f *CreateGameForm) ComponentID() string {
+	return CreateGameFormID
+}
 
 //Validate Validate form and return any error if raised.
 func (f *CreateGameForm) Validate() error {
