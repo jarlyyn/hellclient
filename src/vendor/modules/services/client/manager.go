@@ -4,7 +4,7 @@ import (
 	"modules/services/script"
 	"sync"
 
-	"github.com/herb-go/herb/model"
+	"github.com/herb-go/herb/ui/validator"
 
 	"github.com/herb-go/connections/room/message"
 )
@@ -65,7 +65,7 @@ func (m *Manager) OnConnected(id string) {
 		m.CommandOutput <- msg
 	}()
 }
-func (m *Manager) OnCreateFail(errors []*model.FieldError) {
+func (m *Manager) OnCreateFail(errors []*validator.FieldError) {
 	msg := newMsg("createFail", "", errors)
 	go func() {
 		m.CommandOutput <- msg
@@ -77,7 +77,7 @@ func (m *Manager) OnCreateSuccess(id string) {
 		m.CommandOutput <- msg
 	}()
 }
-func (m *Manager) OnTriggerFail(current string, errors []*model.FieldError) {
+func (m *Manager) OnTriggerFail(current string, errors []*validator.FieldError) {
 	msg := newMsg("triggerFail", current, errors)
 	go func() {
 		m.CommandOutput <- msg
