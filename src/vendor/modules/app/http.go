@@ -4,6 +4,7 @@ import (
 	forwarded "github.com/herb-go/herb/middleware/forwarded"
 	"github.com/herb-go/herb/middleware/misc"
 	"github.com/herb-go/herb/service/httpservice"
+	"github.com/herb-go/herbconfig/configuration"
 	"github.com/herb-go/util"
 	"github.com/herb-go/util/config"
 	"github.com/herb-go/util/config/tomlconfig"
@@ -22,7 +23,7 @@ var HTTP = &HTTPConfig{
 }
 
 func init() {
-	config.RegisterLoaderAndWatch(util.ConfigFile("/http.toml"), func(configpath util.FileObject) {
+	config.RegisterLoaderAndWatch(util.ConfigFile("/http.toml"), func(configpath configuration.Configuration) {
 		util.Must(tomlconfig.Load(configpath, HTTP))
 		util.SetWarning("Forwarded", HTTP.Forwarded.Warnings()...)
 	})
