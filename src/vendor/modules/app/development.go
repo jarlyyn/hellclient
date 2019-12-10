@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/herb-go/herbconfig/configuration"
+	"github.com/herb-go/herbconfig/source"
 	"github.com/herb-go/util"
 	"github.com/herb-go/util/config"
 	"github.com/herb-go/util/config/commonconfig"
@@ -11,7 +11,7 @@ import (
 var Development = commonconfig.DevelopmentConfig{}
 
 func init() {
-	config.RegisterLoader(util.ConfigFile("/development.toml"), func(configpath configuration.Configuration) {
+	config.RegisterLoader(util.ConfigFile("/development.toml"), func(configpath source.Source) {
 		util.Must(tomlconfig.Load(configpath, &Development))
 		if util.ForceDebug {
 			Development.Debug = true
