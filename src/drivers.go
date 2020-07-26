@@ -6,7 +6,7 @@ package main
 // import _ "github.com/herb-go/herb/cache/drivers/cachegroup"
 // import _ "github.com/herb-go/herb/cache/drivers/freecache"
 // import _ "github.com/herb-go/herb/cache/drivers/versioncache"
-// import _ "github.com/herb-go/providers/redis/rediscache"
+// import _ "github.com/herb-go/herb-drivers/cache/rediscache"
 // import _ "github.com/herb-go/providers/sql/sqlcache"
 
 //Sql drivers
