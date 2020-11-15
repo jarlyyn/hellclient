@@ -1,12 +1,12 @@
 package main
 
 // Cache drivers
-// import _ "github.com/herb-go/herb/cache/marshalers/msgpackmarshaler"
+// import _ "github.com/herb-go/deprecated/cache/marshalers/msgpackmarshaler"
 
-// import _ "github.com/herb-go/herb/cache/drivers/cachegroup"
-// import _ "github.com/herb-go/herb/cache/drivers/freecache"
-// import _ "github.com/herb-go/herb/cache/drivers/versioncache"
-// import _ "github.com/herb-go/herb-drivers/cache/rediscache"
+// import _ "github.com/herb-go/deprecated/cache/drivers/cachegroup"
+// import _ "github.com/herb-go/deprecated/cache/drivers/freecache"
+// import _ "github.com/herb-go/deprecated/cache/drivers/versioncache"
+// import _ "github.com/herb-go/deprecated/cache-drivers/rediscache"
 // import _ "github.com/herb-go/providers/sql/sqlcache"
 
 //Sql drivers
