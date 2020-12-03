@@ -1,7 +1,7 @@
 package appevents
 
 import (
-	"github.com/herb-go/herb/events"
+	"github.com/herb-go/events"
 	"github.com/herb-go/herb/ui/validator"
 )
 

@@ -1,6 +1,6 @@
 package appevents
 
-import "github.com/herb-go/herb/events"
+import "github.com/herb-go/events"
 
 //ExitApp Event type of exit app.
 var ExitApp = events.Type("exitapp")
