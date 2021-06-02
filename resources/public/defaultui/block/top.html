@@ -1,0 +1,47 @@
+<div id="tabs">
+    <div id="no-clients" v-if="!clients.length">还未创建游戏，请点击下方按钮创建新游戏</div>
+<el-tabs v-if="clients.length" v-model="currenttab" type="card" @tab-click="onChange">
+        <el-tab-pane  v-for="client in clients" :label="running[client.ID]? '▶️ '+client.ID:'⏸️ '+client.ID" :name="client.ID"></el-tab-pane>
+      </el-tabs>
+    </div>
+<div id="buttons">
+    <el-button-group id="main-button">
+    <el-tooltip class="item" effect="light" content="添加游戏" placement="bottom">
+    <el-button @click="onButton('createGame')" size="mini" type="primary" icon="el-icon-plus"></el-button>
+    </el-tooltip>
+    </el-button-group >
+    <span  v-if="current">
+    <el-button-group>
+                <el-tooltip v-if="!running[current]" class="item" effect="light" content="连线"  placement="bottom">
+                    <el-button  @click="onButton('connect')" size="mini" type="success" icon="el-icon-arrow-right"></el-button>
+                    </el-tooltip>
+                    <el-tooltip v-if="running[current]" class="item" effect="light" content="断线"  placement="bottom">
+                    <el-button  @click="onButton('disconnect')" size="mini" type="danger" icon="el-icon-close"></el-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="light" content="历史输出"  placement="bottom">
+                            <el-button  @click="onButton('allLines')" size="mini" icon="el-icon-view"></el-button>
+                            </el-tooltip>
+                    <el-tooltip class="item" effect="light" content="设置"  placement="bottom">
+                            <el-button  @click="onButton('options')" size="mini" icon="el-icon-edit"></el-button>
+                            </el-tooltip>
+                                    
+    </el-button-group>
+    <el-button-group>
+            <el-tooltip class="item" effect="light" content="脚本"  placement="bottom">
+                    <el-button  @click="onButton('script')" size="mini" icon=" el-icon-setting"></el-button>
+                    </el-tooltip>
+                    <el-tooltip class="item" effect="light" content="变量"  placement="bottom">
+                        <el-button  @click="onButton('variable')" size="mini" >?</el-button>
+                        </el-tooltip>
+        <el-tooltip class="item" effect="light" content="触发器"  placement="bottom">
+            <el-button  @click="onButton('triggers')" size="mini" icon=" el-icon-tickets"></el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="light" content="计时器"  placement="bottom">
+                <el-button  @click="onButton('timers')" size="mini" icon="el-icon-time"></el-button>
+                </el-tooltip>
+                <el-tooltip class="item" effect="light" content="别名"  placement="bottom">
+                    <el-button  @click="onButton('alias')" size="mini" >=</el-button>
+                    </el-tooltip>
+    </el-button-group>
+</span>
+</div>
