@@ -1,0 +1,22 @@
+#loggers config file
+#You can set builtin loggers or your own loggers here
+[Loggers.Fatal]
+#URI="stderr"
+[Loggers.Panic]
+#URI="stderr"
+[Loggers.Error]
+#URI="stderr"
+[Loggers.Warning]
+#URI="stdout"
+[Loggers.Info]
+#URI="stdout"
+[Loggers.Print]
+#URI="stdout"
+[Loggers.Trace]
+#URI="null"
+[Loggers.Debug]
+#URI="null"
+[Loggers.MyLogger]
+#URI="file://appdata/mylogger.log"
+[Formats]
+#MyLogger=""

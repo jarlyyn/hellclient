@@ -1,0 +1,12 @@
+#Debug mode.
+#App will print debug info if debug mode is true
+#Should be false in  production environment.
+Debug=false
+#Initializing mode
+#App wil init with os env in initializing mode
+#App will panic after init  if  in initializing mode
+Initializing=false
+#Testing mode
+#App will panic if in Testing mode and not testing.
+#App will panic if testing without Testing mode.
+Testing=false
