@@ -1,0 +1,15 @@
+# [[Outsourced]]
+# #Outsourced worker name,should began with 'outsourced-'
+# Name="outsourced-WORKERID"
+# #Outsourced worker overseer team
+# Team="*TEAM"
+# #outsourced worker tranning config
+# [Outsourced.TranningPlan]
+
+# [[Workers]]
+# ID="WORKERNAME"
+# # worker tranning config
+# [Workers.TranningPlan]
+
+# [[Overseers]]
+# ID="OverseerID1"

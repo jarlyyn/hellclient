@@ -1,1 +1,1 @@
-This folder save data produced when app running.
+This folder saves data produced when app running.
