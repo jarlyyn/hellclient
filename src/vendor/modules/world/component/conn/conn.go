@@ -42,6 +42,7 @@ func (conn *Conn) InstallTo(b *bus.Bus) {
 	b.DoConnectServer = conn.Connect
 	b.DoCloseServer = conn.Close
 	b.GetConnBuffer = conn.Buffer
+	b.GetConnConnected = conn.Connected
 }
 
 func (conn *Conn) UninstallFrom(b *bus.Bus) {
@@ -52,6 +53,7 @@ func (conn *Conn) UninstallFrom(b *bus.Bus) {
 	b.DoConnectServer = nil
 	b.DoCloseServer = nil
 	b.GetConnBuffer = nil
+	b.GetConnConnected = nil
 }
 
 func (conn *Conn) C() chan int {
@@ -100,7 +102,7 @@ func (conn *Conn) Receiver() {
 	del := byte(10)
 	del2 := byte(13)
 	for {
-		running := conn.Running()
+		running := conn.Connected()
 		if !running {
 			return
 		}
@@ -134,7 +136,7 @@ func (conn *Conn) Receiver() {
 		conn.Debounce.Exec()
 	}
 }
-func (conn *Conn) Running() bool {
+func (conn *Conn) Connected() bool {
 	if conn == nil {
 		return false
 	}
