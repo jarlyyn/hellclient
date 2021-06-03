@@ -1,10 +1,12 @@
 package routers
 
 import (
+	"modules/scripts"
+
 	"github.com/herb-go/herb/file/simplehttpserver"
 	"github.com/herb-go/herb/middleware"
 	"github.com/herb-go/herb/middleware/router"
-	"github.com/herb-go/herb/middleware/router/httprouter"
+	"github.com/herb-go/herb/middleware/router/muxrouter"
 	"github.com/herb-go/util"
 )
 
@@ -15,10 +17,11 @@ var UIMiddlewares = func() middleware.Middlewares {
 
 //RouterUIFactory ui router factory.
 var RouterUIFactory = router.NewFactory(func() router.Router {
-	var Router = httprouter.New()
+	var Router = muxrouter.New()
 	Router.StripPrefix("/public").
 		HandleFunc(simplehttpserver.ServeFolder(util.Resources("public")))
-	Router.GET("/").HandleFunc(simplehttpserver.ServeFile(util.Resources("defaultui", "index.html")))
+	Router.HandleHomepage().HandleFunc(simplehttpserver.ServeFile(util.Resources("defaultui", "index.html")))
+	Router.Handle(scripts.ScriptPrefix).Handle(scripts.NewWebdavServer())
 	//Put your router configure code here
 	return Router
 })
