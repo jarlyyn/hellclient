@@ -13,7 +13,9 @@ import (
 //Struct must  unmarshaleable by Toml lib.
 //You should comment this struct if you use third party config struct.
 type SystemConfig struct {
-	Addr string
+	Addr     string
+	Username string
+	Password string
 }
 
 //System config instance of system.
