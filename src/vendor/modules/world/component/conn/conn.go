@@ -72,7 +72,7 @@ func (conn *Conn) Connect() error {
 	if conn.running == true {
 		return nil
 	}
-	t, err := telnet.Dial("tcp", conn.bus.GetHost())
+	t, err := telnet.Dial("tcp", conn.bus.GetHostPort())
 	if err != nil {
 		return err
 	}
