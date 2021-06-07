@@ -29,12 +29,12 @@ func (i *Info) CurrentLines() []*bus.Line {
 	result = append(result, i.Prompt)
 	return result
 }
-func (i *Info) onPrompt(line *bus.Line) {
+func (i *Info) onPrompt(b *bus.Bus, line *bus.Line) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
 	i.Prompt = line
 }
-func (i *Info) onNewLine(line *bus.Line) {
+func (i *Info) onNewLine(b *bus.Bus, line *bus.Line) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
 	i.Lines.Value = line

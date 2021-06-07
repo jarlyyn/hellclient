@@ -13,8 +13,8 @@ type Converter struct {
 func (c *Converter) InstallTo(b *bus.Bus) {
 	c.bus = b
 	b.DoSend = c.Send
-	b.OnConnReceive = c.onMsg
-	b.OnConnPrompt = c.onPrompt
+	b.HandleConnReceive = c.onMsg
+	b.HandleConnPrompt = c.onPrompt
 }
 
 func (c *Converter) UninstallFrom(b *bus.Bus) {
@@ -22,8 +22,8 @@ func (c *Converter) UninstallFrom(b *bus.Bus) {
 		return
 	}
 	b.DoSend = nil
-	b.OnConnReceive = nil
-	b.OnConnPrompt = nil
+	b.HandleConnReceive = nil
+	b.HandleConnPrompt = nil
 }
 func (c *Converter) onPrompt(msg []byte) {
 	line := c.ConvertToLine(msg)
@@ -37,7 +37,7 @@ func (c *Converter) onMsg(msg []byte) {
 	c.bus.RaiseLineEvent(line)
 }
 func (c *Converter) onError(err error) {
-	c.bus.OnConverterError(err)
+	c.bus.HandleConverterError(err)
 }
 
 func (c *Converter) Send(cmd []byte) error {
@@ -48,6 +48,26 @@ func (c *Converter) Send(cmd []byte) error {
 		return err
 	}
 	return c.bus.DoSendToServer(b)
+}
+
+func (c *Converter) DoPrintSystem(msg string) {
+	line := bus.NewLine()
+	line.IsSystem = true
+	w := bus.Word{
+		Text: msg,
+	}
+	line.Append(w)
+	c.bus.RaiseLineEvent(line)
+}
+
+func (c *Converter) DoPrint(msg string) {
+	line := bus.NewLine()
+	line.IsPrint = true
+	w := bus.Word{
+		Text: msg,
+	}
+	line.Append(w)
+	c.bus.RaiseLineEvent(line)
 }
 
 func (c *Converter) ConvertToLine(msg []byte) *bus.Line {

@@ -62,7 +62,7 @@ func (conn *Conn) C() chan int {
 func (conn *Conn) UpdatePrompt() {
 	conn.Lock.Lock()
 	defer conn.Lock.Unlock()
-	conn.bus.OnConnPrompt(conn.buffer)
+	conn.bus.HandleConnPrompt(conn.buffer)
 }
 
 //Connect :connect to mud
@@ -94,7 +94,7 @@ func (conn *Conn) Close() error {
 	conn.running = false
 	conn.buffer = []byte{}
 	close(conn.c)
-
+	go conn.bus.RaiseDiscontectedEvent()
 	err := conn.telnet.Close()
 	return err
 }
@@ -112,7 +112,7 @@ func (conn *Conn) Receiver() {
 				conn.Close()
 				return
 			}
-			conn.bus.OnConnError(err)
+			conn.bus.HandleConnError(err)
 			return
 		}
 		conn.Lock.Lock()
@@ -123,10 +123,10 @@ func (conn *Conn) Receiver() {
 		if s == del {
 			if err != nil {
 				conn.Lock.Unlock()
-				conn.bus.OnConnError(err)
+				conn.bus.HandleConnError(err)
 				return
 			}
-			conn.bus.OnConnReceive(conn.buffer)
+			conn.bus.HandleConnReceive(conn.buffer)
 			conn.buffer = []byte{}
 			conn.Lock.Unlock()
 			continue
