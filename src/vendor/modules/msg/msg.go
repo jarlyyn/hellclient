@@ -13,6 +13,8 @@ const MsgTypeCreateFail = "createFail"
 const MsgTypeCreateSuccess = "createSuccess"
 const MsgTypeLine = "line"
 const MsgTypePrompt = "prompt"
+const MsgTypeAllLines = "allLines"
+const MsgTypeLines = "lines"
 
 type Publisher interface {
 	Publish(msg *message.Message)
@@ -45,4 +47,11 @@ func PublishLine(p Publisher, id string, line *bus.Line) {
 }
 func PublishPrompt(p Publisher, id string, prompt *bus.Line) {
 	p.Publish(New(MsgTypePrompt, id, prompt))
+}
+
+func PublishAllLines(p Publisher, id string, lines []*bus.Line) {
+	p.Publish(New(MsgTypeAllLines, id, lines))
+}
+func PublishLines(p Publisher, id string, lines []*bus.Line) {
+	p.Publish(New(MsgTypeAllLines, id, lines))
 }

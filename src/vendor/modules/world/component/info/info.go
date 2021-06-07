@@ -29,6 +29,11 @@ func (i *Info) CurrentLines() []*bus.Line {
 	result = append(result, i.Prompt)
 	return result
 }
+func (i *Info) CurrentPrompt() *bus.Line {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	return i.Prompt
+}
 func (i *Info) onPrompt(b *bus.Bus, line *bus.Line) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
@@ -43,6 +48,7 @@ func (i *Info) onNewLine(b *bus.Bus, line *bus.Line) {
 func (i *Info) InstallTo(b *bus.Bus) {
 	i.bus = b
 	b.GetCurrentLines = i.CurrentLines
+	b.GetPrompt = i.CurrentPrompt
 	b.BindLineEvent("info.onnewline", i.onNewLine)
 	b.BindPromptEvent("info.onprompt", i.onPrompt)
 }

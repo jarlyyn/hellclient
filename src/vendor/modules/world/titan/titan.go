@@ -47,6 +47,46 @@ func (t *Titan) onPrompt(b *bus.Bus, prompt *bus.Line) {
 func (t *Titan) onLine(b *bus.Bus, line *bus.Line) {
 	msg.PublishLine(t, b.ID, line)
 }
+
+func (t *Titan) HandleCmdConnect(id string) {
+	w := t.World(id)
+	if w != nil {
+		w.HandleCmdError(w.DoConnectServer())
+	}
+}
+func (t *Titan) HandleCmdDisconnect(id string) {
+	w := t.World(id)
+	if w != nil {
+		w.HandleCmdError(w.DoCloseServer())
+	}
+}
+func (t *Titan) HandleCmdSend(id string, msg []byte) {
+	w := t.World(id)
+	if w != nil {
+		w.HandleCmdError(w.DoSend(msg))
+	}
+}
+func (t *Titan) HandleCmdAllLines(id string) {
+	w := t.World(id)
+	if w != nil {
+		alllines := w.GetCurrentLines()
+		msg.PublishAllLines(t, id, alllines)
+	}
+}
+func (t *Titan) HandleCmdLines(id string) {
+	w := t.World(id)
+	if w != nil {
+		alllines := w.GetCurrentLines()
+		msg.PublishLines(t, id, alllines)
+	}
+}
+func (t *Titan) HandleCmdPrompt(id string) {
+	w := t.World(id)
+	if w != nil {
+		pormpt := w.GetPrompt()
+		msg.PublishPrompt(t, id, pormpt)
+	}
+}
 func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindContectedEvent("titan.oncontected", t.onConnected)
 	b.BindDiscontectedEvent("titan.ondiscontected", t.onConnected)
