@@ -14,6 +14,7 @@ type Bus struct {
 	GetConnConnected     func() bool
 	GetCharset           func() string
 	GetCurrentLines      func() []*Line
+	GetPrompt            func() *Line
 	DoSendToServer       func(cmd []byte) error
 	DoSend               func(cmd []byte) error
 	DoSave               func() error
@@ -24,6 +25,7 @@ type Bus struct {
 	DoConnectServer      func() error
 	DoCloseServer        func() error
 	HandleConverterError func(err error)
+	HandleCmdError       func(err error)
 	lineEvent            *busevent.Event
 	promptEvent          *busevent.Event
 	connectedEvent       *busevent.Event

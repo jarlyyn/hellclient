@@ -7,6 +7,8 @@ import (
 	"sync"
 	"sync/atomic"
 
+	"github.com/herb-go/uniqueid"
+
 	"github.com/herb-go/util"
 
 	"github.com/herb-go/connections"
@@ -34,7 +36,11 @@ type Prophet struct {
 
 func (p *Prophet) Init(t *titan.Titan) {
 	p.Titan = t
+	t.BindMsgEvent("prophet.publish", p.Publish)
 	p.Current.Store("")
+	p.Gateway.IDGenerator = uniqueid.DefaultGenerator.GenerateID
+	initAdapter(p, p.Adapter)
+	initHandlers(p, p.Handlers)
 }
 func (p *Prophet) newRoomAdapter(cmdtype string) func(m *message.Message) error {
 	return func(m *message.Message) error {
@@ -78,7 +84,35 @@ func (p *Prophet) newUserAdapter(cmdtype string) func(m *message.Message) error 
 		return nil
 	}
 }
+func (p *Prophet) Location(conn connections.OutputConnection) *room.Location {
+	ctx := p.Context(conn.ID())
+	v, _ := ctx.Data.Load("rooms")
+	return v.(*room.Location)
+}
 
+func (p *Prophet) Change(roomid string) {
+	var conn connections.OutputConnection
+	p.Locker.Lock()
+	defer p.Locker.Unlock()
+	v, _ := p.Users.Identities.Load("user")
+	if v != nil {
+		conn = v.(connections.OutputConnection)
+		location := p.Location(conn)
+		v := p.Current.Load()
+		if v != nil {
+			crid := v.(string)
+			if crid != "" {
+				location.Leave(crid)
+			}
+			location.Join(roomid)
+		}
+	}
+	p.Current.Store(roomid)
+	go func() {
+		p.Titan.HandleCmdAllLines(roomid)
+		p.Titan.HandleCmdPrompt(roomid)
+	}()
+}
 func (p *Prophet) Enter(w http.ResponseWriter, r *http.Request) error {
 	wc, err := websocket.Upgrade(w, r, websocket.MsgTypeText)
 	if err != nil {
@@ -129,7 +163,9 @@ func (p *Prophet) OnOpen(connections.OutputConnection) {
 func (p *Prophet) Stop() {
 	p.Contexts.Stop()
 }
-
+func (p *Prophet) Publish(t *titan.Titan, msg *message.Message) {
+	p.Adapter.Exec(msg)
+}
 func New() *Prophet {
 	return &Prophet{
 		Adapter:  message.NewAdapter(),
