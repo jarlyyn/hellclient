@@ -15,15 +15,14 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 	b.DoSend = c.Send
 	b.HandleConnReceive = c.onMsg
 	b.HandleConnPrompt = c.onPrompt
+	b.DoPrint = c.DoPrint
+	b.DoPrintSystem = c.DoPrintSystem
 }
 
 func (c *Converter) UninstallFrom(b *bus.Bus) {
 	if c.bus != b {
 		return
 	}
-	b.DoSend = nil
-	b.HandleConnReceive = nil
-	b.HandleConnPrompt = nil
 }
 func (c *Converter) onPrompt(msg []byte) {
 	line := c.ConvertToLine(msg)

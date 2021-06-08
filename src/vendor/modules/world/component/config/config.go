@@ -30,10 +30,15 @@ type Config struct {
 	Data   *Data
 }
 
-func (c *Config) GetHostPort() string {
+func (c *Config) GetPort() string {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
-	return c.Data.Host + ":" + c.Data.Port
+	return c.Data.Port
+}
+func (c *Config) GetHost() string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.Host
 }
 func (c *Config) GetCharset() string {
 	c.Locker.Lock()
@@ -68,7 +73,8 @@ func (c *Config) Load() error {
 }
 func (c *Config) InstallTo(b *bus.Bus) {
 	c.bus = b
-	b.GetHostPort = c.GetHostPort
+	b.GetHost = c.GetHost
+	b.GetPort = c.GetPort
 	b.GetCharset = c.GetCharset
 }
 
@@ -76,5 +82,4 @@ func (c *Config) UninstallFrom(b *bus.Bus) {
 	if c.bus != b {
 		return
 	}
-	b.GetHostPort = nil
 }
