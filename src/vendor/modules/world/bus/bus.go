@@ -7,11 +7,13 @@ import (
 )
 
 type Bus struct {
-	ID                   string
-	Locker               sync.RWMutex
-	GetHostPort          func() string
+	ID     string
+	Locker sync.RWMutex
+
 	GetConnBuffer        func() []byte
 	GetConnConnected     func() bool
+	GetHost              func() string
+	GetPort              func() string
 	GetCharset           func() string
 	GetCurrentLines      func() []*Line
 	GetPrompt            func() *Line
@@ -19,6 +21,8 @@ type Bus struct {
 	DoSend               func(cmd []byte) error
 	DoSave               func() error
 	DoLoad               func() error
+	DoPrint              func(string)
+	DoPrintSystem        func(string)
 	HandleConnReceive    func(msg []byte)
 	HandleConnError      func(err error)
 	HandleConnPrompt     func(msg []byte)
