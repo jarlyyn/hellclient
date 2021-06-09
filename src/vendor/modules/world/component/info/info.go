@@ -49,15 +49,12 @@ func (i *Info) InstallTo(b *bus.Bus) {
 	i.bus = b
 	b.GetCurrentLines = i.CurrentLines
 	b.GetPrompt = i.CurrentPrompt
-	b.BindLineEvent("info.onnewline", i.onNewLine)
-	b.BindPromptEvent("info.onprompt", i.onPrompt)
+	b.BindLineEvent(i, i.onNewLine)
+	b.BindPromptEvent(i, i.onPrompt)
 }
 
 func (i *Info) UninstallFrom(b *bus.Bus) {
 	if i.bus != b {
 		return
 	}
-	b.GetCurrentLines = i.CurrentLines
-	b.UnbindLineEvent("info.onnewline")
-	b.UnbindLineEvent("info.onprompt")
 }
