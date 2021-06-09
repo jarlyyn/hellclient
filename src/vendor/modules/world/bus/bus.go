@@ -10,26 +10,26 @@ type Bus struct {
 	ID     string
 	Locker sync.RWMutex
 
-	GetConnBuffer        func() []byte
-	GetConnConnected     func() bool
-	GetHost              func() string
-	GetPort              func() string
-	GetCharset           func() string
-	GetCurrentLines      func() []*Line
-	GetPrompt            func() *Line
-	DoSendToServer       func(cmd []byte) error
-	DoSend               func(cmd []byte) error
-	DoSave               func() error
-	DoLoad               func() error
-	DoPrint              func(string)
-	DoPrintSystem        func(string)
-	HandleConnReceive    func(msg []byte)
-	HandleConnError      func(err error)
-	HandleConnPrompt     func(msg []byte)
-	DoConnectServer      func() error
-	DoCloseServer        func() error
-	HandleConverterError func(err error)
-	HandleCmdError       func(err error)
+	GetConnBuffer        func(bus *Bus) []byte
+	GetConnConnected     func(bus *Bus) bool
+	GetHost              func(bus *Bus) string
+	GetPort              func(bus *Bus) string
+	GetCharset           func(bus *Bus) string
+	GetCurrentLines      func(bus *Bus) []*Line
+	GetPrompt            func(bus *Bus) *Line
+	DoSendToServer       func(bus *Bus, cmd []byte) error
+	DoSend               func(bus *Bus, cmd []byte) error
+	DoSave               func(bus *Bus) error
+	DoLoad               func(bus *Bus) error
+	DoPrint              func(bus *Bus, msg string)
+	DoPrintSystem        func(bus *Bus, msg string)
+	HandleConnReceive    func(bus *Bus, msg []byte)
+	HandleConnError      func(bus *Bus, err error)
+	HandleConnPrompt     func(bus *Bus, msg []byte)
+	DoConnectServer      func(bus *Bus) error
+	DoCloseServer        func(bus *Bus) error
+	HandleConverterError func(bus *Bus, err error)
+	HandleCmdError       func(bus *Bus, err error)
 	lineEvent            *busevent.Event
 	promptEvent          *busevent.Event
 	connectedEvent       *busevent.Event

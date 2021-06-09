@@ -7,7 +7,6 @@ import (
 )
 
 type Info struct {
-	bus    *bus.Bus
 	Lines  *ring.Ring
 	Prompt *bus.Line
 	Lock   sync.RWMutex
@@ -16,7 +15,7 @@ type Info struct {
 func (i *Info) Init() {
 	i.Lines = ring.New(1000)
 }
-func (i *Info) CurrentLines() []*bus.Line {
+func (i *Info) CurrentLines(b *bus.Bus) []*bus.Line {
 	result := []*bus.Line{}
 	i.Lock.RLock()
 	defer i.Lock.RUnlock()
@@ -29,7 +28,7 @@ func (i *Info) CurrentLines() []*bus.Line {
 	result = append(result, i.Prompt)
 	return result
 }
-func (i *Info) CurrentPrompt() *bus.Line {
+func (i *Info) CurrentPrompt(b *bus.Bus) *bus.Line {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
 	return i.Prompt
@@ -46,7 +45,6 @@ func (i *Info) onNewLine(b *bus.Bus, line *bus.Line) {
 	i.Lines = i.Lines.Next()
 }
 func (i *Info) InstallTo(b *bus.Bus) {
-	i.bus = b
 	b.GetCurrentLines = i.CurrentLines
 	b.GetPrompt = i.CurrentPrompt
 	b.BindLineEvent(i, i.onNewLine)
@@ -54,7 +52,4 @@ func (i *Info) InstallTo(b *bus.Bus) {
 }
 
 func (i *Info) UninstallFrom(b *bus.Bus) {
-	if i.bus != b {
-		return
-	}
 }
