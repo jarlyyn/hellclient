@@ -6,12 +6,10 @@ import (
 )
 
 type Converter struct {
-	bus  *bus.Bus
 	Lock sync.RWMutex
 }
 
 func (c *Converter) InstallTo(b *bus.Bus) {
-	c.bus = b
 	b.DoSend = c.Send
 	b.HandleConnReceive = c.onMsg
 	b.HandleConnPrompt = c.onPrompt
@@ -20,58 +18,55 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 }
 
 func (c *Converter) UninstallFrom(b *bus.Bus) {
-	if c.bus != b {
-		return
-	}
 }
-func (c *Converter) onPrompt(msg []byte) {
-	line := c.ConvertToLine(msg)
-	c.bus.RaisePromptEvent(line)
+func (c *Converter) onPrompt(bus *bus.Bus, msg []byte) {
+	line := c.ConvertToLine(bus, msg)
+	bus.RaisePromptEvent(line)
 }
-func (c *Converter) onMsg(msg []byte) {
+func (c *Converter) onMsg(bus *bus.Bus, msg []byte) {
 	if len(msg) == 0 {
 		return
 	}
-	line := c.ConvertToLine(msg)
-	c.bus.RaiseLineEvent(line)
+	line := c.ConvertToLine(bus, msg)
+	bus.RaiseLineEvent(line)
 }
-func (c *Converter) onError(err error) {
-	c.bus.HandleConverterError(err)
+func (c *Converter) onError(bus *bus.Bus, err error) {
+	bus.HandleConverterError(bus, err)
 }
 
-func (c *Converter) Send(cmd []byte) error {
+func (c *Converter) Send(bus *bus.Bus, cmd []byte) error {
 	c.Lock.Lock()
 	defer c.Lock.Unlock()
-	b, err := FromUTF8(c.bus.GetCharset(), []byte(cmd))
+	b, err := FromUTF8(bus.GetCharset(bus), []byte(cmd))
 	if err != nil {
 		return err
 	}
-	return c.bus.DoSendToServer(b)
+	return bus.DoSendToServer(bus, b)
 }
 
-func (c *Converter) DoPrintSystem(msg string) {
+func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {
 	line := bus.NewLine()
 	line.IsSystem = true
 	w := bus.Word{
 		Text: msg,
 	}
 	line.Append(w)
-	c.bus.RaiseLineEvent(line)
+	b.RaiseLineEvent(line)
 }
 
-func (c *Converter) DoPrint(msg string) {
+func (c *Converter) DoPrint(b *bus.Bus, msg string) {
 	line := bus.NewLine()
 	line.IsPrint = true
 	w := bus.Word{
 		Text: msg,
 	}
 	line.Append(w)
-	c.bus.RaiseLineEvent(line)
+	b.RaiseLineEvent(line)
 }
 
-func (c *Converter) ConvertToLine(msg []byte) *bus.Line {
-	charset := c.bus.GetCharset()
-	return ConvertToLine(msg, charset, c.onError)
+func (c *Converter) ConvertToLine(bus *bus.Bus, msg []byte) *bus.Line {
+	charset := bus.GetCharset(bus)
+	return ConvertToLine(msg, charset, func(err error) { c.onError(bus, err) })
 }
 
 func New() *Converter {

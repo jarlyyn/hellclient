@@ -27,7 +27,7 @@ func (t *Titan) World(id string) *bus.Bus {
 
 func (t *Titan) DoSendTo(id string, msg []byte) error {
 	w := t.World(id)
-	return w.DoSend(msg)
+	return w.DoSend(w, msg)
 }
 func (t *Titan) Publish(msg *message.Message) {
 	go func() {
@@ -51,39 +51,39 @@ func (t *Titan) onLine(b *bus.Bus, line *bus.Line) {
 func (t *Titan) HandleCmdConnect(id string) {
 	w := t.World(id)
 	if w != nil {
-		w.HandleCmdError(w.DoConnectServer())
+		w.HandleCmdError(w, w.DoConnectServer(w))
 	}
 }
 func (t *Titan) HandleCmdDisconnect(id string) {
 	w := t.World(id)
 	if w != nil {
-		w.HandleCmdError(w.DoCloseServer())
+		w.HandleCmdError(w, w.DoCloseServer(w))
 	}
 }
 func (t *Titan) HandleCmdSend(id string, msg []byte) {
 	w := t.World(id)
 	if w != nil {
-		w.HandleCmdError(w.DoSend(msg))
+		w.HandleCmdError(w, w.DoSend(w, msg))
 	}
 }
 func (t *Titan) HandleCmdAllLines(id string) {
 	w := t.World(id)
 	if w != nil {
-		alllines := w.GetCurrentLines()
+		alllines := w.GetCurrentLines(w)
 		msg.PublishAllLines(t, id, alllines)
 	}
 }
 func (t *Titan) HandleCmdLines(id string) {
 	w := t.World(id)
 	if w != nil {
-		alllines := w.GetCurrentLines()
+		alllines := w.GetCurrentLines(w)
 		msg.PublishLines(t, id, alllines)
 	}
 }
 func (t *Titan) HandleCmdPrompt(id string) {
 	w := t.World(id)
 	if w != nil {
-		pormpt := w.GetPrompt()
+		pormpt := w.GetPrompt(w)
 		msg.PublishPrompt(t, id, pormpt)
 	}
 }

@@ -25,40 +25,39 @@ func NewData() *Data {
 }
 
 type Config struct {
-	bus    *bus.Bus
 	Locker sync.Mutex
 	Data   *Data
 }
 
-func (c *Config) GetPort() string {
+func (c *Config) GetPort(bus *bus.Bus) string {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
 	return c.Data.Port
 }
-func (c *Config) GetHost() string {
+func (c *Config) GetHost(bus *bus.Bus) string {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
 	return c.Data.Host
 }
-func (c *Config) GetCharset() string {
+func (c *Config) GetCharset(bus *bus.Bus) string {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
 	return c.Data.Charset
 }
-func (c *Config) Save() error {
+func (c *Config) Save(bus *bus.Bus) error {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
-	filename := world.GetWorldPath(c.bus.ID)
+	filename := world.GetWorldPath(bus.ID)
 	data, err := toml.Marshal(c.Data)
 	if err != nil {
 		return err
 	}
 	return ioutil.WriteFile(filename, data, util.DefaultFileMode)
 }
-func (c *Config) Load() error {
+func (c *Config) Load(bus *bus.Bus) error {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
-	filename := world.GetWorldPath(c.bus.ID)
+	filename := world.GetWorldPath(bus.ID)
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return err
@@ -72,14 +71,11 @@ func (c *Config) Load() error {
 	return nil
 }
 func (c *Config) InstallTo(b *bus.Bus) {
-	c.bus = b
 	b.GetHost = c.GetHost
 	b.GetPort = c.GetPort
 	b.GetCharset = c.GetCharset
 }
 
 func (c *Config) UninstallFrom(b *bus.Bus) {
-	if c.bus != b {
-		return
-	}
+
 }

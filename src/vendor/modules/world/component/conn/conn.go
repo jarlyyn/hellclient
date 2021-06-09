@@ -15,7 +15,6 @@ const DefaultDebounceDuration = 200 * time.Millisecond
 
 //Conn :mud conn
 type Conn struct {
-	bus      *bus.Bus
 	telnet   *telnet.Conn
 	c        chan int
 	running  bool
@@ -37,7 +36,10 @@ func isClosedError(err error) bool {
 }
 
 func (conn *Conn) InstallTo(b *bus.Bus) {
-	conn.bus = b
+	d := debounce.New(DefaultDebounceDuration, func() { conn.UpdatePrompt(b) })
+	d.MaxDuration = 0
+	conn.Debounce = d
+
 	b.DoSendToServer = conn.Send
 	b.DoConnectServer = conn.Connect
 	b.DoCloseServer = conn.Close
@@ -46,33 +48,25 @@ func (conn *Conn) InstallTo(b *bus.Bus) {
 }
 
 func (conn *Conn) UninstallFrom(b *bus.Bus) {
-	if conn.bus != b {
-		return
-	}
-	b.DoSendToServer = nil
-	b.DoConnectServer = nil
-	b.DoCloseServer = nil
-	b.GetConnBuffer = nil
-	b.GetConnConnected = nil
 }
 
 func (conn *Conn) C() chan int {
 	return conn.c
 }
-func (conn *Conn) UpdatePrompt() {
+func (conn *Conn) UpdatePrompt(bus *bus.Bus) {
 	conn.Lock.Lock()
 	defer conn.Lock.Unlock()
-	conn.bus.HandleConnPrompt(conn.buffer)
+	bus.HandleConnPrompt(bus, conn.buffer)
 }
 
 //Connect :connect to mud
-func (conn *Conn) Connect() error {
+func (conn *Conn) Connect(bus *bus.Bus) error {
 	conn.Lock.Lock()
 	defer conn.Lock.Unlock()
 	if conn.running == true {
 		return nil
 	}
-	t, err := telnet.Dial("tcp", conn.bus.GetHost()+":"+conn.bus.GetPort())
+	t, err := telnet.Dial("tcp", bus.GetHost(bus)+":"+bus.GetPort(bus))
 	if err != nil {
 		return err
 	}
@@ -80,12 +74,12 @@ func (conn *Conn) Connect() error {
 	conn.c = make(chan int)
 	conn.buffer = make([]byte, 1024)
 	conn.telnet = t
-	go conn.Receiver()
+	go conn.Receiver(bus)
 	return nil
 }
 
 //Close :close mud conn
-func (conn *Conn) Close() error {
+func (conn *Conn) Close(bus *bus.Bus) error {
 	conn.Lock.Lock()
 	defer conn.Lock.Unlock()
 	if conn.running == false {
@@ -94,25 +88,25 @@ func (conn *Conn) Close() error {
 	conn.running = false
 	conn.buffer = []byte{}
 	close(conn.c)
-	go conn.bus.RaiseDiscontectedEvent()
+	go bus.RaiseDiscontectedEvent()
 	err := conn.telnet.Close()
 	return err
 }
-func (conn *Conn) Receiver() {
+func (conn *Conn) Receiver(bus *bus.Bus) {
 	del := byte(10)
 	del2 := byte(13)
 	for {
-		running := conn.Connected()
+		running := conn.Connected(bus)
 		if !running {
 			return
 		}
 		s, err := conn.telnet.ReadByte()
 		if err != nil {
 			if isClosedError(err) {
-				conn.Close()
+				conn.Close(bus)
 				return
 			}
-			conn.bus.HandleConnError(err)
+			bus.HandleConnError(bus, err)
 			return
 		}
 		conn.Lock.Lock()
@@ -123,10 +117,10 @@ func (conn *Conn) Receiver() {
 		if s == del {
 			if err != nil {
 				conn.Lock.Unlock()
-				conn.bus.HandleConnError(err)
+				bus.HandleConnError(bus, err)
 				return
 			}
-			conn.bus.HandleConnReceive(conn.buffer)
+			bus.HandleConnReceive(bus, conn.buffer)
 			conn.buffer = []byte{}
 			conn.Lock.Unlock()
 			continue
@@ -136,7 +130,7 @@ func (conn *Conn) Receiver() {
 		conn.Debounce.Exec()
 	}
 }
-func (conn *Conn) Connected() bool {
+func (conn *Conn) Connected(bus *bus.Bus) bool {
 	if conn == nil {
 		return false
 	}
@@ -145,12 +139,12 @@ func (conn *Conn) Connected() bool {
 
 	return conn.running
 }
-func (conn *Conn) Buffer() []byte {
+func (conn *Conn) Buffer(bus *bus.Bus) []byte {
 	conn.Lock.RLock()
 	defer conn.Lock.RUnlock()
 	return conn.buffer
 }
-func (conn *Conn) Send(cmd []byte) error {
+func (conn *Conn) Send(bus *bus.Bus, cmd []byte) error {
 	if conn.telnet == nil {
 		return nil
 	}
@@ -168,8 +162,5 @@ func New(host string) *Conn {
 		c:       make(chan int),
 		running: false,
 	}
-	d := debounce.New(DefaultDebounceDuration, c.UpdatePrompt)
-	d.MaxDuration = 0
-	c.Debounce = d
 	return c
 }
