@@ -39,7 +39,7 @@ type Bus struct {
 func (b *Bus) RaiseLineEvent(line *Line) {
 	b.lineEvent.Raise(line)
 }
-func (b *Bus) BindLineEvent(id string, fn func(b *Bus, line *Line)) {
+func (b *Bus) BindLineEvent(id interface{}, fn func(b *Bus, line *Line)) {
 	b.lineEvent.Bind(busevent.CreateHandler(
 		id,
 		func(data interface{}) {
@@ -48,49 +48,49 @@ func (b *Bus) BindLineEvent(id string, fn func(b *Bus, line *Line)) {
 	))
 
 }
-func (b *Bus) UnbindLineEvent(id string) {
+func (b *Bus) UnbindLineEvent(id interface{}) {
 	b.lineEvent.Unbind(id)
 }
 
 func (b *Bus) RaisePromptEvent(line *Line) {
 	b.promptEvent.Raise(line)
 }
-func (b *Bus) BindPromptEvent(id string, fn func(b *Bus, line *Line)) {
+func (b *Bus) BindPromptEvent(id interface{}, fn func(b *Bus, line *Line)) {
 	b.promptEvent.Bind(busevent.CreateHandler(id,
 		func(data interface{}) {
 			fn(b, data.(*Line))
 		}),
 	)
 }
-func (b *Bus) UnbindPromptEvent(id string) {
+func (b *Bus) UnbindPromptEvent(id interface{}) {
 	b.promptEvent.Unbind(id)
 }
 
 func (b *Bus) RaiseContectedEvent() {
 	b.connectedEvent.Raise(nil)
 }
-func (b *Bus) BindContectedEvent(id string, fn func(b *Bus)) {
+func (b *Bus) BindContectedEvent(id interface{}, fn func(b *Bus)) {
 	b.connectedEvent.Bind(busevent.CreateHandler(id,
 		func(data interface{}) {
 			fn(b)
 		}),
 	)
 }
-func (b *Bus) UnbindContectedEvent(id string) {
+func (b *Bus) UnbindContectedEvent(id interface{}) {
 	b.connectedEvent.Unbind(id)
 }
 
 func (b *Bus) RaiseDiscontectedEvent() {
 	b.disconnectedEvent.Raise(nil)
 }
-func (b *Bus) BindDiscontectedEvent(id string, fn func(b *Bus)) {
+func (b *Bus) BindDiscontectedEvent(id interface{}, fn func(b *Bus)) {
 	b.disconnectedEvent.Bind(busevent.CreateHandler(id,
 		func(data interface{}) {
 			fn(b)
 		}),
 	)
 }
-func (b *Bus) UnbindDiscontectedEvent(id string) {
+func (b *Bus) UnbindDiscontectedEvent(id interface{}) {
 	b.disconnectedEvent.Unbind(id)
 }
 

@@ -97,7 +97,7 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 func (t *Titan) RaiseMsgEvent(msg *message.Message) {
 	t.msgEvent.Raise(msg)
 }
-func (t *Titan) BindMsgEvent(id string, fn func(t *Titan, msg *message.Message)) {
+func (t *Titan) BindMsgEvent(id interface{}, fn func(t *Titan, msg *message.Message)) {
 	t.msgEvent.Bind(busevent.CreateHandler(
 		id,
 		func(data interface{}) {
@@ -106,7 +106,7 @@ func (t *Titan) BindMsgEvent(id string, fn func(t *Titan, msg *message.Message))
 	))
 
 }
-func (t *Titan) UnbindMsgEvent(id string) {
+func (t *Titan) UnbindMsgEvent(id interface{}) {
 	t.msgEvent.Unbind(id)
 }
 
