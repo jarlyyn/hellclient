@@ -10,11 +10,11 @@ type Converter struct {
 }
 
 func (c *Converter) InstallTo(b *bus.Bus) {
-	b.DoSend = c.Send
-	b.HandleConnReceive = c.onMsg
-	b.HandleConnPrompt = c.onPrompt
-	b.DoPrint = c.DoPrint
-	b.DoPrintSystem = c.DoPrintSystem
+	b.DoSend = b.WrapDoCmd(c.Send)
+	b.HandleConnReceive = b.WrapHandleBytes(c.onMsg)
+	b.HandleConnPrompt = b.WrapHandleBytes(c.onPrompt)
+	b.DoPrint = b.WrapHandleString(c.DoPrint)
+	b.DoPrintSystem = b.WrapHandleString(c.DoPrintSystem)
 }
 
 func (c *Converter) UninstallFrom(b *bus.Bus) {
@@ -31,17 +31,17 @@ func (c *Converter) onMsg(bus *bus.Bus, msg []byte) {
 	bus.RaiseLineEvent(line)
 }
 func (c *Converter) onError(bus *bus.Bus, err error) {
-	bus.HandleConverterError(bus, err)
+	bus.HandleConverterError(err)
 }
 
 func (c *Converter) Send(bus *bus.Bus, cmd []byte) error {
 	c.Lock.Lock()
 	defer c.Lock.Unlock()
-	b, err := FromUTF8(bus.GetCharset(bus), []byte(cmd))
+	b, err := FromUTF8(bus.GetCharset(), []byte(cmd))
 	if err != nil {
 		return err
 	}
-	return bus.DoSendToServer(bus, b)
+	return bus.DoSendToServer(b)
 }
 
 func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {
@@ -65,7 +65,7 @@ func (c *Converter) DoPrint(b *bus.Bus, msg string) {
 }
 
 func (c *Converter) ConvertToLine(bus *bus.Bus, msg []byte) *bus.Line {
-	charset := bus.GetCharset(bus)
+	charset := bus.GetCharset()
 	return ConvertToLine(msg, charset, func(err error) { c.onError(bus, err) })
 }
 
