@@ -27,7 +27,7 @@ func (t *Titan) World(id string) *bus.Bus {
 
 func (t *Titan) DoSendTo(id string, msg []byte) error {
 	w := t.World(id)
-	return w.DoSend(w, msg)
+	return w.DoSend(msg)
 }
 func (t *Titan) Publish(msg *message.Message) {
 	go func() {
@@ -51,63 +51,59 @@ func (t *Titan) onLine(b *bus.Bus, line *bus.Line) {
 func (t *Titan) HandleCmdConnect(id string) {
 	w := t.World(id)
 	if w != nil {
-		w.HandleCmdError(w, w.DoConnectServer(w))
+		w.HandleCmdError(w.DoConnectServer())
 	}
 }
 func (t *Titan) HandleCmdDisconnect(id string) {
 	w := t.World(id)
 	if w != nil {
-		w.HandleCmdError(w, w.DoCloseServer(w))
+		w.HandleCmdError(w.DoCloseServer())
 	}
 }
 func (t *Titan) HandleCmdSend(id string, msg []byte) {
 	w := t.World(id)
 	if w != nil {
-		w.HandleCmdError(w, w.DoSend(w, msg))
+		w.HandleCmdError(w.DoSend(msg))
 	}
 }
 func (t *Titan) HandleCmdAllLines(id string) {
 	w := t.World(id)
 	if w != nil {
-		alllines := w.GetCurrentLines(w)
+		alllines := w.GetCurrentLines()
 		msg.PublishAllLines(t, id, alllines)
 	}
 }
 func (t *Titan) HandleCmdLines(id string) {
 	w := t.World(id)
 	if w != nil {
-		alllines := w.GetCurrentLines(w)
+		alllines := w.GetCurrentLines()
 		msg.PublishLines(t, id, alllines)
 	}
 }
 func (t *Titan) HandleCmdPrompt(id string) {
 	w := t.World(id)
 	if w != nil {
-		pormpt := w.GetPrompt(w)
+		pormpt := w.GetPrompt()
 		msg.PublishPrompt(t, id, pormpt)
 	}
 }
 func (t *Titan) InstallTo(b *bus.Bus) {
-	b.BindContectedEvent("titan.oncontected", t.onConnected)
-	b.BindDiscontectedEvent("titan.ondiscontected", t.onConnected)
-	b.BindLineEvent("titan.online", t.onLine)
-	b.BindLineEvent("titan.onprompt", t.onPrompt)
+	b.BindContectedEvent(t, t.onConnected)
+	b.BindDiscontectedEvent(t, t.onConnected)
+	b.BindLineEvent(t, t.onLine)
+	b.BindLineEvent(t, t.onPrompt)
 }
 
 func (t *Titan) RaiseMsgEvent(msg *message.Message) {
 	t.msgEvent.Raise(msg)
 }
 func (t *Titan) BindMsgEvent(id interface{}, fn func(t *Titan, msg *message.Message)) {
-	t.msgEvent.Bind(busevent.CreateHandler(
+	t.msgEvent.BindAs(
 		id,
 		func(data interface{}) {
 			fn(t, data.(*message.Message))
 		},
-	))
-
-}
-func (t *Titan) UnbindMsgEvent(id interface{}) {
-	t.msgEvent.Unbind(id)
+	)
 }
 
 func New() *Titan {

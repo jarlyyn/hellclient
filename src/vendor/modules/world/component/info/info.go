@@ -45,8 +45,8 @@ func (i *Info) onNewLine(b *bus.Bus, line *bus.Line) {
 	i.Lines = i.Lines.Next()
 }
 func (i *Info) InstallTo(b *bus.Bus) {
-	b.GetCurrentLines = i.CurrentLines
-	b.GetPrompt = i.CurrentPrompt
+	b.GetCurrentLines = b.WrapGetLines(i.CurrentLines)
+	b.GetPrompt = b.WrapGetLine(i.CurrentPrompt)
 	b.BindLineEvent(i, i.onNewLine)
 	b.BindPromptEvent(i, i.onPrompt)
 }

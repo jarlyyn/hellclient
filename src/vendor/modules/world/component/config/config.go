@@ -71,9 +71,9 @@ func (c *Config) Load(bus *bus.Bus) error {
 	return nil
 }
 func (c *Config) InstallTo(b *bus.Bus) {
-	b.GetHost = c.GetHost
-	b.GetPort = c.GetPort
-	b.GetCharset = c.GetCharset
+	b.GetHost = b.WrapGetString(c.GetHost)
+	b.GetPort = b.WrapGetString(c.GetPort)
+	b.GetCharset = b.WrapGetString(c.GetCharset)
 }
 
 func (c *Config) UninstallFrom(b *bus.Bus) {

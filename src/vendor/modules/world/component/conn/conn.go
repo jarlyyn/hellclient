@@ -40,11 +40,11 @@ func (conn *Conn) InstallTo(b *bus.Bus) {
 	d.MaxDuration = 0
 	conn.Debounce = d
 
-	b.DoSendToServer = conn.Send
-	b.DoConnectServer = conn.Connect
-	b.DoCloseServer = conn.Close
-	b.GetConnBuffer = conn.Buffer
-	b.GetConnConnected = conn.Connected
+	b.DoSendToServer = b.WrapDoCmd(conn.Send)
+	b.DoConnectServer = b.WrapDo(conn.Connect)
+	b.DoCloseServer = b.WrapDo(conn.Close)
+	// b.GetConnBuffer = b.WrapGetString(conn.Buffer)
+	b.GetConnConnected = b.WrapGetBool(conn.Connected)
 }
 
 func (conn *Conn) UninstallFrom(b *bus.Bus) {
@@ -56,7 +56,7 @@ func (conn *Conn) C() chan int {
 func (conn *Conn) UpdatePrompt(bus *bus.Bus) {
 	conn.Lock.Lock()
 	defer conn.Lock.Unlock()
-	bus.HandleConnPrompt(bus, conn.buffer)
+	bus.HandleConnPrompt(conn.buffer)
 }
 
 //Connect :connect to mud
@@ -66,7 +66,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	if conn.running == true {
 		return nil
 	}
-	t, err := telnet.Dial("tcp", bus.GetHost(bus)+":"+bus.GetPort(bus))
+	t, err := telnet.Dial("tcp", bus.GetHost()+":"+bus.GetPort())
 	if err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 				conn.Close(bus)
 				return
 			}
-			bus.HandleConnError(bus, err)
+			bus.HandleConnError(err)
 			return
 		}
 		conn.Lock.Lock()
@@ -117,10 +117,10 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 		if s == del {
 			if err != nil {
 				conn.Lock.Unlock()
-				bus.HandleConnError(bus, err)
+				bus.HandleConnError(err)
 				return
 			}
-			bus.HandleConnReceive(bus, conn.buffer)
+			bus.HandleConnReceive(conn.buffer)
 			conn.buffer = []byte{}
 			conn.Lock.Unlock()
 			continue
