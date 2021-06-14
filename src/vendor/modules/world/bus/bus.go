@@ -30,11 +30,12 @@ type Bus struct {
 	DoCloseServer        func() error
 	HandleConverterError func(err error)
 	HandleCmdError       func(err error)
-	lineEvent            busevent.Event
-	promptEvent          busevent.Event
-	connectedEvent       busevent.Event
-	disconnectedEvent    busevent.Event
-	closeEvent           busevent.Event
+	LineEvent            busevent.Event
+	PromptEvent          busevent.Event
+	ConnectedEvent       busevent.Event
+	DisconnectedEvent    busevent.Event
+	ReadyEvent           busevent.Event
+	CloseEvent           busevent.Event
 }
 
 func (b *Bus) WrapDo(f func(bus *Bus) error) func() error {
@@ -83,10 +84,10 @@ func (b *Bus) WrapHandleString(f func(bus *Bus, s string)) func(s string) {
 	}
 }
 func (b *Bus) RaiseLineEvent(line *Line) {
-	b.lineEvent.Raise(line)
+	b.LineEvent.Raise(line)
 }
 func (b *Bus) BindLineEvent(id interface{}, fn func(b *Bus, line *Line)) {
-	b.lineEvent.BindAs(
+	b.LineEvent.BindAs(
 		id,
 		func(data interface{}) {
 			fn(b, data.(*Line))
@@ -96,10 +97,10 @@ func (b *Bus) BindLineEvent(id interface{}, fn func(b *Bus, line *Line)) {
 }
 
 func (b *Bus) RaisePromptEvent(line *Line) {
-	b.promptEvent.Raise(line)
+	b.PromptEvent.Raise(line)
 }
 func (b *Bus) BindPromptEvent(id interface{}, fn func(b *Bus, line *Line)) {
-	b.promptEvent.BindAs(
+	b.PromptEvent.BindAs(
 		id,
 		func(data interface{}) {
 			fn(b, data.(*Line))
@@ -108,10 +109,10 @@ func (b *Bus) BindPromptEvent(id interface{}, fn func(b *Bus, line *Line)) {
 }
 
 func (b *Bus) RaiseContectedEvent() {
-	b.connectedEvent.Raise(nil)
+	b.ConnectedEvent.Raise(nil)
 }
 func (b *Bus) BindContectedEvent(id interface{}, fn func(b *Bus)) {
-	b.connectedEvent.BindAs(
+	b.ConnectedEvent.BindAs(
 		id,
 		func(data interface{}) {
 			fn(b)
@@ -120,10 +121,10 @@ func (b *Bus) BindContectedEvent(id interface{}, fn func(b *Bus)) {
 }
 
 func (b *Bus) RaiseDiscontectedEvent() {
-	b.disconnectedEvent.Raise(nil)
+	b.DisconnectedEvent.Raise(nil)
 }
 func (b *Bus) BindDiscontectedEvent(id interface{}, fn func(b *Bus)) {
-	b.disconnectedEvent.BindAs(
+	b.DisconnectedEvent.BindAs(
 		id,
 		func(data interface{}) {
 			fn(b)
@@ -131,15 +132,29 @@ func (b *Bus) BindDiscontectedEvent(id interface{}, fn func(b *Bus)) {
 	)
 }
 func (b *Bus) RaiseCloseEvent() {
-	b.closeEvent.Raise(nil)
+	b.CloseEvent.Raise(nil)
 }
 func (b *Bus) BindCloseEvent(id interface{}, fn func(b *Bus)) {
-	b.closeEvent.BindAs(
+	b.CloseEvent.BindAs(
 		id,
 		func(data interface{}) {
 			fn(b)
 		},
 	)
+}
+func (b *Bus) RaiseReadyEvent() {
+	b.ReadyEvent.Raise(nil)
+}
+func (b *Bus) BindReadyEvent(id interface{}, fn func(b *Bus)) {
+	b.ReadyEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b)
+		},
+	)
+}
+func (b *Bus) Reset() {
+	*b = *New()
 }
 func New() *Bus {
 	return &Bus{}
