@@ -13,10 +13,14 @@ type Bus struct {
 	GetConnBuffer        func() []byte
 	GetConnConnected     func() bool
 	GetHost              func() string
+	SetHost              func(string)
 	GetPort              func() string
+	SetPort              func(string)
 	GetCharset           func() string
+	SetCharset           func(string)
 	GetCurrentLines      func() []*Line
 	GetPrompt            func() *Line
+	GetClientInfo        func() *ClientInfo
 	DoSendToServer       func(cmd []byte) error
 	DoSend               func(cmd []byte) error
 	DoSave               func() error
@@ -70,6 +74,11 @@ func (b *Bus) WrapGetLines(f func(bus *Bus) []*Line) func() []*Line {
 }
 func (b *Bus) WrapGetBool(f func(bus *Bus) bool) func() bool {
 	return func() bool {
+		return f(b)
+	}
+}
+func (b *Bus) WrapGetClientInfo(f func(bus *Bus) *ClientInfo) func() *ClientInfo {
+	return func() *ClientInfo {
 		return f(b)
 	}
 }

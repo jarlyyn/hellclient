@@ -15,6 +15,12 @@ type Info struct {
 func (i *Info) Init() {
 	i.Lines = ring.New(1000)
 }
+func (i *Info) ClientInfo(b *bus.Bus) *bus.ClientInfo {
+	info := &bus.ClientInfo{}
+	info.ID = b.ID
+	info.Running = b.GetConnConnected()
+	return info
+}
 func (i *Info) CurrentLines(b *bus.Bus) []*bus.Line {
 	result := []*bus.Line{}
 	i.Lock.RLock()
@@ -47,9 +53,7 @@ func (i *Info) onNewLine(b *bus.Bus, line *bus.Line) {
 func (i *Info) InstallTo(b *bus.Bus) {
 	b.GetCurrentLines = b.WrapGetLines(i.CurrentLines)
 	b.GetPrompt = b.WrapGetLine(i.CurrentPrompt)
+	b.GetClientInfo = b.WrapGetClientInfo(i.ClientInfo)
 	b.BindLineEvent(i, i.onNewLine)
 	b.BindPromptEvent(i, i.onPrompt)
-}
-
-func (i *Info) UninstallFrom(b *bus.Bus) {
 }
