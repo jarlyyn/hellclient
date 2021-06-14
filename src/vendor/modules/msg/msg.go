@@ -4,7 +4,7 @@ import (
 	"modules/world/bus"
 
 	"github.com/herb-go/connections/room/message"
-	"gopkg.in/go-playground/validator.v8"
+	"github.com/herb-go/herb/ui/validator"
 )
 
 const MsgTypeConnected = "connected"
@@ -15,6 +15,7 @@ const MsgTypeLine = "line"
 const MsgTypePrompt = "prompt"
 const MsgTypeAllLines = "allLines"
 const MsgTypeLines = "lines"
+const MsgTypeClients = "clients"
 
 type Publisher interface {
 	Publish(msg *message.Message)
@@ -54,4 +55,8 @@ func PublishAllLines(p Publisher, id string, lines []*bus.Line) {
 }
 func PublishLines(p Publisher, id string, lines []*bus.Line) {
 	p.Publish(New(MsgTypeAllLines, id, lines))
+}
+
+func PublishClients(p Publisher, infos []*bus.ClientInfo) {
+	p.Publish(New(MsgTypeClients, "", infos))
 }

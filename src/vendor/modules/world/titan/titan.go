@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/herb-go/connections/room/message"
+	"github.com/herb-go/herb/ui/validator"
 	"github.com/herb-go/misc/busevent"
 )
 
@@ -23,6 +24,18 @@ func (t *Titan) World(id string) *bus.Bus {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
 	return t.find(id)
+}
+
+func (t *Titan) NewWorld(id string) *bus.Bus {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	if t.Worlds[id] != nil {
+		return nil
+	}
+	b := bus.New()
+	b.ID = id
+	t.Worlds[id] = b
+	return b
 }
 
 func (t *Titan) DoSendTo(id string, msg []byte) error {
@@ -47,7 +60,13 @@ func (t *Titan) onPrompt(b *bus.Bus, prompt *bus.Line) {
 func (t *Titan) onLine(b *bus.Bus, line *bus.Line) {
 	msg.PublishLine(t, b.ID, line)
 }
+func (t *Titan) OnCreateFail(errors []*validator.FieldError) {
+	msg.PublishCreateFail(t, errors)
+}
+func (t *Titan) OnCreateSuccess(id string) {
+	msg.PublishCreateSuccess(t, id)
 
+}
 func (t *Titan) HandleCmdConnect(id string) {
 	w := t.World(id)
 	if w != nil {
@@ -86,6 +105,18 @@ func (t *Titan) HandleCmdPrompt(id string) {
 		pormpt := w.GetPrompt()
 		msg.PublishPrompt(t, id, pormpt)
 	}
+}
+
+func (t *Titan) ExecClients() {
+	t.Locker.RLock()
+	defer t.Locker.RUnlock()
+	var result = make([]*bus.ClientInfo, len(t.Worlds))
+	var i = 0
+	for _, v := range t.Worlds {
+		result[i] = v.GetClientInfo()
+		i++
+	}
+	msg.PublishClients(t, result)
 }
 func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindContectedEvent(t, t.onConnected)
