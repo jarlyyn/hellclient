@@ -12,6 +12,9 @@ handlers.current=function(data){
 handlers.line=function(data){
     var lines=vm.lines
     lines.push(data)
+    lines.sort(function(a, b) {
+        return a.ID>b.ID?1:-1;
+    });      
     if (lines.length>500){
         lines.shift()
     }else{
