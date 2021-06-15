@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/herb-go/connections/room/message"
 	"github.com/herb-go/herb/ui/validator"
@@ -78,9 +79,11 @@ func (t *Titan) Publish(msg *message.Message) {
 }
 
 func (t *Titan) onConnected(b *bus.Bus) {
+	b.DoPrintSystem(app.Time.Datetime(time.Now()) + "  成功连接服务器")
 	msg.PublishConnected(t, b.ID)
 }
-func (t *Titan) onDisonnected(b *bus.Bus) {
+func (t *Titan) onDisconnected(b *bus.Bus) {
+	b.DoPrintSystem(app.Time.Datetime(time.Now()) + "  与服务器断开连接接 ")
 	msg.PublishDisconnected(t, b.ID)
 }
 func (t *Titan) onPrompt(b *bus.Bus, prompt *bus.Line) {
@@ -164,7 +167,7 @@ func (t *Titan) ExecClients() {
 }
 func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindContectedEvent(t, t.onConnected)
-	b.BindDiscontectedEvent(t, t.onConnected)
+	b.BindDiscontectedEvent(t, t.onDisconnected)
 	b.BindLineEvent(t, t.onLine)
 	b.BindPromptEvent(t, t.onPrompt)
 }

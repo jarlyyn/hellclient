@@ -70,6 +70,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	if err != nil {
 		return err
 	}
+	go bus.RaiseContectedEvent()
 	conn.running = true
 	conn.c = make(chan int)
 	conn.buffer = make([]byte, 1024)

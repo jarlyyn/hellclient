@@ -1,6 +1,10 @@
 package bus
 
-import "time"
+import (
+	"time"
+
+	"github.com/herb-go/uniqueid"
+)
 
 type Word struct {
 	Text       string
@@ -11,6 +15,7 @@ type Word struct {
 
 type Line struct {
 	Words    []Word
+	ID       string
 	Time     int64
 	IsPrint  bool
 	IsSystem bool
@@ -30,6 +35,7 @@ func (l *Line) Plain() string {
 func NewLine() *Line {
 	return &Line{
 		Words:    []Word{},
+		ID:       uniqueid.MustGenerateID(),
 		Time:     time.Now().Unix(),
 		IsPrint:  false,
 		IsSystem: false,
