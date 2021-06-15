@@ -129,12 +129,12 @@ func (p *Prophet) Enter(w http.ResponseWriter, r *http.Request) error {
 
 //OnMessage called when connection message received.
 func (p *Prophet) OnMessage(msg *connections.Message) {
-	go func() {
-		_, _, cerr := p.Handlers.Exec(msg)
-		if cerr != nil {
+	_, _, cerr := p.Handlers.Exec(msg)
+	if cerr != nil {
+		go func() {
 			p.OnError(cerr)
-		}
-	}()
+		}()
+	}
 
 }
 
