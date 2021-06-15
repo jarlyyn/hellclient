@@ -16,9 +16,13 @@ func (l *Log) InstallTo(b *bus.Bus) {
 	b.HandleConnError = dolog
 }
 func (l *Log) DoLogError(b *bus.Bus, err error) {
-	util.LogError(err)
+	if err == nil {
+		return
+	}
+	go b.DoPrintSystem("Error: " + err.Error())
+	go util.LogError(err)
 }
 
-func (l *Log) UninstallFrom(b *bus.Bus) {
-
+func New() *Log {
+	return &Log{}
 }

@@ -11,6 +11,11 @@ onButton.connect=function(){
 onButton.disconnect=function(){
     send("disconnect",vm.current)
 }
+onButton.notopened=function(){
+    vm.notopened=null;
+    vm.notopenedVisible=true
+    send("notopened")
+}
 onButton.createGame=function(){
     vm.createFail=[];
     vm.gameCreateForm={};
@@ -38,5 +43,9 @@ onButton.allLines=function(){
     vm.alllines=[]
     vm.allLinesVisible=true;
     send("allLines");
+}
+onButton.open=function(id){
+    send("open",id);
+    notopenedVisible=false;
 }
 })

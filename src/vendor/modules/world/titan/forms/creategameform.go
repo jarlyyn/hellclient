@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"regexp"
 
-	"modules/world/bus"
-
 	"github.com/herb-go/herb/ui"
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
@@ -27,7 +25,6 @@ type CreateGameForm struct {
 	Host    string
 	Port    string
 	Charset string
-	world   *bus.Bus
 }
 
 //CreateGameFormID form id of form create game
@@ -56,8 +53,11 @@ func (f *CreateGameForm) Validate() error {
 	f.ValidateFieldf(f.Port != "", "Port", "端口不能为空")
 	f.ValidateFieldf(f.Charset != "", "Charset", "字符编码不能为空")
 	if !f.HasError() {
-		f.world = titan.Pangu.NewWorld(f.ID)
-		f.ValidateFieldf(f.world == nil, "ID", "名称已经存在")
+		ok, err := titan.Pangu.IsWorldExist(f.ID)
+		if err != nil {
+			return err
+		}
+		f.ValidateFieldf(ok == false, "ID", "名称已经存在")
 	}
 	return nil
 }
@@ -69,7 +69,7 @@ func (f *CreateGameForm) InitWithRequest(r *http.Request) error {
 	return nil
 }
 
-func CreateGame(data []byte) {
+func CreateGame(t *titan.Titan, data []byte) {
 	form := NewCreateGameForm()
 	err := json.Unmarshal(data, form)
 	if err != nil {
@@ -81,18 +81,22 @@ func CreateGame(data []byte) {
 	}
 	errors := form.Errors()
 	if len(errors) != 0 {
-		titan.Pangu.OnCreateFail(errors)
+		t.OnCreateFail(errors)
 		return
 	}
-	form.world.SetHost(form.Host)
-	form.world.SetPort(form.Port)
-	form.world.SetCharset(form.Charset)
-	err = form.world.DoSave()
+	w := t.NewWorld(form.ID)
+	if w == nil {
+		return
+	}
+	w.SetHost(form.Host)
+	w.SetPort(form.Port)
+	w.SetCharset(form.Charset)
+	go func() {
+		t.OnCreateSuccess(form.ID)
+		t.ExecClients()
+	}()
+	err = t.SaveWorld(form.ID)
 	if err != nil {
 		return
 	}
-	go func() {
-		titan.Pangu.OnCreateSuccess(form.ID)
-		titan.Pangu.ExecClients()
-	}()
 }

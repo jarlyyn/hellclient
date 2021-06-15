@@ -20,6 +20,8 @@ var data={
     saveTriggerFail:[],
     allLines:[],
     allLinesVisible:false,
+    notopened:[],
+    notopenedVisible:false,
 }
 var vm = new Vue({
     el:"#app",
@@ -40,6 +42,9 @@ var vm = new Vue({
         },
         onButton:function(data){
             onButton[data]()
+        },
+        onOpen:function(id){
+            onButton.open(id)
         },
         onUpdateTrigger:function(data){
             vm.saveTriggerFail=[];

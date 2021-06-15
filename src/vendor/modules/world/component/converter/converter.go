@@ -21,14 +21,18 @@ func (c *Converter) UninstallFrom(b *bus.Bus) {
 }
 func (c *Converter) onPrompt(bus *bus.Bus, msg []byte) {
 	line := c.ConvertToLine(bus, msg)
-	bus.RaisePromptEvent(line)
+	if line != nil {
+		bus.RaisePromptEvent(line)
+	}
 }
 func (c *Converter) onMsg(bus *bus.Bus, msg []byte) {
 	if len(msg) == 0 {
 		return
 	}
 	line := c.ConvertToLine(bus, msg)
-	bus.RaiseLineEvent(line)
+	if line != nil {
+		bus.RaiseLineEvent(line)
+	}
 }
 func (c *Converter) onError(bus *bus.Bus, err error) {
 	bus.HandleConverterError(err)
