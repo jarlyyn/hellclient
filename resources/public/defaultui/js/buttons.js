@@ -46,6 +46,6 @@ onButton.allLines=function(){
 }
 onButton.open=function(id){
     send("open",id);
-    notopenedVisible=false;
+    vm.notopenedVisible=false;
 }
 })

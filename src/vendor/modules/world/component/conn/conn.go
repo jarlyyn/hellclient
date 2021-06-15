@@ -145,9 +145,13 @@ func (conn *Conn) Buffer(bus *bus.Bus) []byte {
 	return conn.buffer
 }
 func (conn *Conn) Send(bus *bus.Bus, cmd []byte) error {
+	conn.Lock.RLock()
+	defer conn.Lock.RUnlock()
 	if conn.telnet == nil {
 		return nil
 	}
+	bus.HandleConnReceive(conn.buffer)
+	conn.buffer = []byte{}
 	_, err := conn.telnet.Conn.Write(cmd)
 	if err != nil {
 		return err
