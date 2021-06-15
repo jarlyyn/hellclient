@@ -156,7 +156,7 @@ func (conn *Conn) Send(bus *bus.Bus, cmd []byte) error {
 	return err
 }
 
-func New(host string) *Conn {
+func New() *Conn {
 	c := &Conn{
 		telnet:  nil,
 		c:       make(chan int),

@@ -17,4 +17,5 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("triggerFail", p.newRoomAdapter("triggerFail"))
 	adapter.Register("triggerSuccess", p.newRoomAdapter("triggerSuccess"))
 	adapter.Register("allLines", p.newRoomAdapter("allLines"))
+	adapter.Register("notopened", p.newUserAdapter("notopened"))
 }

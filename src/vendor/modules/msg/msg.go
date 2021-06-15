@@ -16,6 +16,7 @@ const MsgTypePrompt = "prompt"
 const MsgTypeAllLines = "allLines"
 const MsgTypeLines = "lines"
 const MsgTypeClients = "clients"
+const MsgTypeNotOpened = "notopened"
 
 type Publisher interface {
 	Publish(msg *message.Message)
@@ -59,4 +60,7 @@ func PublishLines(p Publisher, id string, lines []*bus.Line) {
 
 func PublishClients(p Publisher, infos []*bus.ClientInfo) {
 	p.Publish(New(MsgTypeClients, "", infos))
+}
+func PublishNotOpened(p Publisher, list []*bus.WorldFile) {
+	p.Publish(New(MsgTypeNotOpened, "", list))
 }

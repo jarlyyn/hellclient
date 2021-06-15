@@ -68,5 +68,7 @@ handlers.triggerSuccess=function(data){
 handlers.allLines=function(data){
     vm.allLines=data
 }
-
+handlers.notopened=function(data){
+    vm.notopened=data
+}
 })

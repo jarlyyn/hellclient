@@ -23,8 +23,8 @@ type Bus struct {
 	GetClientInfo        func() *ClientInfo
 	DoSendToServer       func(cmd []byte) error
 	DoSend               func(cmd []byte) error
-	DoSave               func() error
-	DoLoad               func() error
+	DoEncode             func() ([]byte, error)
+	DoDecode             func([]byte) error
 	DoPrint              func(msg string)
 	DoPrintSystem        func(msg string)
 	HandleConnReceive    func(msg []byte)

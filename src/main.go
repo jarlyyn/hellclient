@@ -5,6 +5,7 @@ import (
 	"modules/app"
 	_ "modules/drivers"
 	"modules/overseers"
+	"modules/world"
 
 	"github.com/herb-go/util"
 	"github.com/herb-go/util/config"
@@ -25,6 +26,8 @@ func initModules() {
 
 //Main app run func.
 var run = func() {
+	world.Start()
+	util.OnQuit(world.Stop)
 	//Put your run code here
 	util.WaitingQuit()
 	//Delay util.QuitDelayDuration for modules quit.

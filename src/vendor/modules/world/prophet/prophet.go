@@ -36,7 +36,7 @@ type Prophet struct {
 
 func (p *Prophet) Init(t *titan.Titan) {
 	p.Titan = t
-	t.BindMsgEvent("prophet.publish", p.Publish)
+	t.BindMsgEvent(p, p.Publish)
 	p.Current.Store("")
 	p.Gateway.IDGenerator = uniqueid.DefaultGenerator.GenerateID
 	initAdapter(p, p.Adapter)
@@ -155,8 +155,29 @@ func (p *Prophet) OnClose(conn connections.OutputConnection) {
 }
 
 //OnOpen called when connection open.
-func (p *Prophet) OnOpen(connections.OutputConnection) {
+func (p *Prophet) OnOpen(conn connections.OutputConnection) {
+	p.Contexts.OnOpen(conn)
+	ctx := p.Context(conn.ID())
+	ctx.Lock.Lock()
+	defer ctx.Lock.Unlock()
+	r := room.NewLocation(conn, p.Rooms)
+	var crid string
+	v := p.Current.Load()
+	if v != nil {
+		crid = v.(string)
+		Send(conn, "current", crid)
+	}
+	if crid != "" {
+		r.Join(crid)
+	}
+	p.Titan.ExecClients()
+	p.Titan.HandleCmdAllLines(crid)
+	p.Titan.HandleCmdPrompt(crid)
+	ctx.Data.Store("rooms", r)
 
+}
+func (p *Prophet) Start() {
+	connections.Consume(p.Gateway, p)
 }
 
 // Stop stop consumer
@@ -177,13 +198,4 @@ func New() *Prophet {
 	}
 }
 
-var Laozi = New()
-
-func Start() {
-	Laozi.Init(titan.Pangu)
-
-}
-
-func Stop() {
-	Laozi.Stop()
-}
+var Laozi *Prophet

@@ -1,14 +1,11 @@
 package config
 
 import (
-	"io/ioutil"
-	"modules/world"
+	"bytes"
 	"modules/world/bus"
 	"sync"
 
-	"github.com/herb-go/util"
-
-	"github.com/pelletier/go-toml"
+	"github.com/BurntSushi/toml"
 )
 
 type Data struct {
@@ -59,26 +56,21 @@ func (c *Config) SetCharset(bus *bus.Bus, charset string) {
 	defer c.Locker.Unlock()
 	c.Data.Charset = charset
 }
-func (c *Config) Save(bus *bus.Bus) error {
+func (c *Config) Encode() ([]byte, error) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
-	filename := world.GetWorldPath(bus.ID)
-	data, err := toml.Marshal(c.Data)
+	buf := bytes.NewBuffer(nil)
+	err := toml.NewEncoder(buf).Encode(c.Data)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return ioutil.WriteFile(filename, data, util.DefaultFileMode)
+	return buf.Bytes(), nil
 }
-func (c *Config) Load(bus *bus.Bus) error {
+func (c *Config) Decode(data []byte) error {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
-	filename := world.GetWorldPath(bus.ID)
-	data, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return err
-	}
 	configdata := NewData()
-	err = toml.Unmarshal(data, configdata)
+	err := toml.Unmarshal(data, configdata)
 	if err != nil {
 		return err
 	}
@@ -92,9 +84,13 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetPort = b.WrapHandleString(c.SetPort)
 	b.GetCharset = b.WrapGetString(c.GetCharset)
 	b.SetCharset = b.WrapHandleString(c.SetCharset)
+	b.DoEncode = c.Encode
+	b.DoDecode = c.Decode
 
 }
 
-func (c *Config) UninstallFrom(b *bus.Bus) {
-
+func New() *Config {
+	return &Config{
+		Data: NewData(),
+	}
 }
