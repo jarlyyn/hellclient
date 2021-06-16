@@ -109,7 +109,7 @@ func (p *Prophet) Change(roomid string) {
 	}
 	p.Current.Store(roomid)
 	go func() {
-		p.Titan.HandleCmdAllLines(roomid)
+		p.Titan.HandleCmdLines(roomid)
 		p.Titan.HandleCmdPrompt(roomid)
 	}()
 }
@@ -171,7 +171,7 @@ func (p *Prophet) OnOpen(conn connections.OutputConnection) {
 		r.Join(crid)
 	}
 	p.Titan.ExecClients()
-	p.Titan.HandleCmdAllLines(crid)
+	p.Titan.HandleCmdLines(crid)
 	p.Titan.HandleCmdPrompt(crid)
 	ctx.Data.Store("rooms", r)
 

@@ -8,6 +8,7 @@ define(function (require) {
 handlers.current=function(data){
     vm.current=data
     vm.currenttab=data
+    vm.lines=[]
 }
 handlers.line=function(data){
     var lines=vm.lines

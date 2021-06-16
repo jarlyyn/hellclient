@@ -20,6 +20,7 @@ func Start() {
 func Stop() {
 	prophet.Laozi.Stop()
 }
+
 func init() {
 	util.RegisterModule(ModuleName, func() {
 

@@ -3,6 +3,7 @@ package routers
 import (
 	"modules/scripts"
 	prophetactions "modules/world/prophet/actions"
+	"modules/world/titan"
 
 	"github.com/herb-go/herb/file/simplehttpserver"
 	"github.com/herb-go/herb/middleware"
@@ -24,6 +25,8 @@ var RouterUIFactory = router.NewFactory(func() router.Router {
 	Router.HandleHomepage().HandleFunc(simplehttpserver.ServeFile(util.Resources("defaultui", "index.html")))
 	Router.Handle("/ws").HandleFunc(prophetactions.WebsocketAction)
 	Router.Handle(scripts.ScriptPrefix).Handle(scripts.NewWebdavServer())
+	Router.Handle(titan.WorldsPrefix).Handle(titan.NewWebdavServer())
+
 	//Put your router configure code here
 	return Router
 })
