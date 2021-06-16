@@ -24,11 +24,8 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *bus.
 					continue
 				}
 				w.Text = string(b)
-				fmt.Println([]byte(s.Code))
-				fmt.Println(w.Text)
 				line.Append(w)
 			} else if s.Type == "CSI" {
-				fmt.Println("CSI", s.Params)
 				for _, v := range s.Params {
 					switch v {
 					case "0":
