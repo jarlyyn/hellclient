@@ -12,7 +12,7 @@ const ModuleName = "900scripts"
 
 const ScriptFolder = "scripts"
 
-const ScriptPrefix = "/scriptfiles/"
+const ScriptPrefix = "/scripts/"
 
 func NewWebdavServer() http.Handler {
 	webdavserver := &webdav.Handler{

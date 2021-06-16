@@ -103,11 +103,10 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 		}
 		s, err := conn.telnet.ReadByte()
 		if err != nil {
-			if isClosedError(err) {
-				conn.Close(bus)
-				return
+			if !isClosedError(err) {
+				bus.HandleConnError(err)
 			}
-			bus.HandleConnError(err)
+			conn.Close(bus)
 			return
 		}
 		conn.Lock.Lock()

@@ -55,7 +55,7 @@ func PublishAllLines(p Publisher, id string, lines []*bus.Line) {
 	p.Publish(New(MsgTypeAllLines, id, lines))
 }
 func PublishLines(p Publisher, id string, lines []*bus.Line) {
-	p.Publish(New(MsgTypeAllLines, id, lines))
+	p.Publish(New(MsgTypeLines, id, lines))
 }
 
 func PublishClients(p Publisher, infos []*bus.ClientInfo) {
