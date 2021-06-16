@@ -45,9 +45,7 @@ func (conn *Conn) InstallTo(b *bus.Bus) {
 	b.DoCloseServer = b.WrapDo(conn.Close)
 	// b.GetConnBuffer = b.WrapGetString(conn.Buffer)
 	b.GetConnConnected = b.WrapGetBool(conn.Connected)
-}
-
-func (conn *Conn) UninstallFrom(b *bus.Bus) {
+	b.BindCloseEvent(conn, conn.Stop)
 }
 
 func (conn *Conn) C() chan int {
@@ -57,6 +55,9 @@ func (conn *Conn) UpdatePrompt(bus *bus.Bus) {
 	conn.Lock.Lock()
 	defer conn.Lock.Unlock()
 	bus.HandleConnPrompt(conn.buffer)
+}
+func (conn *Conn) Stop(b *bus.Bus) {
+	conn.Close(b)
 }
 
 //Connect :connect to mud
@@ -89,7 +90,7 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 	conn.running = false
 	conn.buffer = []byte{}
 	close(conn.c)
-	go bus.RaiseDiscontectedEvent()
+	bus.RaiseDiscontectedEvent()
 	err := conn.telnet.Close()
 	return err
 }
