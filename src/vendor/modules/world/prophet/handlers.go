@@ -92,6 +92,13 @@ func (p *Prophet) onCmdOpen(conn connections.OutputConnection, cmd command.Comma
 	}
 	return nil
 }
+func (p *Prophet) onCmdClose(conn connections.OutputConnection, cmd command.Command) error {
+	id := p.Current.Load().(string)
+	p.Titan.CloseWorld(id)
+	p.change(conn, "")
+	p.Titan.ExecClients()
+	return nil
+}
 
 // func (p *Prophet) onCmdSaveTrigger(conn connections.OutputConnection, cmd command.Command) error {
 // 	forms.SaveTrigger(CurrentGameID(), cmd.Data())
@@ -112,6 +119,8 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("createGame", p.onCmdCreateGame)
 	handlers.Register("notopened", p.onCmdNotOpened)
 	handlers.Register("open", p.onCmdOpen)
+	handlers.Register("close", p.onCmdClose)
+
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)
 

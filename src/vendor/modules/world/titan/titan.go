@@ -247,6 +247,16 @@ func (t *Titan) listWorlds() ([]string, error) {
 	}
 	return result, nil
 }
+func (t *Titan) CloseWorld(id string) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	w := t.Worlds[id]
+	if w == nil {
+		return
+	}
+	delete(t.Worlds, id)
+	t.DestoryBus(w)
+}
 func (t *Titan) SaveWorld(id string) error {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()

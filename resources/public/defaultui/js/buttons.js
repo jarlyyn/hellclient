@@ -11,6 +11,9 @@ onButton.connect=function(){
 onButton.disconnect=function(){
     send("disconnect",vm.current)
 }
+onButton.close=function(){
+    send("close",vm.current)
+}
 onButton.notopened=function(){
     vm.notopened=null;
     vm.notopenedVisible=true
