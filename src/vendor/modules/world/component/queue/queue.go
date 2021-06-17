@@ -17,15 +17,17 @@ type Queue struct {
 func (c *Queue) InstallTo(b *bus.Bus) {
 	b.BindReadyEvent(c, c.Ready)
 	b.BindCloseEvent(c, c.close)
+	b.DoSendToQueue = b.WrapHandleBytes(c.Append)
+	b.DoDiscardQueue = b.Wrap(c.Flush)
 }
 func (c *Queue) Ready(b *bus.Bus) {
 	c.List = list.New()
 	c.List.Init()
 }
 func (c *Queue) close(b *bus.Bus) {
-	c.Flush()
+	c.Flush(b)
 }
-func (c *Queue) Flush() {
+func (c *Queue) Flush(b *bus.Bus) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
 	timer := c.Timer
