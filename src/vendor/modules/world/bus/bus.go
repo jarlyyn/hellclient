@@ -16,13 +16,16 @@ type Bus struct {
 	SetHost              func(string)
 	GetPort              func() string
 	SetPort              func(string)
+	GetQueueDelay        func() int
+	SetQueueDelay        func(int)
 	GetCharset           func() string
 	SetCharset           func(string)
 	GetCurrentLines      func() []*Line
 	GetPrompt            func() *Line
 	GetClientInfo        func() *ClientInfo
-	DoSendToServer       func(cmd []byte) error
-	DoSend               func(cmd []byte) error
+	DoSendToConn         func(cmd []byte)
+	DoSend               func(cmd []byte)
+	DoSendToQueue        func(cmd []byte)
 	DoEncode             func() ([]byte, error)
 	DoDecode             func([]byte) error
 	DoPrint              func(msg string)
@@ -77,6 +80,11 @@ func (b *Bus) WrapGetBool(f func(bus *Bus) bool) func() bool {
 		return f(b)
 	}
 }
+func (b *Bus) WrapGetInt(f func(bus *Bus) int) func() int {
+	return func() int {
+		return f(b)
+	}
+}
 func (b *Bus) WrapGetClientInfo(f func(bus *Bus) *ClientInfo) func() *ClientInfo {
 	return func() *ClientInfo {
 		return f(b)
@@ -90,6 +98,11 @@ func (b *Bus) WrapHandleBytes(f func(bus *Bus, bs []byte)) func(bs []byte) {
 func (b *Bus) WrapHandleString(f func(bus *Bus, s string)) func(s string) {
 	return func(s string) {
 		f(b, s)
+	}
+}
+func (b *Bus) WrapHandleInt(f func(bus *Bus, i int)) func(i int) {
+	return func(i int) {
+		f(b, i)
 	}
 }
 func (b *Bus) RaiseLineEvent(line *Line) {

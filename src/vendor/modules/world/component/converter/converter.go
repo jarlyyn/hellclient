@@ -10,7 +10,7 @@ type Converter struct {
 }
 
 func (c *Converter) InstallTo(b *bus.Bus) {
-	b.DoSend = b.WrapDoCmd(c.Send)
+	b.DoSend = b.WrapHandleBytes(c.Send)
 	b.HandleConnReceive = b.WrapHandleBytes(c.onMsg)
 	b.HandleConnPrompt = b.WrapHandleBytes(c.onPrompt)
 	b.DoPrint = b.WrapHandleString(c.DoPrint)
@@ -38,14 +38,14 @@ func (c *Converter) onError(bus *bus.Bus, err error) {
 	bus.HandleConverterError(err)
 }
 
-func (c *Converter) Send(bus *bus.Bus, cmd []byte) error {
+func (c *Converter) Send(bus *bus.Bus, cmd []byte) {
 	c.Lock.Lock()
 	defer c.Lock.Unlock()
 	b, err := FromUTF8(bus.GetCharset(), []byte(cmd))
 	if err != nil {
-		return err
+		bus.HandleConverterError(err)
 	}
-	return bus.DoSendToServer(b)
+	bus.DoSendToConn(b)
 }
 
 func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {

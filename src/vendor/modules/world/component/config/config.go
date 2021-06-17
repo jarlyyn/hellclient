@@ -9,10 +9,11 @@ import (
 )
 
 type Data struct {
-	Host    string
-	Port    string
-	Charset string
-	Params  map[string]string
+	Host       string
+	Port       string
+	Charset    string
+	QueueDelay int
+	Params     map[string]string
 }
 
 func NewData() *Data {
@@ -35,6 +36,16 @@ func (c *Config) SetPort(bus *bus.Bus, port string) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
 	c.Data.Port = port
+}
+func (c *Config) GetQueueDelay(bus *bus.Bus) int {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.QueueDelay
+}
+func (c *Config) SetQueueDelay(bus *bus.Bus, delay int) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.QueueDelay = delay
 }
 func (c *Config) GetHost(bus *bus.Bus) string {
 	c.Locker.Lock()
@@ -84,6 +95,8 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetPort = b.WrapHandleString(c.SetPort)
 	b.GetCharset = b.WrapGetString(c.GetCharset)
 	b.SetCharset = b.WrapHandleString(c.SetCharset)
+	b.GetQueueDelay = b.WrapGetInt(c.GetQueueDelay)
+	b.SetQueueDelay = b.WrapHandleInt(c.SetQueueDelay)
 	b.DoEncode = c.Encode
 	b.DoDecode = c.Decode
 

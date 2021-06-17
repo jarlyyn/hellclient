@@ -40,7 +40,7 @@ func (conn *Conn) InstallTo(b *bus.Bus) {
 	d.MaxDuration = 0
 	conn.Debounce = d
 
-	b.DoSendToServer = b.WrapDoCmd(conn.Send)
+	b.DoSendToConn = b.WrapHandleBytes(conn.Send)
 	b.DoConnectServer = b.WrapDo(conn.Connect)
 	b.DoCloseServer = b.WrapDo(conn.Close)
 	// b.GetConnBuffer = b.WrapGetString(conn.Buffer)
@@ -145,20 +145,19 @@ func (conn *Conn) Buffer(bus *bus.Bus) []byte {
 	defer conn.Lock.RUnlock()
 	return conn.buffer
 }
-func (conn *Conn) Send(bus *bus.Bus, cmd []byte) error {
+func (conn *Conn) Send(bus *bus.Bus, cmd []byte) {
 	conn.Lock.RLock()
 	defer conn.Lock.RUnlock()
 	if conn.telnet == nil {
-		return nil
 	}
 	bus.HandleConnReceive(conn.buffer)
 	conn.buffer = []byte{}
 	_, err := conn.telnet.Conn.Write(cmd)
 	if err != nil {
-		return err
+		bus.HandleConnError(err)
 	}
 	_, err = conn.telnet.Conn.Write([]byte("\n"))
-	return err
+	bus.HandleConnError(err)
 }
 
 func New() *Conn {
