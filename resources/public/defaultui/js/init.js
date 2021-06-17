@@ -1,8 +1,8 @@
 requirejs.config({
     "paths": {
-        "text":"https://cdn.staticfile.org/require-text/2.0.12/text.min",
-        "vue":"https://cdn.jsdelivr.net/npm/vue@2.5.21/dist/vue",
-        "ELEMENT":"https://unpkg.com/element-ui/lib/index",
+        "text":"/public/defaultui/js/text.min",
+        "vue":"/public/defaultui/js/vue",
+        "ELEMENT":"/public/defaultui/theme-chalk/index",
         "html-top":"/public/defaultui/block/top.html",
         "html-triggers":"/public/defaultui/block/triggers.html",
         "html-creategameform":"/public/defaultui/block/creategameform.html",
