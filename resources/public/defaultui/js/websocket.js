@@ -1,6 +1,8 @@
 define(function (require) {
 var ws=new WebSocket("ws:"+location.host+"/ws");
-var app=require("/public/defaultui/js/app.js")        
+var app=require("/public/defaultui/js/app.js");
+var vm=require("/public/defaultui/js/vm.js")
+
 var handlers=app.handlers;
 var convertmsg=function(data){
     var sep=data.indexOf(" ")

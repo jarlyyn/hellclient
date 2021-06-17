@@ -1,6 +1,5 @@
 define(["vue","/public/defaultui/js/app.js"],function (Vue,app) {
     var onButton=app.onButton; 
-    var send=app.send;
 var data={
     current:"",
     currenttab:"",
@@ -31,12 +30,12 @@ var vm = new Vue({
     },
     methods:{
         send:function(){
-             send("send",this.cmd)
+            app.send("send",this.cmd)
              document.getElementById("user-input").getElementsByTagName("input")[0].select()
         },
         onChange:function(current){
             if (vm.clients.length){
-            send("change",current.name)
+                app.send("change",current.name)
             }
             return false
         },
