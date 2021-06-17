@@ -30,6 +30,7 @@ type Bus struct {
 	DoDecode             func([]byte) error
 	DoPrint              func(msg string)
 	DoPrintSystem        func(msg string)
+	DoDiscardQueue       func()
 	HandleConnReceive    func(msg []byte)
 	HandleConnError      func(err error)
 	HandleConnPrompt     func(msg []byte)
@@ -45,6 +46,11 @@ type Bus struct {
 	CloseEvent           busevent.Event
 }
 
+func (b *Bus) Wrap(f func(bus *Bus)) func() {
+	return func() {
+		f(b)
+	}
+}
 func (b *Bus) WrapDo(f func(bus *Bus) error) func() error {
 	return func() error {
 		return f(b)
