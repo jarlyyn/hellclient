@@ -10,6 +10,8 @@ import (
 	"modules/world/component/converter"
 	"modules/world/component/info"
 	"modules/world/component/log"
+	"modules/world/component/queue"
+
 	"os"
 	"path/filepath"
 	"strings"
@@ -37,6 +39,7 @@ func (t *Titan) CreateBus() *bus.Bus {
 		converter.New(),
 		info.New(),
 		log.New(),
+		queue.New(),
 		t,
 	)
 	b.RaiseReadyEvent()
@@ -68,9 +71,9 @@ func (t *Titan) NewWorld(id string) *bus.Bus {
 	return b
 }
 
-func (t *Titan) DoSendTo(id string, msg []byte) error {
+func (t *Titan) DoSendTo(id string, msg []byte) {
 	w := t.World(id)
-	return w.DoSend(msg)
+	w.DoSend(msg)
 }
 func (t *Titan) Publish(msg *message.Message) {
 	go func() {
@@ -114,7 +117,7 @@ func (t *Titan) HandleCmdDisconnect(id string) {
 func (t *Titan) HandleCmdSend(id string, msg []byte) {
 	w := t.World(id)
 	if w != nil {
-		w.HandleCmdError(w.DoSend(msg))
+		w.DoSend(msg)
 	}
 }
 func (t *Titan) HandleCmdAllLines(id string) {
