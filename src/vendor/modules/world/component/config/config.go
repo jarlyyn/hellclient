@@ -67,6 +67,26 @@ func (c *Config) SetCharset(bus *bus.Bus, charset string) {
 	defer c.Locker.Unlock()
 	c.Data.Charset = charset
 }
+func (c *Config) GetParam(key string) string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.Params[key]
+}
+func (c *Config) SetParam(key string, value string) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.Params[key] = value
+}
+func (c *Config) DeleteParam(key string) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	delete(c.Data.Params, key)
+}
+func (c *Config) GetParams() map[string]string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.Params
+}
 func (c *Config) Encode() ([]byte, error) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
@@ -99,7 +119,10 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetQueueDelay = b.WrapHandleInt(c.SetQueueDelay)
 	b.DoEncode = c.Encode
 	b.DoDecode = c.Decode
-
+	b.SetParam = c.SetParam
+	b.GetParam = c.GetParam
+	b.GetParams = c.GetParams
+	b.DeleteParam = c.DeleteParam
 }
 
 func New() *Config {
