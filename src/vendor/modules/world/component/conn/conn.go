@@ -92,6 +92,7 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 	close(conn.c)
 	bus.RaiseDiscontectedEvent()
 	err := conn.telnet.Close()
+	conn.telnet = nil
 	return err
 }
 func (conn *Conn) Receiver(bus *bus.Bus) {
@@ -149,6 +150,7 @@ func (conn *Conn) Send(bus *bus.Bus, cmd []byte) {
 	conn.Lock.RLock()
 	defer conn.Lock.RUnlock()
 	if conn.telnet == nil {
+		return
 	}
 	bus.HandleConnReceive(conn.buffer)
 	conn.buffer = []byte{}

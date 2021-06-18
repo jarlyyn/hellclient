@@ -18,6 +18,10 @@ type Bus struct {
 	SetPort              func(string)
 	GetQueueDelay        func() int
 	SetQueueDelay        func(int)
+	GetParam             func(string) string
+	GetParams            func() map[string]string
+	SetParam             func(string, string)
+	DeleteParam          func(string)
 	GetCharset           func() string
 	SetCharset           func(string)
 	GetCurrentLines      func() []*Line
@@ -38,6 +42,7 @@ type Bus struct {
 	DoCloseServer        func() error
 	HandleConverterError func(err error)
 	HandleCmdError       func(err error)
+	HandleTriggerError   func(err error)
 	LineEvent            busevent.Event
 	PromptEvent          busevent.Event
 	ConnectedEvent       busevent.Event

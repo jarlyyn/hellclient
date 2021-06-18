@@ -100,7 +100,10 @@ func (t *Titan) OnCreateFail(errors []*validator.FieldError) {
 }
 func (t *Titan) OnCreateSuccess(id string) {
 	msg.PublishCreateSuccess(t, id)
-
+	w := t.World(id)
+	if w != nil {
+		w.HandleCmdError(w.DoConnectServer())
+	}
 }
 func (t *Titan) HandleCmdConnect(id string) {
 	w := t.World(id)
@@ -290,6 +293,8 @@ func (t *Titan) OpenWorld(id string) (bool, error) {
 		return false, err
 	}
 	t.Worlds[id] = b
+	go b.HandleCmdError(b.DoConnectServer())
+
 	return true, nil
 }
 func New() *Titan {
