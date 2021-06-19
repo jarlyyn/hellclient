@@ -47,6 +47,9 @@ func (i *Info) onPrompt(b *bus.Bus, line *bus.Line) {
 func (i *Info) onNewLine(b *bus.Bus, line *bus.Line) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
+	if line.OmitFromOutput {
+		return
+	}
 	i.Lines.Value = line
 	i.Lines = i.Lines.Next()
 }

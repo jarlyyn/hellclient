@@ -93,6 +93,9 @@ func (t *Titan) onPrompt(b *bus.Bus, prompt *bus.Line) {
 	msg.PublishPrompt(t, b.ID, prompt)
 }
 func (t *Titan) onLine(b *bus.Bus, line *bus.Line) {
+	if line.OmitFromOutput {
+		return
+	}
 	msg.PublishLine(t, b.ID, line)
 }
 func (t *Titan) OnCreateFail(errors []*validator.FieldError) {

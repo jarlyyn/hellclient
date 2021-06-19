@@ -31,6 +31,7 @@ func (c *Converter) onMsg(bus *bus.Bus, msg []byte) {
 	}
 	line := c.ConvertToLine(bus, msg)
 	if line != nil {
+		line.IsReal = true
 		bus.RaiseLineEvent(line)
 	}
 }
