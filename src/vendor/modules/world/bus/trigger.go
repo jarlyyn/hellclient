@@ -30,4 +30,7 @@ type Trigger struct {
 	WildcardsLowerCase bool
 	Group              string
 	IgnoreCase         bool
+	KeepEvaluating     bool
+	OmitFromLog        bool
+	OmitFromOutput     bool
 }

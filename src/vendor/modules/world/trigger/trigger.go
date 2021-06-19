@@ -35,6 +35,9 @@ type Trigger struct {
 	RawMatch string
 }
 
+func (t *Trigger) OnSuccess(ctx *Context, result *MatchResult) {
+
+}
 func (t *Trigger) BuildMatcher(match string) error {
 	if t.Data.Regexp {
 		re, err := regexp.Compile(match)
@@ -56,6 +59,9 @@ func (t *Trigger) BuildMatcher(match string) error {
 	return nil
 }
 func (t *Trigger) Match(ctx *Context) (*MatchResult, error) {
+	if t.Deleted || !t.Data.Enabled {
+		return nil, nil
+	}
 	if t.Data.ExpandVariables {
 		if ctx.Expanded == nil {
 			params := ctx.Bus.GetParams()

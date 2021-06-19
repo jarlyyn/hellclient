@@ -14,11 +14,14 @@ type Word struct {
 }
 
 type Line struct {
-	Words    []Word
-	ID       string
-	Time     int64
-	IsPrint  bool
-	IsSystem bool
+	Words          []Word
+	ID             string
+	Time           int64
+	IsReal         bool
+	IsPrint        bool
+	IsSystem       bool
+	OmitFromLog    bool
+	OmitFromOutput bool
 }
 
 func (l *Line) Append(w Word) {

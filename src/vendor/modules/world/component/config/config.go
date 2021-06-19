@@ -23,8 +23,9 @@ func NewData() *Data {
 }
 
 type Config struct {
-	Locker sync.Mutex
-	Data   *Data
+	Locker  sync.Mutex
+	Changed bool
+	Data    *Data
 }
 
 func (c *Config) GetPort(bus *bus.Bus) string {
@@ -35,6 +36,7 @@ func (c *Config) GetPort(bus *bus.Bus) string {
 func (c *Config) SetPort(bus *bus.Bus, port string) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
+	c.Changed = true
 	c.Data.Port = port
 }
 func (c *Config) GetQueueDelay(bus *bus.Bus) int {
