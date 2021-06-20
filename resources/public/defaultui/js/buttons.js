@@ -19,6 +19,9 @@ onButton.notopened=function(){
     vm.notopenedVisible=true
     send("notopened")
 }
+onButton.save=function(){
+    send("save",vm.current)
+}
 onButton.createGame=function(){
     vm.createFail=[];
     vm.gameCreateForm={};
