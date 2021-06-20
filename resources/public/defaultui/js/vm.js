@@ -7,7 +7,7 @@ var data={
     prompt:{},
     createFail:[],
     cmd:"",
-    running:{},
+    info:{},
     clients:[],
     gameCreateFormVisible:false,
     gameCreateForm:{},

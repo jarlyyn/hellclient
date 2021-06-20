@@ -43,6 +43,7 @@ type Bus struct {
 	HandleConverterError func(err error)
 	HandleCmdError       func(err error)
 	HandleTriggerError   func(err error)
+	GetReadyAt           func() int64
 	LineEvent            busevent.Event
 	PromptEvent          busevent.Event
 	ConnectedEvent       busevent.Event

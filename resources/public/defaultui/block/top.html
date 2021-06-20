@@ -1,21 +1,24 @@
+<div id="world">
+    <el-button-group id="main-button">
+        <el-tooltip class="item" effect="light" content="打开游戏" placement="bottom">
+        <el-button @click="onButton('notopened')" size="mini" type="primary" icon="el-icon-folder-opened"></el-button>
+        </el-tooltip>
+        </el-button-group >
+    <span v-if="clients.length && current && info[current]" id="world-intro">当前游戏:{{current}} @ {{info[current].HostPort}}</span>
+</div>
 <div id="tabs">
-    <div id="no-clients" v-if="!clients.length">还未打开游戏，请点击下方按钮打开或创建游戏</div>
+    <div id="no-clients" v-if="!clients.length">还未打开游戏，请点击上方按钮打开或创建游戏</div>
 <el-tabs v-if="clients.length" v-model="currenttab" type="card" @tab-click="onChange">
-        <el-tab-pane  v-for="client in clients" :label="running[client.ID]? '▶️ '+client.ID:'⏸️ '+client.ID" :name="client.ID"></el-tab-pane>
+        <el-tab-pane  v-for="client in clients" :label="client.Running? '▶️ '+client.ID:'⏸️ '+client.ID" :name="client.ID"></el-tab-pane>
       </el-tabs>
     </div>
 <div id="buttons">
-    <el-button-group id="main-button">
-    <el-tooltip class="item" effect="light" content="打开游戏" placement="bottom">
-    <el-button @click="onButton('notopened')" size="mini" type="primary" icon="el-icon-folder-opened"></el-button>
-    </el-tooltip>
-    </el-button-group >
-    <span  v-if="current">
+    <span  v-if="current && info[current]">
     <el-button-group>
-                <el-tooltip v-if="!running[current]" class="item" effect="light" content="连线"  placement="bottom">
+                <el-tooltip v-if="!info[current].Running" class="item" effect="light" content="连线"  placement="bottom">
                     <el-button  @click="onButton('connect')" size="mini" type="success" icon="el-icon-arrow-right"></el-button>
                     </el-tooltip>
-                    <el-tooltip v-if="running[current]" class="item" effect="light" content="断线"  placement="bottom">
+                    <el-tooltip v-if="info[current].Running" class="item" effect="light" content="断线"  placement="bottom">
                     <el-button  @click="onButton('disconnect')" size="mini" type="warning" icon="el-icon-switch-button"></el-button>
                     </el-tooltip>
 

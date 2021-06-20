@@ -18,6 +18,8 @@ func (i *Info) Init(b *bus.Bus) {
 func (i *Info) ClientInfo(b *bus.Bus) *bus.ClientInfo {
 	info := &bus.ClientInfo{}
 	info.ID = b.ID
+	info.HostPort = b.GetHost() + ":" + b.GetPort()
+	info.ReadyAt = b.GetReadyAt()
 	info.Running = b.GetConnConnected()
 	return info
 }

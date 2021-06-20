@@ -1,23 +1,24 @@
 
-            body{background: black;color:white;font-family: monospace;margin:0;padding:0;visibility: hidden;};
-            ul,li{padding:0;margin:0;list-style: none}
-            ul#lines,ul#alllines{white-space: pre}
-            ul#alllines{background: black;padding:0;margin:0;color:white}
-            ul#lines li,ul#alllines li{max-width: 80em;overflow: hidden;}
-            ul#lines{padding-bottom: 40px;margin-bottom:-32px;padding-top: 90px;padding-left:0;}
-            #footer{position: fixed;bottom:0;height: 32px;left:0;width:100%;background:black}
-            #user-input{height: 32px;padding-left: 8em;padding-right:8em;position: relative;}
-            #user-input .el-input-group__prepend{background: black}
-            #user-input span{height:32px;line-height:32px}
-            #user-input .el-input__inner{background: black;color:white;border-bottom: none}
-            #top{position: fixed;top:0;left:0;width: 100%;height:80px;background: white}
-            #top .el-tabs__header{margin:0}
-            #buttons{padding:4px}
-            .el-tooltip__popper{color:black}
-            #current{z-index: 1;position:relative;font-weight:  bold;line-height: 32px;float: left;width:7em;margin-right:-8em;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;text-align:left;text-decoration: underline;padding: 0 0.5em 0 0.5em;background: black}
-            #current:hover{width: 100%;margin-right: -100%}
-            #main-button{padding-right: 2em}
-            #tabs{height:43px}
-            #no-clients{color:black;font-weight: bold;line-height:43px;text-indent: 0.5em}
-            #triggers .el-table .cell{color:#333333}
-            .el-form .el-switch{height:40px;line-height: 40px}
+body{background: black;color:white;font-family: monospace;margin:0;padding:0;visibility: hidden;};
+ul,li{padding:0;margin:0;list-style: none}
+ul#lines,ul#alllines{white-space: pre}
+ul#alllines{background: black;padding:0;margin:0;color:white}
+ul#lines li,ul#alllines li{max-width: 80em;overflow: hidden;}
+ul#lines{padding-bottom: 40px;margin-bottom:-32px;padding-top: 110px;padding-left:0;}
+#footer{position: fixed;bottom:0;height: 32px;left:0;width:100%;background:black}
+#user-input{height: 32px;padding-left: 8em;padding-right:8em;position: relative;}
+#user-input .el-input-group__prepend{background: black}
+#user-input span{height:32px;line-height:32px}
+#user-input .el-input__inner{background: black;color:white;border-bottom: none}
+#top{position: fixed;top:0;left:0;width: 100%;height:108px;background: white}
+#top .el-tabs__header{margin:0}
+#buttons{padding:4px}
+.el-tooltip__popper{color:black}
+#current{z-index: 1;position:relative;font-weight:  bold;line-height: 32px;float: left;width:7em;margin-right:-8em;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;text-align:left;text-decoration: underline;padding: 0 0.5em 0 0.5em;background: black}
+#current:hover{width: 100%;margin-right: -100%}
+#main-button{padding-right: 2em}
+#tabs{height:43px}
+#no-clients{color:black;font-weight: bold;line-height:43px;text-indent: 0.5em}
+#triggers .el-table .cell{color:#333333}
+.el-form .el-switch{height:40px;line-height: 40px}
+#world-intro{color:#303133}
