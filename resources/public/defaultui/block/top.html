@@ -26,33 +26,38 @@
                         <el-button  @click="onButton('close')" size="mini" type="danger" icon="el-icon-close" ></el-button>
                         </el-tooltip>
                     <el-tooltip class="item" effect="light" content="历史输出"  placement="bottom">
-                            <el-button  @click="onButton('allLines')" size="mini" icon="el-icon-view"></el-button>
+                            <el-button  @click="onButton('allLines')" size="mini" icon="el-icon-chat-line-square"></el-button>
                             </el-tooltip>
 
     </el-button-group>
     <el-button-group>
-        <el-tooltip  class="item" effect="light" content="保存"  placement="bottom">
-            <el-button  @click="onButton('save')" size="mini" type="primary" icon="el-icon-receiving" ></el-button>
+        <el-tooltip class="item" effect="light" content="设置"  placement="bottom">
+            <el-button  @click="onButton('options')" size="mini" icon="el-icon-set-up"></el-button>
             </el-tooltip>
-            <el-tooltip class="item" effect="light" content="设置"  placement="bottom">
-                <el-button  @click="onButton('options')" size="mini" icon="el-icon-edit"></el-button>
-                </el-tooltip>
-            <el-tooltip class="item" effect="light" content="脚本"  placement="bottom">
-                    <el-button  @click="onButton('script')" size="mini" icon=" el-icon-setting"></el-button>
-                    </el-tooltip>
+    </el-button-group>
+    <el-button-group>
                     <el-tooltip class="item" effect="light" content="变量"  placement="bottom">
-                        <el-button  @click="onButton('variable')" size="mini" >?</el-button>
+                        <el-button  @click="onButton('variable')" size="mini" icon="el-icon-s-data"></el-button>
                         </el-tooltip>
         <el-tooltip class="item" effect="light" content="触发器"  placement="bottom">
-            <el-button  @click="onButton('triggers')" size="mini" icon=" el-icon-tickets"></el-button>
+            <el-button  @click="onButton('triggers')" size="mini" icon="el-icon-s-tools"></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="light" content="计时器"  placement="bottom">
                 <el-button  @click="onButton('timers')" size="mini" icon="el-icon-time"></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="light" content="别名"  placement="bottom">
-                    <el-button  @click="onButton('alias')" size="mini" >=</el-button>
+                    <el-button  @click="onButton('alias')" size="mini" icon="el-icon-s-promotion"></el-button>
                     </el-tooltip>
+                    <el-tooltip class="item" effect="light" content="脚本"  placement="bottom">
+                        <el-button  @click="onButton('script')" size="mini" icon="el-icon-cpu"></el-button>
+                        </el-tooltip>
+
     </el-button-group>
+<el-button-group>
+    <el-tooltip  class="item" effect="light" content="保存"  placement="bottom">
+        <el-button  @click="onButton('save')" size="mini" type="primary" icon="el-icon-coin" ></el-button>
+        </el-tooltip>
+</el-button-group>
 
 </span>
 </div>
