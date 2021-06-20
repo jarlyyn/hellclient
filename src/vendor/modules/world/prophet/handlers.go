@@ -93,10 +93,21 @@ func (p *Prophet) onCmdOpen(conn connections.OutputConnection, cmd command.Comma
 	return nil
 }
 func (p *Prophet) onCmdClose(conn connections.OutputConnection, cmd command.Command) error {
-	id := p.Current.Load().(string)
-	p.Titan.CloseWorld(id)
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.CloseWorld(msg)
 	p.change(conn, "")
 	p.Titan.ExecClients()
+	return nil
+}
+func (p *Prophet) onCmdSave(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdSave(msg)
 	return nil
 }
 
@@ -120,6 +131,7 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("notopened", p.onCmdNotOpened)
 	handlers.Register("open", p.onCmdOpen)
 	handlers.Register("close", p.onCmdClose)
+	handlers.Register("save", p.onCmdSave)
 
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)

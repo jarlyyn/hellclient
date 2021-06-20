@@ -162,7 +162,12 @@ func (t *Titan) HandleCmdOpen(id string) bool {
 	}
 	return ok
 }
-
+func (t *Titan) HandleCmdSave(id string) {
+	w := t.World(id)
+	if w != nil {
+		w.HandleCmdError(t.SaveWorld(id))
+	}
+}
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()

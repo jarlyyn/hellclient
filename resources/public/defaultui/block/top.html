@@ -18,18 +18,22 @@
                     <el-tooltip v-if="running[current]" class="item" effect="light" content="断线"  placement="bottom">
                     <el-button  @click="onButton('disconnect')" size="mini" type="warning" icon="el-icon-switch-button"></el-button>
                     </el-tooltip>
+
                     <el-tooltip  class="item" effect="light" content="关闭"  placement="bottom">
                         <el-button  @click="onButton('close')" size="mini" type="danger" icon="el-icon-close" ></el-button>
                         </el-tooltip>
                     <el-tooltip class="item" effect="light" content="历史输出"  placement="bottom">
                             <el-button  @click="onButton('allLines')" size="mini" icon="el-icon-view"></el-button>
                             </el-tooltip>
-                    <el-tooltip class="item" effect="light" content="设置"  placement="bottom">
-                            <el-button  @click="onButton('options')" size="mini" icon="el-icon-edit"></el-button>
-                            </el-tooltip>
 
     </el-button-group>
     <el-button-group>
+        <el-tooltip  class="item" effect="light" content="保存"  placement="bottom">
+            <el-button  @click="onButton('save')" size="mini" type="primary" icon="el-icon-receiving" ></el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="light" content="设置"  placement="bottom">
+                <el-button  @click="onButton('options')" size="mini" icon="el-icon-edit"></el-button>
+                </el-tooltip>
             <el-tooltip class="item" effect="light" content="脚本"  placement="bottom">
                     <el-button  @click="onButton('script')" size="mini" icon=" el-icon-setting"></el-button>
                     </el-tooltip>
