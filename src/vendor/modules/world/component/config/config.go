@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"modules/world/bus"
 	"sync"
+	"time"
 
 	"github.com/BurntSushi/toml"
 )
@@ -24,10 +25,15 @@ func NewData() *Data {
 
 type Config struct {
 	Locker  sync.Mutex
-	Changed bool
 	Data    *Data
+	ReadyAt int64
 }
 
+func (c *Config) GetReadyAt() int64 {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.ReadyAt
+}
 func (c *Config) GetPort(bus *bus.Bus) string {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
@@ -36,7 +42,6 @@ func (c *Config) GetPort(bus *bus.Bus) string {
 func (c *Config) SetPort(bus *bus.Bus, port string) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
-	c.Changed = true
 	c.Data.Port = port
 }
 func (c *Config) GetQueueDelay(bus *bus.Bus) int {
@@ -110,6 +115,9 @@ func (c *Config) Decode(data []byte) error {
 	c.Data = configdata
 	return nil
 }
+func (c *Config) OnReady(b *bus.Bus) {
+	c.ReadyAt = time.Now().Unix()
+}
 func (c *Config) InstallTo(b *bus.Bus) {
 	b.GetHost = b.WrapGetString(c.GetHost)
 	b.SetHost = b.WrapHandleString(c.SetHost)
@@ -125,6 +133,8 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.GetParam = c.GetParam
 	b.GetParams = c.GetParams
 	b.DeleteParam = c.DeleteParam
+	b.GetReadyAt = c.GetReadyAt
+	b.BindReadyEvent(b, c.OnReady)
 }
 
 func New() *Config {

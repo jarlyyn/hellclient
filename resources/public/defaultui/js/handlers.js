@@ -29,9 +29,10 @@ handlers.prompt=function(data){
     vm.prompt=data
 }
 handlers.clients=function(data){
+    vm.info=[]
     vm.clients=data
     data.forEach(function(client) {
-        vm.running[client.ID]=client.Running
+        vm.info[client.ID]=client
     })
 }
 handlers.lines=function(data){
@@ -48,10 +49,14 @@ handlers.lines=function(data){
         },0)
 }
 handlers.connected=function(data){
-    vm.running[data]=true
+    if (vm.info[data]){
+    vm.info[data].Running=true
+    }
 }
 handlers.disconnected=function(data){
-    vm.running[data]=false
+    if (vm.info[data]){
+    vm.info[data].Running=false
+    }
 }
 handlers.createFail=function(data){
     vm.createFail=data

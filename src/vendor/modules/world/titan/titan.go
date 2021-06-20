@@ -11,6 +11,7 @@ import (
 	"modules/world/component/info"
 	"modules/world/component/log"
 	"modules/world/component/queue"
+	"sort"
 
 	"os"
 	"path/filepath"
@@ -171,12 +172,13 @@ func (t *Titan) HandleCmdSave(id string) {
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()
-	var result = make([]*bus.ClientInfo, len(t.Worlds))
+	var result = make(bus.ClientInfos, len(t.Worlds))
 	var i = 0
 	for _, v := range t.Worlds {
 		result[i] = v.GetClientInfo()
 		i++
 	}
+	sort.Sort(result)
 	msg.PublishClients(t, result)
 }
 func (t *Titan) InstallTo(b *bus.Bus) {
