@@ -59,5 +59,34 @@
         </el-tooltip>
 </el-button-group>
 
+<el-button-group>
+    <el-tooltip  class="item" effect="light" content="重新加载"  placement="bottom">
+        <el-button  @click="onButton('reload')" size="mini"  icon="el-icon-refresh-left" ></el-button>
+        </el-tooltip>
+        <el-tooltip  v-if="advancemode" class="item" effect="light" content="关闭脚本编辑模式"  placement="bottom">
+            <el-button  @click="onButton('lock')" size="mini" type="info" icon="el-icon-unlock" type=""></el-button>
+            </el-tooltip>
+            <el-tooltip  v-if="!advancemode" class="item" effect="light" content="开启脚本编辑模式"  placement="bottom">
+                <el-button  @click="onButton('unlock')" size="mini" type="warning" icon="el-icon-lock" ></el-button>
+                </el-tooltip>
+</el-button-group>
+<el-button-group v-if="advancemode">
+<el-tooltip class="item" effect="light" content="脚本基本设置"  placement="bottom">
+<el-button  @click="onButton('triggers')" size="mini" type="warning" icon="el-icon-set-up"></el-button>
+</el-tooltip>
+<el-tooltip class="item" effect="light" content="脚本触发器"  placement="bottom">
+<el-button  @click="onButton('triggers')" size="mini" type="warning" icon="el-icon-s-tools"></el-button>
+</el-tooltip>
+<el-tooltip class="item" effect="light" content="脚本计时器"  placement="bottom">
+<el-button  @click="onButton('timers')" size="mini" type="warning" icon="el-icon-time"></el-button>
+</el-tooltip>
+<el-tooltip class="item" effect="light" content="脚本别名"  placement="bottom">
+    <el-button  @click="onButton('alias')" size="mini" type="warning" icon="el-icon-s-promotion"></el-button>
+</el-tooltip>
+<el-tooltip  class="item" effect="light" content="保存脚本"  placement="bottom">
+    <el-button  @click="onButton('save')" size="mini" type="warning" icon="el-icon-coin" ></el-button>
+    </el-tooltip>
+</el-button-group>
+
 </span>
 </div>

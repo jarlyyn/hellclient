@@ -8,6 +8,14 @@ var send=app.send;
 onButton.connect=function(){
     send("connect",vm.current)
 }
+onButton.unlock=function(){
+    localStorage.setItem("hellclient-advancemode","on")
+    vm.advancemode=true;
+}
+onButton.lock=function(){
+    localStorage.setItem("hellclient-advancemode","")
+    vm.advancemode=false;
+}
 onButton.disconnect=function(){
     send("disconnect",vm.current)
 }

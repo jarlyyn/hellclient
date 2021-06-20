@@ -21,11 +21,13 @@ var data={
     allLinesVisible:false,
     notopened:[],
     notopenedVisible:false,
+    advancemode:false,
 }
 var vm = new Vue({
     el:"#app",
     data: data,
     mounted:function(){
+        this.advancemode=(localStorage.getItem("hellclient-advancemode")!="");
         document.getElementsByTagName("body")[0].style.visibility="visible";
     },
     methods:{
