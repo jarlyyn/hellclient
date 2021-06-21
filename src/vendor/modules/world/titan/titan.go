@@ -13,6 +13,7 @@ import (
 	"modules/world/component/log"
 	"modules/world/component/queue"
 	"modules/world/component/script"
+	"path"
 	"sort"
 
 	"os"
@@ -200,6 +201,7 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindDiscontectedEvent(t, t.onDisconnected)
 	b.BindLineEvent(t, t.onLine)
 	b.BindPromptEvent(t, t.onPrompt)
+	b.GetScriptPath = t.GetScriptPath
 }
 
 func (t *Titan) RaiseMsgEvent(msg *message.Message) {
@@ -217,11 +219,23 @@ func (t *Titan) BindMsgEvent(id interface{}, fn func(t *Titan, msg *message.Mess
 func (t *Titan) GetWorldPath(id string) string {
 	return filepath.Join(t.Path, id) + Ext
 }
-func (t *Titan) GetScriptPath(id string) string {
-	return filepath.Join(t.Scriptpath, id)
-}
+
 func (t *Titan) IsWorldExist(id string) (bool, error) {
 	_, err := os.Stat(t.GetWorldPath(id))
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
+}
+
+func (t *Titan) GetScriptPath() string {
+	return t.Scriptpath
+}
+func (t *Titan) IsScriptExist(id string) (bool, error) {
+	_, err := os.Stat(path.Join(t.Scriptpath, id))
 	if err == nil {
 		return true, nil
 	}

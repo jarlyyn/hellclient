@@ -3,6 +3,7 @@ package forms
 import (
 	"encoding/json"
 	"modules/world"
+	"modules/world/bus"
 	"modules/world/titan"
 	"net/http"
 
@@ -10,48 +11,42 @@ import (
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
-//CreateGameFormFieldLabels form field labels map.
-var CreateGameFormFieldLabels = map[string]string{
-	"ID":      "名称",
-	"Host":    "网址",
-	"Port":    "端口",
-	"Charset": "字符编码",
+//CreateScriptFormFieldLabels form field labels map.
+var CreateScriptFormFieldLabels = map[string]string{
+	"ID":   "名称",
+	"Type": "类型",
 }
 
-//CreateGameForm form struct for create game
-type CreateGameForm struct {
+//CreateScriptForm form struct for create game
+type CreateScriptForm struct {
 	formdata.Form
-	ID      string
-	Host    string
-	Port    string
-	Charset string
+	ID   string
+	Type string
 }
 
-//CreateGameFormID form id of form create game
-const CreateGameFormID = "formcreategame"
+//CreateScriptFormID form id of form create game
+const CreateScriptFormID = "formcreatescript"
 
-//NewCreateGameForm create new create game form
-func NewCreateGameForm() *CreateGameForm {
-	form := &CreateGameForm{}
-	form.SetComponentLabels(ui.MapLabels(CreateGameFormFieldLabels))
+//NewCreateScriptForm create new create game form
+func NewCreateScriptForm() *CreateScriptForm {
+	form := &CreateScriptForm{}
+	form.SetComponentLabels(ui.MapLabels(CreateScriptFormFieldLabels))
 	return form
 }
 
-func (f *CreateGameForm) ComponentID() string {
-	return CreateGameFormID
+func (f *CreateScriptForm) ComponentID() string {
+	return CreateScriptFormID
 }
 
 //Validate Validate form and return any error if raised.
-func (f *CreateGameForm) Validate() error {
+func (f *CreateScriptForm) Validate() error {
 	f.ValidateFieldf(len(f.ID) > 2, "ID", "名称至少需要2个字符")
 	f.ValidateFieldf(len(f.ID) < 64, "ID", "名称不能超过64个字符")
 
 	f.ValidateFieldf(world.IDRegexp.MatchString(f.ID), "ID", "名称只能包含数字，字母，- _ @ .()[]+")
-	f.ValidateFieldf(f.Host != "", "Host", "网址不能为空")
-	f.ValidateFieldf(f.Port != "", "Port", "端口不能为空")
-	f.ValidateFieldf(f.Charset != "", "Charset", "字符编码不能为空")
+	f.ValidateFieldf(world.AvailableScriptTypes[f.Type], "Type", "脚本类型不可用")
 	if !f.HasError() {
-		ok, err := titan.Pangu.IsWorldExist(f.ID)
+		ok, err := titan.Pangu.IsScriptExist(f.ID)
 		if err != nil {
 			return err
 		}
@@ -61,14 +56,14 @@ func (f *CreateGameForm) Validate() error {
 }
 
 //InitWithRequest init  create game form  with http request.
-func (f *CreateGameForm) InitWithRequest(r *http.Request) error {
+func (f *CreateScriptForm) InitWithRequest(r *http.Request) error {
 	//Put your request form code here.
 	//such as get current user id or ip address.
 	return nil
 }
 
-func CreateGame(t *titan.Titan, data []byte) {
-	form := NewCreateGameForm()
+func CreateScript(t *titan.Titan, b *bus.Bus, data []byte) {
+	form := NewCreateScriptForm()
 	err := json.Unmarshal(data, form)
 	if err != nil {
 		return
