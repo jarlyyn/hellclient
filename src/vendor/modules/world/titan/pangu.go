@@ -13,8 +13,8 @@ var Pangu *Titan
 const WorldsFolder = "worlds"
 const Ext = ".toml"
 const WorldsPrefix = "/worlds/"
-const ScriptsFolder = "worlds"
-const ScriptsPrefix = "scripts"
+const ScriptsFolder = "scripts"
+const ScriptsPrefix = "/scripts/"
 
 func CreatePangu() {
 	Pangu = New()

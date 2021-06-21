@@ -24,6 +24,10 @@ var data={
     advancemode:false,
     script:null,
     scriptVisible:false,
+    scriptCreateFormVisible:false,
+    createScriptFail:[],
+    scriptCreateForm:{},
+
 }
 var vm = new Vue({
     el:"#app",

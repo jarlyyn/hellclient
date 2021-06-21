@@ -1,0 +1,6 @@
+Type="lua"
+
+OnOpen="onOpen"
+OnClose="onClose"
+OnConnected="onConnected"
+OnDisconnected="onDisconnected"
