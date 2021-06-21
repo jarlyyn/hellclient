@@ -13,11 +13,16 @@ var Pangu *Titan
 const WorldsFolder = "worlds"
 const Ext = ".toml"
 const WorldsPrefix = "/worlds/"
+const ScriptsFolder = "worlds"
+const ScriptsPrefix = "scripts"
 
 func CreatePangu() {
 	Pangu = New()
 	Pangu.Path = util.AppData(WorldsFolder)
+	Pangu.Scriptpath = util.AppData(ScriptsFolder)
 	os.MkdirAll(Pangu.Path, util.DefaultFolderMode)
+	os.MkdirAll(Pangu.Scriptpath, util.DefaultFolderMode)
+
 }
 
 func NewWebdavServer() http.Handler {

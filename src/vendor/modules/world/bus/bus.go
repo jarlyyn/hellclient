@@ -37,6 +37,7 @@ type Bus struct {
 	SetScriptID          func(string)
 	GetScriptType        func() string
 	SetScriptType        func(string)
+	GetScriptPath        func() string
 	SetTrusted           func(*herbplugin.Trusted)
 	GetTrusted           func() *herbplugin.Trusted
 	DoSendToConn         func(cmd []byte)
@@ -44,6 +45,8 @@ type Bus struct {
 	DoSendToQueue        func(cmd []byte)
 	DoEncode             func() ([]byte, error)
 	DoDecode             func([]byte) error
+	DoEncodeScript       func() ([]byte, error)
+	DoDecodeScript       func([]byte) error
 	DoPrint              func(msg string)
 	DoPrintSystem        func(msg string)
 	DoDiscardQueue       func()
