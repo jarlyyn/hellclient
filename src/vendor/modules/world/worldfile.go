@@ -1,4 +1,4 @@
-package bus
+package world
 
 type WorldFile struct {
 	ID          string

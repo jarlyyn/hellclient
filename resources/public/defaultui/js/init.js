@@ -8,6 +8,7 @@ requirejs.config({
         "html-creategameform":"/public/defaultui/block/creategameform.html",
         "html-alllines":"/public/defaultui/block/alllines.html",
         "html-notopened":"/public/defaultui/block/notopened.html",
+        "html-script":"/public/defaultui/block/script.html",
         "main":"/public/defaultui/js/main"
     },
 });
@@ -22,6 +23,8 @@ define(function (require) {
     document.getElementById("alllines").innerHTML=htmlalllines;
     var htmlalllines=require("text!html-notopened");
     document.getElementById("notopened").innerHTML=htmlalllines;
+    var htmlscript=require("text!html-script");
+    document.getElementById("script").innerHTML=htmlscript;
 
     require(["main"],function(main){
     });

@@ -110,6 +110,14 @@ func (p *Prophet) onCmdSave(conn connections.OutputConnection, cmd command.Comma
 	p.Titan.HandleCmdSave(msg)
 	return nil
 }
+func (p *Prophet) onCmdScriptInfo(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdScriptInfo(msg)
+	return nil
+}
 
 // func (p *Prophet) onCmdSaveTrigger(conn connections.OutputConnection, cmd command.Command) error {
 // 	forms.SaveTrigger(CurrentGameID(), cmd.Data())
@@ -132,6 +140,7 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("open", p.onCmdOpen)
 	handlers.Register("close", p.onCmdClose)
 	handlers.Register("save", p.onCmdSave)
+	handlers.Register("scriptinfo", p.onCmdScriptInfo)
 
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)

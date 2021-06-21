@@ -1,6 +1,7 @@
 package converter
 
 import (
+	"modules/world"
 	"modules/world/bus"
 	"sync"
 )
@@ -50,9 +51,9 @@ func (c *Converter) Send(bus *bus.Bus, cmd []byte) {
 }
 
 func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {
-	line := bus.NewLine()
+	line := world.NewLine()
 	line.IsSystem = true
-	w := bus.Word{
+	w := world.Word{
 		Text: msg,
 	}
 	line.Append(w)
@@ -60,16 +61,16 @@ func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {
 }
 
 func (c *Converter) DoPrint(b *bus.Bus, msg string) {
-	line := bus.NewLine()
+	line := world.NewLine()
 	line.IsPrint = true
-	w := bus.Word{
+	w := world.Word{
 		Text: msg,
 	}
 	line.Append(w)
 	b.RaiseLineEvent(line)
 }
 
-func (c *Converter) ConvertToLine(bus *bus.Bus, msg []byte) *bus.Line {
+func (c *Converter) ConvertToLine(bus *bus.Bus, msg []byte) *world.Line {
 	charset := bus.GetCharset()
 	return ConvertToLine(msg, charset, func(err error) { c.onError(bus, err) })
 }

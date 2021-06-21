@@ -80,4 +80,8 @@ handlers.allLines=function(data){
 handlers.notopened=function(data){
     vm.notopened=data
 }
+handlers.scriptinfo=function(data){
+    vm.script=data
+}
+
 })

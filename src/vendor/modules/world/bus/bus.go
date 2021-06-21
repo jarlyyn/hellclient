@@ -1,7 +1,10 @@
 package bus
 
 import (
+	"modules/world"
 	"sync"
+
+	"github.com/herb-go/herbplugin"
 
 	"github.com/herb-go/misc/busevent"
 )
@@ -24,9 +27,18 @@ type Bus struct {
 	DeleteParam          func(string)
 	GetCharset           func() string
 	SetCharset           func(string)
-	GetCurrentLines      func() []*Line
-	GetPrompt            func() *Line
-	GetClientInfo        func() *ClientInfo
+	GetCurrentLines      func() []*world.Line
+	GetPrompt            func() *world.Line
+	GetClientInfo        func() *world.ClientInfo
+	GetScriptInfo        func() *world.ScriptInfo
+	SetPermissions       func([]string)
+	GetPermissions       func() []string
+	GetScriptID          func() string
+	SetScriptID          func(string)
+	GetScriptType        func() string
+	SetScriptType        func(string)
+	SetTrusted           func(*herbplugin.Trusted)
+	GetTrusted           func() *herbplugin.Trusted
 	DoSendToConn         func(cmd []byte)
 	DoSend               func(cmd []byte)
 	DoSendToQueue        func(cmd []byte)
@@ -49,6 +61,7 @@ type Bus struct {
 	ConnectedEvent       busevent.Event
 	DisconnectedEvent    busevent.Event
 	ReadyEvent           busevent.Event
+	BeforeCloseEvent     busevent.Event
 	CloseEvent           busevent.Event
 }
 
@@ -77,13 +90,13 @@ func (b *Bus) WrapHandleError(f func(bus *Bus, err error)) func(err error) {
 		f(b, err)
 	}
 }
-func (b *Bus) WrapGetLine(f func(bus *Bus) *Line) func() *Line {
-	return func() *Line {
+func (b *Bus) WrapGetLine(f func(bus *Bus) *world.Line) func() *world.Line {
+	return func() *world.Line {
 		return f(b)
 	}
 }
-func (b *Bus) WrapGetLines(f func(bus *Bus) []*Line) func() []*Line {
-	return func() []*Line {
+func (b *Bus) WrapGetLines(f func(bus *Bus) []*world.Line) func() []*world.Line {
+	return func() []*world.Line {
 		return f(b)
 	}
 }
@@ -97,8 +110,13 @@ func (b *Bus) WrapGetInt(f func(bus *Bus) int) func() int {
 		return f(b)
 	}
 }
-func (b *Bus) WrapGetClientInfo(f func(bus *Bus) *ClientInfo) func() *ClientInfo {
-	return func() *ClientInfo {
+func (b *Bus) WrapGetClientInfo(f func(bus *Bus) *world.ClientInfo) func() *world.ClientInfo {
+	return func() *world.ClientInfo {
+		return f(b)
+	}
+}
+func (b *Bus) WrapGetScriptInfo(f func(bus *Bus) *world.ScriptInfo) func() *world.ScriptInfo {
+	return func() *world.ScriptInfo {
 		return f(b)
 	}
 }
@@ -117,27 +135,27 @@ func (b *Bus) WrapHandleInt(f func(bus *Bus, i int)) func(i int) {
 		f(b, i)
 	}
 }
-func (b *Bus) RaiseLineEvent(line *Line) {
+func (b *Bus) RaiseLineEvent(line *world.Line) {
 	b.LineEvent.Raise(line)
 }
-func (b *Bus) BindLineEvent(id interface{}, fn func(b *Bus, line *Line)) {
+func (b *Bus) BindLineEvent(id interface{}, fn func(b *Bus, line *world.Line)) {
 	b.LineEvent.BindAs(
 		id,
 		func(data interface{}) {
-			fn(b, data.(*Line))
+			fn(b, data.(*world.Line))
 		},
 	)
 
 }
 
-func (b *Bus) RaisePromptEvent(line *Line) {
+func (b *Bus) RaisePromptEvent(line *world.Line) {
 	b.PromptEvent.Raise(line)
 }
-func (b *Bus) BindPromptEvent(id interface{}, fn func(b *Bus, line *Line)) {
+func (b *Bus) BindPromptEvent(id interface{}, fn func(b *Bus, line *world.Line)) {
 	b.PromptEvent.BindAs(
 		id,
 		func(data interface{}) {
-			fn(b, data.(*Line))
+			fn(b, data.(*world.Line))
 		},
 	)
 }
@@ -170,6 +188,17 @@ func (b *Bus) RaiseCloseEvent() {
 }
 func (b *Bus) BindCloseEvent(id interface{}, fn func(b *Bus)) {
 	b.CloseEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b)
+		},
+	)
+}
+func (b *Bus) RaiseBeforeCloseEvent() {
+	b.BeforeCloseEvent.Raise(nil)
+}
+func (b *Bus) BindBeforeCloseEvent(id interface{}, fn func(b *Bus)) {
+	b.BeforeCloseEvent.BindAs(
 		id,
 		func(data interface{}) {
 			fn(b)

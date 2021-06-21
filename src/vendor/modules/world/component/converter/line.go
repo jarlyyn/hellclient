@@ -2,14 +2,14 @@ package converter
 
 import (
 	"fmt"
-	"modules/world/bus"
+	"modules/world"
 
 	"github.com/jarlyyn/ansi"
 )
 
-func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *bus.Line {
-	w := bus.Word{}
-	line := bus.NewLine()
+func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *world.Line {
+	w := world.Word{}
+	line := world.NewLine()
 	if len(msg) == 0 {
 		return line
 	}
@@ -171,7 +171,7 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *bus.
 							w.Background = "BG-Bright-White"
 						}
 					case "256":
-						line = bus.NewLine()
+						line = world.NewLine()
 					}
 
 				}
