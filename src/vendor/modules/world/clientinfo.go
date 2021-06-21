@@ -1,9 +1,10 @@
-package bus
+package world
 
 type ClientInfo struct {
 	ID       string
 	ReadyAt  int64
 	HostPort string
+	ScriptID string
 	Running  bool
 }
 

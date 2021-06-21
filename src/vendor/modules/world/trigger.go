@@ -1,4 +1,4 @@
-package bus
+package world
 
 const TriggerFlagEnabled = 1
 const TriggerFlagOmitFromLog = 2

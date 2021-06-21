@@ -2,33 +2,35 @@ package info
 
 import (
 	"container/ring"
+	"modules/world"
 	"modules/world/bus"
 	"sync"
 )
 
 type Info struct {
 	Lines  *ring.Ring
-	Prompt *bus.Line
+	Prompt *world.Line
 	Lock   sync.RWMutex
 }
 
 func (i *Info) Init(b *bus.Bus) {
 	i.Lines = ring.New(1000)
 }
-func (i *Info) ClientInfo(b *bus.Bus) *bus.ClientInfo {
-	info := &bus.ClientInfo{}
+func (i *Info) ClientInfo(b *bus.Bus) *world.ClientInfo {
+	info := &world.ClientInfo{}
 	info.ID = b.ID
 	info.HostPort = b.GetHost() + ":" + b.GetPort()
 	info.ReadyAt = b.GetReadyAt()
 	info.Running = b.GetConnConnected()
+	info.ScriptID = b.GetScriptID()
 	return info
 }
-func (i *Info) CurrentLines(b *bus.Bus) []*bus.Line {
-	result := []*bus.Line{}
+func (i *Info) CurrentLines(b *bus.Bus) []*world.Line {
+	result := []*world.Line{}
 	i.Lock.RLock()
 	defer i.Lock.RUnlock()
 	i.Lines.Do(func(x interface{}) {
-		line, ok := x.(*bus.Line)
+		line, ok := x.(*world.Line)
 		if ok && line != nil {
 			result = append(result, line)
 		}
@@ -36,17 +38,17 @@ func (i *Info) CurrentLines(b *bus.Bus) []*bus.Line {
 	// result = append(result, i.Prompt)
 	return result
 }
-func (i *Info) CurrentPrompt(b *bus.Bus) *bus.Line {
+func (i *Info) CurrentPrompt(b *bus.Bus) *world.Line {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
 	return i.Prompt
 }
-func (i *Info) onPrompt(b *bus.Bus, line *bus.Line) {
+func (i *Info) onPrompt(b *bus.Bus, line *world.Line) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
 	i.Prompt = line
 }
-func (i *Info) onNewLine(b *bus.Bus, line *bus.Line) {
+func (i *Info) onNewLine(b *bus.Bus, line *world.Line) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
 	if line.OmitFromOutput {

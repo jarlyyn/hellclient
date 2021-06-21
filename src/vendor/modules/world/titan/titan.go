@@ -3,6 +3,7 @@ package titan
 import (
 	"modules/app"
 	"modules/msg"
+	"modules/world"
 	"modules/world/bus"
 	"modules/world/component"
 	"modules/world/component/config"
@@ -11,6 +12,7 @@ import (
 	"modules/world/component/info"
 	"modules/world/component/log"
 	"modules/world/component/queue"
+	"modules/world/component/script"
 	"sort"
 
 	"os"
@@ -26,10 +28,11 @@ import (
 )
 
 type Titan struct {
-	Locker   sync.RWMutex
-	Worlds   map[string]*bus.Bus
-	Path     string
-	msgEvent *busevent.Event
+	Locker     sync.RWMutex
+	Worlds     map[string]*bus.Bus
+	Path       string
+	Scriptpath string
+	msgEvent   *busevent.Event
 }
 
 func (t *Titan) CreateBus() *bus.Bus {
@@ -41,12 +44,14 @@ func (t *Titan) CreateBus() *bus.Bus {
 		info.New(),
 		log.New(),
 		queue.New(),
+		script.New(),
 		t,
 	)
 	b.RaiseReadyEvent()
 	return b
 }
 func (t *Titan) DestoryBus(b *bus.Bus) {
+	b.RaiseBeforeCloseEvent()
 	b.RaiseCloseEvent()
 	b.Reset()
 }
@@ -74,7 +79,9 @@ func (t *Titan) NewWorld(id string) *bus.Bus {
 
 func (t *Titan) DoSendTo(id string, msg []byte) {
 	w := t.World(id)
-	w.DoSend(msg)
+	if w != nil {
+		w.DoSend(msg)
+	}
 }
 func (t *Titan) Publish(msg *message.Message) {
 	go func() {
@@ -90,10 +97,10 @@ func (t *Titan) onDisconnected(b *bus.Bus) {
 	b.DoPrintSystem(app.Time.Datetime(time.Now()) + "  与服务器断开连接接 ")
 	msg.PublishDisconnected(t, b.ID)
 }
-func (t *Titan) onPrompt(b *bus.Bus, prompt *bus.Line) {
+func (t *Titan) onPrompt(b *bus.Bus, prompt *world.Line) {
 	msg.PublishPrompt(t, b.ID, prompt)
 }
-func (t *Titan) onLine(b *bus.Bus, line *bus.Line) {
+func (t *Titan) onLine(b *bus.Bus, line *world.Line) {
 	if line.OmitFromOutput {
 		return
 	}
@@ -169,10 +176,17 @@ func (t *Titan) HandleCmdSave(id string) {
 		w.HandleCmdError(t.SaveWorld(id))
 	}
 }
+func (t *Titan) HandleCmdScriptInfo(id string) {
+	w := t.World(id)
+	if w != nil {
+		info := w.GetScriptInfo()
+		msg.PublishScriptInfo(t, id, info)
+	}
+}
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()
-	var result = make(bus.ClientInfos, len(t.Worlds))
+	var result = make(world.ClientInfos, len(t.Worlds))
 	var i = 0
 	for _, v := range t.Worlds {
 		result[i] = v.GetClientInfo()
@@ -203,6 +217,9 @@ func (t *Titan) BindMsgEvent(id interface{}, fn func(t *Titan, msg *message.Mess
 func (t *Titan) GetWorldPath(id string) string {
 	return filepath.Join(t.Path, id) + Ext
 }
+func (t *Titan) GetScriptPath(id string) string {
+	return filepath.Join(t.Scriptpath, id)
+}
 func (t *Titan) IsWorldExist(id string) (bool, error) {
 	_, err := os.Stat(t.GetWorldPath(id))
 	if err == nil {
@@ -214,10 +231,10 @@ func (t *Titan) IsWorldExist(id string) (bool, error) {
 	return false, err
 }
 
-func (t *Titan) ListNotOpened() ([]*bus.WorldFile, error) {
+func (t *Titan) ListNotOpened() ([]*world.WorldFile, error) {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()
-	var result = []*bus.WorldFile{}
+	var result = []*world.WorldFile{}
 	files, err := os.ReadDir(t.Path)
 	if err != nil {
 		return nil, err
@@ -238,7 +255,7 @@ func (t *Titan) ListNotOpened() ([]*bus.WorldFile, error) {
 				return nil, err
 			}
 			ut := app.Time.Datetime(i.ModTime())
-			result = append(result, &bus.WorldFile{
+			result = append(result, &world.WorldFile{
 				ID:          id,
 				LastUpdated: ut,
 			})

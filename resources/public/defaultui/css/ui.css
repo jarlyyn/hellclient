@@ -1,5 +1,5 @@
 
-body{background: black;color:white;font-family: monospace;margin:0;padding:0;visibility: hidden;};
+body{background: black;color:white;font-family: monospace;margin:0;padding:0;visibility: hidden};
 ul,li{padding:0;margin:0;list-style: none}
 ul#lines,ul#alllines{white-space: pre}
 ul#alllines{background: black;padding:0;margin:0;color:white}
@@ -10,7 +10,7 @@ ul#lines{padding-bottom: 40px;margin-bottom:-32px;padding-top: 110px;padding-lef
 #user-input .el-input-group__prepend{background: black}
 #user-input span{height:32px;line-height:32px}
 #user-input .el-input__inner{background: black;color:white;border-bottom: none}
-#top{position: fixed;top:0;left:0;width: 100%;height:108px;background: white}
+#top{position: fixed;top:0;left:0;width: 100%;height:108px;background: white;min-width:1024px}
 #top .el-tabs__header{margin:0}
 #buttons{padding:4px}
 .el-tooltip__popper{color:black}

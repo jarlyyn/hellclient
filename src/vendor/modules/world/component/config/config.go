@@ -2,19 +2,28 @@ package config
 
 import (
 	"bytes"
+	"modules/world"
 	"modules/world/bus"
 	"sync"
 	"time"
+
+	"github.com/herb-go/herbplugin"
 
 	"github.com/BurntSushi/toml"
 )
 
 type Data struct {
-	Host       string
-	Port       string
-	Charset    string
-	QueueDelay int
-	Params     map[string]string
+	Host        string
+	Port        string
+	Charset     string
+	QueueDelay  int
+	Params      map[string]string
+	Permissions []string
+	ScriptID    string
+	Trusted     herbplugin.Trusted
+	Triggers    []*world.Trigger
+	Timers      []*world.Timer
+	Alias       []*world.Alias
 }
 
 func NewData() *Data {
@@ -53,6 +62,26 @@ func (c *Config) SetQueueDelay(bus *bus.Bus, delay int) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
 	c.Data.QueueDelay = delay
+}
+func (c *Config) GetPermissions() []string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.Permissions
+}
+func (c *Config) SetPermissions(v []string) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.Permissions = v
+}
+func (c *Config) GetTrusted() *herbplugin.Trusted {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return &c.Data.Trusted
+}
+func (c *Config) SetTrusted(v *herbplugin.Trusted) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.Trusted = *v
 }
 func (c *Config) GetHost(bus *bus.Bus) string {
 	c.Locker.Lock()
@@ -94,6 +123,17 @@ func (c *Config) GetParams() map[string]string {
 	defer c.Locker.Unlock()
 	return c.Data.Params
 }
+
+func (c *Config) GetScriptID() string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.ScriptID
+}
+func (c *Config) SetScriptID(id string) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.ScriptID = id
+}
 func (c *Config) Encode() ([]byte, error) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
@@ -115,6 +155,7 @@ func (c *Config) Decode(data []byte) error {
 	c.Data = configdata
 	return nil
 }
+
 func (c *Config) OnReady(b *bus.Bus) {
 	c.ReadyAt = time.Now().Unix()
 }
@@ -134,6 +175,12 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.GetParams = c.GetParams
 	b.DeleteParam = c.DeleteParam
 	b.GetReadyAt = c.GetReadyAt
+	b.GetTrusted = c.GetTrusted
+	b.SetTrusted = c.SetTrusted
+	b.GetPermissions = c.GetPermissions
+	b.SetPermissions = c.SetPermissions
+	b.GetScriptID = c.GetScriptID
+	b.SetScriptID = c.SetScriptID
 	b.BindReadyEvent(b, c.OnReady)
 }
 

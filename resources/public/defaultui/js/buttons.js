@@ -9,8 +9,17 @@ onButton.connect=function(){
     send("connect",vm.current)
 }
 onButton.unlock=function(){
-    localStorage.setItem("hellclient-advancemode","on")
-    vm.advancemode=true;
+    vm.$confirm('是否开启脚本编辑模式?在脚本编辑模式中可以对脚本的触发器，计时器和别名进行编辑', '提示', {
+        confirmButtonText: '开启',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        localStorage.setItem("hellclient-advancemode","on")
+        vm.advancemode=true;
+      }).catch(()=>{
+
+      })
+
 }
 onButton.lock=function(){
     localStorage.setItem("hellclient-advancemode","")
@@ -20,13 +29,27 @@ onButton.disconnect=function(){
     send("disconnect",vm.current)
 }
 onButton.close=function(){
-    send("close",vm.current)
+    vm.$confirm('是否要关闭本游戏?', '提示', {
+        confirmButtonText: '关闭',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        send("close",vm.current)
+      }).catch(()=>{
+
+      })
 }
 onButton.notopened=function(){
     vm.notopened=null;
     vm.notopenedVisible=true
     send("notopened")
 }
+onButton.script=function(){
+    vm.script=null;
+    vm.scriptVisible=true
+    send("scriptinfo",vm.current)
+}
+
 onButton.save=function(){
     send("save",vm.current)
 }

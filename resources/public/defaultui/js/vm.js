@@ -22,6 +22,8 @@ var data={
     notopened:[],
     notopenedVisible:false,
     advancemode:false,
+    script:null,
+    scriptVisible:false,
 }
 var vm = new Vue({
     el:"#app",

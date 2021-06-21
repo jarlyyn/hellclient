@@ -1,0 +1,14 @@
+<el-dialog width="80%"  :fullscreen="true"  title="脚本信息" :visible.sync="scriptVisible">
+<div v-if="script">
+    <el-row>
+        {{script.ID ? script.ID : " - 未使用- "}}
+<el-button-group>
+<el-button size="mini"  type="success" class="el-icon-folder-opened">打开</el-button>
+<el-button size="mini"  v-if="script.ID" type="warning" class="el-icon-close" plain></el-button>
+</el-button-group>
+    </el-row>
+    <div v-if="script.ID">
+
+    </div>
+</div>
+</el-dialog>
