@@ -19,5 +19,7 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("allLines", p.newRoomAdapter("allLines"))
 	adapter.Register("notopened", p.newUserAdapter("notopened"))
 	adapter.Register("scriptinfo", p.newRoomAdapter("scriptinfo"))
+	adapter.Register("createScriptFail", p.newUserAdapter("createScriptFail"))
+	adapter.Register("createScriptSuccess", p.newUserAdapter("createScriptSuccess"))
 
 }

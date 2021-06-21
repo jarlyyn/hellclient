@@ -3,7 +3,6 @@ package forms
 import (
 	"encoding/json"
 	"modules/world"
-	"modules/world/bus"
 	"modules/world/titan"
 	"net/http"
 
@@ -62,34 +61,27 @@ func (f *CreateScriptForm) InitWithRequest(r *http.Request) error {
 	return nil
 }
 
-func CreateScript(t *titan.Titan, b *bus.Bus, data []byte) {
+func CreateScript(t *titan.Titan, data []byte) error {
 	form := NewCreateScriptForm()
 	err := json.Unmarshal(data, form)
 	if err != nil {
-		return
+		return err
 	}
 	err = form.Validate()
 	if err != nil {
-		return
+		return err
 	}
 	errors := form.Errors()
 	if len(errors) != 0 {
-		t.OnCreateFail(errors)
-		return
+		t.OnCreateScriptFail(errors)
+		return nil
 	}
-	w := t.NewWorld(form.ID)
-	if w == nil {
-		return
-	}
-	w.SetHost(form.Host)
-	w.SetPort(form.Port)
-	w.SetCharset(form.Charset)
-	go func() {
-		t.OnCreateSuccess(form.ID)
-		t.ExecClients()
-	}()
-	err = t.SaveWorld(form.ID)
+	err = t.NewScript(form.ID, form.Type)
 	if err != nil {
-		return
+		return err
 	}
+	go func() {
+		t.OnCreateScriptSuccess(form.ID)
+	}()
+	return nil
 }

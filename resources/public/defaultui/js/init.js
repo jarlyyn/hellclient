@@ -6,6 +6,7 @@ requirejs.config({
         "html-top":"/public/defaultui/block/top.html",
         "html-triggers":"/public/defaultui/block/triggers.html",
         "html-creategameform":"/public/defaultui/block/creategameform.html",
+        "html-createscriptform":"/public/defaultui/block/createscriptform.html",
         "html-alllines":"/public/defaultui/block/alllines.html",
         "html-notopened":"/public/defaultui/block/notopened.html",
         "html-script":"/public/defaultui/block/script.html",
@@ -25,7 +26,10 @@ define(function (require) {
     document.getElementById("notopened").innerHTML=htmlalllines;
     var htmlscript=require("text!html-script");
     document.getElementById("script").innerHTML=htmlscript;
+    var htmlcreatescriptform=require("text!html-createscriptform");
+    document.getElementById("createscriptform").innerHTML=htmlcreatescriptform;
 
+    
     require(["main"],function(main){
     });
 })

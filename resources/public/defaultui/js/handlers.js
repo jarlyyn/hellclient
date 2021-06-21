@@ -83,5 +83,10 @@ handlers.notopened=function(data){
 handlers.scriptinfo=function(data){
     vm.script=data
 }
-
+handlers.createScriptFail=function(data){
+    vm.createScriptFail=data
+}
+handlers.createScriptSuccess=function(data){
+    vm.scriptCreateFormVisible=false;
+}
 })

@@ -1,6 +1,7 @@
 package titan
 
 import (
+	"errors"
 	"modules/app"
 	"modules/msg"
 	"modules/world"
@@ -116,6 +117,13 @@ func (t *Titan) OnCreateSuccess(id string) {
 	if w != nil {
 		w.HandleCmdError(w.DoConnectServer())
 	}
+}
+
+func (t *Titan) OnCreateScriptFail(errors []*validator.FieldError) {
+	msg.PublishCreateScriptFail(t, errors)
+}
+func (t *Titan) OnCreateScriptSuccess(id string) {
+	msg.PublishCreateScriptSuccess(t, id)
 }
 func (t *Titan) HandleCmdConnect(id string) {
 	w := t.World(id)
@@ -337,6 +345,70 @@ func (t *Titan) OpenWorld(id string) (bool, error) {
 	go b.HandleCmdError(b.DoConnectServer())
 
 	return true, nil
+}
+func (t *Titan) SaveScript(id string) error {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	w := t.Worlds[id]
+	if w == nil {
+		return nil
+	}
+	data, err := w.DoEncodeScript()
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(filepath.Join(t.Scriptpath, id, "script.toml"), data, util.DefaultFileMode)
+}
+func (t *Titan) OpenScript(id string) (bool, error) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	w := t.Worlds[id]
+	if w == nil {
+		return false, nil
+	}
+	data, err := os.ReadFile(filepath.Join(t.Scriptpath, id, "script.toml"))
+	if err != nil {
+		return false, err
+	}
+	err = w.DoDecodeScript(data)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+func (t *Titan) NewScript(id string, scripttype string) error {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	ok, err := t.IsScriptExist(id)
+	if err != nil {
+		return err
+	}
+	if ok {
+		return errors.New("script exists")
+	}
+	err = os.MkdirAll(filepath.Join(t.Scriptpath, id, "script"), util.DefaultFolderMode)
+	if err != nil {
+		return err
+	}
+	data, err := os.ReadFile(world.ScriptTomlTemplates[scripttype])
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(filepath.Join(t.Scriptpath, id, "script.toml"), data, util.DefaultFileMode)
+	if err != nil {
+		return err
+	}
+	data, err = os.ReadFile(world.ScriptTemplates[scripttype])
+	if err != nil {
+		return err
+	}
+	err = os.WriteFile(filepath.Join(t.Scriptpath, id, "script", world.ScriptTargets[scripttype]), data, util.DefaultFileMode)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 func New() *Titan {
 	return &Titan{

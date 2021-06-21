@@ -3,7 +3,7 @@
     <el-row>
         {{script.ID ? script.ID : " - 未使用- "}}
 <el-button-group>
-<el-button size="mini"  type="success" class="el-icon-folder-opened">打开</el-button>
+<el-button size="mini"  type="success" class="el-icon-folder-opened" @click="onButton('createScript')">打开</el-button>
 <el-button size="mini"  v-if="script.ID" type="warning" class="el-icon-close" plain></el-button>
 </el-button-group>
     </el-row>

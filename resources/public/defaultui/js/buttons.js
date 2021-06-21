@@ -85,4 +85,12 @@ onButton.open=function(id){
     send("open",id);
     vm.notopenedVisible=false;
 }
+onButton.createScript=function(){
+    vm.createScriptFail=[];
+    vm.scriptCreateForm={};
+    vm.scriptCreateFormVisible=true;
+}
+onButton.createScriptSubmit=function(){
+    send("createScript",vm.scriptCreateForm);
+}
 })
