@@ -15,15 +15,11 @@ type Queue struct {
 }
 
 func (c *Queue) InstallTo(b *bus.Bus) {
-	b.BindInitEvent(c, c.Ready)
 	b.BindCloseEvent(c, c.close)
 	b.DoSendToQueue = b.WrapHandleBytes(c.Append)
 	b.DoDiscardQueue = b.Wrap(c.Flush)
 }
-func (c *Queue) Ready(b *bus.Bus) {
-	c.List = list.New()
-	c.List.Init()
-}
+
 func (c *Queue) close(b *bus.Bus) {
 	c.Flush(b)
 }
@@ -63,7 +59,7 @@ func (c *Queue) AfterDelay(b *bus.Bus) {
 	c.check(b)
 }
 func (c *Queue) exec(b *bus.Bus, msg []byte) {
-	b.DoSend([]byte(msg))
+	b.DoSend([]byte(msg), true)
 	delay := b.GetQueueDelay()
 	if delay >= 0 {
 		c.Pending = true
@@ -72,5 +68,8 @@ func (c *Queue) exec(b *bus.Bus, msg []byte) {
 }
 
 func New() *Queue {
-	return &Queue{}
+	q := &Queue{}
+	q.List = list.New()
+	q.List.Init()
+	return q
 }

@@ -30,5 +30,10 @@
 .words .BG-Bright-Magenta{background:rgb(255,0,255)}
 .words .BG-Bright-Cyan{background:rgb(0,255,255)}
 .words .BG-Bright-White{background:rgb(255,255,255)}
-.words.system{color: red;}
 .words .bold{font-weight: bold}
+.words.echo{color: cyan;font-style:italic}
+.words.echo::before{content:"↣";color:teal}
+.words.system{color: red;}
+.words.system::before{content:"⯳";color:purple}
+.words.print{color:mediumspringgreen;}
+.words.print::before{content:"↢";color:green;}

@@ -134,11 +134,15 @@ func (s *Script) beforeClose(b *bus.Bus) {
 	s.Unload(b)
 }
 func (s *Script) connected(b *bus.Bus) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	if s.Engine != nil {
 		s.Engine.OnConnect(b)
 	}
 }
 func (s *Script) disconnected(b *bus.Bus) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	if s.Engine != nil {
 		s.Engine.OnDisconnect(b)
 	}

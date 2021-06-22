@@ -8,11 +8,11 @@ import (
 )
 
 func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *world.Line {
-	w := world.Word{}
 	line := world.NewLine()
 	if len(msg) == 0 {
 		return line
 	}
+	w := world.Word{}
 	for {
 		out, s, err := ansi.Decode(msg)
 		msg = out
@@ -25,6 +25,7 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *worl
 				}
 				w.Text = string(b)
 				line.Append(w)
+				w = world.Word{}
 			} else if s.Type == "CSI" {
 				for _, v := range s.Params {
 					switch v {

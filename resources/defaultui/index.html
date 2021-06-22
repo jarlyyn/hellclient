@@ -16,7 +16,7 @@
       
             </div>
         <ul id="lines">
-            <li v-bind:class="'words '+ (line.IsPrint?' print':'') + (line.IsSystem?' system':'')" v-for="line in lines">
+            <li v-bind:class="'words '+ typeclass[line.Type]" v-for="line in lines">
                 <span v-if="line.IsSystem">🗨️</span>
                 <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') " v-for="word in line.Words" >{{word.Text}}</span>
             </li>

@@ -54,7 +54,9 @@ func (conn *Conn) C() chan int {
 func (conn *Conn) UpdatePrompt(bus *bus.Bus) {
 	conn.Lock.Lock()
 	defer conn.Lock.Unlock()
-	bus.HandleConnPrompt(conn.buffer)
+	if conn.running {
+		bus.HandleConnPrompt(conn.buffer)
+	}
 }
 func (conn *Conn) Stop(b *bus.Bus) {
 	conn.Close(b)

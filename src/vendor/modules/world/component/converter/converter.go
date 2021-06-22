@@ -11,7 +11,7 @@ type Converter struct {
 }
 
 func (c *Converter) InstallTo(b *bus.Bus) {
-	b.DoSend = b.WrapHandleBytes(c.Send)
+	b.DoSend = b.WrapHandleSend(c.Send)
 	b.HandleConnReceive = b.WrapHandleBytes(c.onMsg)
 	b.HandleConnPrompt = b.WrapHandleBytes(c.onPrompt)
 	b.DoPrint = b.WrapHandleString(c.DoPrint)
@@ -32,7 +32,7 @@ func (c *Converter) onMsg(bus *bus.Bus, msg []byte) {
 	}
 	line := c.ConvertToLine(bus, msg)
 	if line != nil {
-		line.IsReal = true
+		line.Type = world.LineTypeReal
 		bus.RaiseLineEvent(line)
 	}
 }
@@ -40,21 +40,38 @@ func (c *Converter) onError(bus *bus.Bus, err error) {
 	bus.HandleConverterError(err)
 }
 
-func (c *Converter) Send(bus *bus.Bus, cmd []byte) {
+func (c *Converter) Send(bus *bus.Bus, cmd []byte, echo bool) {
 	c.Lock.Lock()
 	defer c.Lock.Unlock()
 	b, err := FromUTF8(bus.GetCharset(), cmd)
 	if err != nil {
 		bus.HandleConverterError(err)
+		return
 	}
-
+	p := bus.GetPrompt()
+	if !p.IsEmpty() {
+		p.Type = world.LineTypePrompt
+		bus.RaiseLineEvent(p)
+		bus.RaisePromptEvent(world.NewLine())
+	}
+	if echo {
+		c.DoPrintEcho(bus, string(cmd))
+	}
 	bus.DoSendToConn(b)
 	bus.DoSendToConn([]byte("\n"))
 }
-
+func (c *Converter) DoPrintEcho(b *bus.Bus, msg string) {
+	line := world.NewLine()
+	line.Type = world.LineTypeEcho
+	w := world.Word{
+		Text: msg,
+	}
+	line.Append(w)
+	b.RaiseLineEvent(line)
+}
 func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {
 	line := world.NewLine()
-	line.IsSystem = true
+	line.Type = world.LineTypeSystem
 	w := world.Word{
 		Text: msg,
 	}
@@ -64,7 +81,7 @@ func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {
 
 func (c *Converter) DoPrint(b *bus.Bus, msg string) {
 	line := world.NewLine()
-	line.IsPrint = true
+	line.Type = world.LineTypePrint
 	w := world.Word{
 		Text: msg,
 	}
