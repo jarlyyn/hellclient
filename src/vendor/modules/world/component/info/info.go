@@ -63,7 +63,7 @@ func (i *Info) InstallTo(b *bus.Bus) {
 	b.GetClientInfo = b.WrapGetClientInfo(i.ClientInfo)
 	b.BindLineEvent(i, i.onNewLine)
 	b.BindPromptEvent(i, i.onPrompt)
-	b.BindReadyEvent(i, i.Init)
+	b.BindInitEvent(i, i.Init)
 }
 
 func New() *Info {

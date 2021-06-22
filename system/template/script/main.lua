@@ -1,11 +1,11 @@
-function onOpen()
+onOpen=function ()
 end
 
-function onClose()
+onClose=function ()
 end
 
-function onConnected()
+onConnected=function ()
 end
 
-function onDisconnected()
+onDisconnected=function ()
 end

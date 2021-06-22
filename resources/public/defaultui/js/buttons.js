@@ -93,4 +93,12 @@ onButton.createScript=function(){
 onButton.createScriptSubmit=function(){
     send("createScript",vm.scriptCreateForm);
 }
+onButton.listScriptinfo=function(){
+    vm.scriptlist=null;
+    vm.scriptlistVisible=true
+    send("listScriptinfo")
+}
+onButton.cleanScript=function(){
+    app.send("usescript",[vm.current,""])
+}
 })

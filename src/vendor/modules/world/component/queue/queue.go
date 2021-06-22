@@ -15,7 +15,7 @@ type Queue struct {
 }
 
 func (c *Queue) InstallTo(b *bus.Bus) {
-	b.BindReadyEvent(c, c.Ready)
+	b.BindInitEvent(c, c.Ready)
 	b.BindCloseEvent(c, c.close)
 	b.DoSendToQueue = b.WrapHandleBytes(c.Append)
 	b.DoDiscardQueue = b.Wrap(c.Flush)

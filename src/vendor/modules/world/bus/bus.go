@@ -13,59 +13,63 @@ type Bus struct {
 	ID     string
 	Locker sync.RWMutex
 
-	GetConnBuffer        func() []byte
-	GetConnConnected     func() bool
-	GetHost              func() string
-	SetHost              func(string)
-	GetPort              func() string
-	SetPort              func(string)
-	GetQueueDelay        func() int
-	SetQueueDelay        func(int)
-	GetParam             func(string) string
-	GetParams            func() map[string]string
-	SetParam             func(string, string)
-	DeleteParam          func(string)
-	GetCharset           func() string
-	SetCharset           func(string)
-	GetCurrentLines      func() []*world.Line
-	GetPrompt            func() *world.Line
-	GetClientInfo        func() *world.ClientInfo
-	GetScriptInfo        func() *world.ScriptInfo
-	SetPermissions       func([]string)
-	GetPermissions       func() []string
-	GetScriptID          func() string
-	SetScriptID          func(string)
-	GetScriptType        func() string
-	SetScriptType        func(string)
-	GetScriptPath        func() string
-	SetTrusted           func(*herbplugin.Trusted)
-	GetTrusted           func() *herbplugin.Trusted
-	DoSendToConn         func(cmd []byte)
-	DoSend               func(cmd []byte)
-	DoSendToQueue        func(cmd []byte)
-	DoEncode             func() ([]byte, error)
-	DoDecode             func([]byte) error
-	DoEncodeScript       func() ([]byte, error)
-	DoDecodeScript       func([]byte) error
-	DoPrint              func(msg string)
-	DoPrintSystem        func(msg string)
-	DoDiscardQueue       func()
-	HandleConnReceive    func(msg []byte)
-	HandleConnError      func(err error)
-	HandleConnPrompt     func(msg []byte)
-	DoConnectServer      func() error
-	DoCloseServer        func() error
-	HandleConverterError func(err error)
-	HandleCmdError       func(err error)
-	HandleTriggerError   func(err error)
-	GetReadyAt           func() int64
-	LineEvent            busevent.Event
-	PromptEvent          busevent.Event
-	ConnectedEvent       busevent.Event
-	DisconnectedEvent    busevent.Event
-	ReadyEvent           busevent.Event
-	BeforeCloseEvent     busevent.Event
-	CloseEvent           busevent.Event
+	GetConnBuffer          func() []byte
+	GetConnConnected       func() bool
+	GetHost                func() string
+	SetHost                func(string)
+	GetPort                func() string
+	SetPort                func(string)
+	GetQueueDelay          func() int
+	SetQueueDelay          func(int)
+	GetParam               func(string) string
+	GetParams              func() map[string]string
+	SetParam               func(string, string)
+	DeleteParam            func(string)
+	GetCharset             func() string
+	SetCharset             func(string)
+	GetReadyAt             func() int64
+	GetCurrentLines        func() []*world.Line
+	GetPrompt              func() *world.Line
+	GetClientInfo          func() *world.ClientInfo
+	GetScriptData          func() *world.ScriptData
+	SetPermissions         func([]string)
+	GetPermissions         func() []string
+	GetScriptID            func() string
+	SetScriptID            func(string)
+	GetScriptPath          func() string
+	SetTrusted             func(*herbplugin.Trusted)
+	GetTrusted             func() *herbplugin.Trusted
+	GetScriptPluginOptions func() herbplugin.Options
+	DoSendToConn           func(cmd []byte)
+	DoSend                 func(cmd []byte)
+	DoSendToQueue          func(cmd []byte)
+	DoEncode               func() ([]byte, error)
+	DoDecode               func([]byte) error
+	DoUnloadScript         func()
+	DoLoadScript           func() error
+	DoSaveScript           func() error
+	DoUseScript            func(string)
+	DoPrint                func(msg string)
+	DoPrintSystem          func(msg string)
+	DoDiscardQueue         func()
+	HandleConnReceive      func(msg []byte)
+	HandleConnError        func(err error)
+	HandleConnPrompt       func(msg []byte)
+	DoConnectServer        func() error
+	DoCloseServer          func() error
+	HandleConverterError   func(err error)
+	HandleCmdError         func(err error)
+	HandleTriggerError     func(err error)
+	HandleScriptError      func(err error)
+
+	LineEvent         busevent.Event
+	PromptEvent       busevent.Event
+	ConnectedEvent    busevent.Event
+	DisconnectedEvent busevent.Event
+	InitEvent         busevent.Event
+	ReadyEvent        busevent.Event
+	BeforeCloseEvent  busevent.Event
+	CloseEvent        busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -118,11 +122,17 @@ func (b *Bus) WrapGetClientInfo(f func(bus *Bus) *world.ClientInfo) func() *worl
 		return f(b)
 	}
 }
-func (b *Bus) WrapGetScriptInfo(f func(bus *Bus) *world.ScriptInfo) func() *world.ScriptInfo {
-	return func() *world.ScriptInfo {
+func (b *Bus) WrapGetScriptData(f func(bus *Bus) *world.ScriptData) func() *world.ScriptData {
+	return func() *world.ScriptData {
 		return f(b)
 	}
 }
+func (b *Bus) WrapGetScriptPluginOptions(f func(bus *Bus) herbplugin.Options) func() herbplugin.Options {
+	return func() herbplugin.Options {
+		return f(b)
+	}
+}
+
 func (b *Bus) WrapHandleBytes(f func(bus *Bus, bs []byte)) func(bs []byte) {
 	return func(bs []byte) {
 		f(b, bs)
@@ -163,10 +173,10 @@ func (b *Bus) BindPromptEvent(id interface{}, fn func(b *Bus, line *world.Line))
 	)
 }
 
-func (b *Bus) RaiseContectedEvent() {
+func (b *Bus) RaiseConnectedEvent() {
 	b.ConnectedEvent.Raise(nil)
 }
-func (b *Bus) BindContectedEvent(id interface{}, fn func(b *Bus)) {
+func (b *Bus) BindConnectedEvent(id interface{}, fn func(b *Bus)) {
 	b.ConnectedEvent.BindAs(
 		id,
 		func(data interface{}) {
@@ -175,10 +185,10 @@ func (b *Bus) BindContectedEvent(id interface{}, fn func(b *Bus)) {
 	)
 }
 
-func (b *Bus) RaiseDiscontectedEvent() {
+func (b *Bus) RaiseDisconnectedEvent() {
 	b.DisconnectedEvent.Raise(nil)
 }
-func (b *Bus) BindDiscontectedEvent(id interface{}, fn func(b *Bus)) {
+func (b *Bus) BindDisconnectedEvent(id interface{}, fn func(b *Bus)) {
 	b.DisconnectedEvent.BindAs(
 		id,
 		func(data interface{}) {
@@ -208,6 +218,18 @@ func (b *Bus) BindBeforeCloseEvent(id interface{}, fn func(b *Bus)) {
 		},
 	)
 }
+func (b *Bus) RaiseInitEvent() {
+	b.InitEvent.Raise(nil)
+}
+func (b *Bus) BindInitEvent(id interface{}, fn func(b *Bus)) {
+	b.InitEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b)
+		},
+	)
+}
+
 func (b *Bus) RaiseReadyEvent() {
 	b.ReadyEvent.Raise(nil)
 }

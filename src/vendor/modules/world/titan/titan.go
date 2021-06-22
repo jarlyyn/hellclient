@@ -17,6 +17,8 @@ import (
 	"path"
 	"sort"
 
+	"github.com/BurntSushi/toml"
+
 	"os"
 	"path/filepath"
 	"strings"
@@ -49,7 +51,7 @@ func (t *Titan) CreateBus() *bus.Bus {
 		script.New(),
 		t,
 	)
-	b.RaiseReadyEvent()
+	b.RaiseInitEvent()
 	return b
 }
 func (t *Titan) DestoryBus(b *bus.Bus) {
@@ -76,6 +78,7 @@ func (t *Titan) NewWorld(id string) *bus.Bus {
 	b := t.CreateBus()
 	b.ID = id
 	t.Worlds[id] = b
+	b.RaiseReadyEvent()
 	return b
 }
 
@@ -173,7 +176,7 @@ func (t *Titan) HandleCmdNotOpened() {
 }
 func (t *Titan) HandleCmdOpen(id string) bool {
 	ok, err := t.OpenWorld(id)
-	if err != nil {
+	if err != nil && !os.IsNotExist(err) {
 		util.LogError(err)
 		return false
 	}
@@ -188,8 +191,22 @@ func (t *Titan) HandleCmdSave(id string) {
 func (t *Titan) HandleCmdScriptInfo(id string) {
 	w := t.World(id)
 	if w != nil {
-		info := w.GetScriptInfo()
+		info := w.GetScriptData().ConvertInfo(w.GetScriptID())
 		msg.PublishScriptInfo(t, id, info)
+	}
+}
+func (t *Titan) HandleCmdListScriptInfo() {
+	info, err := t.ListScripts()
+	if err != nil {
+		util.LogError(err)
+		return
+	}
+	msg.PublishScriptInfoList(t, info)
+}
+func (t *Titan) HandleCmdUseScript(id string, script string) {
+	w := t.World(id)
+	if w != nil {
+		w.DoUseScript(script)
 	}
 }
 func (t *Titan) ExecClients() {
@@ -204,9 +221,10 @@ func (t *Titan) ExecClients() {
 	sort.Sort(result)
 	msg.PublishClients(t, result)
 }
+
 func (t *Titan) InstallTo(b *bus.Bus) {
-	b.BindContectedEvent(t, t.onConnected)
-	b.BindDiscontectedEvent(t, t.onDisconnected)
+	b.BindConnectedEvent(t, t.onConnected)
+	b.BindDisconnectedEvent(t, t.onDisconnected)
 	b.BindLineEvent(t, t.onLine)
 	b.BindPromptEvent(t, t.onPrompt)
 	b.GetScriptPath = t.GetScriptPath
@@ -302,6 +320,33 @@ func (t *Titan) listWorlds() ([]string, error) {
 	}
 	return result, nil
 }
+func (t *Titan) ListScripts() ([]*world.ScriptInfo, error) {
+	t.Locker.RLock()
+	defer t.Locker.RUnlock()
+	result := []*world.ScriptInfo{}
+	files, err := os.ReadDir(t.Scriptpath)
+	if err != nil {
+		return nil, err
+	}
+	for _, v := range files {
+		if v.IsDir() {
+			id := v.Name()
+			if world.IDRegexp.Match([]byte(id)) {
+				data, err := os.ReadFile(filepath.Join(t.Scriptpath, id, "script.toml"))
+				if err != nil {
+					continue
+				}
+				d := world.NewScriptData()
+				err = toml.Unmarshal(data, d)
+				if err != nil {
+					continue
+				}
+				result = append(result, d.ConvertInfo(id))
+			}
+		}
+	}
+	return result, nil
+}
 func (t *Titan) CloseWorld(id string) {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
@@ -342,41 +387,12 @@ func (t *Titan) OpenWorld(id string) (bool, error) {
 		return false, err
 	}
 	t.Worlds[id] = b
+	b.RaiseReadyEvent()
 	go b.HandleCmdError(b.DoConnectServer())
 
 	return true, nil
 }
-func (t *Titan) SaveScript(id string) error {
-	t.Locker.Lock()
-	defer t.Locker.Unlock()
-	w := t.Worlds[id]
-	if w == nil {
-		return nil
-	}
-	data, err := w.DoEncodeScript()
-	if err != nil {
-		return err
-	}
 
-	return os.WriteFile(filepath.Join(t.Scriptpath, id, "script.toml"), data, util.DefaultFileMode)
-}
-func (t *Titan) OpenScript(id string) (bool, error) {
-	t.Locker.Lock()
-	defer t.Locker.Unlock()
-	w := t.Worlds[id]
-	if w == nil {
-		return false, nil
-	}
-	data, err := os.ReadFile(filepath.Join(t.Scriptpath, id, "script.toml"))
-	if err != nil {
-		return false, err
-	}
-	err = w.DoDecodeScript(data)
-	if err != nil {
-		return false, err
-	}
-	return true, nil
-}
 func (t *Titan) NewScript(id string, scripttype string) error {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()

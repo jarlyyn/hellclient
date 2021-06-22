@@ -89,4 +89,7 @@ handlers.createScriptFail=function(data){
 handlers.createScriptSuccess=function(data){
     vm.scriptCreateFormVisible=false;
 }
+handlers.scriptinfoList=function(data){
+    vm.scriptlist=data;
+}
 })

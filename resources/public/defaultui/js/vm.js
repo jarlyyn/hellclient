@@ -27,7 +27,8 @@ var data={
     scriptCreateFormVisible:false,
     createScriptFail:[],
     scriptCreateForm:{},
-
+    scriptlistVisible:false,
+    scriptlist:null,
 }
 var vm = new Vue({
     el:"#app",
@@ -52,6 +53,10 @@ var vm = new Vue({
         },
         onOpen:function(id){
             onButton.open(id)
+        },
+        onUseScript:function(script){
+            this.scriptlistVisible=false
+            app.send("usescript",[this.current,script])
         },
         onUpdateTrigger:function(data){
             vm.saveTriggerFail=[];

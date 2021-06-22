@@ -82,6 +82,7 @@ func CreateScript(t *titan.Titan, data []byte) error {
 	}
 	go func() {
 		t.OnCreateScriptSuccess(form.ID)
+		t.HandleCmdListScriptInfo()
 	}()
 	return nil
 }

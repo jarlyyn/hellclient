@@ -14,6 +14,8 @@ func (l *Log) InstallTo(b *bus.Bus) {
 	b.HandleConverterError = dolog
 	b.HandleCmdError = dolog
 	b.HandleConnError = dolog
+	b.HandleScriptError = dolog
+	b.HandleTriggerError = dolog
 }
 func (l *Log) DoLogError(b *bus.Bus, err error) {
 	if err == nil {
