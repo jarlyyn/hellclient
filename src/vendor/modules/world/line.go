@@ -13,13 +13,17 @@ type Word struct {
 	Bold       bool
 }
 
+const LineTypePrint = 0
+const LineTypeSystem = 1
+const LineTypeReal = 2
+const LineTypeEcho = 3
+const LineTypePrompt = 4
+
 type Line struct {
 	Words          []Word
 	ID             string
 	Time           int64
-	IsReal         bool
-	IsPrint        bool
-	IsSystem       bool
+	Type           int
 	OmitFromLog    bool
 	OmitFromOutput bool
 }
@@ -34,13 +38,13 @@ func (l *Line) Plain() string {
 	}
 	return output
 }
-
+func (l *Line) IsEmpty() bool {
+	return l == nil || len(l.Words) == 0
+}
 func NewLine() *Line {
 	return &Line{
-		Words:    []Word{},
-		ID:       uniqueid.MustGenerateID(),
-		Time:     time.Now().Unix(),
-		IsPrint:  false,
-		IsSystem: false,
+		Words: []Word{},
+		ID:    uniqueid.MustGenerateID(),
+		Time:  time.Now().Unix(),
 	}
 }

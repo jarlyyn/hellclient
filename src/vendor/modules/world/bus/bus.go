@@ -41,7 +41,7 @@ type Bus struct {
 	GetTrusted             func() *herbplugin.Trusted
 	GetScriptPluginOptions func() herbplugin.Options
 	DoSendToConn           func(cmd []byte)
-	DoSend                 func(cmd []byte)
+	DoSend                 func(cmd []byte, echo bool)
 	DoSendToQueue          func(cmd []byte)
 	DoEncode               func() ([]byte, error)
 	DoDecode               func([]byte) error
@@ -132,7 +132,11 @@ func (b *Bus) WrapGetScriptPluginOptions(f func(bus *Bus) herbplugin.Options) fu
 		return f(b)
 	}
 }
-
+func (b *Bus) WrapHandleSend(f func(bus *Bus, bs []byte, echo bool)) func(bs []byte, echo bool) {
+	return func(bs []byte, echo bool) {
+		f(b, bs, echo)
+	}
+}
 func (b *Bus) WrapHandleBytes(f func(bus *Bus, bs []byte)) func(bs []byte) {
 	return func(bs []byte) {
 		f(b, bs)

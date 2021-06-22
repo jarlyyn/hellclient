@@ -85,7 +85,7 @@ func (t *Titan) NewWorld(id string) *bus.Bus {
 func (t *Titan) DoSendTo(id string, msg []byte) {
 	w := t.World(id)
 	if w != nil {
-		w.DoSend(msg)
+		w.DoSend(msg, true)
 	}
 }
 func (t *Titan) Publish(msg *message.Message) {
@@ -143,7 +143,7 @@ func (t *Titan) HandleCmdDisconnect(id string) {
 func (t *Titan) HandleCmdSend(id string, msg []byte) {
 	w := t.World(id)
 	if w != nil {
-		w.DoSend(msg)
+		w.DoSend(msg, true)
 	}
 }
 func (t *Titan) HandleCmdAllLines(id string) {

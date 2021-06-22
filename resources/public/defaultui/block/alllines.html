@@ -1,7 +1,7 @@
 <el-dialog width="80%"  :fullscreen="true"  title="历史输出" :visible.sync="allLinesVisible">
     <div v-if="allLines">
     <ul id="alllines">
-            <li v-bind:class="'words '+ (line.IsPrint?' print':'') + (line.IsSystem?' system':'')" v-for="line in allLines">
+            <li v-bind:class="'words '+ typeclass[line.Type]" v-for="line in allLines">
                 <span v-if="line.IsSystem">🗨️</span>
                 <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') " v-for="word in line.Words" >{{word.Text}}</span>
             </li>

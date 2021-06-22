@@ -1,6 +1,12 @@
 define(["vue","/public/defaultui/js/app.js"],function (Vue,app) {
     var onButton=app.onButton; 
 var data={
+    typeclass:{
+        0:" print",
+        1:" system",
+        3:" echo",
+        4:" prompt"
+    },
     current:"",
     currenttab:"",
     lines:[],
