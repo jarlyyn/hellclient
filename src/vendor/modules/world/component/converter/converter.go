@@ -43,11 +43,13 @@ func (c *Converter) onError(bus *bus.Bus, err error) {
 func (c *Converter) Send(bus *bus.Bus, cmd []byte) {
 	c.Lock.Lock()
 	defer c.Lock.Unlock()
-	b, err := FromUTF8(bus.GetCharset(), []byte(cmd))
+	b, err := FromUTF8(bus.GetCharset(), cmd)
 	if err != nil {
 		bus.HandleConverterError(err)
 	}
+
 	bus.DoSendToConn(b)
+	bus.DoSendToConn([]byte("\n"))
 }
 
 func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {

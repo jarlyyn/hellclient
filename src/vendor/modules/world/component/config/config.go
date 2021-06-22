@@ -181,7 +181,7 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetPermissions = c.SetPermissions
 	b.GetScriptID = c.GetScriptID
 	b.SetScriptID = c.SetScriptID
-	b.BindReadyEvent(b, c.OnReady)
+	b.BindInitEvent(b, c.OnReady)
 }
 
 func New() *Config {

@@ -9,6 +9,8 @@ requirejs.config({
         "html-createscriptform":"/public/defaultui/block/createscriptform.html",
         "html-alllines":"/public/defaultui/block/alllines.html",
         "html-notopened":"/public/defaultui/block/notopened.html",
+        "html-scriptlist":"/public/defaultui/block/scriptlist.html",
+        
         "html-script":"/public/defaultui/block/script.html",
         "main":"/public/defaultui/js/main"
     },
@@ -28,6 +30,8 @@ define(function (require) {
     document.getElementById("script").innerHTML=htmlscript;
     var htmlcreatescriptform=require("text!html-createscriptform");
     document.getElementById("createscriptform").innerHTML=htmlcreatescriptform;
+    var htmlscriptlist=require("text!html-scriptlist");
+    document.getElementById("scriptlist").innerHTML=htmlscriptlist;
 
     
     require(["main"],function(main){

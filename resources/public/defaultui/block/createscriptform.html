@@ -1,6 +1,6 @@
 <el-dialog title="创建脚本" :visible.sync="scriptCreateFormVisible">
     <div v-if="createScriptFail">
-            <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
+            <el-alert v-for="err in createScriptFail" :title="err.Msg" type="error" show-icon> </el-alert>
         
     </div>
         <el-form :model="scriptCreateForm">

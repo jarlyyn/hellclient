@@ -71,7 +71,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	if err != nil {
 		return err
 	}
-	go bus.RaiseContectedEvent()
+	go bus.RaiseConnectedEvent()
 	conn.running = true
 	conn.c = make(chan int)
 	conn.buffer = make([]byte, 1024)
@@ -90,7 +90,7 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 	conn.running = false
 	conn.buffer = []byte{}
 	close(conn.c)
-	bus.RaiseDiscontectedEvent()
+	bus.RaiseDisconnectedEvent()
 	err := conn.telnet.Close()
 	conn.telnet = nil
 	return err
@@ -152,14 +152,11 @@ func (conn *Conn) Send(bus *bus.Bus, cmd []byte) {
 	if conn.telnet == nil {
 		return
 	}
-	bus.HandleConnReceive(conn.buffer)
 	conn.buffer = []byte{}
 	_, err := conn.telnet.Conn.Write(cmd)
 	if err != nil {
 		bus.HandleConnError(err)
 	}
-	_, err = conn.telnet.Conn.Write([]byte("\n"))
-	bus.HandleConnError(err)
 }
 
 func New() *Conn {
