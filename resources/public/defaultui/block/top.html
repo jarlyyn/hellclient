@@ -4,7 +4,7 @@
         <el-button @click="onButton('notopened')" size="mini" type="primary" icon="el-icon-folder-opened"></el-button>
         </el-tooltip>
         </el-button-group >
-    <span v-if="clients.length && current && info[current]" id="world-intro">当前游戏:{{current}} @ {{info[current].HostPort}}</span>
+    <span v-if="clients.length && current && info[current]" id="world-intro">当前游戏:{{current}} @ {{info[current].HostPort}} </span> <span v-if="status" id="top-status">[ {{status}} ]</span>
 </div>
 <div id="tabs">
     <div id="no-clients" v-if="!clients.length">还未打开游戏，请点击上方按钮打开或创建游戏</div>

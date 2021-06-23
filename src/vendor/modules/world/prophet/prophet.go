@@ -109,8 +109,7 @@ func (p *Prophet) Change(roomid string) {
 	}
 	p.Current.Store(roomid)
 	go func() {
-		p.Titan.HandleCmdLines(roomid)
-		p.Titan.HandleCmdPrompt(roomid)
+		p.onCurrent(roomid)
 	}()
 }
 func (p *Prophet) Enter(w http.ResponseWriter, r *http.Request) error {
@@ -171,10 +170,16 @@ func (p *Prophet) OnOpen(conn connections.OutputConnection) {
 		r.Join(crid)
 	}
 	p.Titan.ExecClients()
-	p.Titan.HandleCmdLines(crid)
-	p.Titan.HandleCmdPrompt(crid)
+	p.onCurrent(crid)
 	ctx.Data.Store("rooms", r)
 
+}
+
+func (p *Prophet) onCurrent(roomid string) {
+	p.Titan.HandleCmdLines(roomid)
+	p.Titan.HandleCmdPrompt(roomid)
+	p.Titan.HandleCmdStatus(roomid)
+	p.Titan.HandleCmdHistory(roomid)
 }
 func (p *Prophet) Start() {
 	connections.Consume(p.Gateway, p)

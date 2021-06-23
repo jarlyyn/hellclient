@@ -126,6 +126,15 @@ func (p *Prophet) onCmdListScriptinfo(conn connections.OutputConnection, cmd com
 	p.Titan.HandleCmdListScriptInfo()
 	return nil
 }
+func (p *Prophet) onCmdListStatus(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+
+	p.Titan.HandleCmdStatus(msg)
+	return nil
+}
 func (p *Prophet) onCmdUseScript(conn connections.OutputConnection, cmd command.Command) error {
 	var msg []string
 	if json.Unmarshal(cmd.Data(), &msg) != nil {
@@ -164,6 +173,7 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("createScript", p.onCmdCreateScript)
 	handlers.Register("listScriptinfo", p.onCmdListScriptinfo)
 	handlers.Register("usescript", p.onCmdUseScript)
+	handlers.Register("status", p.onCmdListStatus)
 
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)

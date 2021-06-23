@@ -61,6 +61,9 @@ func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
 	if cmd.Echo {
 		c.DoPrintEcho(bus, string(cmd.Mesasge))
 	}
+	if cmd.History {
+		bus.AddHistory(cmd.Mesasge)
+	}
 	bus.DoSendToConn(b)
 	bus.DoSendToConn([]byte("\n"))
 }

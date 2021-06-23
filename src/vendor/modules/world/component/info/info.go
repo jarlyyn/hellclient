@@ -40,7 +40,6 @@ func (i *Info) CurrentLines(b *bus.Bus) []*world.Line {
 			result = append(result, line)
 		}
 	})
-	// result = append(result, i.Prompt)
 	return result
 }
 func (i *Info) CurrentPrompt(b *bus.Bus) *world.Line {
@@ -71,7 +70,7 @@ func (i *Info) AddHistory(b *bus.Bus, cmd string) {
 }
 
 func (i *Info) getHistories() []string {
-	var result = make([]string, i.History.Len())
+	var result = make([]string, 0, i.History.Len())
 	i.History.Do(func(x interface{}) {
 		data, ok := x.(string)
 		if ok {

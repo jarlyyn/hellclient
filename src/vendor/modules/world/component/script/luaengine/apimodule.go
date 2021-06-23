@@ -52,7 +52,10 @@ func (a *luaapi) InstallAPIs(l *lua.LState) {
 	l.SetGlobal("CreateGUID", l.NewFunction(a.CreateGUID))
 	l.SetGlobal("FlashIcon", l.NewFunction(a.FlashIcon))
 	l.SetGlobal("SetStatus", l.NewFunction(a.SetStatus))
-
+	l.SetGlobal("Execute", l.NewFunction(a.Execute))
+	l.SetGlobal("DeleteCommandHistory", l.NewFunction(a.DeleteCommandHistory))
+	l.SetGlobal("DiscardQueue", l.NewFunction(a.DiscardQueue))
+	l.SetGlobal("GetQueue", l.NewFunction(a.GetQueue))
 }
 func (a *luaapi) Note(L *lua.LState) int {
 	info := L.ToString(1)
@@ -67,6 +70,11 @@ func (a *luaapi) SendImmediate(L *lua.LState) int {
 func (a *luaapi) Send(L *lua.LState) int {
 	info := L.ToString(1)
 	L.Push(lua.LNumber(a.API.Send(info)))
+	return 1
+}
+func (a *luaapi) Execute(L *lua.LState) int {
+	info := L.ToString(1)
+	L.Push(lua.LNumber(a.API.Execute(info)))
 	return 1
 }
 func (a *luaapi) SendNoEcho(L *lua.LState) int {
@@ -210,7 +218,23 @@ func (a *luaapi) SetStatus(L *lua.LState) int {
 	a.API.SetStatus(text)
 	return 0
 }
-
+func (a *luaapi) DeleteCommandHistory(L *lua.LState) int {
+	a.API.DeleteCommandHistory()
+	return 0
+}
+func (a *luaapi) DiscardQueue(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.DiscardQueue()))
+	return 1
+}
+func (a *luaapi) GetQueue(L *lua.LState) int {
+	cmds := a.API.GetQueue()
+	t := L.NewTable()
+	for k := range cmds {
+		t.Append(lua.LString(cmds[k]))
+	}
+	L.Push(t)
+	return 1
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

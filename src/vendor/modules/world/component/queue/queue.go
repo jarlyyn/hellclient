@@ -18,21 +18,33 @@ type Queue struct {
 func (c *Queue) InstallTo(b *bus.Bus) {
 	b.BindCloseEvent(c, c.close)
 	b.DoSendToQueue = b.WrapHandleSend(c.Append)
-	b.DoDiscardQueue = b.Wrap(c.Flush)
+	b.DoDiscardQueue = c.Flush
+	b.GetQueue = c.ListQueue
 }
-
+func (c *Queue) ListQueue() []*world.Command {
+	c.Locker.RLock()
+	defer c.Locker.RUnlock()
+	var result = make([]*world.Command, 0, c.List.Len())
+	for i := c.List.Front(); i != nil; i = i.Next() {
+		c := i.Value.(*world.Command)
+		result = append(result, c)
+	}
+	return result
+}
 func (c *Queue) close(b *bus.Bus) {
-	c.Flush(b)
+	c.Flush()
 }
-func (c *Queue) Flush(b *bus.Bus) {
+func (c *Queue) Flush() int {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
 	timer := c.Timer
 	if timer != nil {
 		timer.Stop()
 	}
+	l := c.List.Len()
 	c.List.Init()
 	c.Pending = false
+	return l
 }
 func (c *Queue) Append(b *bus.Bus, cmd *world.Command) {
 	c.Locker.Lock()

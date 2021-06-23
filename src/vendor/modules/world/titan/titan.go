@@ -99,6 +99,15 @@ func (t *Titan) onDisconnected(b *bus.Bus) {
 func (t *Titan) onPrompt(b *bus.Bus, prompt *world.Line) {
 	msg.PublishPrompt(t, b.ID, prompt)
 }
+
+func (t *Titan) onStatus(b *bus.Bus, status string) {
+	msg.PublishStatus(t, b.ID, status)
+}
+
+func (t *Titan) onHistory(b *bus.Bus, h []string) {
+	msg.PublishHistory(t, b.ID, h)
+}
+
 func (t *Titan) onLine(b *bus.Bus, line *world.Line) {
 	if line.OmitFromOutput {
 		return
@@ -140,6 +149,20 @@ func (t *Titan) HandleCmdDisconnect(id string) {
 	w := t.World(id)
 	if w != nil {
 		w.HandleCmdError(w.DoCloseServer())
+	}
+}
+func (t *Titan) HandleCmdStatus(id string) {
+	w := t.World(id)
+	if w != nil {
+		status := w.GetStatus()
+		msg.PublishStatus(t, id, status)
+	}
+}
+func (t *Titan) HandleCmdHistory(id string) {
+	w := t.World(id)
+	if w != nil {
+		h := w.GetHistories()
+		msg.PublishHistory(t, id, h)
 	}
 }
 
@@ -224,6 +247,8 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindDisconnectedEvent(t, t.onDisconnected)
 	b.BindLineEvent(t, t.onLine)
 	b.BindPromptEvent(t, t.onPrompt)
+	b.BindStatusEvent(t, t.onStatus)
+	b.BindHistoriesEvent(t, t.onHistory)
 	b.GetScriptPath = t.GetScriptPath
 }
 

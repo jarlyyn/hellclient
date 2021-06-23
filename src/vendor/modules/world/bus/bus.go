@@ -23,6 +23,7 @@ type Bus struct {
 	SetStatus              func(string)
 	GetQueueDelay          func() int
 	SetQueueDelay          func(int)
+	GetQueue               func() []*world.Command
 	GetParam               func(string) string
 	GetParams              func() map[string]string
 	SetParam               func(string, string)
@@ -54,7 +55,7 @@ type Bus struct {
 	DoUseScript            func(string)
 	DoPrint                func(msg string)
 	DoPrintSystem          func(msg string)
-	DoDiscardQueue         func()
+	DoDiscardQueue         func() int
 	AddHistory             func(string)
 	GetHistories           func() []string
 	FlushHistories         func()
@@ -77,6 +78,7 @@ type Bus struct {
 	BeforeCloseEvent  busevent.Event
 	CloseEvent        busevent.Event
 	HistoriesEvent    busevent.Event
+	StatusEvent       busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -258,13 +260,25 @@ func (b *Bus) BindReadyEvent(id interface{}, fn func(b *Bus)) {
 	)
 }
 func (b *Bus) RaiseHistoriesEvent(histories []string) {
-	b.HistoriesEvent.Raise(nil)
+	b.HistoriesEvent.Raise(histories)
 }
 func (b *Bus) BindHistoriesEvent(id interface{}, fn func(b *Bus, histories []string)) {
 	b.HistoriesEvent.BindAs(
 		id,
 		func(data interface{}) {
-			fn(b, data.([]string))
+			h, _ := data.([]string)
+			fn(b, h)
+		},
+	)
+}
+func (b *Bus) RaiseStatusEvent(status string) {
+	b.StatusEvent.Raise(status)
+}
+func (b *Bus) BindStatusEvent(id interface{}, fn func(b *Bus, status string)) {
+	b.StatusEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b, data.(string))
 		},
 	)
 }
