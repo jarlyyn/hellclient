@@ -19,6 +19,8 @@ type Bus struct {
 	SetHost                func(string)
 	GetPort                func() string
 	SetPort                func(string)
+	GetStatus              func() string
+	SetStatus              func(string)
 	GetQueueDelay          func() int
 	SetQueueDelay          func(int)
 	GetParam               func(string) string
@@ -41,8 +43,9 @@ type Bus struct {
 	GetTrusted             func() *herbplugin.Trusted
 	GetScriptPluginOptions func() herbplugin.Options
 	DoSendToConn           func(cmd []byte)
-	DoSend                 func(cmd []byte, echo bool)
-	DoSendToQueue          func(cmd []byte)
+	DoSend                 func(*world.Command)
+	DoSendToQueue          func(*world.Command)
+	DoExecute              func(message string)
 	DoEncode               func() ([]byte, error)
 	DoDecode               func([]byte) error
 	DoUnloadScript         func()
@@ -52,6 +55,9 @@ type Bus struct {
 	DoPrint                func(msg string)
 	DoPrintSystem          func(msg string)
 	DoDiscardQueue         func()
+	AddHistory             func(string)
+	GetHistories           func() []string
+	FlushHistories         func()
 	HandleConnReceive      func(msg []byte)
 	HandleConnError        func(err error)
 	HandleConnPrompt       func(msg []byte)
@@ -70,6 +76,7 @@ type Bus struct {
 	ReadyEvent        busevent.Event
 	BeforeCloseEvent  busevent.Event
 	CloseEvent        busevent.Event
+	HistoriesEvent    busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -89,6 +96,11 @@ func (b *Bus) WrapDoCmd(f func(bus *Bus, cmd []byte) error) func(cmd []byte) err
 }
 func (b *Bus) WrapGetString(f func(bus *Bus) string) func() string {
 	return func() string {
+		return f(b)
+	}
+}
+func (b *Bus) WrapGetStrings(f func(bus *Bus) []string) func() []string {
+	return func() []string {
 		return f(b)
 	}
 }
@@ -132,9 +144,9 @@ func (b *Bus) WrapGetScriptPluginOptions(f func(bus *Bus) herbplugin.Options) fu
 		return f(b)
 	}
 }
-func (b *Bus) WrapHandleSend(f func(bus *Bus, bs []byte, echo bool)) func(bs []byte, echo bool) {
-	return func(bs []byte, echo bool) {
-		f(b, bs, echo)
+func (b *Bus) WrapHandleSend(f func(bus *Bus, cmd *world.Command)) func(cmd *world.Command) {
+	return func(cmd *world.Command) {
+		f(b, cmd)
 	}
 }
 func (b *Bus) WrapHandleBytes(f func(bus *Bus, bs []byte)) func(bs []byte) {
@@ -245,6 +257,18 @@ func (b *Bus) BindReadyEvent(id interface{}, fn func(b *Bus)) {
 		},
 	)
 }
+func (b *Bus) RaiseHistoriesEvent(histories []string) {
+	b.HistoriesEvent.Raise(nil)
+}
+func (b *Bus) BindHistoriesEvent(id interface{}, fn func(b *Bus, histories []string)) {
+	b.HistoriesEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b, data.([]string))
+		},
+	)
+}
+
 func (b *Bus) Reset() {
 	*b = *New()
 }

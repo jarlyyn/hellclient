@@ -62,7 +62,7 @@ func (p *Prophet) onCmdSend(conn connections.OutputConnection, cmd command.Comma
 	if json.Unmarshal(cmd.Data(), &msg) != nil {
 		return nil
 	}
-	p.Titan.DoSendTo(id, []byte(msg))
+	p.Titan.HandleCmdSend(id, msg)
 	return nil
 }
 

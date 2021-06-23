@@ -2,6 +2,7 @@ package queue
 
 import (
 	"container/list"
+	"modules/world"
 	"modules/world/bus"
 	"sync"
 	"time"
@@ -16,7 +17,7 @@ type Queue struct {
 
 func (c *Queue) InstallTo(b *bus.Bus) {
 	b.BindCloseEvent(c, c.close)
-	b.DoSendToQueue = b.WrapHandleBytes(c.Append)
+	b.DoSendToQueue = b.WrapHandleSend(c.Append)
 	b.DoDiscardQueue = b.Wrap(c.Flush)
 }
 
@@ -33,21 +34,21 @@ func (c *Queue) Flush(b *bus.Bus) {
 	c.List.Init()
 	c.Pending = false
 }
-func (c *Queue) Append(b *bus.Bus, msg []byte) {
+func (c *Queue) Append(b *bus.Bus, cmd *world.Command) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
 	if c.List.Len() > 0 || c.Pending {
-		c.List.PushBack(msg)
+		c.List.PushBack(cmd)
 		return
 	}
-	c.exec(b, msg)
+	c.exec(b, cmd)
 }
 func (c *Queue) check(b *bus.Bus) {
 	if c.List.Len() != 0 && !c.Pending {
 		e := c.List.Front()
 		c.List.Remove(e)
-		msg := e.Value.([]byte)
-		c.exec(b, msg)
+		cmd := e.Value.(*world.Command)
+		c.exec(b, cmd)
 	}
 
 }
@@ -58,8 +59,8 @@ func (c *Queue) AfterDelay(b *bus.Bus) {
 	c.Timer = nil
 	c.check(b)
 }
-func (c *Queue) exec(b *bus.Bus, msg []byte) {
-	b.DoSend([]byte(msg), true)
+func (c *Queue) exec(b *bus.Bus, cmd *world.Command) {
+	b.DoSend(cmd)
 	delay := b.GetQueueDelay()
 	if delay >= 0 {
 		c.Pending = true

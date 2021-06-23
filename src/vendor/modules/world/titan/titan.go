@@ -82,12 +82,6 @@ func (t *Titan) NewWorld(id string) *bus.Bus {
 	return b
 }
 
-func (t *Titan) DoSendTo(id string, msg []byte) {
-	w := t.World(id)
-	if w != nil {
-		w.DoSend(msg, true)
-	}
-}
 func (t *Titan) Publish(msg *message.Message) {
 	go func() {
 		t.msgEvent.Raise(msg)
@@ -128,6 +122,14 @@ func (t *Titan) OnCreateScriptFail(errors []*validator.FieldError) {
 func (t *Titan) OnCreateScriptSuccess(id string) {
 	msg.PublishCreateScriptSuccess(t, id)
 }
+
+func (t *Titan) HandleCmdSend(id string, msg string) {
+	w := t.World(id)
+	if w != nil {
+		w.DoExecute(msg)
+	}
+}
+
 func (t *Titan) HandleCmdConnect(id string) {
 	w := t.World(id)
 	if w != nil {
@@ -140,12 +142,7 @@ func (t *Titan) HandleCmdDisconnect(id string) {
 		w.HandleCmdError(w.DoCloseServer())
 	}
 }
-func (t *Titan) HandleCmdSend(id string, msg []byte) {
-	w := t.World(id)
-	if w != nil {
-		w.DoSend(msg, true)
-	}
-}
+
 func (t *Titan) HandleCmdAllLines(id string) {
 	w := t.World(id)
 	if w != nil {
