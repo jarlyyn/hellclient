@@ -74,6 +74,7 @@ func (e *LuaEngine) OnDisconnect(b *bus.Bus) {
 		b.HandleScriptError(e.Plugin.LState.DoString(e.onDisconnect + "()"))
 	}
 }
+
 func (e *LuaEngine) OnTrigger(*bus.Bus) {
 
 }

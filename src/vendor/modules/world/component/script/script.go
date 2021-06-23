@@ -18,6 +18,7 @@ import (
 type Script struct {
 	Locker       sync.Mutex
 	EngineLocker sync.Mutex
+	Status       string
 	Data         *world.ScriptData
 	Engine       Engine
 }
@@ -157,12 +158,26 @@ func (s *Script) UseScript(b *bus.Bus, id string) {
 		b.HandleScriptError(err)
 	}
 }
+func (s *Script) GetStatus() string {
+	s.Locker.Lock()
+	defer s.Locker.Unlock()
+	return s.Status
+}
+func (s *Script) SetStatus(val string) {
+	s.Locker.Lock()
+	defer s.Locker.Unlock()
+	s.Status = val
+}
 func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptData = b.WrapGetScriptData(s.ScriptData)
 	b.DoLoadScript = b.WrapDo(s.Load)
 	b.DoSaveScript = b.WrapDo(s.SaveScript)
 	b.DoUseScript = b.WrapHandleString(s.UseScript)
 	b.GetScriptPluginOptions = b.WrapGetScriptPluginOptions(s.PluginOptions)
+
+	b.GetStatus = s.GetStatus
+	b.SetStatus = s.SetStatus
+
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)

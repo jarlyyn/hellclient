@@ -16,9 +16,13 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 	b.HandleConnPrompt = b.WrapHandleBytes(c.onPrompt)
 	b.DoPrint = b.WrapHandleString(c.DoPrint)
 	b.DoPrintSystem = b.WrapHandleString(c.DoPrintSystem)
+	b.DoExecute = b.WrapHandleString(c.Execute)
 }
 
-func (c *Converter) UninstallFrom(b *bus.Bus) {
+func (c *Converter) Execute(b *bus.Bus, message string) {
+	cmd := world.CreateCommand(message)
+	cmd.History = true
+	c.Send(b, cmd)
 }
 func (c *Converter) onPrompt(bus *bus.Bus, msg []byte) {
 	line := c.ConvertToLine(bus, msg)
@@ -40,10 +44,10 @@ func (c *Converter) onError(bus *bus.Bus, err error) {
 	bus.HandleConverterError(err)
 }
 
-func (c *Converter) Send(bus *bus.Bus, cmd []byte, echo bool) {
+func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
 	c.Lock.Lock()
 	defer c.Lock.Unlock()
-	b, err := FromUTF8(bus.GetCharset(), cmd)
+	b, err := FromUTF8(bus.GetCharset(), []byte(cmd.Mesasge))
 	if err != nil {
 		bus.HandleConverterError(err)
 		return
@@ -54,8 +58,8 @@ func (c *Converter) Send(bus *bus.Bus, cmd []byte, echo bool) {
 		bus.RaiseLineEvent(p)
 		bus.RaisePromptEvent(world.NewLine())
 	}
-	if echo {
-		c.DoPrintEcho(bus, string(cmd))
+	if cmd.Echo {
+		c.DoPrintEcho(bus, string(cmd.Mesasge))
 	}
 	bus.DoSendToConn(b)
 	bus.DoSendToConn([]byte("\n"))
