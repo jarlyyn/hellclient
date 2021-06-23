@@ -22,6 +22,8 @@ const MsgTypeClients = "clients"
 const MsgTypeNotOpened = "notopened"
 const MsgTypeScriptInfo = "scriptinfo"
 const MsgTypeScriptInfoList = "scriptinfoList"
+const MsgTypeStatus = "status"
+const MsgTypeHistory = "history"
 
 type Publisher interface {
 	Publish(msg *message.Message)
@@ -82,4 +84,12 @@ func PublishScriptInfo(p Publisher, id string, info *world.ScriptInfo) {
 }
 func PublishScriptInfoList(p Publisher, info []*world.ScriptInfo) {
 	p.Publish(New(MsgTypeScriptInfoList, "", info))
+}
+
+func PublishStatus(p Publisher, id string, status string) {
+	p.Publish(New(MsgTypeStatus, id, status))
+}
+
+func PublishHistory(p Publisher, id string, history []string) {
+	p.Publish(New(MsgTypeHistory, id, history))
 }

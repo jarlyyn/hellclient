@@ -92,4 +92,10 @@ handlers.createScriptSuccess=function(data){
 handlers.scriptinfoList=function(data){
     vm.scriptlist=data;
 }
+handlers.status=function(data){
+    vm.status=data;
+}
+handlers.history=function(data){
+    vm.history=data;
+}
 })

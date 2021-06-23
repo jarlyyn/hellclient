@@ -10,6 +10,8 @@ var data={
     current:"",
     currenttab:"",
     lines:[],
+    status:"",
+    history:[],
     prompt:{},
     createFail:[],
     cmd:"",
@@ -70,6 +72,9 @@ var vm = new Vue({
             vm.triggerSaveForm=data;
             vm.triggerSaveFormVisible=true;
             vm.triggersVisible=true;
+        },
+        onHistory:function(command){
+            app.send("send",command)
         }
     }
 })

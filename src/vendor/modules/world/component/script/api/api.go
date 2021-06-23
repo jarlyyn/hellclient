@@ -198,12 +198,20 @@ func (a *API) Trim(source string) string {
 func (a *API) FlashIcon() {}
 
 func (a *API) GetQueue() []string {
-	return nil
+	cmds := a.Bus.GetQueue()
+	var result = make([]string, len(cmds))
+	for k := range cmds {
+		result[k] = cmds[k].Mesasge
+	}
+	return result
 }
 func (a *API) DiscardQueue() int {
-	a.Bus.DoDiscardQueue()
-	return EOK
+	return a.Bus.DoDiscardQueue()
 }
 func (a *API) SpeedWalkDelay() int {
 	return a.Bus.GetQueueDelay()
+}
+
+func (a *API) DeleteCommandHistory() {
+	a.Bus.FlushHistories()
 }

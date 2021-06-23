@@ -130,6 +130,9 @@ func (s *Script) load(b *bus.Bus) error {
 }
 func (s *Script) ready(b *bus.Bus) {
 	s.Load(b)
+	go func() {
+		b.RaiseStatusEvent(b.GetStatus())
+	}()
 }
 func (s *Script) beforeClose(b *bus.Bus) {
 	s.Unload(b)
@@ -163,10 +166,13 @@ func (s *Script) GetStatus() string {
 	defer s.Locker.Unlock()
 	return s.Status
 }
-func (s *Script) SetStatus(val string) {
+func (s *Script) SetStatus(b *bus.Bus, val string) {
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
 	s.Status = val
+	go func() {
+		b.RaiseStatusEvent(val)
+	}()
 }
 func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptData = b.WrapGetScriptData(s.ScriptData)
@@ -176,7 +182,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptPluginOptions = b.WrapGetScriptPluginOptions(s.PluginOptions)
 
 	b.GetStatus = s.GetStatus
-	b.SetStatus = s.SetStatus
+	b.SetStatus = b.WrapHandleString(s.SetStatus)
 
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
