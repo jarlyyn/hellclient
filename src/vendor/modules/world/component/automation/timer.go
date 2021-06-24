@@ -10,7 +10,7 @@ type Timer struct {
 	Locker sync.Locker
 	Data   *world.Timer
 	Timer  *time.Timer
-	OnFire func()
+	OnFire func(*world.Timer)
 }
 
 func (t *Timer) onFire() {
@@ -18,7 +18,7 @@ func (t *Timer) onFire() {
 	defer t.Locker.Unlock()
 	t.Timer = nil
 	go func() {
-		t.OnFire()
+		t.OnFire(t.Data)
 	}()
 	if !t.Data.OneShot {
 		go func() {
