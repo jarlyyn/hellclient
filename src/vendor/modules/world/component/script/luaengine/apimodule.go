@@ -2,6 +2,7 @@ package luaengine
 
 import (
 	"context"
+	"modules/world"
 	"modules/world/bus"
 	"modules/world/component/script/api"
 
@@ -247,3 +248,32 @@ func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 		nil,
 	)
 }
+
+var ModuleSendTo = herbplugin.CreateModule("sendto",
+	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
+		next(ctx, plugin)
+		luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
+		l := luapluing.LState
+		sendto := l.NewTable()
+		sendto.RawSetString("world", lua.LNumber(world.SendtoWorld))
+		sendto.RawSetString("world", lua.LNumber(world.SendtoCommand))
+		sendto.RawSetString("output", lua.LNumber(world.SendtoOutput))
+		sendto.RawSetString("status", lua.LNumber(world.SendtoStatus))
+		sendto.RawSetString("notepad", lua.LNumber(world.SendtoNotepad))
+		sendto.RawSetString("notepadappend", lua.LNumber(world.SendtoNotepadAppend))
+		sendto.RawSetString("logfile", lua.LNumber(world.SendtoLogfile))
+		sendto.RawSetString("notepadreplace", lua.LNumber(world.SendtoNotepadReplace))
+		sendto.RawSetString("commandqueue", lua.LNumber(world.SendtoCommandqueue))
+		sendto.RawSetString("variable", lua.LNumber(world.SendtoVariable))
+		sendto.RawSetString("execute", lua.LNumber(world.SendtoExecute))
+		sendto.RawSetString("execute", lua.LNumber(world.SendtoExecute))
+		sendto.RawSetString("speedwalk", lua.LNumber(world.SendtoSpeedwalk))
+		sendto.RawSetString("script", lua.LNumber(world.SendtoScript))
+		sendto.RawSetString("immediate", lua.LNumber(world.SendtoImmediate))
+		sendto.RawSetString("scriptafteromit", lua.LNumber(world.SendtoScriptafteromit))
+		l.SetGlobal("sendto", sendto)
+		next(ctx, plugin)
+	},
+	nil,
+	nil,
+)

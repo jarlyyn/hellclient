@@ -14,7 +14,7 @@ func newLuaInitializer(b *bus.Bus) *lua51plugin.Initializer {
 	i.Entry = "main.lua"
 	i.Modules = []*herbplugin.Module{
 		lua51plugin.ModuleOpenlib,
-		lua51plugin.ModulePrint,
+		ModuleSendTo,
 		NewAPIModule(b),
 	}
 	return i

@@ -1,7 +1,7 @@
-package trigger
+package automation
 
 import (
-	"modules/world/bus"
+	"modules/world"
 
 	"github.com/herb-go/misc/starpattern"
 )
@@ -19,7 +19,7 @@ type StarMatcher struct {
 	matcher *starpattern.Pattern
 }
 
-func (m *StarMatcher) Match(line *bus.Line) (*MatchResult, error) {
+func (m *StarMatcher) Match(line *world.Line) (*MatchResult, error) {
 	ok, found := m.matcher.Find(line.Plain())
 	if ok {
 		r := NewMatchResult()

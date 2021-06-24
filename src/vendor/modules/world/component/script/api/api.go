@@ -71,6 +71,7 @@ func (a *API) LogSend(message string) int {
 	return EOK
 }
 func (a *API) Execute(message string) int {
+	a.Bus.DoExecute(message)
 	return EOK
 }
 func (a *API) SendPkt(packet string) int {

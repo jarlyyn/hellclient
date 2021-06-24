@@ -1,7 +1,7 @@
-package trigger
+package automation
 
 import (
-	"modules/world/bus"
+	"modules/world"
 	"regexp"
 )
 
@@ -9,7 +9,7 @@ type RegexpMatcher struct {
 	matcher *regexp.Regexp
 }
 
-func (m *RegexpMatcher) Match(line *bus.Line) (*MatchResult, error) {
+func (m *RegexpMatcher) Match(line *world.Line) (*MatchResult, error) {
 	result := m.matcher.FindAllString(line.Plain(), -1)
 	if result == nil {
 		return nil, nil

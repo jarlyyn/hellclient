@@ -1,6 +1,7 @@
-package trigger
+package automation
 
 import (
+	"modules/world"
 	"modules/world/bus"
 	"regexp"
 	"strings"
@@ -20,16 +21,16 @@ func NewMatchResult() *MatchResult {
 
 type Context struct {
 	Bus      *bus.Bus
-	Line     *bus.Line
+	Line     *world.Line
 	Expanded *strings.Replacer
 }
 type Matcher interface {
-	Match(line *bus.Line) (*MatchResult, error)
+	Match(line *world.Line) (*MatchResult, error)
 }
 
 type Trigger struct {
 	Deleted  bool
-	Data     *bus.Trigger
+	Data     *world.Trigger
 	Matcher  Matcher
 	ByUser   bool
 	RawMatch string

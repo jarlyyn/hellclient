@@ -11,6 +11,7 @@ const TriggerFlagReplace = 1024
 const TriggerFlagTemporary = 16384
 
 type Trigger struct {
+	ID                 string
 	Name               string
 	Enabled            bool
 	Match              string

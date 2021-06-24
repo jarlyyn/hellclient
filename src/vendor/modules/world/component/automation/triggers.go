@@ -1,16 +1,19 @@
-package trigger
+package automation
 
 import (
+	"modules/world"
 	"modules/world/bus"
 	"sort"
 	"sync"
 )
 
 type Triggers struct {
-	Locker sync.RWMutex
-	Map    map[string]*Trigger
-	List   TriggerList
-	Groups map[string]map[string]*Trigger
+	Locker    sync.RWMutex
+	All       map[string]*Trigger
+	Named     map[string]*Trigger
+	Temporary map[string]*Trigger
+	List      TriggerList
+	Grouped   map[string]map[string]*Trigger
 }
 
 func (t *Triggers) sort() {
@@ -25,16 +28,16 @@ func (t *Triggers) sort() {
 }
 
 func (t *Triggers) remove(id string) {
-	tr := t.Map[id]
+	tr := t.All[id]
 	if tr != nil {
-		delete(t.Map, id)
+		delete(t.All, id)
 		tr.Deleted = true
 	}
 }
 func (t *Triggers) init() {
-	t.Map = map[string]*Trigger{}
+	t.All = map[string]*Trigger{}
 	t.List = TriggerList{}
-	t.Groups = map[string]map[string]*Trigger{}
+	t.Grouped = map[string]map[string]*Trigger{}
 
 }
 func (t *Triggers) Flush() {
@@ -42,7 +45,7 @@ func (t *Triggers) Flush() {
 	defer t.Locker.Unlock()
 	t.init()
 }
-func (t *Triggers) Exec(bus *bus.Bus, line *bus.Line) {
+func (t *Triggers) Exec(bus *bus.Bus, line *world.Line) {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
 	ctx := &Context{
