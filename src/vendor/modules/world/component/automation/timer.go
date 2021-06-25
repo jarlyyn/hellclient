@@ -7,7 +7,7 @@ import (
 )
 
 type Timer struct {
-	Locker sync.Locker
+	Locker sync.RWMutex
 	Data   *world.Timer
 	Timer  *time.Timer
 	OnFire func(*world.Timer)

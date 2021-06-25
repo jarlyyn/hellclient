@@ -174,13 +174,28 @@ func (s *Script) SetStatus(b *bus.Bus, val string) {
 		b.RaiseStatusEvent(val)
 	}()
 }
+func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
+	s.Locker.Lock()
+	defer s.Locker.Unlock()
+	if s.Engine != nil {
+		s.Engine.OnTimer(b, timer)
+	}
+}
+func (s *Script) Run(b *bus.Bus, cmd string) {
+	s.Locker.Lock()
+	defer s.Locker.Unlock()
+	if s.Engine != nil {
+		s.Engine.Run(b, cmd)
+	}
+}
 func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptData = b.WrapGetScriptData(s.ScriptData)
 	b.DoLoadScript = b.WrapDo(s.Load)
 	b.DoSaveScript = b.WrapDo(s.SaveScript)
 	b.DoUseScript = b.WrapHandleString(s.UseScript)
 	b.GetScriptPluginOptions = b.WrapGetScriptPluginOptions(s.PluginOptions)
-
+	b.DoSendTimerToScript = b.WrapHandleTimer(s.SendTimer)
+	b.DoRunScript = b.WrapHandleString(s.Run)
 	b.GetStatus = s.GetStatus
 	b.SetStatus = b.WrapHandleString(s.SetStatus)
 
@@ -188,6 +203,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)
 	b.BindDisconnectedEvent(s, s.disconnected)
+
 }
 
 func New() *Script {

@@ -7,6 +7,7 @@ import (
 	"modules/world"
 	"modules/world/bus"
 	"modules/world/component"
+	"modules/world/component/automation"
 	"modules/world/component/config"
 	"modules/world/component/conn"
 	"modules/world/component/converter"
@@ -14,6 +15,7 @@ import (
 	"modules/world/component/log"
 	"modules/world/component/queue"
 	"modules/world/component/script"
+
 	"path"
 	"sort"
 
@@ -49,6 +51,7 @@ func (t *Titan) CreateBus() *bus.Bus {
 		log.New(),
 		queue.New(),
 		script.New(),
+		automation.New(),
 		t,
 	)
 	b.RaiseInitEvent()
@@ -57,7 +60,6 @@ func (t *Titan) CreateBus() *bus.Bus {
 func (t *Titan) DestoryBus(b *bus.Bus) {
 	b.RaiseBeforeCloseEvent()
 	b.RaiseCloseEvent()
-	b.Reset()
 }
 func (t *Titan) find(id string) *bus.Bus {
 	return t.Worlds[id]

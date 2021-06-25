@@ -1,10 +1,12 @@
 package luaengine
 
 import (
+	"modules/world"
 	"modules/world/bus"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/util"
+	lua "github.com/yuin/gopher-lua"
 
 	"github.com/herb-go/herbplugin/lua51plugin"
 )
@@ -14,7 +16,8 @@ func newLuaInitializer(b *bus.Bus) *lua51plugin.Initializer {
 	i.Entry = "main.lua"
 	i.Modules = []*herbplugin.Module{
 		lua51plugin.ModuleOpenlib,
-		ModuleSendTo,
+		ModuleConstsSendTo,
+		ModuleConstsTimerFlag,
 		NewAPIModule(b),
 	}
 	return i
@@ -81,6 +84,19 @@ func (e *LuaEngine) OnTrigger(*bus.Bus) {
 func (e *LuaEngine) OnAlias(*bus.Bus) {
 
 }
-func (e *LuaEngine) OnTimer(*bus.Bus) {
-
+func (e *LuaEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
+	if timer.Script == "" {
+		return
+	}
+	L := e.Plugin.LState
+	if err := L.CallByParam(lua.P{
+		Fn:      L.GetGlobal(timer.Script),
+		NRet:    0,
+		Protect: true,
+	}, lua.LString(timer.Name)); err != nil {
+		b.HandleScriptError(err)
+	}
+}
+func (e *LuaEngine) Run(b *bus.Bus, cmd string) {
+	b.HandleScriptError(e.Plugin.LState.DoString(cmd))
 }

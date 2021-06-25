@@ -53,10 +53,13 @@ type Bus struct {
 	DoLoadScript           func() error
 	DoSaveScript           func() error
 	DoUseScript            func(string)
+	DoRunScript            func(string)
 	DoPrint                func(msg string)
 	DoPrintSystem          func(msg string)
 	DoDiscardQueue         func() int
+	DoSendTimerToScript    func(*world.Timer)
 	AddHistory             func(string)
+	AddTimer               func(*world.Timer, bool)
 	GetHistories           func() []string
 	FlushHistories         func()
 	HandleConnReceive      func(msg []byte)
@@ -166,6 +169,17 @@ func (b *Bus) WrapHandleInt(f func(bus *Bus, i int)) func(i int) {
 		f(b, i)
 	}
 }
+func (b *Bus) WrapAddTimer(f func(bus *Bus, timer *world.Timer, replace bool)) func(*world.Timer, bool) {
+	return func(timer *world.Timer, replace bool) {
+		f(b, timer, replace)
+	}
+}
+func (b *Bus) WrapHandleTimer(f func(bus *Bus, timer *world.Timer)) func(*world.Timer) {
+	return func(timer *world.Timer) {
+		f(b, timer)
+	}
+}
+
 func (b *Bus) RaiseLineEvent(line *world.Line) {
 	b.LineEvent.Raise(line)
 }
@@ -283,9 +297,6 @@ func (b *Bus) BindStatusEvent(id interface{}, fn func(b *Bus, status string)) {
 	)
 }
 
-func (b *Bus) Reset() {
-	*b = *New()
-}
 func New() *Bus {
 	return &Bus{}
 }

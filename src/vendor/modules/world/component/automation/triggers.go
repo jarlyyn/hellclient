@@ -71,7 +71,7 @@ func (t *Triggers) Exec(bus *bus.Bus, line *world.Line) {
 		}
 	}
 }
-func New() *Triggers {
+func NewTriggers() *Triggers {
 	t := &Triggers{}
 	t.init()
 	return t
