@@ -2,7 +2,18 @@ package world
 
 import (
 	"time"
+
+	"github.com/herb-go/uniqueid"
 )
+
+const TimerFlagEnabled = 1
+const TimerFlagAtTime = 2
+const TimerFlagOneShot = 4
+const TimerFlagTimerSpeedWalk = 8
+const TimerFlagTimerNote = 16
+const TimerFlagActiveWhenClosed = 32
+const TimerFlagReplace = 1024
+const TimerFlagTemporary = 16384
 
 type Timer struct {
 	ID                    string
@@ -12,7 +23,7 @@ type Timer struct {
 	Minute                int
 	Second                int
 	Send                  string
-	ScriptName            string
+	Script                string
 	AtTime                bool
 	SendTo                int
 	ActionWhenDisconnectd bool
@@ -20,8 +31,22 @@ type Timer struct {
 	OneShot               bool
 	SpeedWalk             bool
 	Group                 string
+	Variable              string
+	byuser                bool
 }
 
+func (t *Timer) ByUser() bool {
+	return t.byuser
+}
+func (t *Timer) SetByUser(v bool) {
+	t.byuser = v
+}
+func (t *Timer) PrefixedName() string {
+	if t.byuser {
+		return PrefixByUser + t.Name
+	}
+	return PrefixByScript + t.Name
+}
 func (t *Timer) GetDuration() time.Duration {
 	if t.AtTime {
 		now := time.Now()
@@ -35,4 +60,10 @@ func (t *Timer) GetDuration() time.Duration {
 }
 func NewTimer() *Timer {
 	return &Timer{}
+}
+
+func CreateTimer() *Timer {
+	return &Timer{
+		ID: uniqueid.MustGenerateID(),
+	}
 }

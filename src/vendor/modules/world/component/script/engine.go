@@ -1,6 +1,7 @@
 package script
 
 import (
+	"modules/world"
 	"modules/world/bus"
 )
 
@@ -11,5 +12,6 @@ type Engine interface {
 	OnDisconnect(*bus.Bus)
 	OnTrigger(*bus.Bus)
 	OnAlias(*bus.Bus)
-	OnTimer(*bus.Bus)
+	OnTimer(b *bus.Bus, timer *world.Timer)
+	Run(*bus.Bus, string)
 }

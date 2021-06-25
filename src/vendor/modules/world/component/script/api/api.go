@@ -18,8 +18,6 @@ import (
 
 var uniqueNumber = int32(0)
 
-const EOK = 0
-
 type API struct {
 	Bus *bus.Bus
 }
@@ -215,4 +213,67 @@ func (a *API) SpeedWalkDelay() int {
 
 func (a *API) DeleteCommandHistory() {
 	a.Bus.FlushHistories()
+}
+
+func (a *API) DoAfter(seconds float64, sendtext string) int {
+	t := world.CreateTimer()
+	t.Enabled = true
+	t.OneShot = true
+	t.Second = int(seconds)
+	t.SendTo = world.SendtoWorld
+	t.Send = sendtext
+	t.Temporary = true
+	a.Bus.AddTimer(t, false)
+	return EOK
+}
+func (a *API) DoAfterNote(seconds float64, sendtext string) int {
+	t := world.CreateTimer()
+	t.Enabled = true
+	t.OneShot = true
+	t.Second = int(seconds)
+	t.SendTo = world.SendtoOutput
+	t.Send = sendtext
+	t.Temporary = true
+	a.Bus.AddTimer(t, false)
+	return EOK
+}
+func (a *API) DoAfterSpeedWalk(seconds float64, sendtext string) int {
+	t := world.CreateTimer()
+	t.Enabled = true
+	t.OneShot = true
+	t.Second = int(seconds)
+	t.SendTo = world.SendtoSpeedwalk
+	t.Send = sendtext
+	t.Temporary = true
+	a.Bus.AddTimer(t, false)
+	return EOK
+}
+
+func (a *API) DoAfterSpecial(seconds float64, sendtext string, sendto int) int {
+	t := world.CreateTimer()
+	t.Enabled = true
+	t.OneShot = true
+	t.Second = int(seconds)
+	t.SendTo = sendto
+	t.Send = sendtext
+	t.Temporary = true
+	a.Bus.AddTimer(t, false)
+	return EOK
+}
+
+func (a *API) AddTimer(timerName string, hour int, minute int, second float64, responseText string, flags int, scriptName string) int {
+	t := world.CreateTimer()
+	t.Hour = hour
+	t.Minute = minute
+	t.Second = int(second)
+	t.Send = responseText
+	t.Script = scriptName
+	t.Enabled = flags&world.TimerFlagEnabled != 0
+	t.AtTime = flags&world.TimerFlagAtTime != 0
+	t.OneShot = flags&world.TimerFlagOneShot != 0
+	t.SpeedWalk = flags&world.TimerFlagTimerSpeedWalk != 0
+	t.ActionWhenDisconnectd = flags&world.TimerFlagActiveWhenClosed != 0
+	t.Temporary = flags&world.TimerFlagTemporary != 0
+	a.Bus.AddTimer(t, flags&world.TimerFlagReplace != 0)
+	return EOK
 }

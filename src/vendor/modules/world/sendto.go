@@ -14,4 +14,4 @@ const SendtoExecute = 10
 const SendtoSpeedwalk = 11
 const SendtoScript = 12
 const SendtoImmediate = 13
-const SendtoScriptafteromit = 14
+const SendtoScriptAfterOmit = 14

@@ -2,7 +2,6 @@ package luaengine
 
 import (
 	"context"
-	"modules/world"
 	"modules/world/bus"
 	"modules/world/component/script/api"
 
@@ -57,6 +56,12 @@ func (a *luaapi) InstallAPIs(l *lua.LState) {
 	l.SetGlobal("DeleteCommandHistory", l.NewFunction(a.DeleteCommandHistory))
 	l.SetGlobal("DiscardQueue", l.NewFunction(a.DiscardQueue))
 	l.SetGlobal("GetQueue", l.NewFunction(a.GetQueue))
+	l.SetGlobal("DoAfter", l.NewFunction(a.DoAfter))
+	l.SetGlobal("DoAfterNote", l.NewFunction(a.DoAfterNote))
+	l.SetGlobal("DoAfterSpeedWalk", l.NewFunction(a.DoAfterSpeedWalk))
+	l.SetGlobal("DoAfterSpecail", l.NewFunction(a.DoAfterSpecial))
+	l.SetGlobal("AddTimer", l.NewFunction(a.AddTimer))
+
 }
 func (a *luaapi) Note(L *lua.LState) int {
 	info := L.ToString(1)
@@ -236,6 +241,43 @@ func (a *luaapi) GetQueue(L *lua.LState) int {
 	L.Push(t)
 	return 1
 }
+
+func (a *luaapi) DoAfter(L *lua.LState) int {
+	seconds := float64(L.ToNumber(1))
+	send := L.ToString(2)
+	L.Push(lua.LNumber(a.API.DoAfter(seconds, send)))
+	return 1
+}
+func (a *luaapi) DoAfterNote(L *lua.LState) int {
+	seconds := float64(L.ToNumber(1))
+	send := L.ToString(2)
+	L.Push(lua.LNumber(a.API.DoAfterNote(seconds, send)))
+	return 1
+}
+func (a *luaapi) DoAfterSpeedWalk(L *lua.LState) int {
+	seconds := float64(L.ToNumber(1))
+	send := L.ToString(2)
+	L.Push(lua.LNumber(a.API.DoAfterSpeedWalk(seconds, send)))
+	return 1
+}
+func (a *luaapi) DoAfterSpecial(L *lua.LState) int {
+	seconds := float64(L.ToNumber(1))
+	send := L.ToString(2)
+	sendto := int(L.ToNumber(3))
+	L.Push(lua.LNumber(a.API.DoAfterSpecial(seconds, send, sendto)))
+	return 1
+}
+func (a *luaapi) AddTimer(L *lua.LState) int {
+	name := L.ToString(1)
+	hour := int(L.ToNumber(2))
+	min := int(L.ToNumber(3))
+	seconds := float64(L.ToNumber(4))
+	send := L.ToString(5)
+	flags := int(L.ToNumber(6))
+	script := L.ToString(7)
+	L.Push(lua.LNumber(a.API.AddTimer(name, hour, min, seconds, send, flags, script)))
+	return 1
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
@@ -248,32 +290,3 @@ func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 		nil,
 	)
 }
-
-var ModuleSendTo = herbplugin.CreateModule("sendto",
-	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
-		next(ctx, plugin)
-		luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
-		l := luapluing.LState
-		sendto := l.NewTable()
-		sendto.RawSetString("world", lua.LNumber(world.SendtoWorld))
-		sendto.RawSetString("world", lua.LNumber(world.SendtoCommand))
-		sendto.RawSetString("output", lua.LNumber(world.SendtoOutput))
-		sendto.RawSetString("status", lua.LNumber(world.SendtoStatus))
-		sendto.RawSetString("notepad", lua.LNumber(world.SendtoNotepad))
-		sendto.RawSetString("notepadappend", lua.LNumber(world.SendtoNotepadAppend))
-		sendto.RawSetString("logfile", lua.LNumber(world.SendtoLogfile))
-		sendto.RawSetString("notepadreplace", lua.LNumber(world.SendtoNotepadReplace))
-		sendto.RawSetString("commandqueue", lua.LNumber(world.SendtoCommandqueue))
-		sendto.RawSetString("variable", lua.LNumber(world.SendtoVariable))
-		sendto.RawSetString("execute", lua.LNumber(world.SendtoExecute))
-		sendto.RawSetString("execute", lua.LNumber(world.SendtoExecute))
-		sendto.RawSetString("speedwalk", lua.LNumber(world.SendtoSpeedwalk))
-		sendto.RawSetString("script", lua.LNumber(world.SendtoScript))
-		sendto.RawSetString("immediate", lua.LNumber(world.SendtoImmediate))
-		sendto.RawSetString("scriptafteromit", lua.LNumber(world.SendtoScriptafteromit))
-		l.SetGlobal("sendto", sendto)
-		next(ctx, plugin)
-	},
-	nil,
-	nil,
-)
