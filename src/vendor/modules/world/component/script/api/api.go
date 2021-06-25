@@ -277,3 +277,46 @@ func (a *API) AddTimer(timerName string, hour int, minute int, second float64, r
 	a.Bus.AddTimer(t, flags&world.TimerFlagReplace != 0)
 	return EOK
 }
+func (a *API) DeleteTemporaryTimers() int {
+	return a.Bus.DoDeleteTemporaryTimers()
+}
+func (a *API) DeleteTimer(name string) int {
+	if !a.Bus.DoDeleteTimerByName(name) {
+		return ETimerNotFound
+	}
+	return EOK
+}
+
+func (a *API) DeleteTimerGroup(group string) int {
+	return a.Bus.DoDeleteTimerGroup(group)
+}
+
+func (a *API) EnableTimer(name string, enabled bool) int {
+	if !a.Bus.DoEnableTimerByName(name, enabled) {
+		return ETimerNotFound
+	}
+	return EOK
+}
+
+func (a *API) EnableTimerGroup(group string, enabled bool) int {
+	return a.Bus.DoEnableTimerGroup(group, enabled)
+}
+func (a *API) GetTimerList() []string {
+	return a.Bus.DoListTimerNames()
+}
+
+func (a *API) IsTimer(name string) int {
+	if !a.Bus.HasNamedTimer(name) {
+		return ETimerNotFound
+	}
+	return EOK
+}
+func (a *API) ResetTimer(name string) int {
+	if !a.Bus.DoResetNamedTimer(name) {
+		return ETimerNotFound
+	}
+	return EOK
+}
+func (a *API) ResetTimers() {
+	a.Bus.DoResetTimers()
+}
