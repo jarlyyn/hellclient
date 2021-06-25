@@ -29,7 +29,9 @@ func (t *Timer) onFire() {
 func (t *Timer) Start() {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
-	t.Timer = time.AfterFunc(t.Data.GetDuration(), t.onFire)
+	if t.Timer == nil {
+		t.Timer = time.AfterFunc(t.Data.GetDuration(), t.onFire)
+	}
 }
 func (t *Timer) Stop() {
 	t.Locker.Lock()
@@ -37,5 +39,13 @@ func (t *Timer) Stop() {
 	if t.Timer != nil {
 		t.Timer.Stop()
 		t.Timer = nil
+	}
+}
+
+func (t *Timer) Reset() {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	if t.Timer != nil {
+		t.Timer.Reset(t.Data.GetDuration())
 	}
 }

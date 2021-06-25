@@ -13,64 +13,73 @@ type Bus struct {
 	ID     string
 	Locker sync.RWMutex
 
-	GetConnBuffer          func() []byte
-	GetConnConnected       func() bool
-	GetHost                func() string
-	SetHost                func(string)
-	GetPort                func() string
-	SetPort                func(string)
-	GetStatus              func() string
-	SetStatus              func(string)
-	GetQueueDelay          func() int
-	SetQueueDelay          func(int)
-	GetQueue               func() []*world.Command
-	GetParam               func(string) string
-	GetParams              func() map[string]string
-	SetParam               func(string, string)
-	DeleteParam            func(string)
-	GetCharset             func() string
-	SetCharset             func(string)
-	GetReadyAt             func() int64
-	GetCurrentLines        func() []*world.Line
-	GetPrompt              func() *world.Line
-	GetClientInfo          func() *world.ClientInfo
-	GetScriptData          func() *world.ScriptData
-	SetPermissions         func([]string)
-	GetPermissions         func() []string
-	GetScriptID            func() string
-	SetScriptID            func(string)
-	GetScriptPath          func() string
-	SetTrusted             func(*herbplugin.Trusted)
-	GetTrusted             func() *herbplugin.Trusted
-	GetScriptPluginOptions func() herbplugin.Options
-	DoSendToConn           func(cmd []byte)
-	DoSend                 func(*world.Command)
-	DoSendToQueue          func(*world.Command)
-	DoExecute              func(message string)
-	DoEncode               func() ([]byte, error)
-	DoDecode               func([]byte) error
-	DoUnloadScript         func()
-	DoLoadScript           func() error
-	DoSaveScript           func() error
-	DoUseScript            func(string)
-	DoRunScript            func(string)
-	DoPrint                func(msg string)
-	DoPrintSystem          func(msg string)
-	DoDiscardQueue         func() int
-	DoSendTimerToScript    func(*world.Timer)
-	AddHistory             func(string)
-	AddTimer               func(*world.Timer, bool)
-	GetHistories           func() []string
-	FlushHistories         func()
-	HandleConnReceive      func(msg []byte)
-	HandleConnError        func(err error)
-	HandleConnPrompt       func(msg []byte)
-	DoConnectServer        func() error
-	DoCloseServer          func() error
-	HandleConverterError   func(err error)
-	HandleCmdError         func(err error)
-	HandleTriggerError     func(err error)
-	HandleScriptError      func(err error)
+	GetConnBuffer           func() []byte
+	GetConnConnected        func() bool
+	GetHost                 func() string
+	SetHost                 func(string)
+	GetPort                 func() string
+	SetPort                 func(string)
+	GetStatus               func() string
+	SetStatus               func(string)
+	GetQueueDelay           func() int
+	SetQueueDelay           func(int)
+	GetQueue                func() []*world.Command
+	GetParam                func(string) string
+	GetParams               func() map[string]string
+	SetParam                func(string, string)
+	DeleteParam             func(string)
+	GetCharset              func() string
+	SetCharset              func(string)
+	GetReadyAt              func() int64
+	GetCurrentLines         func() []*world.Line
+	GetPrompt               func() *world.Line
+	GetClientInfo           func() *world.ClientInfo
+	GetScriptData           func() *world.ScriptData
+	SetPermissions          func([]string)
+	GetPermissions          func() []string
+	GetScriptID             func() string
+	SetScriptID             func(string)
+	GetScriptPath           func() string
+	SetTrusted              func(*herbplugin.Trusted)
+	GetTrusted              func() *herbplugin.Trusted
+	GetScriptPluginOptions  func() herbplugin.Options
+	DoSendToConn            func(cmd []byte)
+	DoSend                  func(*world.Command)
+	DoSendToQueue           func(*world.Command)
+	DoExecute               func(message string)
+	DoEncode                func() ([]byte, error)
+	DoDecode                func([]byte) error
+	DoUnloadScript          func()
+	DoLoadScript            func() error
+	DoSaveScript            func() error
+	DoUseScript             func(string)
+	DoRunScript             func(string)
+	DoPrint                 func(msg string)
+	DoPrintSystem           func(msg string)
+	DoDiscardQueue          func() int
+	DoSendTimerToScript     func(*world.Timer)
+	DoDeleteTimerByName     func(string) bool
+	DoDeleteTemporaryTimers func() int
+	DoDeleteTimerGroup      func(string) int
+	DoEnableTimerByName     func(string, bool) bool
+	DoEnableTimerGroup      func(string, bool) int
+	DoResetNamedTimer       func(string) bool
+	DoResetTimers           func()
+	HasNamedTimer           func(string) bool
+	DoListTimerNames        func() []string
+	AddHistory              func(string)
+	AddTimer                func(*world.Timer, bool) bool
+	GetHistories            func() []string
+	FlushHistories          func()
+	HandleConnReceive       func(msg []byte)
+	HandleConnError         func(err error)
+	HandleConnPrompt        func(msg []byte)
+	DoConnectServer         func() error
+	DoCloseServer           func() error
+	HandleConverterError    func(err error)
+	HandleCmdError          func(err error)
+	HandleTriggerError      func(err error)
+	HandleScriptError       func(err error)
 
 	LineEvent         busevent.Event
 	PromptEvent       busevent.Event
@@ -169,9 +178,9 @@ func (b *Bus) WrapHandleInt(f func(bus *Bus, i int)) func(i int) {
 		f(b, i)
 	}
 }
-func (b *Bus) WrapAddTimer(f func(bus *Bus, timer *world.Timer, replace bool)) func(*world.Timer, bool) {
-	return func(timer *world.Timer, replace bool) {
-		f(b, timer, replace)
+func (b *Bus) WrapAddTimer(f func(bus *Bus, timer *world.Timer, replace bool) bool) func(*world.Timer, bool) bool {
+	return func(timer *world.Timer, replace bool) bool {
+		return f(b, timer, replace)
 	}
 }
 func (b *Bus) WrapHandleTimer(f func(bus *Bus, timer *world.Timer)) func(*world.Timer) {
@@ -179,7 +188,11 @@ func (b *Bus) WrapHandleTimer(f func(bus *Bus, timer *world.Timer)) func(*world.
 		f(b, timer)
 	}
 }
-
+func (b *Bus) WrapHandleStringForBool(f func(bus *Bus, str string) bool) func(str string) bool {
+	return func(str string) bool {
+		return f(b, str)
+	}
+}
 func (b *Bus) RaiseLineEvent(line *world.Line) {
 	b.LineEvent.Raise(line)
 }

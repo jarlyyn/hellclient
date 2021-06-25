@@ -61,6 +61,15 @@ func (a *luaapi) InstallAPIs(l *lua.LState) {
 	l.SetGlobal("DoAfterSpeedWalk", l.NewFunction(a.DoAfterSpeedWalk))
 	l.SetGlobal("DoAfterSpecail", l.NewFunction(a.DoAfterSpecial))
 	l.SetGlobal("AddTimer", l.NewFunction(a.AddTimer))
+	l.SetGlobal("DeleteTimer", l.NewFunction(a.DeleteTimer))
+	l.SetGlobal("DeleteTemporaryTimers", l.NewFunction(a.DeleteTemporaryTimers))
+	l.SetGlobal("DeleteTimerGroup", l.NewFunction(a.DeleteTimerGroup))
+	l.SetGlobal("EnableTimer", l.NewFunction(a.EnableTimer))
+	l.SetGlobal("EnableTimerGroup", l.NewFunction(a.EnableTimerGroup))
+	l.SetGlobal("GetTimerList", l.NewFunction(a.GetTimerList))
+	l.SetGlobal("IsTimer", l.NewFunction(a.IsTimer))
+	l.SetGlobal("ResetTimer", l.NewFunction(a.ResetTimer))
+	l.SetGlobal("ResetTimers", l.NewFunction(a.ResetTimers))
 
 }
 func (a *luaapi) Note(L *lua.LState) int {
@@ -278,6 +287,61 @@ func (a *luaapi) AddTimer(L *lua.LState) int {
 	L.Push(lua.LNumber(a.API.AddTimer(name, hour, min, seconds, send, flags, script)))
 	return 1
 }
+func (a *luaapi) DeleteTimer(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.DeleteTimer(name)))
+	return 1
+}
+func (a *luaapi) DeleteTemporaryTimers(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.DeleteTemporaryTimers()))
+	return 1
+
+}
+func (a *luaapi) DeleteTimerGroup(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.DeleteTimerGroup(name)))
+	return 1
+}
+
+func (a *luaapi) EnableTimer(L *lua.LState) int {
+	name := L.ToString(1)
+	enabled := L.ToBool(2)
+	L.Push(lua.LNumber(a.API.EnableTimer(name, enabled)))
+	return 1
+}
+func (a *luaapi) EnableTimerGroup(L *lua.LState) int {
+	group := L.ToString(1)
+	enabled := L.ToBool(2)
+	L.Push(lua.LNumber(a.API.EnableTimerGroup(group, enabled)))
+	return 1
+}
+
+func (a *luaapi) GetTimerList(L *lua.LState) int {
+	list := a.API.GetTimerList()
+	reuslt := L.NewTable()
+	for _, v := range list {
+		reuslt.Append(lua.LString(v))
+	}
+	L.Push(reuslt)
+	return 1
+}
+func (a *luaapi) IsTimer(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.IsTimer(name)))
+	return 1
+}
+
+func (a *luaapi) ResetTimer(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.ResetTimer(name)))
+	return 1
+}
+
+func (a *luaapi) ResetTimers(L *lua.LState) int {
+	a.API.ResetTimers()
+	return 0
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

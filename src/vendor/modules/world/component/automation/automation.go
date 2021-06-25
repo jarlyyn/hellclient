@@ -13,9 +13,45 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	a.Timers = NewTimers()
 	a.Timers.OnFire = b.WrapHandleTimer(a.OnFire)
 	b.AddTimer = a.AddTimer
+	b.DoDeleteTimerByName = a.RemoveTimerByName
+	b.DoDeleteTemporaryTimers = a.DeleteTemporaryTimers
+	b.DoDeleteTimerGroup = a.DeleteTimerGroup
+	b.DoEnableTimerByName = a.EnableTimerByName
+	b.DoEnableTimerGroup = a.EnableTimerGroup
+	b.DoListTimerNames = a.ListTimerNames
+	b.HasNamedTimer = a.HasNamedTimer
+	b.DoResetNamedTimer = a.ResetNamedTimer
+	b.DoResetTimers = a.ResetTimers
 }
-func (a *Automation) AddTimer(timer *world.Timer, replace bool) {
-	a.Timers.AddTimer(timer, replace)
+func (a *Automation) AddTimer(timer *world.Timer, replace bool) bool {
+	return a.Timers.AddTimer(timer, replace)
+}
+func (a *Automation) RemoveTimerByName(name string) bool {
+	return a.Timers.RemoveTimerByName(name)
+}
+func (a *Automation) DeleteTemporaryTimers() int {
+	return a.Timers.DeleteTemporaryTimers()
+}
+func (a *Automation) DeleteTimerGroup(group string) int {
+	return a.Timers.DeleteTimerGroup(group)
+}
+func (a *Automation) EnableTimerByName(name string, enabled bool) bool {
+	return a.Timers.EnableTimerByName(name, enabled)
+}
+func (a *Automation) EnableTimerGroup(group string, enabled bool) int {
+	return a.Timers.EnableTimerGroup(group, enabled)
+}
+func (a *Automation) ListTimerNames() []string {
+	return a.Timers.ListTimerNames()
+}
+func (a *Automation) HasNamedTimer(name string) bool {
+	return a.Timers.HasNamedTimer(name)
+}
+func (a *Automation) ResetNamedTimer(name string) bool {
+	return a.Timers.ResetNamedTimer(name)
+}
+func (a *Automation) ResetTimers() {
+	a.Timers.ResetTimers()
 }
 func (a *Automation) OnFire(b *bus.Bus, timer *world.Timer) {
 	connceted := b.GetConnConnected()
@@ -27,6 +63,7 @@ func (a *Automation) OnFire(b *bus.Bus, timer *world.Timer) {
 		b.DoSendTimerToScript(timer)
 	}
 }
+
 func (a *Automation) trySendTo(b *bus.Bus, target int, message string, variable string) bool {
 	if message == "" {
 		return false
