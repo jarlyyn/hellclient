@@ -12,29 +12,9 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-type Data struct {
-	Host        string
-	Port        string
-	Charset     string
-	QueueDelay  int
-	Params      map[string]string
-	Permissions []string
-	ScriptID    string
-	Trusted     herbplugin.Trusted
-	Triggers    []*world.Trigger
-	Timers      []*world.Timer
-	Alias       []*world.Alias
-}
-
-func NewData() *Data {
-	return &Data{
-		Params: map[string]string{},
-	}
-}
-
 type Config struct {
 	Locker  sync.Mutex
-	Data    *Data
+	Data    *world.WorldData
 	ReadyAt int64
 }
 
@@ -147,7 +127,7 @@ func (c *Config) Encode() ([]byte, error) {
 func (c *Config) Decode(data []byte) error {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
-	configdata := NewData()
+	configdata := world.NewWorldData()
 	err := toml.Unmarshal(data, configdata)
 	if err != nil {
 		return err
@@ -186,6 +166,6 @@ func (c *Config) InstallTo(b *bus.Bus) {
 
 func New() *Config {
 	return &Config{
-		Data: NewData(),
+		Data: world.NewWorldData(),
 	}
 }
