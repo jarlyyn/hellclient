@@ -65,6 +65,8 @@ type Bus struct {
 	DoEnableTimerGroup      func(string, bool) int
 	DoResetNamedTimer       func(string) bool
 	DoResetTimers           func()
+	GetTimerOption          func(name string, option string) (string, bool, bool)
+	SetTimerOption          func(name string, option string, value string) (bool, bool, bool)
 	HasNamedTimer           func(string) bool
 	DoListTimerNames        func() []string
 	AddHistory              func(string)

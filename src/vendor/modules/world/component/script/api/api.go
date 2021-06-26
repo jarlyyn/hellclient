@@ -320,3 +320,27 @@ func (a *API) ResetTimer(name string) int {
 func (a *API) ResetTimers() {
 	a.Bus.DoResetTimers()
 }
+
+func (a *API) GetTimerOption(name string, option string) (string, int) {
+	result, ofound, tfound := a.Bus.GetTimerOption(name, option)
+	if !tfound {
+		return "", ETimerNotFound
+	}
+	if !ofound {
+		return "", EOptionOutOfRange
+	}
+	return result, EOK
+}
+func (a *API) SetTimerOption(name string, option string, value string) int {
+	result, ofound, tfound := a.Bus.SetTimerOption(name, option, value)
+	if !tfound {
+		return ETimerNotFound
+	}
+	if !ofound {
+		return EOK
+	}
+	if !result {
+		return ETimeInvalid
+	}
+	return EOK
+}
