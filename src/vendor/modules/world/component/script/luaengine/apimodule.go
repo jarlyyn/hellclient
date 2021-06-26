@@ -2,8 +2,10 @@ package luaengine
 
 import (
 	"context"
+	"modules/world"
 	"modules/world/bus"
 	"modules/world/component/script/api"
+	"strconv"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/herbplugin/lua51plugin"
@@ -70,6 +72,8 @@ func (a *luaapi) InstallAPIs(l *lua.LState) {
 	l.SetGlobal("IsTimer", l.NewFunction(a.IsTimer))
 	l.SetGlobal("ResetTimer", l.NewFunction(a.ResetTimer))
 	l.SetGlobal("ResetTimers", l.NewFunction(a.ResetTimers))
+	l.SetGlobal("GetTimerOption", l.NewFunction(a.GetTimerOption))
+	l.SetGlobal("SetTimerOption", l.NewFunction(a.SetTimerOption))
 
 }
 func (a *luaapi) Note(L *lua.LState) int {
@@ -340,6 +344,47 @@ func (a *luaapi) ResetTimer(L *lua.LState) int {
 func (a *luaapi) ResetTimers(L *lua.LState) int {
 	a.API.ResetTimers()
 	return 0
+}
+
+func (a *luaapi) GetTimerOption(L *lua.LState) int {
+	name := L.ToString(1)
+	option := L.ToString(2)
+	result, code := a.API.GetTimerOption(name, option)
+	if code != api.EOK {
+		L.Push(lua.LNil)
+	} else {
+		switch option {
+		case "active_closed", "at_time", "enabled", "omit_from_log", "omit_from_output", "one_shot":
+			L.Push(lua.LBool(result == world.StringYes))
+		case "group", "name", "script", "send", "variable":
+			L.Push(lua.LString(result))
+		case "hour", "minute", "offset_hour", "offset_minute", "offset_second", "second", "send_to", "user":
+			i, _ := strconv.Atoi(result)
+			L.Push(lua.LNumber(i))
+		default:
+			L.Push(lua.LNil)
+		}
+	}
+	return 1
+}
+func (a *luaapi) SetTimerOption(L *lua.LState) int {
+	name := L.ToString(1)
+	option := L.ToString(2)
+	var value string
+	switch option {
+	case "active_closed", "at_time", "enabled", "omit_from_log", "omit_from_output", "one_shot":
+		if L.ToBool(3) {
+			value = world.StringYes
+		} else {
+			value = ""
+		}
+	case "group", "name", "script", "send", "variable":
+		value = L.ToString(3)
+	case "hour", "minute", "offset_hour", "offset_minute", "offset_second", "second", "send_to", "user":
+		value = L.ToString(3)
+	}
+	L.Push(lua.LNumber(a.API.SetTimerOption(name, option, value)))
+	return 1
 }
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {

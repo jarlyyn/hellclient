@@ -22,6 +22,8 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.HasNamedTimer = a.HasNamedTimer
 	b.DoResetNamedTimer = a.ResetNamedTimer
 	b.DoResetTimers = a.ResetTimers
+	b.GetTimerOption = a.GetTimerOption
+	b.SetTimerOption = a.SetTimerOption
 }
 func (a *Automation) AddTimer(timer *world.Timer, replace bool) bool {
 	return a.Timers.AddTimer(timer, replace)
@@ -53,6 +55,12 @@ func (a *Automation) ResetNamedTimer(name string) bool {
 func (a *Automation) ResetTimers() {
 	a.Timers.ResetTimers()
 }
+func (a *Automation) GetTimerOption(name string, option string) (string, bool, bool) {
+	return a.Timers.GetTimerOption(name, option)
+}
+func (a *Automation) SetTimerOption(name string, option string, value string) (bool, bool, bool) {
+	return a.Timers.SetTimerOption(name, option, value)
+}
 func (a *Automation) OnFire(b *bus.Bus, timer *world.Timer) {
 	connceted := b.GetConnConnected()
 	if !connceted && !timer.ActionWhenDisconnectd {
@@ -60,7 +68,8 @@ func (a *Automation) OnFire(b *bus.Bus, timer *world.Timer) {
 	}
 	a.trySendTo(b, timer.SendTo, timer.Send, timer.Variable)
 	if timer.Script != "" {
-		b.DoSendTimerToScript(timer)
+		ti := *timer
+		b.DoSendTimerToScript(&ti)
 	}
 }
 

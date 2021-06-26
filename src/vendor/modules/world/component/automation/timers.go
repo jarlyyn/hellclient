@@ -29,11 +29,8 @@ func (t *Timers) createTimer(ti *world.Timer) *Timer {
 	}
 	return result
 }
-func (t *Timers) addTimer(ti *world.Timer) bool {
-	if t.All[ti.ID] != nil {
-		return false
-	}
-	timer := t.createTimer(ti)
+func (t *Timers) loadTimer(timer *Timer) {
+	ti := timer.Data
 	t.All[ti.ID] = timer
 	if ti.Name != "" {
 		t.Named[ti.PrefixedName()] = timer
@@ -49,6 +46,14 @@ func (t *Timers) addTimer(ti *world.Timer) bool {
 	if ti.Temporary {
 		t.Temporary[ti.ID] = timer
 	}
+
+}
+func (t *Timers) addTimer(ti *world.Timer) bool {
+	if t.All[ti.ID] != nil {
+		return false
+	}
+	timer := t.createTimer(ti)
+	t.loadTimer(timer)
 	if ti.Enabled {
 		go timer.Start()
 	}
@@ -179,6 +184,30 @@ func (t *Timers) ResetTimers() {
 	for _, v := range t.All {
 		v.Reset()
 	}
+}
+func (t *Timers) GetTimerOption(name string, option string) (string, bool, bool) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	ti := t.Named[name]
+	if ti == nil {
+		return "", false, false
+	}
+	result, ok := ti.Option(option)
+	return result, ok, true
+}
+func (t *Timers) SetTimerOption(name string, option string, value string) (bool, bool, bool) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	ti := t.Named[name]
+	if ti == nil {
+		return false, false, false
+	}
+	result, ok := ti.SetOption(option, value)
+	if result && ok {
+		t.unloadTimer(ti.Data.ID)
+		t.loadTimer(ti)
+	}
+	return result, ok, true
 }
 func NewTimers() *Timers {
 	timers := &Timers{}
