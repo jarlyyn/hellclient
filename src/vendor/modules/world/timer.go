@@ -67,3 +67,20 @@ func CreateTimer() *Timer {
 		ID: uniqueid.MustGenerateID(),
 	}
 }
+
+type Timers []*Timer
+
+// Len is the number of elements in the collection.
+func (t Timers) Len() int {
+	return len(t)
+}
+
+// Less reports whether the element with index i
+func (t Timers) Less(i, j int) bool {
+	return t[i].ID < t[j].ID
+}
+
+// Swap swaps the elements with indexes i and j.
+func (t Timers) Swap(i, j int) {
+	t[i], t[j] = t[j], t[i]
+}

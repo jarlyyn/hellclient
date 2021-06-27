@@ -217,6 +217,7 @@ func (a *API) DeleteCommandHistory() {
 
 func (a *API) DoAfter(seconds float64, sendtext string) int {
 	t := world.CreateTimer()
+	t.SetByUser(false)
 	t.Enabled = true
 	t.OneShot = true
 	t.Second = int(seconds)
@@ -228,6 +229,7 @@ func (a *API) DoAfter(seconds float64, sendtext string) int {
 }
 func (a *API) DoAfterNote(seconds float64, sendtext string) int {
 	t := world.CreateTimer()
+	t.SetByUser(false)
 	t.Enabled = true
 	t.OneShot = true
 	t.Second = int(seconds)
@@ -239,6 +241,7 @@ func (a *API) DoAfterNote(seconds float64, sendtext string) int {
 }
 func (a *API) DoAfterSpeedWalk(seconds float64, sendtext string) int {
 	t := world.CreateTimer()
+	t.SetByUser(false)
 	t.Enabled = true
 	t.OneShot = true
 	t.Second = int(seconds)
@@ -274,6 +277,7 @@ func (a *API) AddTimer(timerName string, hour int, minute int, second float64, r
 	t.SpeedWalk = flags&world.TimerFlagTimerSpeedWalk != 0
 	t.ActionWhenDisconnectd = flags&world.TimerFlagActiveWhenClosed != 0
 	t.Temporary = flags&world.TimerFlagTemporary != 0
+	t.SetByUser(false)
 	a.Bus.AddTimer(t, flags&world.TimerFlagReplace != 0)
 	return EOK
 }
@@ -281,6 +285,7 @@ func (a *API) DeleteTemporaryTimers() int {
 	return a.Bus.DoDeleteTemporaryTimers()
 }
 func (a *API) DeleteTimer(name string) int {
+	name = world.PrefixedName(name, false)
 	if !a.Bus.DoDeleteTimerByName(name) {
 		return ETimerNotFound
 	}
@@ -292,6 +297,7 @@ func (a *API) DeleteTimerGroup(group string) int {
 }
 
 func (a *API) EnableTimer(name string, enabled bool) int {
+	name = world.PrefixedName(name, false)
 	if !a.Bus.DoEnableTimerByName(name, enabled) {
 		return ETimerNotFound
 	}
@@ -306,12 +312,14 @@ func (a *API) GetTimerList() []string {
 }
 
 func (a *API) IsTimer(name string) int {
+	name = world.PrefixedName(name, false)
 	if !a.Bus.HasNamedTimer(name) {
 		return ETimerNotFound
 	}
 	return EOK
 }
 func (a *API) ResetTimer(name string) int {
+	name = world.PrefixedName(name, false)
 	if !a.Bus.DoResetNamedTimer(name) {
 		return ETimerNotFound
 	}
@@ -322,6 +330,7 @@ func (a *API) ResetTimers() {
 }
 
 func (a *API) GetTimerOption(name string, option string) (string, int) {
+	name = world.PrefixedName(name, false)
 	result, ofound, tfound := a.Bus.GetTimerOption(name, option)
 	if !tfound {
 		return "", ETimerNotFound
@@ -332,6 +341,7 @@ func (a *API) GetTimerOption(name string, option string) (string, int) {
 	return result, EOK
 }
 func (a *API) SetTimerOption(name string, option string, value string) int {
+	name = world.PrefixedName(name, false)
 	result, ofound, tfound := a.Bus.SetTimerOption(name, option, value)
 	if !tfound {
 		return ETimerNotFound

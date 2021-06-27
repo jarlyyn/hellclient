@@ -8,6 +8,8 @@ import (
 type Timers struct {
 	Locker    sync.RWMutex
 	All       map[string]*Timer
+	ByUser    map[string]*Timer
+	ByScript  map[string]*Timer
 	Named     map[string]*Timer
 	Temporary map[string]*Timer
 	Grouped   map[string]map[string]*Timer
@@ -32,6 +34,13 @@ func (t *Timers) createTimer(ti *world.Timer) *Timer {
 func (t *Timers) loadTimer(timer *Timer) {
 	ti := timer.Data
 	t.All[ti.ID] = timer
+	if !ti.Temporary {
+		if ti.ByUser() {
+			t.ByUser[ti.ID] = timer
+		} else {
+			t.ByScript[ti.ID] = timer
+		}
+	}
 	if ti.Name != "" {
 		t.Named[ti.PrefixedName()] = timer
 	}
@@ -83,6 +92,14 @@ func (t *Timers) unloadTimer(id string) *Timer {
 		return nil
 	}
 	delete(t.All, id)
+	if !ti.Data.Temporary {
+		if ti.Data.ByUser() {
+			delete(t.ByUser, ti.Data.ID)
+		} else {
+			delete(t.ByScript, ti.Data.ID)
+		}
+	}
+
 	if ti.Data.Name != "" {
 		delete(t.Named, ti.Data.PrefixedName())
 	}
@@ -208,6 +225,29 @@ func (t *Timers) SetTimerOption(name string, option string, value string) (bool,
 		t.loadTimer(ti)
 	}
 	return result, ok, true
+}
+
+func (t *Timers) GetTimersByType(byuser bool) []*world.Timer {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	var all map[string]*Timer
+	if byuser {
+		all = t.ByUser
+	} else {
+		all = t.ByScript
+	}
+	result := make([]*world.Timer, 0, len(all))
+	for _, v := range all {
+		result = append(result, v.Data)
+	}
+	return result
+}
+func (t *Timers) AddTimers(ts []*world.Timer) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	for _, v := range ts {
+		t.addTimer(v)
+	}
 }
 func NewTimers() *Timers {
 	timers := &Timers{}
