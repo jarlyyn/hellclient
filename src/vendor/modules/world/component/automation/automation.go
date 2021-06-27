@@ -24,10 +24,16 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.DoResetTimers = a.ResetTimers
 	b.GetTimerOption = a.GetTimerOption
 	b.SetTimerOption = a.SetTimerOption
+	b.GetTimersByType = a.GetTimersByType
+	b.AddTimers = a.AddTimers
 }
 func (a *Automation) AddTimer(timer *world.Timer, replace bool) bool {
 	return a.Timers.AddTimer(timer, replace)
 }
+func (a *Automation) AddTimers(ts []*world.Timer) {
+	a.Timers.AddTimers(ts)
+}
+
 func (a *Automation) RemoveTimerByName(name string) bool {
 	return a.Timers.RemoveTimerByName(name)
 }
@@ -60,6 +66,9 @@ func (a *Automation) GetTimerOption(name string, option string) (string, bool, b
 }
 func (a *Automation) SetTimerOption(name string, option string, value string) (bool, bool, bool) {
 	return a.Timers.SetTimerOption(name, option, value)
+}
+func (a *Automation) GetTimersByType(byuser bool) []*world.Timer {
+	return a.Timers.GetTimersByType(byuser)
 }
 func (a *Automation) OnFire(b *bus.Bus, timer *world.Timer) {
 	connceted := b.GetConnConnected()
