@@ -231,6 +231,18 @@ func (t *Titan) HandleCmdUseScript(id string, script string) {
 		w.DoUseScript(script)
 	}
 }
+func (t *Titan) HandleCmdTimers(id string, byuser bool) {
+	w := t.World(id)
+	if w != nil {
+		timers := w.GetTimersByType(byuser)
+		if byuser {
+			msg.PublishUserTimers(t, id, timers)
+		} else {
+			msg.PublishScriptTimers(t, id, timers)
+		}
+	}
+}
+
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()

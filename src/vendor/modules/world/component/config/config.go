@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"modules/world"
 	"modules/world/bus"
+	"sort"
 	"sync"
 	"time"
 
@@ -114,9 +115,12 @@ func (c *Config) SetScriptID(id string) {
 	defer c.Locker.Unlock()
 	c.Data.ScriptID = id
 }
-func (c *Config) Encode() ([]byte, error) {
+func (c *Config) Encode(bus *bus.Bus) ([]byte, error) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
+	timers := bus.GetTimersByType(true)
+	sort.Sort(world.Timers(timers))
+	c.Data.Timers = timers
 	buf := bytes.NewBuffer(nil)
 	err := toml.NewEncoder(buf).Encode(c.Data)
 	if err != nil {
@@ -124,7 +128,7 @@ func (c *Config) Encode() ([]byte, error) {
 	}
 	return buf.Bytes(), nil
 }
-func (c *Config) Decode(data []byte) error {
+func (c *Config) Decode(bus *bus.Bus, data []byte) error {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
 	configdata := world.NewWorldData()
@@ -132,7 +136,11 @@ func (c *Config) Decode(data []byte) error {
 	if err != nil {
 		return err
 	}
+	for k := range configdata.Timers {
+		configdata.Timers[k].SetByUser(true)
+	}
 	c.Data = configdata
+	bus.AddTimers(c.Data.Timers)
 	return nil
 }
 
@@ -148,8 +156,8 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetCharset = b.WrapHandleString(c.SetCharset)
 	b.GetQueueDelay = b.WrapGetInt(c.GetQueueDelay)
 	b.SetQueueDelay = b.WrapHandleInt(c.SetQueueDelay)
-	b.DoEncode = c.Encode
-	b.DoDecode = c.Decode
+	b.DoEncode = b.WrapDoEncode(c.Encode)
+	b.DoDecode = b.WrapDoDecode(c.Decode)
 	b.SetParam = c.SetParam
 	b.GetParam = c.GetParam
 	b.GetParams = c.GetParams

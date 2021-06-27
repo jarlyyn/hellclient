@@ -101,4 +101,10 @@ onButton.listScriptinfo=function(){
 onButton.cleanScript=function(){
     app.send("usescript",[vm.current,""])
 }
+onButton.usertimers=function(){
+    app.send("timers",[vm.current,"byuser"])
+}
+onButton.scripttimers=function(){
+    app.send("timers",[vm.current,""])
+}
 })
