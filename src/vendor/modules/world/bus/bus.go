@@ -182,6 +182,16 @@ func (b *Bus) WrapHandleInt(f func(bus *Bus, i int)) func(i int) {
 		f(b, i)
 	}
 }
+func (b *Bus) WrapDoEncode(f func(bus *Bus) ([]byte, error)) func() ([]byte, error) {
+	return func() ([]byte, error) {
+		return f(b)
+	}
+}
+func (b *Bus) WrapDoDecode(f func(bus *Bus, bs []byte) error) func([]byte) error {
+	return func(bs []byte) error {
+		return f(b, bs)
+	}
+}
 func (b *Bus) WrapAddTimer(f func(bus *Bus, timer *world.Timer, replace bool) bool) func(*world.Timer, bool) bool {
 	return func(timer *world.Timer, replace bool) bool {
 		return f(b, timer, replace)
