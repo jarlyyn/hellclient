@@ -201,6 +201,15 @@ func (p *Prophet) onCmdUpdateTimer(conn connections.OutputConnection, cmd comman
 	return nil
 
 }
+func (p *Prophet) onCmdReloadScript(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdReloadScript(msg)
+	return nil
+
+}
 
 // func (p *Prophet) onCmdSaveTrigger(conn connections.OutputConnection, cmd command.Command) error {
 // 	forms.SaveTrigger(CurrentGameID(), cmd.Data())
@@ -234,6 +243,7 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("deleteTimer", p.onCmdDeleteTimer)
 	handlers.Register("loadTimer", p.onCmdLoadTimer)
 	handlers.Register("updateTimer", p.onCmdUpdateTimer)
+	handlers.Register("reloadScript", p.onCmdReloadScript)
 
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)

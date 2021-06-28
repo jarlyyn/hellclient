@@ -107,6 +107,9 @@ handlers.scripttimers=function(data){
 handlers.createTimerSuccess=function(data){
     vm.timerCreateFormVisible=false
 }
+handlers.updateTimerSuccess=function(data){
+    vm.timerUpdateFormVisible=false
+}
 handlers.timer=function(data){
     if (vm.updatingTimer&&vm.updatingTimer.ID==data.ID){
         vm.updatingTimer.Form=data

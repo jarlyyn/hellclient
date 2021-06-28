@@ -73,6 +73,20 @@ onButton.savescript=function(){
       })
 }
 
+onButton.reload=function(){
+    vm.$confirm('脚本所有的修改将丢失，进行中的程序也将停止，是否要重新加载脚本?', '提示', {
+        confirmButtonText: '重新加载',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        send("reloadScript",vm.current)
+        }).catch(()=>{
+
+      })
+}
+
+
+
 onButton.createGame=function(){
     vm.createFail=[];
     vm.gameCreateForm={};
