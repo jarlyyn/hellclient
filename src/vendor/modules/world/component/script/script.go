@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sort"
 	"sync"
 
 	"github.com/BurntSushi/toml"
@@ -65,6 +66,10 @@ func (s *Script) save(b *bus.Bus) error {
 	if id == "" {
 		return nil
 	}
+	timers := b.GetTimersByType(false)
+	sort.Sort(world.Timers(timers))
+	s.Data.Timers = timers
+
 	data, err := s.encodeScript()
 	if err != nil {
 		return err
@@ -90,6 +95,10 @@ func (s *Script) open(b *bus.Bus) error {
 	if err != nil {
 		return err
 	}
+	for k := range s.Data.Timers {
+		s.Data.Timers[k].SetByUser(false)
+	}
+	b.AddTimers(s.Data.Timers)
 	return nil
 }
 func (s *Script) Unload(b *bus.Bus) {
@@ -102,6 +111,7 @@ func (s *Script) unload(b *bus.Bus) {
 	if s.Engine != nil {
 		s.Engine.Close(b)
 	}
+	b.DoDeleteTimerByType(false)
 	s.Data = nil
 	s.Engine = nil
 }

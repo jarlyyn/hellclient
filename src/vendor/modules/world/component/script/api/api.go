@@ -274,7 +274,6 @@ func (a *API) AddTimer(timerName string, hour int, minute int, second float64, r
 	t.Enabled = flags&world.TimerFlagEnabled != 0
 	t.AtTime = flags&world.TimerFlagAtTime != 0
 	t.OneShot = flags&world.TimerFlagOneShot != 0
-	t.SpeedWalk = flags&world.TimerFlagTimerSpeedWalk != 0
 	t.ActionWhenDisconnectd = flags&world.TimerFlagActiveWhenClosed != 0
 	t.Temporary = flags&world.TimerFlagTemporary != 0
 	t.SetByUser(false)

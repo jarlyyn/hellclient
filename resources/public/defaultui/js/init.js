@@ -7,10 +7,12 @@ requirejs.config({
         "html-triggers":"/public/defaultui/block/triggers.html",
         "html-creategameform":"/public/defaultui/block/creategameform.html",
         "html-createscriptform":"/public/defaultui/block/createscriptform.html",
+        "html-createtimerform":"/public/defaultui/block/createtimerform.html",
+        "html-updatetimerform":"/public/defaultui/block/updatetimerform.html",
         "html-alllines":"/public/defaultui/block/alllines.html",
         "html-notopened":"/public/defaultui/block/notopened.html",
         "html-scriptlist":"/public/defaultui/block/scriptlist.html",
-        
+        "html-timerlist":"/public/defaultui/block/timerlist.html",
         "html-script":"/public/defaultui/block/script.html",
         "main":"/public/defaultui/js/main"
     },
@@ -32,8 +34,16 @@ define(function (require) {
     document.getElementById("createscriptform").innerHTML=htmlcreatescriptform;
     var htmlscriptlist=require("text!html-scriptlist");
     document.getElementById("scriptlist").innerHTML=htmlscriptlist;
+    var htmltimerlist=require("text!html-timerlist");
+    document.getElementById("timerlist").innerHTML=htmltimerlist;
+    var htmlcreatetimerform=require("text!html-createtimerform");
+    document.getElementById("createtimerform").innerHTML=htmlcreatetimerform;
+    var htmlupdatetimerform=require("text!html-updatetimerform");
+    document.getElementById("updatetimerform").innerHTML=htmlupdatetimerform;
 
     
+    var htmlalllines=require("text!html-alllines");
+
     require(["main"],function(main){
     });
 })

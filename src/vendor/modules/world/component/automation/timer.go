@@ -90,8 +90,14 @@ func (t *Timer) Option(name string) (string, bool) {
 	case "offset_second":
 		return "0", true
 	case "omit_from_log":
+		if t.Data.OmitFromLog {
+			return world.StringYes, true
+		}
 		return "", true
 	case "omit_from_output":
+		if t.Data.OmitFromOutput {
+			return world.StringYes, true
+		}
 		return "", true
 	case "one_shot":
 		if t.Data.OneShot {
@@ -161,9 +167,11 @@ func (t *Timer) SetOption(name string, val string) (bool, bool) {
 	case "offset_second":
 		return false, false
 	case "omit_from_log":
-		return false, false
+		t.Data.OmitFromLog = (val == world.StringYes)
+		return true, true
 	case "omit_from_output":
-		return false, false
+		t.Data.OmitFromOutput = (val == world.StringYes)
+		return true, true
 	case "one_shot":
 		t.Data.OneShot = (val == world.StringYes)
 		return true, true
@@ -182,7 +190,6 @@ func (t *Timer) SetOption(name string, val string) (bool, bool) {
 		return true, true
 	case "send_to":
 		i, _ := strconv.Atoi(val)
-
 		t.Data.SendTo = i
 		return true, true
 	case "user":

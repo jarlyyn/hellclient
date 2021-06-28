@@ -71,8 +71,15 @@ func (t *Timers) addTimer(ti *world.Timer) bool {
 func (t *Timers) AddTimer(ti *world.Timer, replace bool) bool {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
-	if replace {
-		t.removeTimer(ti.ID)
+	name := ti.PrefixedName()
+	if name != "" {
+		named := t.Named[name]
+		if named != nil {
+			if !replace {
+				return false
+			}
+			t.removeTimer(named.Data.ID)
+		}
 	}
 	return t.addTimer(ti)
 }
@@ -249,11 +256,35 @@ func (t *Timers) AddTimers(ts []*world.Timer) {
 		t.addTimer(v)
 	}
 }
+func (t *Timers) DoDeleteTimerByType(byuser bool) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	var list map[string]*Timer
+	if byuser {
+		list = t.ByUser
+	} else {
+		list = t.ByScript
+	}
+	for _, v := range list {
+		t.removeTimer(v.Data.ID)
+	}
+}
+func (t *Timers) GetTimer(id string) *world.Timer {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	ti := t.All[id]
+	if ti == nil {
+		return nil
+	}
+	return ti.Data
+}
 func NewTimers() *Timers {
 	timers := &Timers{}
 	timers.All = map[string]*Timer{}
 	timers.Named = map[string]*Timer{}
 	timers.Temporary = map[string]*Timer{}
 	timers.Grouped = map[string]map[string]*Timer{}
+	timers.ByUser = map[string]*Timer{}
+	timers.ByScript = map[string]*Timer{}
 	return timers
 }
