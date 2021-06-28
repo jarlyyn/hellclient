@@ -268,7 +268,12 @@ func (t *Titan) HandleCmdLoadTimer(world string, id string) {
 		}
 	}
 }
-
+func (t *Titan) HandleCmdReloadScript(id string) {
+	w := t.World(id)
+	if w != nil {
+		w.HandleCmdError(w.DoReloadScript())
+	}
+}
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()

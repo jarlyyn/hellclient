@@ -138,6 +138,12 @@ func (s *Script) load(b *bus.Bus) error {
 	}
 	return nil
 }
+func (s *Script) Reload(b *bus.Bus) error {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
+	s.unload(b)
+	return s.load(b)
+}
 func (s *Script) ready(b *bus.Bus) {
 	s.Load(b)
 	go func() {
@@ -200,7 +206,7 @@ func (s *Script) Run(b *bus.Bus, cmd string) {
 }
 func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptData = b.WrapGetScriptData(s.ScriptData)
-	b.DoLoadScript = b.WrapDo(s.Load)
+	b.DoReloadScript = b.WrapDo(s.Reload)
 	b.DoSaveScript = b.WrapDo(s.SaveScript)
 	b.DoUseScript = b.WrapHandleString(s.UseScript)
 	b.GetScriptPluginOptions = b.WrapGetScriptPluginOptions(s.PluginOptions)

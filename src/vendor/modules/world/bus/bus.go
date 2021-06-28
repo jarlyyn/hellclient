@@ -49,8 +49,7 @@ type Bus struct {
 	DoExecute               func(message string)
 	DoEncode                func() ([]byte, error)
 	DoDecode                func([]byte) error
-	DoUnloadScript          func()
-	DoLoadScript            func() error
+	DoReloadScript          func() error
 	DoSaveScript            func() error
 	DoUseScript             func(string)
 	DoRunScript             func(string)
