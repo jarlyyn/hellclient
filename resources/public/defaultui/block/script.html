@@ -1,14 +1,21 @@
 <el-dialog width="80%"  :fullscreen="true"  title="脚本信息" :visible.sync="scriptVisible">
-<div v-if="script">
-    <el-row>
-        {{script.ID ? script.ID : " - 未使用- "}}
+    <el-form  v-if="script"ref="form" :model="form" label-width="80px">
+
+        <el-form-item label="脚本">
+            {{script.ID ? script.ID : " - 未使用- "}}
 <el-button-group>
 <el-button size="mini"  type="success" class="el-icon-folder-opened" @click="onButton('listScriptinfo')">选择</el-button>
 <el-button size="mini"  v-if="script.ID" type="warning" class="el-icon-close" plain @click="onButton('cleanScript')"></el-button>
 </el-button-group>
-    </el-row>
+        </el-form-item>
     <div v-if="script.ID">
-
+            <el-form-item label="类型">
+                {{script.Type}}
+            </el-form-item> 
+            <el-form-item label="描述">
+                {{script.Desc}}
+            </el-form-item>
     </div>
-</div>
+</el-form>
+
 </el-dialog>
