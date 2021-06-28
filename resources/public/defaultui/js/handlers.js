@@ -98,4 +98,19 @@ handlers.status=function(data){
 handlers.history=function(data){
     vm.history=data;
 }
+handlers.usertimers=function(data){
+    vm.usertimerlist=data
+}
+handlers.scripttimers=function(data){
+    vm.scripttimerlist=data
+}
+handlers.createTimerSuccess=function(data){
+    vm.timerCreateFormVisible=false
+}
+handlers.timer=function(data){
+    if (vm.updatingTimer&&vm.updatingTimer.ID==data.ID){
+        vm.updatingTimer.Form=data
+    }
+}
+
 })

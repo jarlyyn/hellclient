@@ -1,0 +1,57 @@
+<el-dialog width="80%"  :fullscreen="true" :title="'编辑计时器'" :visible.sync="timerUpdateFormVisible">
+    <div v-if="createFail">
+            <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
+        
+    </div> 
+    <div v-if="updatingTimer && updatingTimer.Form">
+        <el-form :model="updatingTimer" label-width="120px" >
+            <el-form-item :label="updatingTimer.Form.AtTime?'触发时间':'触发间隔'" >
+            <el-row>
+                小时    <el-input-number v-model="updatingTimer.Form.Hour" :min="0"  label="小时"></el-input-number>
+                分钟    <el-input-number v-model="updatingTimer.Form.Minute" :min="0"  label="分钟"></el-input-number>
+                秒    <el-input-number v-model="updatingTimer.Form.Second" :min="0"  label="小时"></el-input-number>
+            </el-row>
+        </el-form-item>
+                <el-form-item label="名称" ><el-input v-model="updatingTimer.Form.Name"></el-input></el-form-item>
+                <el-form-item label="发送到" >
+                    <el-select v-model="updatingTimer.Form.SendTo" placeholder="请选择">
+                        <el-option
+                          v-for="(label,index) in sendto"
+                          :key="index"
+                          :label="index+'.'+label"
+                          :value="index">
+                        </el-option>
+                      </el-select>
+                    
+                </el-form-item>
+            <el-form-item label="发送" >
+                <el-input
+                type="textarea"
+                :autosize="{ minRows: 4}"
+                placeholder="请输入内容"
+                v-model="updatingTimer.Form.Send">
+              </el-input>
+                          </el-form-item>
+                <el-form-item label="调用脚本函数" ><el-input v-model="updatingTimer.Form.Script"></el-input></el-form-item>
+                <el-form-item label="分组名" ><el-input v-model="updatingTimer.Form.Group" ></el-input></el-form-item>
+                <el-form-item v-if="updatingTimer.Form.SendTo==9"label="变量名" ><el-input v-model="updatingTimer.Form.Variable" ></el-input></el-form-item>
+
+                <el-form-item label="选项" >
+                    <div>
+                    <el-row><el-checkbox v-model="updatingTimer.Form.AtTime">具体时分秒</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTimer.Form.Enabled">启用</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTimer.Form.ActionWhenDisconnectd">离线可用</el-checkbox></el-row>
+                    
+                    <el-row><el-checkbox v-model="updatingTimer.Form.OneShot">一次性</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTimer.Form.Temporary">临时</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTimer.Form.OmitFromOutput">不出现在输出</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTimer.Form.OmitFromLog">不出现在日志</el-checkbox></el-row>
+                </div>
+                </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="timerUpdateFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="onButton('updateTimerSubmit')">确 定</el-button>
+        </div>
+      </div>
+      </el-dialog>              

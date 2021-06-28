@@ -53,6 +53,10 @@ onButton.script=function(){
 onButton.save=function(){
     send("save",vm.current)
 }
+onButton.savescript=function(){
+    send("savescript",vm.current)
+}
+
 onButton.createGame=function(){
     vm.createFail=[];
     vm.gameCreateForm={};
@@ -102,9 +106,26 @@ onButton.cleanScript=function(){
     app.send("usescript",[vm.current,""])
 }
 onButton.usertimers=function(){
+    vm.usertimerlist=null;
+    vm.timersVisible=true;
+    vm.byuser=true;
     app.send("timers",[vm.current,"byuser"])
 }
 onButton.scripttimers=function(){
+    vm.scripttimerlist=null;
+    vm.timersVisible=true;
+    vm.byuser=false;
     app.send("timers",[vm.current,""])
+}
+onButton.createTimer=function(){
+    vm.createFail=[];
+    vm.timerCreateForm={};
+    vm.timerCreateFormVisible=true;
+}
+onButton.createTimerSubmit=function(){
+    vm.timerCreateForm.World=vm.current
+    vm.timerCreateForm.ByUser=vm.byuser
+    vm.timerCreateForm.SendTo=vm.timerCreateForm.SendTo*1
+    send("createTimer",vm.timerCreateForm);
 }
 })

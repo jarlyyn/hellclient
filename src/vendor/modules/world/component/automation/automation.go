@@ -13,6 +13,7 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	a.Timers = NewTimers()
 	a.Timers.OnFire = b.WrapHandleTimer(a.OnFire)
 	b.AddTimer = a.AddTimer
+	b.DoDeleteTimer = a.RemoveTimer
 	b.DoDeleteTimerByName = a.RemoveTimerByName
 	b.DoDeleteTemporaryTimers = a.DeleteTemporaryTimers
 	b.DoDeleteTimerGroup = a.DeleteTimerGroup
@@ -26,6 +27,8 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.SetTimerOption = a.SetTimerOption
 	b.GetTimersByType = a.GetTimersByType
 	b.AddTimers = a.AddTimers
+	b.DoDeleteTimerByType = a.DoDeleteTimerByType
+	b.GetTimer = a.GetTimer
 }
 func (a *Automation) AddTimer(timer *world.Timer, replace bool) bool {
 	return a.Timers.AddTimer(timer, replace)
@@ -33,7 +36,9 @@ func (a *Automation) AddTimer(timer *world.Timer, replace bool) bool {
 func (a *Automation) AddTimers(ts []*world.Timer) {
 	a.Timers.AddTimers(ts)
 }
-
+func (a *Automation) RemoveTimer(id string) bool {
+	return a.Timers.RemoveTimer(id)
+}
 func (a *Automation) RemoveTimerByName(name string) bool {
 	return a.Timers.RemoveTimerByName(name)
 }
@@ -70,25 +75,38 @@ func (a *Automation) SetTimerOption(name string, option string, value string) (b
 func (a *Automation) GetTimersByType(byuser bool) []*world.Timer {
 	return a.Timers.GetTimersByType(byuser)
 }
+func (a *Automation) GetTimer(id string) *world.Timer {
+	return a.Timers.GetTimer(id)
+}
 func (a *Automation) OnFire(b *bus.Bus, timer *world.Timer) {
 	connceted := b.GetConnConnected()
 	if !connceted && !timer.ActionWhenDisconnectd {
 		return
 	}
-	a.trySendTo(b, timer.SendTo, timer.Send, timer.Variable)
+	a.trySendTo(b, timer.SendTo, timer.Send, timer.Variable, timer.OmitFromLog, timer.OmitFromOutput)
 	if timer.Script != "" {
 		ti := *timer
 		b.DoSendTimerToScript(&ti)
 	}
 }
+func (a *Automation) DoDeleteTimerByType(byuser bool) {
+	a.Timers.DoDeleteTimerByType(byuser)
+}
 
-func (a *Automation) trySendTo(b *bus.Bus, target int, message string, variable string) bool {
+func (a *Automation) trySendTo(b *bus.Bus, target int, message string, variable string, omit_from_log bool, omit_from_output bool) bool {
 	if message == "" {
 		return false
 	}
 	switch target {
 	case world.SendtoWorld:
-		b.DoSend(world.CreateCommand(message))
+		cmd := world.CreateCommand(message)
+		if omit_from_output {
+			cmd.Echo = false
+		}
+		if omit_from_log {
+			cmd.Log = false
+		}
+		b.DoSend(cmd)
 	case world.SendtoCommand:
 	case world.SendtoOutput:
 		b.DoPrint(message)
@@ -99,7 +117,14 @@ func (a *Automation) trySendTo(b *bus.Bus, target int, message string, variable 
 	case world.SendtoLogfile:
 	case world.SendtoNotepadReplace:
 	case world.SendtoCommandqueue:
-		b.DoSendToQueue(world.CreateCommand(message))
+		cmd := world.CreateCommand(message)
+		if omit_from_output {
+			cmd.Echo = false
+		}
+		if omit_from_log {
+			cmd.Log = false
+		}
+		b.DoSendToQueue(cmd)
 	case world.SendtoVariable:
 		b.SetParam(variable, message)
 	case world.SendtoExecute:
@@ -109,7 +134,14 @@ func (a *Automation) trySendTo(b *bus.Bus, target int, message string, variable 
 	case world.SendtoScript:
 		b.DoRunScript(message)
 	case world.SendtoImmediate:
-		b.DoSend(world.CreateCommand(message))
+		cmd := world.CreateCommand(message)
+		if omit_from_output {
+			cmd.Echo = false
+		}
+		if omit_from_log {
+			cmd.Log = false
+		}
+		b.DoSend(cmd)
 	case world.SendtoScriptAfterOmit:
 		b.DoRunScript(message)
 	default:

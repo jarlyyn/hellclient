@@ -58,13 +58,16 @@ type Bus struct {
 	DoPrintSystem           func(msg string)
 	DoDiscardQueue          func() int
 	DoSendTimerToScript     func(*world.Timer)
+	DoDeleteTimer           func(string) bool
 	DoDeleteTimerByName     func(string) bool
 	DoDeleteTemporaryTimers func() int
 	DoDeleteTimerGroup      func(string) int
 	DoEnableTimerByName     func(string, bool) bool
 	DoEnableTimerGroup      func(string, bool) int
 	DoResetNamedTimer       func(string) bool
+	GetTimer                func(string) *world.Timer
 	GetTimersByType         func(bool) []*world.Timer
+	DoDeleteTimerByType     func(bool)
 	AddTimers               func(ts []*world.Timer)
 	DoResetTimers           func()
 	GetTimerOption          func(name string, option string) (string, bool, bool)

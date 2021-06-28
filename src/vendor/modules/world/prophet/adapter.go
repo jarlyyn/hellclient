@@ -26,5 +26,7 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("history", p.newRoomAdapter("history"))
 	adapter.Register("usertimers", p.newRoomAdapter("usertimers"))
 	adapter.Register("scripttimers", p.newRoomAdapter("scripttimers"))
+	adapter.Register("createTimerSuccess", p.newRoomAdapter("createTimerSuccess"))
+	adapter.Register("timer", p.newRoomAdapter("timer"))
 
 }

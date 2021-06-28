@@ -133,7 +133,9 @@ func (t *Titan) OnCreateScriptFail(errors []*validator.FieldError) {
 func (t *Titan) OnCreateScriptSuccess(id string) {
 	msg.PublishCreateScriptSuccess(t, id)
 }
-
+func (t *Titan) OnCreateTimerSuccess(world string, id string) {
+	msg.PublishCreateTimerSuccess(t, world, id)
+}
 func (t *Titan) HandleCmdSend(id string, msg string) {
 	w := t.World(id)
 	if w != nil {
@@ -210,6 +212,12 @@ func (t *Titan) HandleCmdSave(id string) {
 		w.HandleCmdError(t.SaveWorld(id))
 	}
 }
+func (t *Titan) HandleCmdSaveScript(id string) {
+	w := t.World(id)
+	if w != nil {
+		w.HandleCmdError(w.DoSaveScript())
+	}
+}
 func (t *Titan) HandleCmdScriptInfo(id string) {
 	w := t.World(id)
 	if w != nil {
@@ -239,6 +247,21 @@ func (t *Titan) HandleCmdTimers(id string, byuser bool) {
 			msg.PublishUserTimers(t, id, timers)
 		} else {
 			msg.PublishScriptTimers(t, id, timers)
+		}
+	}
+}
+func (t *Titan) HandleCmdDeleteTimer(world string, id string) {
+	w := t.World(world)
+	if w != nil {
+		w.DoDeleteTimer(id)
+	}
+}
+func (t *Titan) HandleCmdLoadTimer(world string, id string) {
+	w := t.World(world)
+	if w != nil {
+		timer := w.GetTimer(id)
+		if timer != nil {
+			msg.PublishTimer(t, world, timer)
 		}
 	}
 }
@@ -292,7 +315,21 @@ func (t *Titan) IsWorldExist(id string) (bool, error) {
 	}
 	return false, err
 }
-
+func (t *Titan) IsNameAvaliable(id string, name string, byuser bool) bool {
+	w := t.World(id)
+	if w != nil {
+		name = world.PrefixedName(name, byuser)
+		return w.HasNamedTimer(name)
+	}
+	return false
+}
+func (t *Titan) DoCreateTimer(id string, timer *world.Timer) bool {
+	w := t.World(id)
+	if w != nil {
+		return w.AddTimer(timer, false)
+	}
+	return false
+}
 func (t *Titan) GetScriptPath() string {
 	return t.Scriptpath
 }

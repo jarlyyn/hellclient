@@ -37,6 +37,32 @@ var data={
     scriptCreateForm:{},
     scriptlistVisible:false,
     scriptlist:null,
+    byuser:false,
+    timerlist:null,
+    usertimerlist:null,
+    scripttimerlist:null,
+    timersVisible:false,
+    timerCreateForm:{},
+    timerCreateFormVisible:false,
+    updatingTimer:null,
+    timerUpdateFormVisible:false,
+    sendto:{
+        0:"游戏",
+        1:"命令",
+        2:"输出",
+        3:"状态栏",
+        4:"记事本",
+        5:"追加到记事本",
+        6:"日志",
+        7:"替换记事本",
+        8:"命令队列",
+        9:"变量",
+        10:"执行",
+        11:"快速行走",
+        12:"脚本",
+        13:"立刻发送",
+        14:"脚本(过滤后)",
+    },
 }
 var vm = new Vue({
     el:"#app",
@@ -75,7 +101,26 @@ var vm = new Vue({
         },
         onHistory:function(command){
             app.send("send",command)
+        },
+        onDeleteTimer:function (id){
+            vm.$confirm('是否要删除该计时器?', '删除', {
+                confirmButtonText: '删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                app.send("deleteTimer",[vm.current,id])
+              }).catch(()=>{
+              })
+        },
+        onUpdateTimer:function (id){
+            app.send("loadTimer",[vm.current,id])
+            vm.updatingTimer={
+                ID:id,
+                Form:{},
+            }
+            vm.timerUpdateFormVisible=true
         }
+        
     }
 })
     return vm

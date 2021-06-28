@@ -110,6 +110,14 @@ func (p *Prophet) onCmdSave(conn connections.OutputConnection, cmd command.Comma
 	p.Titan.HandleCmdSave(msg)
 	return nil
 }
+func (p *Prophet) onCmdSaveScript(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdSaveScript(msg)
+	return nil
+}
 func (p *Prophet) onCmdScriptInfo(conn connections.OutputConnection, cmd command.Command) error {
 	var msg string
 	if json.Unmarshal(cmd.Data(), &msg) != nil {
@@ -158,6 +166,36 @@ func (p *Prophet) onCmdTimers(conn connections.OutputConnection, cmd command.Com
 	p.Titan.HandleCmdTimers(msg[0], msg[1] == "byuser")
 	return nil
 }
+func (p *Prophet) onCmdCreateTimer(conn connections.OutputConnection, cmd command.Command) error {
+	forms.CreateTimer(p.Titan, cmd.Data())
+	return nil
+
+}
+func (p *Prophet) onCmdDeleteTimer(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 2 {
+		return nil
+	}
+	p.Titan.HandleCmdDeleteTimer(msg[0], msg[1])
+	p.Titan.HandleCmdTimers(msg[0], false)
+	p.Titan.HandleCmdTimers(msg[0], true)
+	return nil
+
+}
+func (p *Prophet) onCmdLoadTimer(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 2 {
+		return nil
+	}
+	p.Titan.HandleCmdLoadTimer(msg[0], msg[1])
+	return nil
+}
 
 // func (p *Prophet) onCmdSaveTrigger(conn connections.OutputConnection, cmd command.Command) error {
 // 	forms.SaveTrigger(CurrentGameID(), cmd.Data())
@@ -186,6 +224,11 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("usescript", p.onCmdUseScript)
 	handlers.Register("status", p.onCmdListStatus)
 	handlers.Register("timers", p.onCmdTimers)
+	handlers.Register("createTimer", p.onCmdCreateTimer)
+	handlers.Register("savescript", p.onCmdSaveScript)
+	handlers.Register("deleteTimer", p.onCmdDeleteTimer)
+	handlers.Register("loadTimer", p.onCmdLoadTimer)
+
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)
 

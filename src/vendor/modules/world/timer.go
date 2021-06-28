@@ -29,9 +29,10 @@ type Timer struct {
 	ActionWhenDisconnectd bool
 	Temporary             bool
 	OneShot               bool
-	SpeedWalk             bool
 	Group                 string
 	Variable              string
+	OmitFromLog           bool
+	OmitFromOutput        bool
 	byuser                bool
 }
 
