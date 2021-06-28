@@ -29,6 +29,7 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.AddTimers = a.AddTimers
 	b.DoDeleteTimerByType = a.DoDeleteTimerByType
 	b.GetTimer = a.GetTimer
+	b.DoUpdateTimer = a.DoUpdateTimer
 }
 func (a *Automation) AddTimer(timer *world.Timer, replace bool) bool {
 	return a.Timers.AddTimer(timer, replace)
@@ -92,7 +93,9 @@ func (a *Automation) OnFire(b *bus.Bus, timer *world.Timer) {
 func (a *Automation) DoDeleteTimerByType(byuser bool) {
 	a.Timers.DoDeleteTimerByType(byuser)
 }
-
+func (a *Automation) DoUpdateTimer(ti *world.Timer) int {
+	return a.Timers.DoUpdateTimer(ti)
+}
 func (a *Automation) trySendTo(b *bus.Bus, target int, message string, variable string, omit_from_log bool, omit_from_output bool) bool {
 	if message == "" {
 		return false

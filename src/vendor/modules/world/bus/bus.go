@@ -76,6 +76,7 @@ type Bus struct {
 	DoListTimerNames        func() []string
 	AddHistory              func(string)
 	AddTimer                func(*world.Timer, bool) bool
+	DoUpdateTimer           func(*world.Timer) int
 	GetHistories            func() []string
 	FlushHistories          func()
 	HandleConnReceive       func(msg []byte)
