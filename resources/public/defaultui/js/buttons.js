@@ -51,10 +51,26 @@ onButton.script=function(){
 }
 
 onButton.save=function(){
-    send("save",vm.current)
+    vm.$confirm('原游戏将被覆盖，是否要保存游戏?', '提示', {
+        confirmButtonText: '覆盖',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        send("save",vm.current)
+    }).catch(()=>{
+
+      })
 }
 onButton.savescript=function(){
-    send("savescript",vm.current)
+    vm.$confirm('原脚本将被覆盖，是否要保存脚本?', '提示', {
+        confirmButtonText: '覆盖',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        send("savescript",vm.current)
+        }).catch(()=>{
+
+      })
 }
 
 onButton.createGame=function(){
