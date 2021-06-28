@@ -136,6 +136,9 @@ func (t *Titan) OnCreateScriptSuccess(id string) {
 func (t *Titan) OnCreateTimerSuccess(world string, id string) {
 	msg.PublishCreateTimerSuccess(t, world, id)
 }
+func (t *Titan) OnUpdateTimerSuccess(world string, id string) {
+	msg.PublishUpdateTimerSuccess(t, world, id)
+}
 func (t *Titan) HandleCmdSend(id string, msg string) {
 	w := t.World(id)
 	if w != nil {
@@ -329,6 +332,13 @@ func (t *Titan) DoCreateTimer(id string, timer *world.Timer) bool {
 		return w.AddTimer(timer, false)
 	}
 	return false
+}
+func (t *Titan) DoUpdateTimer(id string, timer *world.Timer) int {
+	w := t.World(id)
+	if w != nil {
+		return w.DoUpdateTimer(timer)
+	}
+	return world.UpdateFailNotFound
 }
 func (t *Titan) GetScriptPath() string {
 	return t.Scriptpath

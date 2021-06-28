@@ -128,4 +128,11 @@ onButton.createTimerSubmit=function(){
     vm.timerCreateForm.SendTo=vm.timerCreateForm.SendTo*1
     send("createTimer",vm.timerCreateForm);
 }
+onButton.updateTimerSubmit=function(){
+    vm.updatingTimer.Form.World=vm.current
+    vm.updatingTimer.Form.ID=vm.updatingTimer.ID
+    vm.updatingTimer.Form.SendTo=vm.updatingTimer.Form.SendTo*1
+    send("updateTimer",vm.updatingTimer.Form);
+}
+
 })

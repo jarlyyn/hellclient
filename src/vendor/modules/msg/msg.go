@@ -28,6 +28,7 @@ const MsgTypeUserTimers = "usertimers"
 const MsgTypeScriptTimers = "scripttimers"
 const MsgTypeCreateTimerSuccess = "createTimerSuccess"
 const MsgTypeTimer = "timer"
+const MsgTypeUpdateTimerSuccess = "updateTimerSuccess"
 
 type Publisher interface {
 	Publish(msg *message.Message)
@@ -108,4 +109,7 @@ func PublishCreateTimerSuccess(p Publisher, world string, id string) {
 }
 func PublishTimer(p Publisher, world string, timer *world.Timer) {
 	p.Publish(New(MsgTypeTimer, world, timer))
+}
+func PublishUpdateTimerSuccess(p Publisher, world string, id string) {
+	p.Publish(New(MsgTypeUpdateTimerSuccess, world, id))
 }

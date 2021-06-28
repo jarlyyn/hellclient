@@ -278,6 +278,22 @@ func (t *Timers) GetTimer(id string) *world.Timer {
 	}
 	return ti.Data
 }
+func (t *Timers) DoUpdateTimer(ti *world.Timer) int {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	old := t.All[ti.ID]
+	if old == nil {
+		return world.UpdateFailNotFound
+	}
+	ti.SetByUser(old.Data.ByUser())
+	if ti.Name != "" && ti.Name != old.Data.Name && t.Named[ti.PrefixedName()] != nil {
+		return world.UpdateFailDuplicateName
+	}
+	t.unloadTimer(old.Data.ID)
+	old.Data = ti
+	t.loadTimer(old)
+	return world.UpdateOK
+}
 func NewTimers() *Timers {
 	timers := &Timers{}
 	timers.All = map[string]*Timer{}
