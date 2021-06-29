@@ -9,10 +9,12 @@ requirejs.config({
         "html-createscriptform":"/public/defaultui/block/createscriptform.html",
         "html-createtimerform":"/public/defaultui/block/createtimerform.html",
         "html-updatetimerform":"/public/defaultui/block/updatetimerform.html",
+        "html-createaliasform":"/public/defaultui/block/createaliasform.html",
         "html-alllines":"/public/defaultui/block/alllines.html",
         "html-notopened":"/public/defaultui/block/notopened.html",
         "html-scriptlist":"/public/defaultui/block/scriptlist.html",
         "html-timerlist":"/public/defaultui/block/timerlist.html",
+        "html-aliaslist":"/public/defaultui/block/aliaslist.html",
         "html-script":"/public/defaultui/block/script.html",
         "main":"/public/defaultui/js/main"
     },
@@ -40,6 +42,10 @@ define(function (require) {
     document.getElementById("createtimerform").innerHTML=htmlcreatetimerform;
     var htmlupdatetimerform=require("text!html-updatetimerform");
     document.getElementById("updatetimerform").innerHTML=htmlupdatetimerform;
+    var htmlaliaslist=require("text!html-aliaslist");
+    document.getElementById("aliaslist").innerHTML=htmlaliaslist;
+    var htmlcreatealiasform=require("text!html-createaliasform");
+    document.getElementById("createaliasform").innerHTML=htmlcreatealiasform;
 
     
     var htmlalllines=require("text!html-alllines");

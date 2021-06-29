@@ -9,12 +9,12 @@ type RegexpMatcher struct {
 	matcher *regexp.Regexp
 }
 
-func (m *RegexpMatcher) Match(line *world.Line) (*MatchResult, error) {
-	result := m.matcher.FindAllString(line.Plain(), -1)
+func (m *RegexpMatcher) Match(message string) (*world.MatchResult, error) {
+	result := m.matcher.FindAllString(message, -1)
 	if result == nil {
 		return nil, nil
 	}
-	r := NewMatchResult()
+	r := world.NewMatchResult()
 	r.List = result
 	names := m.matcher.SubexpNames()
 	for k := range names {

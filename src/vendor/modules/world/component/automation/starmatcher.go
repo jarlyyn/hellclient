@@ -19,10 +19,10 @@ type StarMatcher struct {
 	matcher *starpattern.Pattern
 }
 
-func (m *StarMatcher) Match(line *world.Line) (*MatchResult, error) {
-	ok, found := m.matcher.Find(line.Plain())
+func (m *StarMatcher) Match(message string) (*world.MatchResult, error) {
+	ok, found := m.matcher.Find(message)
 	if ok {
-		r := NewMatchResult()
+		r := world.NewMatchResult()
 		r.List = found
 		return r, nil
 	}

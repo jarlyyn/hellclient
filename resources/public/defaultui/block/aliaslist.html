@@ -1,0 +1,66 @@
+<el-dialog width="80%"  :fullscreen="true"  :title="(byuser?'用户':'脚本')+'别名'" :visible.sync="aliasesVisible">
+    <el-button-group >
+        <el-tooltip class="item" effect="light" content="添加" placement="bottom">
+        <el-button @click="onButton('createAlias')" size="mini" type="primary" icon="el-icon-plus"></el-button>
+        </el-tooltip>
+    </el-button-group >
+  <span v-show="false">
+      {{aliaslist = byuser?useraliaslist:scriptaliaslist}}
+  </span>
+    <div id="aliaslist" v-if="aliaslist!==null">
+        <el-table
+        :data="aliaslist"
+        style="width: 100%">
+        <el-table-column
+        prop="Second"
+        label="时间"
+        >
+        <template slot-scope="scope">
+            <span>{{scope.row.Hour+":"+scope.row.Minute+":"+scope.row.Second}}</span>
+       </template>
+      </el-table-column>
+        <el-table-column
+        prop="AtTime"
+        label="固定时间"
+        >
+        <template slot-scope="scope">
+            <span>{{scope.row.AtTime ? "是":"否"}}</span>
+       </template>
+      </el-table-column>
+        <el-table-column
+          prop="Enabled"
+          label="有效"
+          >
+          <template slot-scope="scope">
+              <span>{{scope.row.Enabled ? "是":"否"}}</span>
+         </template>
+        </el-table-column>
+
+        <el-table-column
+          prop="Name"
+          label="名称"
+          >
+        </el-table-column>
+        <el-table-column
+        prop="Group"
+        label="分组"
+        >
+      </el-table-column>
+        <el-table-column
+          prop="Send"
+          label="发送"
+          >
+        </el-table-column>
+    <el-table-column
+    fixed="right"
+    label="操作"
+    width="100">
+    <template slot-scope="scope">
+      <el-button @click="onUpdateAlias(scope.row.ID)" type="text" size="small">编辑</el-button>
+      <el-button @click="onDeleteAlias(scope.row.ID)" type="text" size="small">删除</el-button>
+    </template>
+  </el-table-column>
+
+      </el-table>
+    </div>
+</el-dialog>

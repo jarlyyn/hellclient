@@ -46,6 +46,15 @@ var data={
     timerCreateFormVisible:false,
     updatingTimer:null,
     timerUpdateFormVisible:false,
+    aliaslist:null,
+    useraliaslist:null,
+    scriptaliaslist:null,
+    aliasesVisible:false,
+    aliasCreateForm:{},
+    aliasCreateFormVisible:false,
+    updatingAlias:null,
+    aliasUpdateFormVisible:false,
+
     sendto:{
         0:"游戏",
         1:"命令",
