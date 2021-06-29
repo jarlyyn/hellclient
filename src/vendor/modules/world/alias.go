@@ -48,3 +48,25 @@ func CreateAlias() *Alias {
 		ID: uniqueid.MustGenerateID(),
 	}
 }
+
+type Aliases []*Alias
+
+// Len is the number of elements in the collection.
+func (a Aliases) Len() int {
+	return len(a)
+}
+
+// Less reports whether the element with index i
+func (a Aliases) Less(i, j int) bool {
+	if a[i].Sequence != a[j].Sequence {
+		return a[i].Sequence < a[j].Sequence
+	}
+
+	return a[i].ID < a[j].ID
+
+}
+
+// Swap swaps the elements with indexes i and j.
+func (a Aliases) Swap(i, j int) {
+	a[i], a[j] = a[j], a[i]
+}

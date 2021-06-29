@@ -70,6 +70,10 @@ func (s *Script) save(b *bus.Bus) error {
 	sort.Sort(world.Timers(timers))
 	s.Data.Timers = timers
 
+	aliases := b.GetAliasesByType(false)
+	sort.Sort(world.Aliases(aliases))
+	s.Data.Aliases = aliases
+
 	data, err := s.encodeScript()
 	if err != nil {
 		return err
@@ -98,7 +102,11 @@ func (s *Script) open(b *bus.Bus) error {
 	for k := range s.Data.Timers {
 		s.Data.Timers[k].SetByUser(false)
 	}
+	for k := range s.Data.Aliases {
+		s.Data.Aliases[k].SetByUser(false)
+	}
 	b.AddTimers(s.Data.Timers)
+	b.AddAliases(s.Data.Aliases)
 	return nil
 }
 func (s *Script) Unload(b *bus.Bus) {

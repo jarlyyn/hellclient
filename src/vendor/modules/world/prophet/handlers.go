@@ -155,6 +155,15 @@ func (p *Prophet) onCmdUseScript(conn connections.OutputConnection, cmd command.
 	p.Titan.HandleCmdScriptInfo(msg[0])
 	return nil
 }
+
+func (p *Prophet) onCmdReloadScript(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdReloadScript(msg)
+	return nil
+}
 func (p *Prophet) onCmdTimers(conn connections.OutputConnection, cmd command.Command) error {
 	var msg []string
 	if json.Unmarshal(cmd.Data(), &msg) != nil {
@@ -201,12 +210,49 @@ func (p *Prophet) onCmdUpdateTimer(conn connections.OutputConnection, cmd comman
 	return nil
 
 }
-func (p *Prophet) onCmdReloadScript(conn connections.OutputConnection, cmd command.Command) error {
-	var msg string
+func (p *Prophet) onCmdAliases(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
 	if json.Unmarshal(cmd.Data(), &msg) != nil {
 		return nil
 	}
-	p.Titan.HandleCmdReloadScript(msg)
+	if len(msg) < 2 {
+		return nil
+	}
+	p.Titan.HandleCmdAliases(msg[0], msg[1] == "byuser")
+	return nil
+}
+func (p *Prophet) onCmdCreateAlias(conn connections.OutputConnection, cmd command.Command) error {
+	forms.CreateAlias(p.Titan, cmd.Data())
+	return nil
+
+}
+func (p *Prophet) onCmdDeleteAlias(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 2 {
+		return nil
+	}
+	p.Titan.HandleCmdDeleteAlias(msg[0], msg[1])
+	p.Titan.HandleCmdAliases(msg[0], false)
+	p.Titan.HandleCmdAliases(msg[0], true)
+	return nil
+
+}
+func (p *Prophet) onCmdLoadAlias(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 2 {
+		return nil
+	}
+	p.Titan.HandleCmdLoadAlias(msg[0], msg[1])
+	return nil
+}
+func (p *Prophet) onCmdUpdateAlias(conn connections.OutputConnection, cmd command.Command) error {
+	forms.UpdateAlias(p.Titan, cmd.Data())
 	return nil
 
 }
@@ -236,14 +282,19 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("createScript", p.onCmdCreateScript)
 	handlers.Register("listScriptinfo", p.onCmdListScriptinfo)
 	handlers.Register("usescript", p.onCmdUseScript)
+	handlers.Register("savescript", p.onCmdSaveScript)
+	handlers.Register("reloadScript", p.onCmdReloadScript)
 	handlers.Register("status", p.onCmdListStatus)
 	handlers.Register("timers", p.onCmdTimers)
 	handlers.Register("createTimer", p.onCmdCreateTimer)
-	handlers.Register("savescript", p.onCmdSaveScript)
 	handlers.Register("deleteTimer", p.onCmdDeleteTimer)
 	handlers.Register("loadTimer", p.onCmdLoadTimer)
 	handlers.Register("updateTimer", p.onCmdUpdateTimer)
-	handlers.Register("reloadScript", p.onCmdReloadScript)
+	handlers.Register("aliases", p.onCmdAliases)
+	handlers.Register("createAlias", p.onCmdCreateAlias)
+	handlers.Register("deleteAlias", p.onCmdDeleteAlias)
+	handlers.Register("loadAlias", p.onCmdLoadAlias)
+	handlers.Register("updateAlias", p.onCmdUpdateAlias)
 
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)

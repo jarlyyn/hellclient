@@ -10,6 +10,8 @@ requirejs.config({
         "html-createtimerform":"/public/defaultui/block/createtimerform.html",
         "html-updatetimerform":"/public/defaultui/block/updatetimerform.html",
         "html-createaliasform":"/public/defaultui/block/createaliasform.html",
+        "html-updatealiasform":"/public/defaultui/block/updatealiasform.html",
+
         "html-alllines":"/public/defaultui/block/alllines.html",
         "html-notopened":"/public/defaultui/block/notopened.html",
         "html-scriptlist":"/public/defaultui/block/scriptlist.html",
@@ -46,7 +48,10 @@ define(function (require) {
     document.getElementById("aliaslist").innerHTML=htmlaliaslist;
     var htmlcreatealiasform=require("text!html-createaliasform");
     document.getElementById("createaliasform").innerHTML=htmlcreatealiasform;
-
+    var htmlupdatealiasform=require("text!html-updatealiasform");
+    document.getElementById("updatealiasform").innerHTML=htmlupdatealiasform;
+  
+    
     
     var htmlalllines=require("text!html-alllines");
 

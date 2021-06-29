@@ -121,6 +121,9 @@ func (c *Config) Encode(bus *bus.Bus) ([]byte, error) {
 	timers := bus.GetTimersByType(true)
 	sort.Sort(world.Timers(timers))
 	c.Data.Timers = timers
+	aliases := bus.GetAliasesByType(true)
+	sort.Sort(world.Aliases(aliases))
+	c.Data.Aliases = aliases
 	buf := bytes.NewBuffer(nil)
 	err := toml.NewEncoder(buf).Encode(c.Data)
 	if err != nil {
@@ -139,8 +142,12 @@ func (c *Config) Decode(bus *bus.Bus, data []byte) error {
 	for k := range configdata.Timers {
 		configdata.Timers[k].SetByUser(true)
 	}
+	for k := range configdata.Aliases {
+		configdata.Aliases[k].SetByUser(true)
+	}
 	c.Data = configdata
 	bus.AddTimers(c.Data.Timers)
+	bus.AddAliases(c.Data.Aliases)
 	return nil
 }
 
