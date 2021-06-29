@@ -293,10 +293,28 @@ func (a *Aliases) GetAliasesByType(byuser bool) []*world.Alias {
 }
 
 func (a *Aliases) GetAliasOption(name string, option string) (string, bool, bool) {
-	return "", false, false
+	a.Locker.Lock()
+	defer a.Locker.Unlock()
+	al := a.Named[name]
+	if al == nil {
+		return "", false, false
+	}
+	result, ok := al.Option(option)
+	return result, ok, true
 }
 func (a *Aliases) SetAliasOption(name string, option string, value string) (bool, bool, bool) {
-	return false, false, false
+	a.Locker.Lock()
+	defer a.Locker.Unlock()
+	al := a.Named[name]
+	if al == nil {
+		return false, false, false
+	}
+	result, ok := al.SetOption(option, value)
+	if result && ok {
+		a.unloadAlias(al.Data.ID)
+		a.loadAlias(al)
+	}
+	return result, ok, true
 }
 func (a *Aliases) HasNamedAlias(name string) bool {
 	a.Locker.Lock()

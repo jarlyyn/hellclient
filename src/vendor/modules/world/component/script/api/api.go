@@ -353,3 +353,94 @@ func (a *API) SetTimerOption(name string, option string, value string) int {
 	}
 	return EOK
 }
+
+func (a *API) AddAlias(aliasName string, match string, responseText string, flags int, scriptName string) int {
+	if match == "" {
+		return EAliasCannotBeEmpty
+	}
+	alias := world.CreateAlias()
+	alias.Name = aliasName
+	alias.Match = match
+	alias.Send = responseText
+	alias.Script = scriptName
+	alias.Enabled = flags&world.AliasFlagEnabled != 0
+	alias.KeepEvaluating = flags&world.AliasFlagKeepEvaluating != 0
+	alias.IgnoreCase = flags&world.AliasFlagIgnoreAliasCase != 0
+	alias.OmitFromLog = flags&world.AliasFlagOmitFromLogFile != 0
+	alias.Regexp = flags&world.AliasFlagRegularExpression != 0
+	alias.ExpandVariables = flags&world.AliasFlagExpandVariables != 0
+	if flags&world.AliasFlagAliasSpeedWalk != 0 {
+		alias.SendTo = world.SendtoSpeedwalk
+	}
+	if flags&world.AliasFlagAliasQueue != 0 {
+		alias.SendTo = world.SendtoCommandqueue
+	}
+	alias.Menu = flags&world.AliasFlagAliasMenu != 0
+	alias.SetByUser(false)
+	ok := a.Bus.AddAlias(alias, flags&world.AliasFlagReplace != 0)
+	if !ok {
+		return EAliasAlreadyExists
+	}
+	return EOK
+}
+
+func (a *API) DeleteAlias(name string) int {
+	ok := a.Bus.DoDeleteAlias(name)
+	if !ok {
+		return EAliasNotFound
+	}
+	return EOK
+}
+func (a *API) DeleteAliasGroup(group string) int {
+	return a.Bus.DoDeleteAliasGroup(group)
+}
+func (a *API) EnableAlias(name string, enabled bool) int {
+	ok := a.Bus.DoEnableAliasByName(name, enabled)
+	if !ok {
+		return EAliasNotFound
+	}
+	return EOK
+}
+
+func (a *API) EnableAliasGroup(group string, enabled bool) int {
+	return a.Bus.DoEnableAliasGroup(group, enabled)
+}
+
+func (a *API) GetAliasList() []string {
+	return a.Bus.DoListAliasNames()
+}
+
+func (a *API) GetAliasOption(name string, option string) (string, int) {
+	name = world.PrefixedName(name, false)
+	result, ofound, tfound := a.Bus.GetAliasOption(name, option)
+	if !tfound {
+		return "", ETimerNotFound
+	}
+	if !ofound {
+		return "", EOptionOutOfRange
+	}
+	return result, EOK
+
+}
+
+func (a *API) IsAlias(name string) int {
+	if !a.Bus.HasNamedAlias(name) {
+		return EAliasNotFound
+	}
+	return EOK
+}
+
+func (a *API) SetAliasOption(name string, option string, value string) int {
+	name = world.PrefixedName(name, false)
+	result, ofound, tfound := a.Bus.SetAliasOption(name, option, value)
+	if !tfound {
+		return ETimerNotFound
+	}
+	if !ofound {
+		return EOK
+	}
+	if !result {
+		return ETimeInvalid
+	}
+	return EOK
+}

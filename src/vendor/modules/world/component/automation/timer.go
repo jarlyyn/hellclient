@@ -133,11 +133,6 @@ func (t *Timer) SetOption(name string, val string) (bool, bool) {
 		return true, true
 	case "enabled":
 		t.Data.Enabled = (val == world.StringYes)
-		if t.Data.Enabled {
-			t.start()
-		} else {
-			t.stop()
-		}
 		return true, true
 	case "group":
 		t.Data.Group = val
@@ -156,9 +151,6 @@ func (t *Timer) SetOption(name string, val string) (bool, bool) {
 			return false, true
 		}
 		t.Data.Minute = i
-		return true, true
-	case "name":
-		t.Data.Name = val
 		return true, true
 	case "offset_hour":
 		return false, false

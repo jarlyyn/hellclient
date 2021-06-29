@@ -18,6 +18,7 @@ func newLuaInitializer(b *bus.Bus) *lua51plugin.Initializer {
 		lua51plugin.ModuleOpenlib,
 		ModuleConstsSendTo,
 		ModuleConstsTimerFlag,
+		ModuleConstsAliasFlag,
 		NewAPIModule(b),
 	}
 	return i
