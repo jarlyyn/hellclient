@@ -31,7 +31,7 @@ type ScriptData struct {
 	OnDisconnect string
 	Triggers     []*Trigger
 	Timers       []*Timer
-	Alias        []*Alias
+	Aliases      []*Alias
 }
 
 func (d *ScriptData) ConvertInfo(id string) *ScriptInfo {

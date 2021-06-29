@@ -128,8 +128,25 @@ var vm = new Vue({
                 Form:{},
             }
             vm.timerUpdateFormVisible=true
+        },
+        onDeleteAlias:function (id){
+            vm.$confirm('是否要删除该别名?', '删除', {
+                confirmButtonText: '删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                app.send("deleteAlias",[vm.current,id])
+              }).catch(()=>{
+              })
+        },
+        onUpdateAlias:function (id){
+            app.send("loadAlias",[vm.current,id])
+            vm.updatingAlias={
+                ID:id,
+                Form:{},
+            }
+            vm.aliasUpdateFormVisible=true
         }
-        
     }
 })
     return vm

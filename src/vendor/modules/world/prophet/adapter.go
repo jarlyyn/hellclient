@@ -29,5 +29,10 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("createTimerSuccess", p.newRoomAdapter("createTimerSuccess"))
 	adapter.Register("timer", p.newRoomAdapter("timer"))
 	adapter.Register("updateTimerSuccess", p.newRoomAdapter("updateTimerSuccess"))
+	adapter.Register("useraliases", p.newRoomAdapter("useraliases"))
+	adapter.Register("scriptaliases", p.newRoomAdapter("scriptaliases"))
+	adapter.Register("createAliasSuccess", p.newRoomAdapter("createAliasSuccess"))
+	adapter.Register("alias", p.newRoomAdapter("alias"))
+	adapter.Register("updateAliasSuccess", p.newRoomAdapter("updateAliasSuccess"))
 
 }

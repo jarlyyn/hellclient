@@ -104,7 +104,7 @@ func UpdateTimer(t *titan.Titan, data []byte) {
 		case world.UpdateFailDuplicateName:
 			form.AddError("Name", "名称重复")
 		case world.UpdateFailNotFound:
-			form.AddError("ID", "未找打")
+			form.AddError("ID", "未找到")
 		}
 		t.OnCreateFail(form.Errors())
 		return

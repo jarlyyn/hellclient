@@ -40,7 +40,7 @@ type WorldData struct {
 	Trusted     herbplugin.Trusted
 	Triggers    []*Trigger
 	Timers      []*Timer
-	Alias       []*Alias
+	Aliases     []*Alias
 }
 
 func NewWorldData() *WorldData {

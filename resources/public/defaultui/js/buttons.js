@@ -186,7 +186,13 @@ onButton.createAlias=function(){
 onButton.createAliasSubmit=function(){
     vm.aliasCreateForm.World=vm.current
     vm.aliasCreateForm.ByUser=vm.byuser
-    vm.aliasCreateForm.SendTo=vm.timerCreateForm.SendTo*1
+    vm.aliasCreateForm.SendTo=vm.aliasCreateForm.SendTo*1
     send("createAlias",vm.aliasCreateForm);
+}
+onButton.updateAliasSubmit=function(){
+    vm.updatingAlias.Form.World=vm.current
+    vm.updatingAlias.Form.ID=vm.updatingAlias.ID
+    vm.updatingAlias.Form.SendTo=vm.updatingAlias.Form.SendTo*1
+    send("updateAlias",vm.updatingAlias.Form);
 }
 })

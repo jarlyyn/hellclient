@@ -116,4 +116,23 @@ handlers.timer=function(data){
     }
 }
 
+handlers.useraliases=function(data){
+    vm.useraliaslist=data
+}
+handlers.scriptaliases=function(data){
+    vm.scriptaliaslist=data
+}
+handlers.createAliasSuccess=function(data){
+    vm.aliasCreateFormVisible=false
+}
+handlers.updateAliasSuccess=function(data){
+    vm.aliasUpdateFormVisible=false
+}
+handlers.alias=function(data){
+    if (vm.updatingAlias&&vm.updatingAlias.ID==data.ID){
+        vm.updatingAlias.Form=data
+    }
+}
+
+
 })

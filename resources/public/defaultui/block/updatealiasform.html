@@ -1,0 +1,54 @@
+<el-dialog width="80%"  :fullscreen="true" title="编辑别名" :visible.sync="aliasUpdateFormVisible">
+    <div v-if="createFail">
+            <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
+        
+    </div> 
+    <div v-if="updatingAlias && updatingAlias.Form">
+
+        <el-form :model="updatingAlias.Form" label-width="120px">
+            <el-form-item label="别名"><el-input v-model="updatingAlias.Form.Match"></el-input></el-form-item>
+                <el-form-item label="名称" ><el-input v-model="updatingAlias.Form.Name"></el-input></el-form-item>
+                <el-form-item label="发送到" >
+                    <el-select v-model="updatingAlias.Form.SendTo" placeholder="请选择">
+                        <el-option
+                          v-for="(label,index) in sendto"
+                          :key="index"
+                          :label="index+'.'+label"
+                          :value="index">
+                        </el-option>
+                      </el-select>
+                    
+                </el-form-item>
+            <el-form-item label="发送" >
+                <el-input
+                type="textarea"
+                :autosize="{ minRows: 4}"
+                placeholder="请输入内容"
+                v-model="updatingAlias.Form.Send">
+              </el-input>
+                          </el-form-item>
+                <el-form-item label="优先级" ><el-input v-model="updatingAlias.Form.Sequence"></el-input></el-form-item>
+                <el-form-item label="调用脚本函数" ><el-input v-model="updatingAlias.Form.Script"></el-input></el-form-item>
+                <el-form-item label="分组名" ><el-input v-model="updatingAlias.Form.Group" ></el-input></el-form-item>
+                <el-form-item v-if="updatingAlias.Form.SendTo==9"label="变量名" ><el-input v-model="updatingAlias.Form.Variable" ></el-input></el-form-item>
+
+                <el-form-item label="选项" >
+                    <div>
+                    <el-row><el-checkbox v-model="updatingAlias.Form.IgnoreCase">不区分大小写</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingAlias.Form.Enabled">启用</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingAlias.Form.Regexp">正则表达式</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingAlias.Form.KeepEvaluating">继续执行</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingAlias.Form.ExpandVariables">展开变量</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingAlias.Form.OneShot">一次性</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingAlias.Form.Temporary">临时</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingAlias.Form.OmitFromOutput">不出现在输出</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingAlias.Form.OmitFromLog">不出现在日志</el-checkbox></el-row>
+                </div>
+                </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="updatingAlias.FormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="onButton('updateAliasSubmit')">确 定</el-button>
+        </div>
+    </div>
+      </el-dialog>              
