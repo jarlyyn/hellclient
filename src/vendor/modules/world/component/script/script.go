@@ -205,6 +205,13 @@ func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
 		s.Engine.OnTimer(b, timer)
 	}
 }
+func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
+	s.Locker.Lock()
+	defer s.Locker.Unlock()
+	if s.Engine != nil {
+		s.Engine.OnAlias(b, message, alias, result)
+	}
+}
 func (s *Script) Run(b *bus.Bus, cmd string) {
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
@@ -219,6 +226,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.DoUseScript = b.WrapHandleString(s.UseScript)
 	b.GetScriptPluginOptions = b.WrapGetScriptPluginOptions(s.PluginOptions)
 	b.DoSendTimerToScript = b.WrapHandleTimer(s.SendTimer)
+	b.DoSendAliasToScript = b.WrapHandleAlias(s.SendAlias)
 	b.DoRunScript = b.WrapHandleString(s.Run)
 	b.GetStatus = s.GetStatus
 	b.SetStatus = b.WrapHandleString(s.SetStatus)

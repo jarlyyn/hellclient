@@ -23,7 +23,7 @@ type UpdateAliasForm struct {
 	Enabled          bool
 	Match            string
 	Send             string
-	ScriptName       string
+	Script           string
 	SendTo           int
 	Sequence         int
 	ExpandVariables  bool
@@ -59,7 +59,7 @@ func (f *UpdateAliasForm) Validate() error {
 	f.ValidateFieldf(f.SendTo >= world.SendToMin && f.SendTo <= world.SendToMin, "SendTo", "发送到无效")
 	f.ValidateFieldf(f.Match != "", "Match", "别名无效")
 	if !f.HasError() {
-		f.ValidateFieldf(f.Name == "" || titan.Pangu.IsAliasNameAvaliable(f.World, f.Name, f.ByUser), "Name", "名称不可用")
+		f.ValidateFieldf(f.Name == "" || world.IDRegexp.MatchString(f.Name), "Name", "名称不可用")
 	}
 	return nil
 }
@@ -92,7 +92,7 @@ func UpdateAlias(t *titan.Titan, data []byte) {
 	alias.Enabled = form.Enabled
 	alias.Match = form.Match
 	alias.Send = form.Send
-	alias.ScriptName = form.ScriptName
+	alias.Script = form.Script
 	alias.SendTo = form.SendTo
 	alias.Sequence = form.Sequence
 	alias.Variable = form.Variable

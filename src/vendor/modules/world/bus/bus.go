@@ -57,26 +57,26 @@ type Bus struct {
 	DoPrintSystem          func(msg string)
 	DoDiscardQueue         func() int
 
-	DoSendTimerToScript     func(*world.Timer)
-	DoDeleteTimer           func(string) bool
-	DoDeleteTimerByName     func(string) bool
-	DoDeleteTemporaryTimers func() int
-	DoDeleteTimerGroup      func(string) int
-	DoEnableTimerByName     func(string, bool) bool
-	DoEnableTimerGroup      func(string, bool) int
-	DoResetNamedTimer       func(string) bool
-	GetTimer                func(string) *world.Timer
-	GetTimersByType         func(bool) []*world.Timer
-	DoDeleteTimerByType     func(bool)
-	AddTimers               func(ts []*world.Timer)
-	DoResetTimers           func()
-	GetTimerOption          func(name string, option string) (string, bool, bool)
-	SetTimerOption          func(name string, option string, value string) (bool, bool, bool)
-	HasNamedTimer           func(string) bool
-	DoListTimerNames        func() []string
-	AddTimer                func(*world.Timer, bool) bool
-	DoUpdateTimer           func(*world.Timer) int
-
+	DoSendTimerToScript      func(*world.Timer)
+	DoDeleteTimer            func(string) bool
+	DoDeleteTimerByName      func(string) bool
+	DoDeleteTemporaryTimers  func() int
+	DoDeleteTimerGroup       func(string) int
+	DoEnableTimerByName      func(string, bool) bool
+	DoEnableTimerGroup       func(string, bool) int
+	DoResetNamedTimer        func(string) bool
+	GetTimer                 func(string) *world.Timer
+	GetTimersByType          func(bool) []*world.Timer
+	DoDeleteTimerByType      func(bool)
+	AddTimers                func(ts []*world.Timer)
+	DoResetTimers            func()
+	GetTimerOption           func(name string, option string) (string, bool, bool)
+	SetTimerOption           func(name string, option string, value string) (bool, bool, bool)
+	HasNamedTimer            func(string) bool
+	DoListTimerNames         func() []string
+	AddTimer                 func(*world.Timer, bool) bool
+	DoUpdateTimer            func(*world.Timer) int
+	DoSendAliasToScript      func(message string, alias *world.Alias, result *world.MatchResult)
 	DoDeleteAlias            func(string) bool
 	DoDeleteAliasByName      func(string) bool
 	DoDeleteTemporaryAliases func() int
@@ -224,6 +224,12 @@ func (b *Bus) WrapHandleTimer(f func(bus *Bus, timer *world.Timer)) func(*world.
 		f(b, timer)
 	}
 }
+func (b *Bus) WrapHandleAlias(f func(b *Bus, message string, alias *world.Alias, result *world.MatchResult)) func(message string, alias *world.Alias, result *world.MatchResult) {
+	return func(message string, alias *world.Alias, result *world.MatchResult) {
+		f(b, message, alias, result)
+	}
+}
+
 func (b *Bus) WrapHandleStringForBool(f func(bus *Bus, str string) bool) func(str string) bool {
 	return func(str string) bool {
 		return f(b, str)

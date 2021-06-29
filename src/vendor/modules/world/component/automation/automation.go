@@ -65,30 +65,24 @@ func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {
 			continue
 		}
 		var send string
-		var target int
-		var variable string
-		var omitlog bool
-		var omitoutput bool
-		var keep bool
+		var data world.Alias
 		v.Locker.Lock()
-
 		if v.Data.Send != "" {
-			target = v.Data.SendTo
-			variable = v.Data.Variable
-			omitlog = v.Data.OmitFromLog
-			omitoutput = v.Data.OmitFromOutput
-			keep = v.Data.KeepEvaluating
+			data = *v.Data
 			rl := r.ReplaceList(v.Data.Name)
 			if v.Data.ExpandVariables {
 				rl = append(rl, BuildParamsReplacer(b)...)
 			}
-			send = strings.NewReplacer(rl...).Replace(v.Data.Send)
+			send = strings.NewReplacer(rl...).Replace(data.Send)
 		}
 		v.Locker.Unlock()
 		if send != "" {
-			a.trySendTo(b, target, send, variable, omitlog, omitoutput)
+			a.trySendTo(b, data.SendTo, send, data.Variable, data.OmitFromLog, data.OmitFromOutput)
 		}
-		if !keep {
+		if data.Script != "" {
+			b.DoSendAliasToScript(message, &data, r)
+		}
+		if !data.KeepEvaluating {
 			return true
 		}
 	}
@@ -96,6 +90,9 @@ func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {
 }
 
 func (a *Automation) DoExecute(b *bus.Bus, message string) {
+	if message == "" {
+		return
+	}
 	if !a.MatchAlias(b, message) {
 		cmd := world.CreateCommand(message)
 		cmd.History = true

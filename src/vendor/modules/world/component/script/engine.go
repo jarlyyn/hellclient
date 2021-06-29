@@ -11,7 +11,7 @@ type Engine interface {
 	OnConnect(*bus.Bus)
 	OnDisconnect(*bus.Bus)
 	OnTrigger(*bus.Bus)
-	OnAlias(*bus.Bus)
+	OnAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult)
 	OnTimer(b *bus.Bus, timer *world.Timer)
 	Run(*bus.Bus, string)
 }

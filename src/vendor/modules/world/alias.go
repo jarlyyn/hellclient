@@ -8,7 +8,7 @@ type Alias struct {
 	Enabled          bool
 	Match            string
 	Send             string
-	ScriptName       string
+	Script           string
 	SendTo           int
 	Sequence         int
 	ExpandVariables  bool
