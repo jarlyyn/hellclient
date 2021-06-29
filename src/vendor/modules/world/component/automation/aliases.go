@@ -138,7 +138,7 @@ func (a *Aliases) Queue() AliasQueue {
 	if !a.Updated {
 		return a.cachedqueue
 	}
-	q := make(AliasQueue, len(a.All))
+	q := make(AliasQueue, 0, len(a.All))
 	for _, v := range a.All {
 		q = append(q, v)
 	}

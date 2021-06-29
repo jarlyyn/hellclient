@@ -16,14 +16,8 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 	b.HandleConnPrompt = b.WrapHandleBytes(c.onPrompt)
 	b.DoPrint = b.WrapHandleString(c.DoPrint)
 	b.DoPrintSystem = b.WrapHandleString(c.DoPrintSystem)
-	b.DoExecute = b.WrapHandleString(c.Execute)
 }
 
-func (c *Converter) Execute(b *bus.Bus, message string) {
-	cmd := world.CreateCommand(message)
-	cmd.History = true
-	c.Send(b, cmd)
-}
 func (c *Converter) onPrompt(bus *bus.Bus, msg []byte) {
 	line := c.ConvertToLine(bus, msg)
 	if line != nil {

@@ -50,7 +50,7 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.DoListAliasNames = a.DoListAliasNames
 	b.AddAlias = a.AddAlias
 	b.DoUpdateAlias = a.DoUpdateAlias
-
+	b.DoExecute = b.WrapHandleString(a.DoExecute)
 }
 func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {
 	var matched bool
@@ -93,6 +93,14 @@ func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {
 		}
 	}
 	return matched
+}
+
+func (a *Automation) DoExecute(b *bus.Bus, message string) {
+	if !a.MatchAlias(b, message) {
+		cmd := world.CreateCommand(message)
+		cmd.History = true
+		b.DoSend(cmd)
+	}
 }
 func (a *Automation) AddTimer(timer *world.Timer, replace bool) bool {
 	return a.Timers.AddTimer(timer, replace)
