@@ -82,6 +82,9 @@ func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {
 		if data.Script != "" {
 			b.DoSendAliasToScript(message, &data, r)
 		}
+		if data.OneShot {
+			a.Aliases.RemoveAlias(data.ID)
+		}
 		if !data.KeepEvaluating {
 			return true
 		}

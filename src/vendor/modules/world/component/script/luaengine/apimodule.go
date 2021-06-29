@@ -74,6 +74,16 @@ func (a *luaapi) InstallAPIs(l *lua.LState) {
 	l.SetGlobal("ResetTimers", l.NewFunction(a.ResetTimers))
 	l.SetGlobal("GetTimerOption", l.NewFunction(a.GetTimerOption))
 	l.SetGlobal("SetTimerOption", l.NewFunction(a.SetTimerOption))
+	l.SetGlobal("AddAlias", l.NewFunction(a.AddAlias))
+	l.SetGlobal("DeleteAlias", l.NewFunction(a.DeleteAlias))
+	l.SetGlobal("DeleteTemporaryAliases", l.NewFunction(a.DeleteTemporaryAliases))
+	l.SetGlobal("DeleteAliasGroup", l.NewFunction(a.DeleteAliasGroup))
+	l.SetGlobal("EnableAlias", l.NewFunction(a.EnableAlias))
+	l.SetGlobal("EnableAliasGroup", l.NewFunction(a.EnableAliasGroup))
+	l.SetGlobal("GetAliasList", l.NewFunction(a.GetAliasList))
+	l.SetGlobal("IsAlias", l.NewFunction(a.IsAlias))
+	l.SetGlobal("GetAliasOption", l.NewFunction(a.GetAliasOption))
+	l.SetGlobal("SetAliasOption", l.NewFunction(a.SetAliasOption))
 
 }
 func (a *luaapi) Note(L *lua.LState) int {
@@ -387,6 +397,99 @@ func (a *luaapi) SetTimerOption(L *lua.LState) int {
 	return 1
 }
 
+func (a *luaapi) AddAlias(L *lua.LState) int {
+	name := L.ToString(1)
+	match := L.ToString(2)
+	send := L.ToString(3)
+	flags := int(L.ToNumber(4))
+	script := L.ToString(5)
+	L.Push(lua.LNumber(a.API.AddAlias(name, match, send, flags, script)))
+	return 1
+}
+func (a *luaapi) DeleteAlias(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.DeleteAlias(name)))
+	return 1
+}
+func (a *luaapi) DeleteTemporaryAliases(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.DeleteTemporaryTimers()))
+	return 1
+
+}
+func (a *luaapi) DeleteAliasGroup(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.DeleteAliasGroup(name)))
+	return 1
+}
+
+func (a *luaapi) EnableAlias(L *lua.LState) int {
+	name := L.ToString(1)
+	enabled := L.ToBool(2)
+	L.Push(lua.LNumber(a.API.EnableAlias(name, enabled)))
+	return 1
+}
+func (a *luaapi) EnableAliasGroup(L *lua.LState) int {
+	group := L.ToString(1)
+	enabled := L.ToBool(2)
+	L.Push(lua.LNumber(a.API.EnableAliasGroup(group, enabled)))
+	return 1
+}
+
+func (a *luaapi) GetAliasList(L *lua.LState) int {
+	list := a.API.GetAliasList()
+	reuslt := L.NewTable()
+	for _, v := range list {
+		reuslt.Append(lua.LString(v))
+	}
+	L.Push(reuslt)
+	return 1
+}
+func (a *luaapi) IsAlias(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.IsAlias(name)))
+	return 1
+}
+
+func (a *luaapi) GetAliasOption(L *lua.LState) int {
+	name := L.ToString(1)
+	option := L.ToString(2)
+	result, code := a.API.GetTimerOption(name, option)
+	if code != api.EOK {
+		L.Push(lua.LNil)
+	} else {
+		switch option {
+		case "echo_alias", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "regexp", "omit_from_log", "omit_from_output", "one_shot":
+			L.Push(lua.LBool(result == world.StringYes))
+		case "group", "name", "match", "script", "send", "variable":
+			L.Push(lua.LString(result))
+		case "send_to", "user", "sequence":
+			i, _ := strconv.Atoi(result)
+			L.Push(lua.LNumber(i))
+		default:
+			L.Push(lua.LNil)
+		}
+	}
+	return 1
+}
+func (a *luaapi) SetAliasOption(L *lua.LState) int {
+	name := L.ToString(1)
+	option := L.ToString(2)
+	var value string
+	switch option {
+	case "echo_alias", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "omit_from_log", "omit_from_output", "one_shot", "regexp":
+		if L.ToBool(3) {
+			value = world.StringYes
+		} else {
+			value = ""
+		}
+	case "group", "name", "match", "script", "send", "variable":
+		value = L.ToString(3)
+	case "send_to", "user", "sequence":
+		value = L.ToString(3)
+	}
+	L.Push(lua.LNumber(a.API.SetTimerOption(name, option, value)))
+	return 1
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

@@ -9,7 +9,31 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
-var ModuleConstsTimerFlag = herbplugin.CreateModule("sendto",
+var ModuleConstsAliasFlag = herbplugin.CreateModule("aliasflag",
+	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
+		next(ctx, plugin)
+		luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
+		l := luapluing.LState
+		consts := l.NewTable()
+		consts.RawSetString("Enabled", lua.LNumber(world.AliasFlagEnabled))
+		consts.RawSetString("KeepEvaluating", lua.LNumber(world.AliasFlagKeepEvaluating))
+		consts.RawSetString("IgnoreAliasCase", lua.LNumber(world.AliasFlagIgnoreAliasCase))
+		consts.RawSetString("OmitFromLogFile", lua.LNumber(world.AliasFlagOmitFromLogFile))
+		consts.RawSetString("RegularExpression", lua.LNumber(world.AliasFlagRegularExpression))
+		consts.RawSetString("ExpandVariables", lua.LNumber(world.AliasFlagExpandVariables))
+		consts.RawSetString("Replace", lua.LNumber(world.AliasFlagReplace))
+		consts.RawSetString("AliasSpeedWalk", lua.LNumber(world.AliasFlagAliasSpeedWalk))
+		consts.RawSetString("AliasQueue", lua.LNumber(world.AliasFlagAliasQueue))
+		consts.RawSetString("AliasMenu", lua.LNumber(world.AliasFlagAliasMenu))
+		consts.RawSetString("Temporary", lua.LNumber(world.AliasFlagTemporary))
+
+		l.SetGlobal("alias_flag", consts)
+		next(ctx, plugin)
+	},
+	nil,
+	nil,
+)
+var ModuleConstsTimerFlag = herbplugin.CreateModule("timerflag",
 	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
 		next(ctx, plugin)
 		luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
