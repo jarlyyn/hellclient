@@ -31,6 +31,7 @@ type UpdateAliasForm struct {
 	OneShot          bool
 	Regexp           bool
 	Group            string
+	Variable         string
 	IgnoreCase       bool
 	KeepEvaluating   bool
 	Menu             bool
@@ -94,6 +95,7 @@ func UpdateAlias(t *titan.Titan, data []byte) {
 	alias.ScriptName = form.ScriptName
 	alias.SendTo = form.SendTo
 	alias.Sequence = form.Sequence
+	alias.Variable = form.Variable
 	alias.ExpandVariables = form.ExpandVariables
 	alias.Temporary = form.Temporary
 	alias.OneShot = form.OneShot
