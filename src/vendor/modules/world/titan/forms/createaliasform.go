@@ -30,7 +30,6 @@ type CreateAliasForm struct {
 	Temporary        bool
 	OneShot          bool
 	Regexp           bool
-	Repeat           bool
 	Group            string
 	IgnoreCase       bool
 	KeepEvaluating   bool
@@ -99,7 +98,6 @@ func CreateAlias(t *titan.Titan, data []byte) {
 	alias.Temporary = form.Temporary
 	alias.OneShot = form.OneShot
 	alias.Regexp = form.Regexp
-	alias.Repeat = form.Repeat
 	alias.Group = form.Group
 	alias.IgnoreCase = form.IgnoreCase
 	alias.KeepEvaluating = form.KeepEvaluating

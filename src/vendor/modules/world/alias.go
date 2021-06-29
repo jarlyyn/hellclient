@@ -15,7 +15,6 @@ type Alias struct {
 	Temporary        bool
 	OneShot          bool
 	Regexp           bool
-	Repeat           bool
 	Group            string
 	IgnoreCase       bool
 	KeepEvaluating   bool
