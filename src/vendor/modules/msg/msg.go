@@ -30,6 +30,12 @@ const MsgTypeCreateTimerSuccess = "createTimerSuccess"
 const MsgTypeTimer = "timer"
 const MsgTypeUpdateTimerSuccess = "updateTimerSuccess"
 
+const MsgTypeUserAliases = "useraliases"
+const MsgTypeScriptAliases = "scriptaliases"
+const MsgTypeCreateAliasSuccess = "createAliasSuccess"
+const MsgTypeAlias = "alias"
+const MsgTypeUpdateAliasSuccess = "updateAliasSuccess"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -112,4 +118,20 @@ func PublishTimer(p Publisher, world string, timer *world.Timer) {
 }
 func PublishUpdateTimerSuccess(p Publisher, world string, id string) {
 	p.Publish(New(MsgTypeUpdateTimerSuccess, world, id))
+}
+
+func PublishUserAliases(p Publisher, id string, aliases []*world.Alias) {
+	p.Publish(New(MsgTypeUserAliases, id, aliases))
+}
+func PublishScriptAliases(p Publisher, id string, aliases []*world.Alias) {
+	p.Publish(New(MsgTypeScriptAliases, id, aliases))
+}
+func PublishCreateALiasSuccess(p Publisher, world string, id string) {
+	p.Publish(New(MsgTypeCreateAliasSuccess, world, id))
+}
+func PublishAlias(p Publisher, world string, alias *world.Alias) {
+	p.Publish(New(MsgTypeAlias, world, alias))
+}
+func PublishUpdateAliasSuccess(p Publisher, world string, id string) {
+	p.Publish(New(MsgTypeUpdateAliasSuccess, world, id))
 }

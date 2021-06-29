@@ -164,5 +164,29 @@ onButton.updateTimerSubmit=function(){
     vm.updatingTimer.Form.SendTo=vm.updatingTimer.Form.SendTo*1
     send("updateTimer",vm.updatingTimer.Form);
 }
-
+onButton.useraliases=function(){
+    vm.useraliaslist=null;
+    vm.aliasesVisible=true;
+    vm.byuser=true;
+    app.send("aliases",[vm.current,"byuser"])
+}
+onButton.scriptaliases=function(){
+    vm.scriptaliaslist=null;
+    vm.aliasesVisible=true;
+    vm.byuser=false;
+    app.send("aliases",[vm.current,""])
+}
+onButton.createAlias=function(){
+    vm.createFail=[];
+    vm.aliasCreateForm={
+        Sequence:100,
+    };
+    vm.aliasCreateFormVisible=true;
+}
+onButton.createAliasSubmit=function(){
+    vm.aliasCreateForm.World=vm.current
+    vm.aliasCreateForm.ByUser=vm.byuser
+    vm.aliasCreateForm.SendTo=vm.timerCreateForm.SendTo*1
+    send("createAlias",vm.aliasCreateForm);
+}
 })

@@ -55,7 +55,9 @@ func (t *Timers) loadTimer(timer *Timer) {
 	if ti.Temporary {
 		t.Temporary[ti.ID] = timer
 	}
-
+	if ti.Enabled {
+		go timer.Start()
+	}
 }
 func (t *Timers) addTimer(ti *world.Timer) bool {
 	if t.All[ti.ID] != nil {
@@ -63,9 +65,7 @@ func (t *Timers) addTimer(ti *world.Timer) bool {
 	}
 	timer := t.createTimer(ti)
 	t.loadTimer(timer)
-	if ti.Enabled {
-		go timer.Start()
-	}
+
 	return true
 }
 func (t *Timers) AddTimer(ti *world.Timer, replace bool) bool {
@@ -119,6 +119,7 @@ func (t *Timers) unloadTimer(id string) *Timer {
 	if ti.Data.Temporary {
 		delete(t.Temporary, ti.Data.ID)
 	}
+	ti.Stop()
 	return ti
 }
 func (t *Timers) RemoveTimer(id string) bool {
@@ -160,6 +161,9 @@ func (t *Timers) EnableTimerByName(name string, enabled bool) bool {
 	if ti == nil {
 		return false
 	}
+	ti.Locker.Lock()
+	defer ti.Locker.Unlock()
+	ti.Data.Enabled = enabled
 	if enabled {
 		ti.Start()
 	} else {
@@ -172,6 +176,9 @@ func (t *Timers) EnableTimerGroup(group string, enabled bool) int {
 	defer t.Locker.Unlock()
 	count := len(t.Grouped[group])
 	for _, v := range t.Grouped[group] {
+		v.Locker.Lock()
+		v.Data.Enabled = true
+		v.Locker.Unlock()
 		v.Start()
 	}
 	return count

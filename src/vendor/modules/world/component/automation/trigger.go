@@ -7,59 +7,46 @@ import (
 	"strings"
 )
 
-type MatchResult struct {
-	List  []string
-	Named map[string]string
-}
-
-func NewMatchResult() *MatchResult {
-	return &MatchResult{
-		List:  []string{},
-		Named: map[string]string{},
-	}
-}
-
 type Context struct {
 	Bus      *bus.Bus
 	Line     *world.Line
 	Expanded *strings.Replacer
 }
-type Matcher interface {
-	Match(line *world.Line) (*MatchResult, error)
-}
 
 type Trigger struct {
 	Deleted  bool
 	Data     *world.Trigger
-	Matcher  Matcher
+	Matcher  world.Matcher
 	ByUser   bool
 	RawMatch string
 }
 
-func (t *Trigger) OnSuccess(ctx *Context, result *MatchResult) {
+func BuildMatcher(match string, isregexp bool, ignore_case bool) (world.Matcher, error) {
+	if isregexp {
+		re, err := regexp.Compile(match)
+		if err != nil {
+			return nil, err
+		}
+		return &RegexpMatcher{matcher: re}, nil
+	}
+	if ignore_case {
+		return &StarMatcher{matcher: starIC.New(match)}, nil
+	}
+	return &StarMatcher{matcher: starNI.New(match)}, nil
+}
+
+func (t *Trigger) OnSuccess(ctx *Context, result *world.MatchResult) {
 
 }
 func (t *Trigger) BuildMatcher(match string) error {
-	if t.Data.Regexp {
-		re, err := regexp.Compile(match)
-		if err != nil {
-			return err
-		}
-		t.Matcher = &RegexpMatcher{matcher: re}
-		return nil
+	matcher, err := BuildMatcher(match, t.Data.Regexp, t.Data.IgnoreCase)
+	if err != nil {
+		return err
 	}
-	if t.Data.IgnoreCase {
-		t.Matcher = &StarMatcher{
-			matcher: starIC.New(match),
-		}
-	} else {
-		t.Matcher = &StarMatcher{
-			matcher: starNI.New(match),
-		}
-	}
+	t.Matcher = matcher
 	return nil
 }
-func (t *Trigger) Match(ctx *Context) (*MatchResult, error) {
+func (t *Trigger) Match(ctx *Context) (*world.MatchResult, error) {
 	if t.Deleted || !t.Data.Enabled {
 		return nil, nil
 	}
@@ -88,7 +75,7 @@ func (t *Trigger) Match(ctx *Context) (*MatchResult, error) {
 			}
 		}
 	}
-	return t.Matcher.Match(ctx.Line)
+	return t.Matcher.Match(ctx.Line.Plain())
 }
 
 type TriggerList []*Trigger

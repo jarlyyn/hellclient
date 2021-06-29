@@ -133,18 +133,6 @@ func (t *Titan) OnCreateScriptFail(errors []*validator.FieldError) {
 func (t *Titan) OnCreateScriptSuccess(id string) {
 	msg.PublishCreateScriptSuccess(t, id)
 }
-func (t *Titan) OnCreateTimerSuccess(world string, id string) {
-	msg.PublishCreateTimerSuccess(t, world, id)
-}
-func (t *Titan) OnUpdateTimerSuccess(world string, id string) {
-	msg.PublishUpdateTimerSuccess(t, world, id)
-}
-func (t *Titan) HandleCmdSend(id string, msg string) {
-	w := t.World(id)
-	if w != nil {
-		w.DoExecute(msg)
-	}
-}
 
 func (t *Titan) HandleCmdConnect(id string) {
 	w := t.World(id)
@@ -242,32 +230,7 @@ func (t *Titan) HandleCmdUseScript(id string, script string) {
 		w.DoUseScript(script)
 	}
 }
-func (t *Titan) HandleCmdTimers(id string, byuser bool) {
-	w := t.World(id)
-	if w != nil {
-		timers := w.GetTimersByType(byuser)
-		if byuser {
-			msg.PublishUserTimers(t, id, timers)
-		} else {
-			msg.PublishScriptTimers(t, id, timers)
-		}
-	}
-}
-func (t *Titan) HandleCmdDeleteTimer(world string, id string) {
-	w := t.World(world)
-	if w != nil {
-		w.DoDeleteTimer(id)
-	}
-}
-func (t *Titan) HandleCmdLoadTimer(world string, id string) {
-	w := t.World(world)
-	if w != nil {
-		timer := w.GetTimer(id)
-		if timer != nil {
-			msg.PublishTimer(t, world, timer)
-		}
-	}
-}
+
 func (t *Titan) HandleCmdReloadScript(id string) {
 	w := t.World(id)
 	if w != nil {
@@ -323,7 +286,63 @@ func (t *Titan) IsWorldExist(id string) (bool, error) {
 	}
 	return false, err
 }
-func (t *Titan) IsNameAvaliable(id string, name string, byuser bool) bool {
+func (t *Titan) IsAliasNameAvaliable(id string, name string, byuser bool) bool {
+	w := t.World(id)
+	if w != nil {
+		name = world.PrefixedName(name, byuser)
+		return w.HasNamedAlias(name)
+	}
+	return false
+}
+
+func (t *Titan) DoCreateAlias(id string, alias *world.Alias) bool {
+	w := t.World(id)
+	if w != nil {
+		return w.AddAlias(alias, false)
+	}
+	return false
+}
+func (t *Titan) DoUpdateAlias(id string, alias *world.Alias) int {
+	w := t.World(id)
+	if w != nil {
+		return w.DoUpdateAlias(alias)
+	}
+	return world.UpdateFailNotFound
+}
+func (t *Titan) OnCreateAliasSuccess(world string, id string) {
+	msg.PublishCreateALiasSuccess(t, world, id)
+}
+func (t *Titan) OnUpdateAliasSuccess(world string, id string) {
+	msg.PublishUpdateAliasSuccess(t, world, id)
+}
+func (t *Titan) HandleCmdAliases(id string, byuser bool) {
+	w := t.World(id)
+	if w != nil {
+		aliases := w.GetAliasesByType(byuser)
+		if byuser {
+			msg.PublishUserAliases(t, id, aliases)
+		} else {
+			msg.PublishScriptAliases(t, id, aliases)
+		}
+	}
+}
+func (t *Titan) HandleCmdDeleteAlias(world string, id string) {
+	w := t.World(world)
+	if w != nil {
+		w.DoDeleteAlias(id)
+	}
+}
+func (t *Titan) HandleCmdLoadAlias(world string, id string) {
+	w := t.World(world)
+	if w != nil {
+		alias := w.GetAlias(id)
+		if alias != nil {
+			msg.PublishAlias(t, world, alias)
+		}
+	}
+}
+
+func (t *Titan) IsTimerNameAvaliable(id string, name string, byuser bool) bool {
 	w := t.World(id)
 	if w != nil {
 		name = world.PrefixedName(name, byuser)
@@ -345,6 +364,47 @@ func (t *Titan) DoUpdateTimer(id string, timer *world.Timer) int {
 	}
 	return world.UpdateFailNotFound
 }
+func (t *Titan) OnCreateTimerSuccess(world string, id string) {
+	msg.PublishCreateTimerSuccess(t, world, id)
+}
+func (t *Titan) OnUpdateTimerSuccess(world string, id string) {
+	msg.PublishUpdateTimerSuccess(t, world, id)
+}
+
+func (t *Titan) HandleCmdTimers(id string, byuser bool) {
+	w := t.World(id)
+	if w != nil {
+		timers := w.GetTimersByType(byuser)
+		if byuser {
+			msg.PublishUserTimers(t, id, timers)
+		} else {
+			msg.PublishScriptTimers(t, id, timers)
+		}
+	}
+}
+func (t *Titan) HandleCmdDeleteTimer(world string, id string) {
+	w := t.World(world)
+	if w != nil {
+		w.DoDeleteTimer(id)
+	}
+}
+func (t *Titan) HandleCmdLoadTimer(world string, id string) {
+	w := t.World(world)
+	if w != nil {
+		timer := w.GetTimer(id)
+		if timer != nil {
+			msg.PublishTimer(t, world, timer)
+		}
+	}
+}
+
+func (t *Titan) HandleCmdSend(id string, msg string) {
+	w := t.World(id)
+	if w != nil {
+		w.DoExecute(msg)
+	}
+}
+
 func (t *Titan) GetScriptPath() string {
 	return t.Scriptpath
 }

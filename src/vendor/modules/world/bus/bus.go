@@ -13,49 +13,50 @@ type Bus struct {
 	ID     string
 	Locker sync.RWMutex
 
-	GetConnBuffer           func() []byte
-	GetConnConnected        func() bool
-	GetHost                 func() string
-	SetHost                 func(string)
-	GetPort                 func() string
-	SetPort                 func(string)
-	GetStatus               func() string
-	SetStatus               func(string)
-	GetQueueDelay           func() int
-	SetQueueDelay           func(int)
-	GetQueue                func() []*world.Command
-	GetParam                func(string) string
-	GetParams               func() map[string]string
-	SetParam                func(string, string)
-	DeleteParam             func(string)
-	GetCharset              func() string
-	SetCharset              func(string)
-	GetReadyAt              func() int64
-	GetCurrentLines         func() []*world.Line
-	GetPrompt               func() *world.Line
-	GetClientInfo           func() *world.ClientInfo
-	GetScriptData           func() *world.ScriptData
-	SetPermissions          func([]string)
-	GetPermissions          func() []string
-	GetScriptID             func() string
-	SetScriptID             func(string)
-	GetScriptPath           func() string
-	SetTrusted              func(*herbplugin.Trusted)
-	GetTrusted              func() *herbplugin.Trusted
-	GetScriptPluginOptions  func() herbplugin.Options
-	DoSendToConn            func(cmd []byte)
-	DoSend                  func(*world.Command)
-	DoSendToQueue           func(*world.Command)
-	DoExecute               func(message string)
-	DoEncode                func() ([]byte, error)
-	DoDecode                func([]byte) error
-	DoReloadScript          func() error
-	DoSaveScript            func() error
-	DoUseScript             func(string)
-	DoRunScript             func(string)
-	DoPrint                 func(msg string)
-	DoPrintSystem           func(msg string)
-	DoDiscardQueue          func() int
+	GetConnBuffer          func() []byte
+	GetConnConnected       func() bool
+	GetHost                func() string
+	SetHost                func(string)
+	GetPort                func() string
+	SetPort                func(string)
+	GetStatus              func() string
+	SetStatus              func(string)
+	GetQueueDelay          func() int
+	SetQueueDelay          func(int)
+	GetQueue               func() []*world.Command
+	GetParam               func(string) string
+	GetParams              func() map[string]string
+	SetParam               func(string, string)
+	DeleteParam            func(string)
+	GetCharset             func() string
+	SetCharset             func(string)
+	GetReadyAt             func() int64
+	GetCurrentLines        func() []*world.Line
+	GetPrompt              func() *world.Line
+	GetClientInfo          func() *world.ClientInfo
+	GetScriptData          func() *world.ScriptData
+	SetPermissions         func([]string)
+	GetPermissions         func() []string
+	GetScriptID            func() string
+	SetScriptID            func(string)
+	GetScriptPath          func() string
+	SetTrusted             func(*herbplugin.Trusted)
+	GetTrusted             func() *herbplugin.Trusted
+	GetScriptPluginOptions func() herbplugin.Options
+	DoSendToConn           func(cmd []byte)
+	DoSend                 func(*world.Command)
+	DoSendToQueue          func(*world.Command)
+	DoExecute              func(message string)
+	DoEncode               func() ([]byte, error)
+	DoDecode               func([]byte) error
+	DoReloadScript         func() error
+	DoSaveScript           func() error
+	DoUseScript            func(string)
+	DoRunScript            func(string)
+	DoPrint                func(msg string)
+	DoPrintSystem          func(msg string)
+	DoDiscardQueue         func() int
+
 	DoSendTimerToScript     func(*world.Timer)
 	DoDeleteTimer           func(string) bool
 	DoDeleteTimerByName     func(string) bool
@@ -73,20 +74,38 @@ type Bus struct {
 	SetTimerOption          func(name string, option string, value string) (bool, bool, bool)
 	HasNamedTimer           func(string) bool
 	DoListTimerNames        func() []string
-	AddHistory              func(string)
 	AddTimer                func(*world.Timer, bool) bool
 	DoUpdateTimer           func(*world.Timer) int
-	GetHistories            func() []string
-	FlushHistories          func()
-	HandleConnReceive       func(msg []byte)
-	HandleConnError         func(err error)
-	HandleConnPrompt        func(msg []byte)
-	DoConnectServer         func() error
-	DoCloseServer           func() error
-	HandleConverterError    func(err error)
-	HandleCmdError          func(err error)
-	HandleTriggerError      func(err error)
-	HandleScriptError       func(err error)
+
+	DoDeleteAlias            func(string) bool
+	DoDeleteAliasByName      func(string) bool
+	DoDeleteTemporaryAliases func() int
+	DoDeleteAliasGroup       func(string) int
+	DoEnableAliasByName      func(string, bool) bool
+	DoEnableAliasGroup       func(string, bool) int
+	GetAlias                 func(string) *world.Alias
+	GetAliasesByType         func(bool) []*world.Alias
+	DoDeleteAliasByType      func(bool)
+	AddAliases               func([]*world.Alias)
+	GetAliasOption           func(name string, option string) (string, bool, bool)
+	SetAliasOption           func(name string, option string, value string) (bool, bool, bool)
+	HasNamedAlias            func(string) bool
+	DoListAliasNames         func() []string
+	AddAlias                 func(*world.Alias, bool) bool
+	DoUpdateAlias            func(*world.Alias) int
+
+	AddHistory           func(string)
+	GetHistories         func() []string
+	FlushHistories       func()
+	HandleConnReceive    func(msg []byte)
+	HandleConnError      func(err error)
+	HandleConnPrompt     func(msg []byte)
+	DoConnectServer      func() error
+	DoCloseServer        func() error
+	HandleConverterError func(err error)
+	HandleCmdError       func(err error)
+	HandleTriggerError   func(err error)
+	HandleScriptError    func(err error)
 
 	LineEvent         busevent.Event
 	PromptEvent       busevent.Event
