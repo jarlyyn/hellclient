@@ -31,6 +31,7 @@ type CreateAliasForm struct {
 	OneShot          bool
 	Regexp           bool
 	Group            string
+	Variable         string
 	IgnoreCase       bool
 	KeepEvaluating   bool
 	Menu             bool
@@ -89,6 +90,7 @@ func CreateAlias(t *titan.Titan, data []byte) {
 	alias.SetByUser(form.ByUser)
 	alias.Name = form.Name
 	alias.Enabled = form.Enabled
+	alias.Variable = form.Variable
 	alias.Match = form.Match
 	alias.Send = form.Send
 	alias.ScriptName = form.ScriptName

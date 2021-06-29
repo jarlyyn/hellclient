@@ -20,6 +20,7 @@ type Alias struct {
 	KeepEvaluating   bool
 	Menu             bool
 	OmitFromLog      bool
+	Variable         string
 	ReverseSpeedwalk bool
 	OmitFromOutput   bool
 	byuser           bool

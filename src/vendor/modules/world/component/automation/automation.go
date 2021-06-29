@@ -3,6 +3,7 @@ package automation
 import (
 	"modules/world"
 	"modules/world/bus"
+	"strings"
 )
 
 type Automation struct {
@@ -50,6 +51,48 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.AddAlias = a.AddAlias
 	b.DoUpdateAlias = a.DoUpdateAlias
 
+}
+func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {
+	var matched bool
+	queue := a.Aliases.Queue()
+	for _, v := range queue {
+		r, err := v.Match(message)
+		if err != nil {
+			b.HandleTriggerError(err)
+			continue
+		}
+		if r == nil {
+			continue
+		}
+		var send string
+		var target int
+		var variable string
+		var omitlog bool
+		var omitoutput bool
+		var keep bool
+		v.Locker.Lock()
+
+		if v.Data.Send != "" {
+			target = v.Data.SendTo
+			variable = v.Data.Variable
+			omitlog = v.Data.OmitFromLog
+			omitoutput = v.Data.OmitFromOutput
+			keep = v.Data.KeepEvaluating
+			rl := r.ReplaceList(v.Data.Name)
+			if v.Data.ExpandVariables {
+				rl = append(rl, BuildParamsReplacer(b)...)
+			}
+			send = strings.NewReplacer(rl...).Replace(v.Data.Send)
+		}
+		v.Locker.Unlock()
+		if send != "" {
+			a.trySendTo(b, target, send, variable, omitlog, omitoutput)
+		}
+		if !keep {
+			return true
+		}
+	}
+	return matched
 }
 func (a *Automation) AddTimer(timer *world.Timer, replace bool) bool {
 	return a.Timers.AddTimer(timer, replace)
