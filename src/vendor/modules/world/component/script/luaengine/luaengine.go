@@ -81,13 +81,32 @@ func (e *LuaEngine) OnDisconnect(b *bus.Bus) {
 func (e *LuaEngine) OnTrigger(*bus.Bus) {
 
 }
-func (e *LuaEngine) OnAlias(*bus.Bus) {
+func (e *LuaEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
+	if alias.Script == "" {
+		return
+	}
+	L := e.Plugin.LState
+	t := L.NewTable()
+	for _, v := range result.List {
+		t.Append(lua.LString(v))
+	}
+	for k, v := range result.Named {
+		t.RawSetString(k, lua.LString(v))
+	}
+	if err := L.CallByParam(lua.P{
+		Fn:      L.GetGlobal(alias.Script),
+		NRet:    0,
+		Protect: true,
+	}, lua.LString(alias.Name), lua.LString(message), t); err != nil {
+		b.HandleScriptError(err)
+	}
 
 }
 func (e *LuaEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
 	if timer.Script == "" {
 		return
 	}
+
 	L := e.Plugin.LState
 	if err := L.CallByParam(lua.P{
 		Fn:      L.GetGlobal(timer.Script),

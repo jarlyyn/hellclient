@@ -55,7 +55,7 @@ func (f *CreateTimerForm) Validate() error {
 	f.ValidateFieldf(f.SendTo >= world.SendToMin && f.SendTo <= world.SendToMin, "SendTo", "发送到无效")
 	f.ValidateFieldf((f.Hour != 0 || f.Minute != 0 || f.Second != 0) || f.AtTime, "Second", "时间无效")
 	if !f.HasError() {
-		f.ValidateFieldf(f.Name == "" || titan.Pangu.IsTimerNameAvaliable(f.World, f.Name, f.ByUser), "Name", "名称不可用")
+		f.ValidateFieldf(f.Name == "" || world.IDRegexp.MatchString(f.Name) || titan.Pangu.IsTimerNameAvaliable(f.World, f.Name, f.ByUser), "Name", "名称不可用")
 	}
 	return nil
 }
