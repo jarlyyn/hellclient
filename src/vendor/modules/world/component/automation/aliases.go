@@ -24,6 +24,9 @@ func (q AliasQueue) Less(i, j int) bool {
 	if q[i].Data.Enabled != q[j].Data.Enabled {
 		return q[i].Data.Enabled
 	}
+	if q[i].Data.ByUser() != q[j].Data.ByUser() {
+		return q[i].Data.ByUser()
+	}
 	return q[i].Data.ID < q[j].Data.ID
 }
 
