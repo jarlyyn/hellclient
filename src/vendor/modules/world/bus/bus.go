@@ -112,18 +112,23 @@ type Bus struct {
 	AddTrigger                func(*world.Trigger, bool) bool
 	DoUpdateTrigger           func(*world.Trigger) int
 	DoSendTriggerToScript     func(line *world.Line, trigger *world.Trigger, result *world.MatchResult)
-	AddHistory                func(string)
-	GetHistories              func() []string
-	FlushHistories            func()
-	HandleConnReceive         func(msg []byte)
-	HandleConnError           func(err error)
-	HandleConnPrompt          func(msg []byte)
-	DoConnectServer           func() error
-	DoCloseServer             func() error
-	HandleConverterError      func(err error)
-	HandleCmdError            func(err error)
-	HandleTriggerError        func(err error)
-	HandleScriptError         func(err error)
+
+	DoMultiLinesAppend func(string)
+	DoMultiLinesFlush  func()
+	DoMultiLinesLast   func(int) []string
+
+	AddHistory           func(string)
+	GetHistories         func() []string
+	FlushHistories       func()
+	HandleConnReceive    func(msg []byte)
+	HandleConnError      func(err error)
+	HandleConnPrompt     func(msg []byte)
+	DoConnectServer      func() error
+	DoCloseServer        func() error
+	HandleConverterError func(err error)
+	HandleCmdError       func(err error)
+	HandleTriggerError   func(err error)
+	HandleScriptError    func(err error)
 
 	DoStopEvaluatingTriggers func()
 	LineEvent                busevent.Event

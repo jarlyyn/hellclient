@@ -11,6 +11,7 @@ type Automation struct {
 	Timers                 *Timers
 	Aliases                *Aliases
 	Triggers               *Triggers
+	MultiLines             *MultiLines
 	Locker                 sync.RWMutex
 	evaluatingTriggersStop bool
 }
@@ -19,6 +20,8 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	a.Timers = NewTimers()
 	a.Aliases = NewAliases()
 	a.Triggers = NewTriggers()
+	a.MultiLines = NewMultiLines()
+
 	a.Timers.OnFire = b.WrapHandleTimer(a.OnFire)
 	b.AddTimer = a.AddTimer
 	b.DoDeleteTimer = a.RemoveTimer
@@ -90,10 +93,26 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.AddTrigger = a.AddTrigger
 	b.DoUpdateTrigger = a.DoUpdateTrigger
 
+	b.DoMultiLinesAppend = a.DoMultiLinesAppend
+	b.DoMultiLinesFlush = a.DoMultiLinesFlush
+	b.DoMultiLinesLast = a.DoMultiLinesLast
+
 	b.DoExecute = b.WrapHandleString(a.DoExecute)
 
 	b.BindLineEvent(b, a.OnLine)
 }
+
+func (a *Automation) DoMultiLinesAppend(message string) {
+	a.MultiLines.Append(message)
+}
+func (a *Automation) DoMultiLinesFlush() {
+	a.MultiLines.Flush()
+
+}
+func (a *Automation) DoMultiLinesLast(count int) []string {
+	return a.MultiLines.Last(count)
+}
+
 func (a *Automation) DoStopEvaluatingTriggers() {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
@@ -114,6 +133,7 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 		return
 	}
 	a.ReadyForLine()
+	b.DoMultiLinesAppend(line.Plain())
 	queue := a.Triggers.Queue()
 	ctx := &Context{
 		Line: line,
