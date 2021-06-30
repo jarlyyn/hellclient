@@ -95,11 +95,7 @@ onButton.createGame=function(){
 onButton.createGameSubmit=function(){
     send("createGame",vm.gameCreateForm)
 }
-onButton.triggers=function(){
-    vm.triggers=null;
-    vm.triggersVisible=true
-    send("triggers",current)
-}
+
 onButton.createTrigger=function(){
     vm.triggerSaveFormVisible=true
     vm.triggerName="";
@@ -194,5 +190,36 @@ onButton.updateAliasSubmit=function(){
     vm.updatingAlias.Form.ID=vm.updatingAlias.ID
     vm.updatingAlias.Form.SendTo=vm.updatingAlias.Form.SendTo*1
     send("updateAlias",vm.updatingAlias.Form);
+}
+onButton.usertriggers=function(){
+    vm.usertriggerlist=null;
+    vm.triggersVisible=true;
+    vm.byuser=true;
+    app.send("triggers",[vm.current,"byuser"])
+}
+onButton.scripttriggers=function(){
+    vm.scripttriggerlist=null;
+    vm.triggersVisible=true;
+    vm.byuser=false;
+    app.send("triggers",[vm.current,""])
+}
+onButton.createTrigger=function(){
+    vm.createFail=[];
+    vm.triggerCreateForm={
+        Sequence:100,
+    };
+    vm.triggerCreateFormVisible=true;
+}
+onButton.createTriggerSubmit=function(){
+    vm.triggerCreateForm.World=vm.current
+    vm.triggerCreateForm.ByUser=vm.byuser
+    vm.triggerCreateForm.SendTo=vm.triggerCreateForm.SendTo*1
+    send("createTrigger",vm.triggerCreateForm);
+}
+onButton.updateTriggerSubmit=function(){
+    vm.updatingTrigger.Form.World=vm.current
+    vm.updatingTrigger.Form.ID=vm.updatingTrigger.ID
+    vm.updatingTrigger.Form.SendTo=vm.updatingTrigger.Form.SendTo*1
+    send("updateTrigger",vm.updatingTrigger.Form);
 }
 })

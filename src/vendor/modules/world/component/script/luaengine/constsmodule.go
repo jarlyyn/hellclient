@@ -9,6 +9,31 @@ import (
 	lua "github.com/yuin/gopher-lua"
 )
 
+var ModuleConstsTriggersFlag = herbplugin.CreateModule("aliasflag",
+	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
+		next(ctx, plugin)
+		luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
+		l := luapluing.LState
+		consts := l.NewTable()
+		consts.RawSetString("Enabled", lua.LNumber(world.TriggerFlagEnabled))
+		consts.RawSetString("OmitFromLog", lua.LNumber(world.TriggerFlagOmitFromLog))
+		consts.RawSetString("OmitFromOutput", lua.LNumber(world.TriggerFlagOmitFromOutput))
+		consts.RawSetString("KeepEvaluating", lua.LNumber(world.TriggerFlagKeepEvaluating))
+		consts.RawSetString("IgnoreCase", lua.LNumber(world.TriggerFlagIgnoreCase))
+		consts.RawSetString("RegularExpression", lua.LNumber(world.TriggerFlagRegularExpression))
+		consts.RawSetString("ExpandVariables", lua.LNumber(world.TriggerFlagExpandVariables))
+		consts.RawSetString("Replace", lua.LNumber(world.TriggerFlagReplace))
+		consts.RawSetString("Temporary", lua.LNumber(world.TriggerFlagTemporary))
+		consts.RawSetString("LowercaseWildcard", lua.LNumber(world.TriggerFlagLowercaseWildcard))
+		consts.RawSetString("OneShot", lua.LNumber(world.TriggerFlagOneShot))
+
+		l.SetGlobal("trigger_flag", consts)
+		next(ctx, plugin)
+	},
+	nil,
+	nil,
+)
+
 var ModuleConstsAliasFlag = herbplugin.CreateModule("aliasflag",
 	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
 		next(ctx, plugin)

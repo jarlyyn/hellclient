@@ -1,0 +1,59 @@
+<el-dialog width="80%"  :fullscreen="true" title="编辑触发器" :visible.sync="triggerUpdateFormVisible">
+    <div v-if="createFail">
+            <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
+        
+    </div> 
+    <div v-if="updatingTrigger && updatingTrigger.Form">
+
+        <el-form :model="updatingTrigger.Form" label-width="120px">
+            <el-form-item label="触发"><el-input v-model="updatingTrigger.Form.Match"></el-input></el-form-item>
+                <el-form-item label="名称" ><el-input v-model="updatingTrigger.Form.Name"></el-input></el-form-item>
+                <el-form-item label="发送到" >
+                    <el-select v-model="updatingTrigger.Form.SendTo" placeholder="请选择">
+                        <el-option
+                          v-for="(label,index) in sendto"
+                          :key="index"
+                          :label="index+'.'+label"
+                          :value="index">
+                        </el-option>
+                      </el-select>
+                    
+                </el-form-item>
+            <el-form-item label="发送" >
+                <el-input
+                type="textarea"
+                :autosize="{ minRows: 4}"
+                placeholder="请输入内容"
+                v-model="updatingTrigger.Form.Send">
+              </el-input>
+                          </el-form-item>
+                          <el-form-item label="优先级" ><el-input v-model="updatingTrigger.Form.Sequence"></el-input></el-form-item>
+                          <el-form-item label="调用脚本函数" ><el-input v-model="updatingTrigger.Form.Script"></el-input></el-form-item>
+                          <el-form-item label="分组名" ><el-input v-model="updatingTrigger.Form.Group" ></el-input></el-form-item>
+                          <el-form-item v-if="updatingTrigger.Form.SendTo==9"label="变量名" ><el-input v-model="updatingTrigger.Form.Variable" ></el-input></el-form-item>
+                          <el-form-item v-if="updatingTrigger.Form.MultiLine"label="匹配行数" ><el-input v-model="updatingTrigger.Form.Variable" ></el-input></el-form-item>
+          
+                <el-form-item label="选项" >
+                  <div>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.IgnoreCase">不区分大小写</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.Enabled">启用</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.Regexp">正则表达式</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.KeepEvaluating">继续执行</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.Repeat">重复触发</el-checkbox></el-row>
+                    
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.ExpandVariables">展开变量</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.OneShot">一次性</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.Temporary">临时</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.MultiLine">多行匹配</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.WildcardLowerCase">匹配内容转小写</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.OmitFromOutput">不出现在输出</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="updatingTrigger.Form.OmitFromLog">不出现在日志</el-checkbox></el-row>
+                </div>
+                </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="updatingTrigger.FormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="onButton('updateTriggerSubmit')">确 定</el-button>
+        </div>
+    </div>
+      </el-dialog>              

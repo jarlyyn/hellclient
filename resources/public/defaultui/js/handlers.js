@@ -134,5 +134,23 @@ handlers.alias=function(data){
     }
 }
 
+handlers.usertriggers=function(data){
+    vm.usertriggerlist=data
+}
+handlers.scripttriggers=function(data){
+    vm.scripttriggerlist=data
+}
+handlers.createTriggerSuccess=function(data){
+    vm.triggerCreateFormVisible=false
+}
+handlers.updateTriggerSuccess=function(data){
+    vm.triggerUpdateFormVisible=false
+}
+handlers.trigger=function(data){
+    if (vm.updatingTrigger&&vm.updatingTrigger.ID==data.ID){
+        vm.updatingTrigger.Form=data
+    }
+}
+
 
 })

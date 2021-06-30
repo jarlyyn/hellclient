@@ -254,7 +254,51 @@ func (p *Prophet) onCmdLoadAlias(conn connections.OutputConnection, cmd command.
 func (p *Prophet) onCmdUpdateAlias(conn connections.OutputConnection, cmd command.Command) error {
 	forms.UpdateAlias(p.Titan, cmd.Data())
 	return nil
+}
+func (p *Prophet) onCmdTriggers(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 2 {
+		return nil
+	}
+	p.Titan.HandleCmdTriggers(msg[0], msg[1] == "byuser")
+	return nil
+}
+func (p *Prophet) onCmdCreateTrigger(conn connections.OutputConnection, cmd command.Command) error {
+	forms.CreateTrigger(p.Titan, cmd.Data())
+	return nil
 
+}
+func (p *Prophet) onCmdDeleteTrigger(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 2 {
+		return nil
+	}
+	p.Titan.HandleCmdDeleteTrigger(msg[0], msg[1])
+	p.Titan.HandleCmdTriggers(msg[0], false)
+	p.Titan.HandleCmdTriggers(msg[0], true)
+	return nil
+
+}
+func (p *Prophet) onCmdLoadTrigger(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 2 {
+		return nil
+	}
+	p.Titan.HandleCmdLoadTrigger(msg[0], msg[1])
+	return nil
+}
+func (p *Prophet) onCmdUpdateTrigger(conn connections.OutputConnection, cmd command.Command) error {
+	forms.UpdateTrigger(p.Titan, cmd.Data())
+	return nil
 }
 
 // func (p *Prophet) onCmdSaveTrigger(conn connections.OutputConnection, cmd command.Command) error {
@@ -295,6 +339,11 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("deleteAlias", p.onCmdDeleteAlias)
 	handlers.Register("loadAlias", p.onCmdLoadAlias)
 	handlers.Register("updateAlias", p.onCmdUpdateAlias)
+	handlers.Register("triggers", p.onCmdTriggers)
+	handlers.Register("createTrigger", p.onCmdCreateTrigger)
+	handlers.Register("deleteTrigger", p.onCmdDeleteTrigger)
+	handlers.Register("loadTrigger", p.onCmdLoadTrigger)
+	handlers.Register("updateTrigger", p.onCmdUpdateTrigger)
 
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)

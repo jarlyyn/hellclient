@@ -20,6 +20,7 @@ type Conn struct {
 	running  bool
 	buffer   []byte
 	Lock     sync.RWMutex
+	SendLock sync.RWMutex
 	Debounce *debounce.Debounce
 }
 
@@ -150,8 +151,8 @@ func (conn *Conn) Buffer(bus *bus.Bus) []byte {
 	return conn.buffer
 }
 func (conn *Conn) Send(bus *bus.Bus, cmd []byte) {
-	conn.Lock.RLock()
-	defer conn.Lock.RUnlock()
+	conn.SendLock.RLock()
+	defer conn.SendLock.RUnlock()
 	if conn.telnet == nil {
 		return
 	}

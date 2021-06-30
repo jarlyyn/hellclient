@@ -44,6 +44,7 @@ type Titan struct {
 func (t *Titan) CreateBus() *bus.Bus {
 	b := bus.New()
 	component.InstallComponents(b,
+		automation.New(),
 		config.New(),
 		conn.New(),
 		converter.New(),
@@ -51,7 +52,6 @@ func (t *Titan) CreateBus() *bus.Bus {
 		log.New(),
 		queue.New(),
 		script.New(),
-		automation.New(),
 		t,
 	)
 	b.RaiseInitEvent()
@@ -310,7 +310,7 @@ func (t *Titan) DoUpdateAlias(id string, alias *world.Alias) int {
 	return world.UpdateFailNotFound
 }
 func (t *Titan) OnCreateAliasSuccess(world string, id string) {
-	msg.PublishCreateALiasSuccess(t, world, id)
+	msg.PublishCreateAliasSuccess(t, world, id)
 }
 func (t *Titan) OnUpdateAliasSuccess(world string, id string) {
 	msg.PublishUpdateAliasSuccess(t, world, id)
@@ -342,6 +342,61 @@ func (t *Titan) HandleCmdLoadAlias(world string, id string) {
 	}
 }
 
+func (t *Titan) IsTriggerNameAvaliable(id string, name string, byuser bool) bool {
+	w := t.World(id)
+	if w != nil {
+		name = world.PrefixedName(name, byuser)
+		return w.HasNamedTrigger(name)
+	}
+	return false
+}
+func (t *Titan) DoCreateTrigger(id string, trigger *world.Trigger) bool {
+	w := t.World(id)
+	if w != nil {
+		return w.AddTrigger(trigger, false)
+	}
+	return false
+}
+func (t *Titan) DoUpdateTrigger(id string, trigger *world.Trigger) int {
+	w := t.World(id)
+	if w != nil {
+		return w.DoUpdateTrigger(trigger)
+	}
+	return world.UpdateFailNotFound
+}
+func (t *Titan) OnCreateTriggerSuccess(world string, id string) {
+	msg.PublishCreateTriggerSuccess(t, world, id)
+}
+func (t *Titan) OnUpdateTriggerSuccess(world string, id string) {
+	msg.PublishUpdateTriggerSuccess(t, world, id)
+}
+func (t *Titan) HandleCmdTriggers(id string, byuser bool) {
+	w := t.World(id)
+	if w != nil {
+		triggers := w.GetTriggersByType(byuser)
+		if byuser {
+			msg.PublishUserTriggers(t, id, triggers)
+		} else {
+			msg.PublishScriptTriggers(t, id, triggers)
+		}
+	}
+}
+func (t *Titan) HandleCmdDeleteTrigger(world string, id string) {
+	w := t.World(world)
+	if w != nil {
+		w.DoDeleteTrigger(id)
+	}
+}
+func (t *Titan) HandleCmdLoadTrigger(world string, id string) {
+	w := t.World(world)
+	if w != nil {
+		trigger := w.GetTrigger(id)
+		if trigger != nil {
+			msg.PublishTrigger(t, world, trigger)
+		}
+	}
+}
+
 func (t *Titan) IsTimerNameAvaliable(id string, name string, byuser bool) bool {
 	w := t.World(id)
 	if w != nil {
@@ -350,6 +405,7 @@ func (t *Titan) IsTimerNameAvaliable(id string, name string, byuser bool) bool {
 	}
 	return false
 }
+
 func (t *Titan) DoCreateTimer(id string, timer *world.Timer) bool {
 	w := t.World(id)
 	if w != nil {

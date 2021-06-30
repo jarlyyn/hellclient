@@ -61,20 +61,11 @@ func (t *Timer) Option(name string) (string, bool) {
 	defer t.Locker.Unlock()
 	switch name {
 	case "active_closed":
-		if t.Data.ActionWhenDisconnectd {
-			return world.StringYes, true
-		}
-		return "", true
+		return world.ToStringBool(t.Data.ActionWhenDisconnectd), true
 	case "at_time":
-		if t.Data.AtTime {
-			return world.StringYes, true
-		}
-		return "", true
+		return world.ToStringBool(t.Data.AtTime), true
 	case "enabled":
-		if t.Data.Enabled {
-			return world.StringYes, true
-		}
-		return "", true
+		return world.ToStringBool(t.Data.Enabled), true
 	case "group":
 		return t.Data.Group, true
 	case "hour":
@@ -90,20 +81,11 @@ func (t *Timer) Option(name string) (string, bool) {
 	case "offset_second":
 		return "0", true
 	case "omit_from_log":
-		if t.Data.OmitFromLog {
-			return world.StringYes, true
-		}
-		return "", true
+		return world.ToStringBool(t.Data.OmitFromLog), true
 	case "omit_from_output":
-		if t.Data.OmitFromOutput {
-			return world.StringYes, true
-		}
-		return "", true
+		return world.ToStringBool(t.Data.OmitFromOutput), true
 	case "one_shot":
-		if t.Data.OneShot {
-			return world.StringYes, true
-		}
-		return "", true
+		return world.ToStringBool(t.Data.OneShot), true
 	case "script":
 		return t.Data.Script, true
 	case "second":
@@ -126,13 +108,13 @@ func (t *Timer) SetOption(name string, val string) (bool, bool) {
 	defer t.Locker.Unlock()
 	switch name {
 	case "active_closed":
-		t.Data.ActionWhenDisconnectd = (val == world.StringYes)
+		t.Data.ActionWhenDisconnectd = world.FromStringBool(val)
 		return true, true
 	case "at_time":
-		t.Data.AtTime = (val == world.StringYes)
+		t.Data.AtTime = world.FromStringBool(val)
 		return true, true
 	case "enabled":
-		t.Data.Enabled = (val == world.StringYes)
+		t.Data.Enabled = world.FromStringBool(val)
 		return true, true
 	case "group":
 		t.Data.Group = val
@@ -146,11 +128,7 @@ func (t *Timer) SetOption(name string, val string) (bool, bool) {
 		return true, true
 
 	case "minute":
-		i, err := strconv.Atoi(val)
-		if err != nil {
-			return false, true
-		}
-		t.Data.Minute = i
+		t.Data.Minute = world.FromStringInt(val)
 		return true, true
 	case "offset_hour":
 		return false, false
@@ -159,30 +137,25 @@ func (t *Timer) SetOption(name string, val string) (bool, bool) {
 	case "offset_second":
 		return false, false
 	case "omit_from_log":
-		t.Data.OmitFromLog = (val == world.StringYes)
+		t.Data.OmitFromLog = world.FromStringBool(val)
 		return true, true
 	case "omit_from_output":
-		t.Data.OmitFromOutput = (val == world.StringYes)
+		t.Data.OmitFromOutput = world.FromStringBool(val)
 		return true, true
 	case "one_shot":
-		t.Data.OneShot = (val == world.StringYes)
+		t.Data.OneShot = world.FromStringBool(val)
 		return true, true
 	case "script":
 		t.Data.Script = val
 		return true, true
 	case "second":
-		i, err := strconv.Atoi(val)
-		if err != nil {
-			return false, true
-		}
-		t.Data.Second = i
+		t.Data.Second = world.FromStringInt(val)
 		return true, true
 	case "send":
 		t.Data.Send = val
 		return true, true
 	case "send_to":
-		i, _ := strconv.Atoi(val)
-		t.Data.SendTo = i
+		t.Data.SendTo = world.FromStringInt(val)
 		return true, true
 	case "user":
 		return false, false

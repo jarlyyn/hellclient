@@ -32,6 +32,9 @@ func (l *Line) Append(w Word) {
 	l.Words = append(l.Words, w)
 }
 func (l *Line) Plain() string {
+	if l == nil {
+		return ""
+	}
 	var output string
 	for k := range l.Words {
 		output = output + l.Words[k].Text

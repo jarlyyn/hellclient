@@ -1,0 +1,56 @@
+<el-dialog width="80%"  :fullscreen="true" :title="'创建'+(byuser?'用户':'脚本')+'触发器'" :visible.sync="triggerCreateFormVisible">
+    <div v-if="createFail">
+            <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
+        
+    </div> 
+        <el-form :model="triggerCreateForm" label-width="120px">
+            <el-form-item label="匹配"><el-input v-model="triggerCreateForm.Match"></el-input></el-form-item>
+                <el-form-item label="名称" ><el-input v-model="triggerCreateForm.Name"></el-input></el-form-item>
+                <el-form-item label="发送到" >
+                    <el-select v-model="triggerCreateForm.SendTo" placeholder="请选择">
+                        <el-option
+                          v-for="(label,index) in sendto"
+                          :key="index"
+                          :label="index+'.'+label"
+                          :value="index">
+                        </el-option>
+                      </el-select>
+                    
+                </el-form-item>
+            <el-form-item label="发送" >
+                <el-input
+                type="textarea"
+                :autosize="{ minRows: 4}"
+                placeholder="请输入内容"
+                v-model="triggerCreateForm.Send">
+              </el-input>
+                          </el-form-item>
+                <el-form-item label="优先级" ><el-input v-model="triggerCreateForm.Sequence"></el-input></el-form-item>
+                <el-form-item label="调用脚本函数" ><el-input v-model="triggerCreateForm.Script"></el-input></el-form-item>
+                <el-form-item label="分组名" ><el-input v-model="triggerCreateForm.Group" ></el-input></el-form-item>
+                <el-form-item v-if="triggerCreateForm.SendTo==9"label="变量名" ><el-input v-model="triggerCreateForm.Variable" ></el-input></el-form-item>
+                <el-form-item v-if="triggerCreateForm.MultiLine"label="匹配行数" ><el-input v-model="triggerCreateForm.Variable" ></el-input></el-form-item>
+
+                <el-form-item label="选项" >
+                    <div>
+                    <el-row><el-checkbox v-model="triggerCreateForm.IgnoreCase">不区分大小写</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="triggerCreateForm.Enabled">启用</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="triggerCreateForm.Regexp">正则表达式</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="triggerCreateForm.KeepEvaluating">继续执行</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="triggerCreateForm.Repeat">重复触发</el-checkbox></el-row>
+                    
+                    <el-row><el-checkbox v-model="triggerCreateForm.ExpandVariables">展开变量</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="triggerCreateForm.OneShot">一次性</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="triggerCreateForm.Temporary">临时</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="triggerCreateForm.MultiLine">多行匹配</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="triggerCreateForm.WildcardLowerCase">匹配内容转小写</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="triggerCreateForm.OmitFromOutput">不出现在输出</el-checkbox></el-row>
+                    <el-row><el-checkbox v-model="triggerCreateForm.OmitFromLog">不出现在日志</el-checkbox></el-row>
+                </div>
+                </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="triggerCreateFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="onButton('createTriggerSubmit')">确 定</el-button>
+        </div>
+      </el-dialog>              

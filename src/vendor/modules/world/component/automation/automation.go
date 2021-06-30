@@ -4,16 +4,21 @@ import (
 	"modules/world"
 	"modules/world/bus"
 	"strings"
+	"sync"
 )
 
 type Automation struct {
-	Timers  *Timers
-	Aliases *Aliases
+	Timers                 *Timers
+	Aliases                *Aliases
+	Triggers               *Triggers
+	Locker                 sync.RWMutex
+	evaluatingTriggersStop bool
 }
 
 func (a *Automation) InstallTo(b *bus.Bus) {
 	a.Timers = NewTimers()
 	a.Aliases = NewAliases()
+	a.Triggers = NewTriggers()
 	a.Timers.OnFire = b.WrapHandleTimer(a.OnFire)
 	b.AddTimer = a.AddTimer
 	b.DoDeleteTimer = a.RemoveTimer
@@ -50,8 +55,103 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.DoListAliasNames = a.DoListAliasNames
 	b.AddAlias = a.AddAlias
 	b.DoUpdateAlias = a.DoUpdateAlias
+
+	b.DoDeleteAlias = a.DoDeleteAlias
+	b.DoDeleteAliasByName = a.DoDeleteAliasByName
+	b.DoDeleteTemporaryAliases = a.DoDeleteTemporaryAliases
+	b.DoDeleteAliasGroup = a.DoDeleteAliasGroup
+	b.DoEnableAliasByName = a.DoEnableAliasByName
+	b.DoEnableAliasGroup = a.DoEnableAliasGroup
+	b.GetAlias = a.GetAlias
+	b.GetAliasesByType = a.GetAliasesByType
+	b.DoDeleteAliasByType = a.DoDeleteAliasByType
+	b.AddAliases = a.AddAliases
+	b.GetAliasOption = a.GetAliasOption
+	b.SetAliasOption = a.SetAliasOption
+	b.HasNamedAlias = a.HasNamedAlias
+	b.DoListAliasNames = a.DoListAliasNames
+	b.AddAlias = a.AddAlias
+	b.DoUpdateAlias = a.DoUpdateAlias
+
+	b.DoDeleteTrigger = a.DoDeleteTrigger
+	b.DoDeleteTriggerByName = a.DoDeleteTriggerByName
+	b.DoDeleteTemporaryTriggers = a.DoDeleteTemporaryTriggers
+	b.DoDeleteTriggerGroup = a.DoDeleteTriggerGroup
+	b.DoEnableTriggerByName = a.DoEnableTriggerByName
+	b.DoEnableTriggerGroup = a.DoEnableTriggerGroup
+	b.GetTrigger = a.GetTrigger
+	b.GetTriggersByType = a.GetTriggersByType
+	b.DoDeleteTriggerByType = a.DoDeleteTriggerByType
+	b.AddTriggers = a.AddTriggers
+	b.GetTriggerOption = a.GetTriggerOption
+	b.SetTriggerOption = a.SetTriggerOption
+	b.HasNamedTrigger = a.HasNamedTrigger
+	b.DoListTriggerNames = a.DoListTriggerNames
+	b.AddTrigger = a.AddTrigger
+	b.DoUpdateTrigger = a.DoUpdateTrigger
+
 	b.DoExecute = b.WrapHandleString(a.DoExecute)
+
+	b.BindLineEvent(b, a.OnLine)
 }
+func (a *Automation) DoStopEvaluatingTriggers() {
+	a.Locker.Lock()
+	defer a.Locker.Unlock()
+	a.evaluatingTriggersStop = true
+}
+func (a *Automation) EvaluatingTriggersStop() bool {
+	a.Locker.Lock()
+	defer a.Locker.Unlock()
+	return a.evaluatingTriggersStop
+}
+func (a *Automation) ReadyForLine() {
+	a.Locker.Lock()
+	defer a.Locker.Unlock()
+	a.evaluatingTriggersStop = false
+}
+func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
+	if line == nil || line.Type != world.LineTypeReal {
+		return
+	}
+	a.ReadyForLine()
+	queue := a.Triggers.Queue()
+	ctx := &Context{
+		Line: line,
+		Bus:  b,
+	}
+	for _, v := range queue {
+		r, err := v.Match(ctx)
+		if err != nil {
+			b.HandleTriggerError(err)
+			continue
+		}
+		if r == nil {
+			continue
+		}
+		var send string
+		var data world.Trigger
+		v.Locker.Lock()
+		data = *v.Data
+		if v.Data.Send != "" {
+			rl := r.ReplaceList(v.Data.Name)
+			send = strings.NewReplacer(rl...).Replace(data.Send)
+		}
+		v.Locker.Unlock()
+		if send != "" {
+			a.trySendTo(b, data.SendTo, send, data.Variable, data.OmitFromLog, data.OmitFromOutput)
+		}
+		if data.Script != "" {
+			b.DoSendTriggerToScript(line, &data, r)
+		}
+		if data.OneShot {
+			a.Triggers.RemoveTrigger(data.ID)
+		}
+		if !data.KeepEvaluating || a.EvaluatingTriggersStop() {
+			return
+		}
+	}
+}
+
 func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {
 	var matched bool
 	queue := a.Aliases.Queue()
@@ -67,8 +167,8 @@ func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {
 		var send string
 		var data world.Alias
 		v.Locker.Lock()
+		data = *v.Data
 		if v.Data.Send != "" {
-			data = *v.Data
 			rl := r.ReplaceList(v.Data.Name)
 			if v.Data.ExpandVariables {
 				rl = append(rl, BuildParamsReplacer(b)...)
@@ -217,6 +317,54 @@ func (a *Automation) DoUpdateAlias(al *world.Alias) int {
 	return a.Aliases.DoUpdateAlias(al)
 }
 
+func (a *Automation) DoDeleteTrigger(id string) bool {
+	return a.Triggers.RemoveTrigger(id)
+}
+func (a *Automation) DoDeleteTriggerByName(name string) bool {
+	return a.Triggers.DoDeleteTriggerByName(name)
+}
+func (a *Automation) DoDeleteTemporaryTriggers() int {
+	return a.Triggers.DoDeleteTemporaryTriggers()
+}
+func (a *Automation) DoDeleteTriggerGroup(group string) int {
+	return a.Triggers.DoDeleteTriggerGroup(group)
+}
+func (a *Automation) DoEnableTriggerByName(name string, enabled bool) bool {
+	return a.Triggers.DoEnableTriggerByName(name, enabled)
+}
+func (a *Automation) DoEnableTriggerGroup(group string, enabled bool) int {
+	return a.Triggers.DoEnableTriggerGroup(group, enabled)
+}
+func (a *Automation) GetTrigger(id string) *world.Trigger {
+	return a.Triggers.GetTrigger(id)
+}
+func (a *Automation) GetTriggersByType(byuser bool) []*world.Trigger {
+	return a.Triggers.GetTriggersByType(byuser)
+}
+func (a *Automation) DoDeleteTriggerByType(byuser bool) {
+	a.Triggers.DoDeleteTriggerByType(byuser)
+}
+func (a *Automation) AddTriggers(al []*world.Trigger) {
+	a.Triggers.AddTriggers(al)
+}
+func (a *Automation) GetTriggerOption(name string, option string) (string, bool, bool) {
+	return a.Triggers.GetTriggerOption(name, option)
+}
+func (a *Automation) SetTriggerOption(name string, option string, value string) (bool, bool, bool) {
+	return a.Triggers.SetTriggerOption(name, option, value)
+}
+func (a *Automation) HasNamedTrigger(name string) bool {
+	return a.Triggers.HasNamedTrigger(name)
+}
+func (a *Automation) DoListTriggerNames() []string {
+	return a.Triggers.DoListTriggerNames()
+}
+func (a *Automation) AddTrigger(al *world.Trigger, replace bool) bool {
+	return a.Triggers.AddTrigger(al, replace)
+}
+func (a *Automation) DoUpdateTrigger(al *world.Trigger) int {
+	return a.Triggers.DoUpdateTrigger(al)
+}
 func (a *Automation) trySendTo(b *bus.Bus, target int, message string, variable string, omit_from_log bool, omit_from_output bool) bool {
 	if message == "" {
 		return false

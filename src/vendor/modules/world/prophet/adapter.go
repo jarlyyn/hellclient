@@ -34,5 +34,10 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("createAliasSuccess", p.newRoomAdapter("createAliasSuccess"))
 	adapter.Register("alias", p.newRoomAdapter("alias"))
 	adapter.Register("updateAliasSuccess", p.newRoomAdapter("updateAliasSuccess"))
+	adapter.Register("usertriggers", p.newRoomAdapter("usertriggers"))
+	adapter.Register("scripttriggers", p.newRoomAdapter("scripttriggers"))
+	adapter.Register("createTriggerSuccess", p.newRoomAdapter("createTriggerSuccess"))
+	adapter.Register("trigger", p.newRoomAdapter("trigger"))
+	adapter.Register("updateTriggerSuccess", p.newRoomAdapter("updateTriggerSuccess"))
 
 }

@@ -1,0 +1,63 @@
+<el-dialog width="80%"  :fullscreen="true"  :title="(byuser?'用户':'脚本')+'触发器'" :visible.sync="triggersVisible">
+    <el-button-group >
+        <el-tooltip class="item" effect="light" content="添加" placement="bottom">
+        <el-button @click="onButton('createTrigger')" size="mini" type="primary" icon="el-icon-plus"></el-button>
+        </el-tooltip>
+    </el-button-group >
+  <span v-show="false">
+      {{triggerlist = byuser?usertriggerlist:scripttriggerlist}}
+  </span>
+    <div id="triggerlist" v-if="triggerlist!==null">
+        <el-table
+        :data="triggerlist"
+        style="width: 100%">
+        <el-table-column
+        prop="Match"
+        label="触发"
+        >
+      </el-table-column>
+        <el-table-column
+        prop="Regexp"
+        label="正则"
+        >
+        <template slot-scope="scope">
+            <span>{{scope.row.Regexp ? "是":"否"}}</span>
+       </template>
+      </el-table-column>
+        <el-table-column
+          prop="Enabled"
+          label="有效"
+          >
+          <template slot-scope="scope">
+              <span>{{scope.row.Enabled ? "是":"否"}}</span>
+         </template>
+        </el-table-column>
+
+        <el-table-column
+          prop="Name"
+          label="名称"
+          >
+        </el-table-column>
+        <el-table-column
+        prop="Group"
+        label="分组"
+        >
+      </el-table-column>
+        <el-table-column
+          prop="Send"
+          label="发送"
+          >
+        </el-table-column>
+    <el-table-column
+    fixed="right"
+    label="操作"
+    width="100">
+    <template slot-scope="scope">
+      <el-button @click="onUpdateTrigger(scope.row.ID)" type="text" size="small">编辑</el-button>
+      <el-button @click="onDeleteTrigger(scope.row.ID)" type="text" size="small">删除</el-button>
+    </template>
+  </el-table-column>
+
+      </el-table>
+    </div>
+</el-dialog>
