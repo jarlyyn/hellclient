@@ -226,7 +226,13 @@ func (t *Trigger) Match(ctx *Context) (*world.MatchResult, error) {
 			}
 		}
 	}
-	return t.Matcher.Match(ctx.Line.Plain())
+	var line string
+	if t.Data.MultiLine && t.Data.Regexp {
+		line = strings.Join(ctx.Bus.DoMultiLinesLast(t.Data.LinesToMatch), "\n")
+	} else {
+		line = ctx.Line.Plain()
+	}
+	return t.Matcher.Match(line)
 }
 
 type TriggerQueue []*Trigger
