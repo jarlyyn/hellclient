@@ -74,6 +74,10 @@ func (s *Script) save(b *bus.Bus) error {
 	sort.Sort(world.Aliases(aliases))
 	s.Data.Aliases = aliases
 
+	triggers := b.GetTriggersByType(false)
+	sort.Sort(world.Triggers(triggers))
+	s.Data.Triggers = triggers
+
 	data, err := s.encodeScript()
 	if err != nil {
 		return err
@@ -105,8 +109,12 @@ func (s *Script) open(b *bus.Bus) error {
 	for k := range s.Data.Aliases {
 		s.Data.Aliases[k].SetByUser(false)
 	}
+	for k := range s.Data.Triggers {
+		s.Data.Triggers[k].SetByUser(false)
+	}
 	b.AddTimers(s.Data.Timers)
 	b.AddAliases(s.Data.Aliases)
+	b.AddTriggers(s.Data.Triggers)
 	return nil
 }
 func (s *Script) Unload(b *bus.Bus) {
@@ -120,6 +128,8 @@ func (s *Script) unload(b *bus.Bus) {
 		s.Engine.Close(b)
 	}
 	b.DoDeleteTimerByType(false)
+	b.DoDeleteAliasByType(false)
+	b.DoDeleteTriggerByType(false)
 	s.Data = nil
 	s.Engine = nil
 }
@@ -212,6 +222,14 @@ func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, resul
 		s.Engine.OnAlias(b, message, alias, result)
 	}
 }
+func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigger, result *world.MatchResult) {
+	s.Locker.Lock()
+	defer s.Locker.Unlock()
+	if s.Engine != nil {
+		s.Engine.OnTrigger(b, line, trigger, result)
+	}
+}
+
 func (s *Script) Run(b *bus.Bus, cmd string) {
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
@@ -227,6 +245,8 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptPluginOptions = b.WrapGetScriptPluginOptions(s.PluginOptions)
 	b.DoSendTimerToScript = b.WrapHandleTimer(s.SendTimer)
 	b.DoSendAliasToScript = b.WrapHandleAlias(s.SendAlias)
+	b.DoSendTriggerToScript = b.WrapHandleTrigger(s.SendTrigger)
+
 	b.DoRunScript = b.WrapHandleString(s.Run)
 	b.GetStatus = s.GetStatus
 	b.SetStatus = b.WrapHandleString(s.SetStatus)

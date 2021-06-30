@@ -43,7 +43,7 @@ type Aliases struct {
 	Named       map[string]*Alias
 	Temporary   map[string]*Alias
 	Grouped     map[string]map[string]*Alias
-	Updated     bool
+	Disorder    bool
 	cachedqueue []*Alias
 }
 
@@ -75,7 +75,7 @@ func (a *Aliases) unloadAlias(id string) *Alias {
 	if al.Data.Temporary {
 		delete(a.Temporary, al.Data.ID)
 	}
-	a.Updated = true
+	a.Disorder = true
 	al.Matcher = nil
 	return al
 }
@@ -103,7 +103,7 @@ func (a *Aliases) loadAlias(alias *Alias) {
 	if al.Temporary {
 		a.Temporary[al.ID] = alias
 	}
-	a.Updated = true
+	a.Disorder = true
 }
 func (a *Aliases) createAlias(al *world.Alias) *Alias {
 	result := &Alias{
@@ -135,7 +135,7 @@ func (a *Aliases) removeAlias(id string) bool {
 func (a *Aliases) Queue() AliasQueue {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
-	if !a.Updated {
+	if !a.Disorder {
 		return a.cachedqueue
 	}
 	q := make(AliasQueue, 0, len(a.All))
@@ -144,7 +144,7 @@ func (a *Aliases) Queue() AliasQueue {
 	}
 	sort.Sort(q)
 	a.cachedqueue = q
-	a.Updated = false
+	a.Disorder = false
 	return q
 }
 
@@ -257,7 +257,7 @@ func (a *Aliases) DoEnableAliasByName(name string, enabled bool) bool {
 	al.Locker.Lock()
 	defer al.Locker.Unlock()
 	al.Data.Enabled = enabled
-	a.Updated = true
+	a.Disorder = true
 	return true
 
 }
@@ -270,7 +270,7 @@ func (a *Aliases) DoEnableAliasGroup(group string, enabled bool) int {
 		v.Data.Enabled = enabled
 		v.Locker.Unlock()
 	}
-	a.Updated = true
+	a.Disorder = true
 	return count
 }
 

@@ -85,6 +85,18 @@ func (a *luaapi) InstallAPIs(l *lua.LState) {
 	l.SetGlobal("GetAliasOption", l.NewFunction(a.GetAliasOption))
 	l.SetGlobal("SetAliasOption", l.NewFunction(a.SetAliasOption))
 
+	l.SetGlobal("AddTrigger", l.NewFunction(a.AddTrigger))
+	l.SetGlobal("AddTriggerEx", l.NewFunction(a.AddTrigger))
+	l.SetGlobal("DeleteTrigger", l.NewFunction(a.DeleteTrigger))
+	l.SetGlobal("DeleteTemporaryTriggers", l.NewFunction(a.DeleteTemporaryTriggers))
+	l.SetGlobal("DeleteTriggerGroup", l.NewFunction(a.DeleteTriggerGroup))
+	l.SetGlobal("EnableTrigger", l.NewFunction(a.EnableTrigger))
+	l.SetGlobal("EnableTriggerGroup", l.NewFunction(a.EnableTriggerGroup))
+	l.SetGlobal("GetTriggerList", l.NewFunction(a.GetTriggerList))
+	l.SetGlobal("IsTrigger", l.NewFunction(a.IsTrigger))
+	l.SetGlobal("GetTriggerOption", l.NewFunction(a.GetTriggerOption))
+	l.SetGlobal("SetTriggerOption", l.NewFunction(a.SetTriggerOption))
+	l.SetGlobal("StopEvaluatingTriggers", l.NewFunction(a.StopEvaluatingTriggers))
 }
 func (a *luaapi) Note(L *lua.LState) int {
 	info := L.ToString(1)
@@ -489,6 +501,122 @@ func (a *luaapi) SetAliasOption(L *lua.LState) int {
 	}
 	L.Push(lua.LNumber(a.API.SetTimerOption(name, option, value)))
 	return 1
+}
+
+func (a *luaapi) AddTrigger(L *lua.LState) int {
+	name := L.ToString(1)
+	match := L.ToString(2)
+	send := L.ToString(3)
+	flags := int(L.ToNumber(4))
+	color := int(L.ToNumber(5))
+	wildcard := int(L.ToNumber(6))
+	sound := L.ToString(7)
+	script := L.ToString(8)
+	L.Push(lua.LNumber(a.API.AddTrigger(name, match, send, flags, color, wildcard, sound, script)))
+	return 1
+}
+func (a *luaapi) AddTriggerEx(L *lua.LState) int {
+	name := L.ToString(1)
+	match := L.ToString(2)
+	send := L.ToString(3)
+	flags := int(L.ToNumber(4))
+	color := int(L.ToNumber(5))
+	wildcard := int(L.ToNumber(6))
+	sound := L.ToString(7)
+	script := L.ToString(8)
+	sendto := int(L.ToNumber(9))
+	sequence := int(L.ToNumber(10))
+	L.Push(lua.LNumber(a.API.AddTriggerEx(name, match, send, flags, color, wildcard, sound, script, sendto, sequence)))
+	return 1
+}
+func (a *luaapi) DeleteTrigger(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.DeleteTrigger(name)))
+	return 1
+}
+func (a *luaapi) DeleteTemporaryTriggers(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.DeleteTemporaryTimers()))
+	return 1
+
+}
+func (a *luaapi) DeleteTriggerGroup(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.DeleteTriggerGroup(name)))
+	return 1
+}
+
+func (a *luaapi) EnableTrigger(L *lua.LState) int {
+	name := L.ToString(1)
+	enabled := L.ToBool(2)
+	L.Push(lua.LNumber(a.API.EnableTrigger(name, enabled)))
+	return 1
+}
+func (a *luaapi) EnableTriggerGroup(L *lua.LState) int {
+	group := L.ToString(1)
+	enabled := L.ToBool(2)
+	L.Push(lua.LNumber(a.API.EnableTriggerGroup(group, enabled)))
+	return 1
+}
+
+func (a *luaapi) GetTriggerList(L *lua.LState) int {
+	list := a.API.GetTriggerList()
+	reuslt := L.NewTable()
+	for _, v := range list {
+		reuslt.Append(lua.LString(v))
+	}
+	L.Push(reuslt)
+	return 1
+}
+func (a *luaapi) IsTrigger(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.IsTrigger(name)))
+	return 1
+}
+
+func (a *luaapi) GetTriggerOption(L *lua.LState) int {
+	name := L.ToString(1)
+	option := L.ToString(2)
+	result, code := a.API.GetTimerOption(name, option)
+	if code != api.EOK {
+		L.Push(lua.LNil)
+	} else {
+		switch option {
+		case "echo_trigger", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "regexp", "omit_from_log", "omit_from_output", "one_shot":
+			L.Push(lua.LBool(result == world.StringYes))
+		case "group", "name", "match", "script", "send", "variable":
+			L.Push(lua.LString(result))
+		case "send_to", "user", "sequence":
+			i, _ := strconv.Atoi(result)
+			L.Push(lua.LNumber(i))
+		default:
+			L.Push(lua.LNil)
+		}
+	}
+	return 1
+}
+func (a *luaapi) SetTriggerOption(L *lua.LState) int {
+	name := L.ToString(1)
+	option := L.ToString(2)
+	var value string
+	switch option {
+	case "echo_trigger", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "omit_from_log", "omit_from_output", "one_shot", "regexp":
+		if L.ToBool(3) {
+			value = world.StringYes
+		} else {
+			value = ""
+		}
+	case "group", "name", "match", "script", "send", "variable":
+		value = L.ToString(3)
+	case "send_to", "user", "sequence":
+		value = L.ToString(3)
+	}
+	L.Push(lua.LNumber(a.API.SetTimerOption(name, option, value)))
+	return 1
+}
+
+func (a *luaapi) StopEvaluatingTriggers(L *lua.LState) int {
+	a.API.StopEvaluatingTriggers()
+	return 0
 }
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",

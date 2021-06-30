@@ -369,6 +369,7 @@ func (a *API) AddAlias(aliasName string, match string, responseText string, flag
 	alias.OmitFromLog = flags&world.AliasFlagOmitFromLogFile != 0
 	alias.Regexp = flags&world.AliasFlagRegularExpression != 0
 	alias.ExpandVariables = flags&world.AliasFlagExpandVariables != 0
+	alias.Temporary = flags&world.AliasFlagTemporary != 0
 	if flags&world.AliasFlagAliasSpeedWalk != 0 {
 		alias.SendTo = world.SendtoSpeedwalk
 	}
@@ -432,15 +433,127 @@ func (a *API) IsAlias(name string) int {
 
 func (a *API) SetAliasOption(name string, option string, value string) int {
 	name = world.PrefixedName(name, false)
-	result, ofound, tfound := a.Bus.SetAliasOption(name, option, value)
+	_, ofound, tfound := a.Bus.SetAliasOption(name, option, value)
 	if !tfound {
-		return ETimerNotFound
+		return EAliasNotFound
 	}
 	if !ofound {
 		return EOK
 	}
-	if !result {
-		return ETimeInvalid
+	return EOK
+}
+
+func (a *API) AddTrigger(triggerName string, match string, responseText string, flags int, colour int, wildcard int, soundFileName string, scriptName string) int {
+	if match == "" {
+		return ETriggerCannotBeEmpty
+	}
+	trigger := world.CreateTrigger()
+	trigger.Name = triggerName
+	trigger.Match = match
+	trigger.Send = responseText
+	trigger.Colour = colour
+	trigger.SoundFileName = soundFileName
+	trigger.Script = scriptName
+	trigger.Enabled = flags&world.TriggerFlagEnabled != 0
+	trigger.KeepEvaluating = flags&world.TriggerFlagKeepEvaluating != 0
+	trigger.IgnoreCase = flags&world.TriggerFlagIgnoreCase != 0
+	trigger.OmitFromLog = flags&world.TriggerFlagOmitFromLog != 0
+	trigger.Regexp = flags&world.TriggerFlagRegularExpression != 0
+	trigger.ExpandVariables = flags&world.TriggerFlagExpandVariables != 0
+	trigger.Temporary = flags&world.TriggerFlagTemporary != 0
+	trigger.SetByUser(false)
+	ok := a.Bus.AddTrigger(trigger, flags&world.TriggerFlagReplace != 0)
+	if !ok {
+		return ETriggerAlreadyExists
 	}
 	return EOK
+}
+
+func (a *API) AddTriggerEx(triggerName string, match string, responseText string, flags int, colour int, wildcard int, soundFileName string, scriptName string, sendTo int, sequence int) int {
+	if match == "" {
+		return ETriggerCannotBeEmpty
+	}
+	trigger := world.CreateTrigger()
+	trigger.Name = triggerName
+	trigger.Match = match
+	trigger.Send = responseText
+	trigger.Colour = colour
+	trigger.SoundFileName = soundFileName
+	trigger.SendTo = sendTo
+	trigger.Sequence = sequence
+	trigger.Script = scriptName
+	trigger.Enabled = flags&world.TriggerFlagEnabled != 0
+	trigger.KeepEvaluating = flags&world.TriggerFlagKeepEvaluating != 0
+	trigger.IgnoreCase = flags&world.TriggerFlagIgnoreCase != 0
+	trigger.OmitFromLog = flags&world.TriggerFlagOmitFromLog != 0
+	trigger.Regexp = flags&world.TriggerFlagRegularExpression != 0
+	trigger.ExpandVariables = flags&world.TriggerFlagExpandVariables != 0
+	trigger.Temporary = flags&world.TriggerFlagTemporary != 0
+	trigger.SetByUser(false)
+	ok := a.Bus.AddTrigger(trigger, flags&world.TriggerFlagReplace != 0)
+	if !ok {
+		return ETriggerAlreadyExists
+	}
+	return EOK
+}
+
+func (a *API) DeleteTrigger(name string) int {
+	ok := a.Bus.DoDeleteTrigger(name)
+	if !ok {
+		return ETriggerNotFound
+	}
+	return EOK
+}
+func (a *API) DeleteTriggerGroup(group string) int {
+	return a.Bus.DoDeleteTriggerGroup(group)
+}
+func (a *API) EnableTrigger(name string, enabled bool) int {
+	ok := a.Bus.DoEnableTriggerByName(name, enabled)
+	if !ok {
+		return ETriggerNotFound
+	}
+	return EOK
+}
+
+func (a *API) EnableTriggerGroup(group string, enabled bool) int {
+	return a.Bus.DoEnableTriggerGroup(group, enabled)
+}
+
+func (a *API) GetTriggerList() []string {
+	return a.Bus.DoListTriggerNames()
+}
+
+func (a *API) GetTriggerOption(name string, option string) (string, int) {
+	name = world.PrefixedName(name, false)
+	result, ofound, tfound := a.Bus.GetTriggerOption(name, option)
+	if !tfound {
+		return "", ETimerNotFound
+	}
+	if !ofound {
+		return "", EOptionOutOfRange
+	}
+	return result, EOK
+
+}
+
+func (a *API) IsTrigger(name string) int {
+	if !a.Bus.HasNamedTrigger(name) {
+		return ETriggerNotFound
+	}
+	return EOK
+}
+
+func (a *API) SetTriggerOption(name string, option string, value string) int {
+	name = world.PrefixedName(name, false)
+	_, ofound, tfound := a.Bus.SetTriggerOption(name, option, value)
+	if !tfound {
+		return ETriggerNotFound
+	}
+	if !ofound {
+		return EOK
+	}
+	return EOK
+}
+func (a *API) StopEvaluatingTriggers() {
+	a.Bus.DoStopEvaluatingTriggers()
 }

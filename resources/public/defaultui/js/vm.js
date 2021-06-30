@@ -19,12 +19,6 @@ var data={
     clients:[],
     gameCreateFormVisible:false,
     gameCreateForm:{},
-    triggers:null,
-    triggerName:"",
-    triggersVisible:false,
-    triggerSaveFormVisible:false,
-    triggerSaveForm:{},
-    saveTriggerFail:[],
     allLines:[],
     allLinesVisible:false,
     notopened:[],
@@ -54,6 +48,14 @@ var data={
     aliasCreateFormVisible:false,
     updatingAlias:null,
     aliasUpdateFormVisible:false,
+    triggerlist:null,
+    usertriggerlist:null,
+    scripttriggerlist:null,
+    triggersVisible:false,
+    triggerCreateForm:{},
+    triggerCreateFormVisible:false,
+    updatingTrigger:null,
+    triggerUpdateFormVisible:false,
 
     sendto:{
         0:"游戏",
@@ -146,6 +148,24 @@ var vm = new Vue({
                 Form:{},
             }
             vm.aliasUpdateFormVisible=true
+        },
+        onDeleteTrigger:function (id){
+            vm.$confirm('是否要删除该触发器?', '删除', {
+                confirmButtonText: '删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                app.send("deleteTrigger",[vm.current,id])
+              }).catch(()=>{
+              })
+        },
+        onUpdateTrigger:function (id){
+            app.send("loadTrigger",[vm.current,id])
+            vm.updatingTrigger={
+                ID:id,
+                Form:{},
+            }
+            vm.triggerUpdateFormVisible=true
         }
     }
 })

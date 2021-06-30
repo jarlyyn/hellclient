@@ -57,26 +57,27 @@ type Bus struct {
 	DoPrintSystem          func(msg string)
 	DoDiscardQueue         func() int
 
-	DoSendTimerToScript      func(*world.Timer)
-	DoDeleteTimer            func(string) bool
-	DoDeleteTimerByName      func(string) bool
-	DoDeleteTemporaryTimers  func() int
-	DoDeleteTimerGroup       func(string) int
-	DoEnableTimerByName      func(string, bool) bool
-	DoEnableTimerGroup       func(string, bool) int
-	DoResetNamedTimer        func(string) bool
-	GetTimer                 func(string) *world.Timer
-	GetTimersByType          func(bool) []*world.Timer
-	DoDeleteTimerByType      func(bool)
-	AddTimers                func(ts []*world.Timer)
-	DoResetTimers            func()
-	GetTimerOption           func(name string, option string) (string, bool, bool)
-	SetTimerOption           func(name string, option string, value string) (bool, bool, bool)
-	HasNamedTimer            func(string) bool
-	DoListTimerNames         func() []string
-	AddTimer                 func(*world.Timer, bool) bool
-	DoUpdateTimer            func(*world.Timer) int
-	DoSendAliasToScript      func(message string, alias *world.Alias, result *world.MatchResult)
+	DoSendTimerToScript     func(*world.Timer)
+	DoDeleteTimer           func(string) bool
+	DoDeleteTimerByName     func(string) bool
+	DoDeleteTemporaryTimers func() int
+	DoDeleteTimerGroup      func(string) int
+	DoEnableTimerByName     func(string, bool) bool
+	DoEnableTimerGroup      func(string, bool) int
+	DoResetNamedTimer       func(string) bool
+	GetTimer                func(string) *world.Timer
+	GetTimersByType         func(bool) []*world.Timer
+	DoDeleteTimerByType     func(bool)
+	AddTimers               func(ts []*world.Timer)
+	DoResetTimers           func()
+	GetTimerOption          func(name string, option string) (string, bool, bool)
+	SetTimerOption          func(name string, option string, value string) (bool, bool, bool)
+	HasNamedTimer           func(string) bool
+	DoListTimerNames        func() []string
+	AddTimer                func(*world.Timer, bool) bool
+	DoUpdateTimer           func(*world.Timer) int
+	DoSendAliasToScript     func(message string, alias *world.Alias, result *world.MatchResult)
+
 	DoDeleteAlias            func(string) bool
 	DoDeleteAliasByName      func(string) bool
 	DoDeleteTemporaryAliases func() int
@@ -94,29 +95,47 @@ type Bus struct {
 	AddAlias                 func(*world.Alias, bool) bool
 	DoUpdateAlias            func(*world.Alias) int
 
-	AddHistory           func(string)
-	GetHistories         func() []string
-	FlushHistories       func()
-	HandleConnReceive    func(msg []byte)
-	HandleConnError      func(err error)
-	HandleConnPrompt     func(msg []byte)
-	DoConnectServer      func() error
-	DoCloseServer        func() error
-	HandleConverterError func(err error)
-	HandleCmdError       func(err error)
-	HandleTriggerError   func(err error)
-	HandleScriptError    func(err error)
+	DoDeleteTrigger           func(string) bool
+	DoDeleteTriggerByName     func(string) bool
+	DoDeleteTemporaryTriggers func() int
+	DoDeleteTriggerGroup      func(string) int
+	DoEnableTriggerByName     func(string, bool) bool
+	DoEnableTriggerGroup      func(string, bool) int
+	GetTrigger                func(string) *world.Trigger
+	GetTriggersByType         func(bool) []*world.Trigger
+	DoDeleteTriggerByType     func(bool)
+	AddTriggers               func([]*world.Trigger)
+	GetTriggerOption          func(name string, option string) (string, bool, bool)
+	SetTriggerOption          func(name string, option string, value string) (bool, bool, bool)
+	HasNamedTrigger           func(string) bool
+	DoListTriggerNames        func() []string
+	AddTrigger                func(*world.Trigger, bool) bool
+	DoUpdateTrigger           func(*world.Trigger) int
+	DoSendTriggerToScript     func(line *world.Line, trigger *world.Trigger, result *world.MatchResult)
+	AddHistory                func(string)
+	GetHistories              func() []string
+	FlushHistories            func()
+	HandleConnReceive         func(msg []byte)
+	HandleConnError           func(err error)
+	HandleConnPrompt          func(msg []byte)
+	DoConnectServer           func() error
+	DoCloseServer             func() error
+	HandleConverterError      func(err error)
+	HandleCmdError            func(err error)
+	HandleTriggerError        func(err error)
+	HandleScriptError         func(err error)
 
-	LineEvent         busevent.Event
-	PromptEvent       busevent.Event
-	ConnectedEvent    busevent.Event
-	DisconnectedEvent busevent.Event
-	InitEvent         busevent.Event
-	ReadyEvent        busevent.Event
-	BeforeCloseEvent  busevent.Event
-	CloseEvent        busevent.Event
-	HistoriesEvent    busevent.Event
-	StatusEvent       busevent.Event
+	DoStopEvaluatingTriggers func()
+	LineEvent                busevent.Event
+	PromptEvent              busevent.Event
+	ConnectedEvent           busevent.Event
+	DisconnectedEvent        busevent.Event
+	InitEvent                busevent.Event
+	ReadyEvent               busevent.Event
+	BeforeCloseEvent         busevent.Event
+	CloseEvent               busevent.Event
+	HistoriesEvent           busevent.Event
+	StatusEvent              busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -227,6 +246,11 @@ func (b *Bus) WrapHandleTimer(f func(bus *Bus, timer *world.Timer)) func(*world.
 func (b *Bus) WrapHandleAlias(f func(b *Bus, message string, alias *world.Alias, result *world.MatchResult)) func(message string, alias *world.Alias, result *world.MatchResult) {
 	return func(message string, alias *world.Alias, result *world.MatchResult) {
 		f(b, message, alias, result)
+	}
+}
+func (b *Bus) WrapHandleTrigger(f func(b *Bus, line *world.Line, trigger *world.Trigger, result *world.MatchResult)) func(line *world.Line, trigger *world.Trigger, result *world.MatchResult) {
+	return func(line *world.Line, trigger *world.Trigger, result *world.MatchResult) {
+		f(b, line, trigger, result)
 	}
 }
 

@@ -36,6 +36,12 @@ const MsgTypeCreateAliasSuccess = "createAliasSuccess"
 const MsgTypeAlias = "alias"
 const MsgTypeUpdateAliasSuccess = "updateAliasSuccess"
 
+const MsgTypeUserTriggers = "usertriggers"
+const MsgTypeScriptTriggers = "scripttriggers"
+const MsgTypeCreateTriggerSuccess = "createTriggerSuccess"
+const MsgTypeTrigger = "trigger"
+const MsgTypeUpdateTriggerSuccess = "updateTriggerSuccess"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -126,7 +132,7 @@ func PublishUserAliases(p Publisher, id string, aliases []*world.Alias) {
 func PublishScriptAliases(p Publisher, id string, aliases []*world.Alias) {
 	p.Publish(New(MsgTypeScriptAliases, id, aliases))
 }
-func PublishCreateALiasSuccess(p Publisher, world string, id string) {
+func PublishCreateAliasSuccess(p Publisher, world string, id string) {
 	p.Publish(New(MsgTypeCreateAliasSuccess, world, id))
 }
 func PublishAlias(p Publisher, world string, alias *world.Alias) {
@@ -134,4 +140,20 @@ func PublishAlias(p Publisher, world string, alias *world.Alias) {
 }
 func PublishUpdateAliasSuccess(p Publisher, world string, id string) {
 	p.Publish(New(MsgTypeUpdateAliasSuccess, world, id))
+}
+
+func PublishUserTriggers(p Publisher, id string, triggers []*world.Trigger) {
+	p.Publish(New(MsgTypeUserTriggers, id, triggers))
+}
+func PublishScriptTriggers(p Publisher, id string, triggers []*world.Trigger) {
+	p.Publish(New(MsgTypeScriptTriggers, id, triggers))
+}
+func PublishCreateTriggerSuccess(p Publisher, world string, id string) {
+	p.Publish(New(MsgTypeCreateTriggerSuccess, world, id))
+}
+func PublishTrigger(p Publisher, world string, trigger *world.Trigger) {
+	p.Publish(New(MsgTypeTrigger, world, trigger))
+}
+func PublishUpdateTriggerSuccess(p Publisher, world string, id string) {
+	p.Publish(New(MsgTypeUpdateTriggerSuccess, world, id))
 }

@@ -19,6 +19,7 @@ func newLuaInitializer(b *bus.Bus) *lua51plugin.Initializer {
 		ModuleConstsSendTo,
 		ModuleConstsTimerFlag,
 		ModuleConstsAliasFlag,
+		ModuleConstsTriggersFlag,
 		NewAPIModule(b),
 	}
 	return i
@@ -79,7 +80,42 @@ func (e *LuaEngine) OnDisconnect(b *bus.Bus) {
 	}
 }
 
-func (e *LuaEngine) OnTrigger(*bus.Bus) {
+func (e *LuaEngine) ConvertStyle(L *lua.LState, line *world.Line) *lua.LTable {
+	result := L.NewTable()
+	for _, v := range line.Words {
+		style := L.NewTable()
+		style.RawSetString("text", lua.LString(v.Text))
+		style.RawSetString("textcolour", lua.LString(v.Color))
+		style.RawSetString("backcolour", lua.LString(v.Background))
+		style.RawSetString("length", lua.LNumber(len(v.Text)))
+		var s int
+		if v.Bold {
+			s = s + 1
+		}
+		style.RawSetString("length", lua.LNumber(s))
+		result.Append(style)
+	}
+	return result
+}
+func (e *LuaEngine) OnTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigger, result *world.MatchResult) {
+	if trigger.Script == "" {
+		return
+	}
+	L := e.Plugin.LState
+	t := L.NewTable()
+	for k, v := range result.List {
+		t.RawSetInt(k, lua.LString(v))
+	}
+	for k, v := range result.Named {
+		t.RawSetString(k, lua.LString(v))
+	}
+	if err := L.CallByParam(lua.P{
+		Fn:      L.GetGlobal(trigger.Script),
+		NRet:    0,
+		Protect: true,
+	}, lua.LString(trigger.Name), lua.LString(line.Plain()), t, e.ConvertStyle(L, line)); err != nil {
+		b.HandleScriptError(err)
+	}
 
 }
 func (e *LuaEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
