@@ -157,6 +157,7 @@ func (s *Script) load(b *bus.Bus) error {
 	return nil
 }
 func (s *Script) Reload(b *bus.Bus) error {
+	b.DoMultiLinesFlush()
 	s.EngineLocker.Lock()
 	defer s.EngineLocker.Unlock()
 	s.unload(b)
@@ -172,6 +173,7 @@ func (s *Script) beforeClose(b *bus.Bus) {
 	s.Unload(b)
 }
 func (s *Script) connected(b *bus.Bus) {
+	b.DoMultiLinesFlush()
 	s.EngineLocker.Lock()
 	defer s.EngineLocker.Unlock()
 	if s.Engine != nil {
