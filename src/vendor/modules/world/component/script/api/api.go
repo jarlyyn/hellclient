@@ -204,13 +204,20 @@ func (a *API) GetQueue() []string {
 	}
 	return result
 }
+func (a *API) Queue(message string) int {
+	cmd := world.CreateCommand(message)
+	a.Bus.DoSendToQueue(cmd)
+	return EOK
+}
 func (a *API) DiscardQueue() int {
 	return a.Bus.DoDiscardQueue()
 }
 func (a *API) SpeedWalkDelay() int {
 	return a.Bus.GetQueueDelay()
 }
-
+func (a *API) SetSpeedWalkDelay(d int) {
+	a.Bus.SetQueueDelay(d)
+}
 func (a *API) DeleteCommandHistory() {
 	a.Bus.FlushHistories()
 }
@@ -556,4 +563,8 @@ func (a *API) SetTriggerOption(name string, option string, value string) int {
 }
 func (a *API) StopEvaluatingTriggers() {
 	a.Bus.DoStopEvaluatingTriggers()
+}
+
+func (a *API) ColourNameToRGB(v string) string {
+	return v
 }

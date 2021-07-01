@@ -21,7 +21,6 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	a.Aliases = NewAliases()
 	a.Triggers = NewTriggers()
 	a.MultiLines = NewMultiLines()
-
 	a.Timers.OnFire = b.WrapHandleTimer(a.OnFire)
 	b.AddTimer = a.AddTimer
 	b.DoDeleteTimer = a.RemoveTimer
@@ -278,7 +277,7 @@ func (a *Automation) OnFire(b *bus.Bus, timer *world.Timer) {
 	a.trySendTo(b, timer.SendTo, timer.Send, timer.Variable, timer.OmitFromLog, timer.OmitFromOutput)
 	if timer.Script != "" {
 		ti := *timer
-		b.DoSendTimerToScript(&ti)
+		go b.DoSendTimerToScript(&ti)
 	}
 }
 func (a *Automation) DoDeleteTimerByType(byuser bool) {

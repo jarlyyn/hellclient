@@ -2,6 +2,7 @@ package script
 
 import (
 	"bytes"
+	"modules/mapper"
 	"modules/world"
 	"modules/world/bus"
 	"modules/world/component/script/luaengine"
@@ -21,9 +22,13 @@ type Script struct {
 	EngineLocker sync.Mutex
 	Status       string
 	Data         *world.ScriptData
+	Mapper       *mapper.Mapper
 	Engine       Engine
 }
 
+func (s *Script) GetMapper() *mapper.Mapper {
+	return s.Mapper
+}
 func (s *Script) encodeScript() ([]byte, error) {
 	buf := bytes.NewBuffer(nil)
 	err := toml.NewEncoder(buf).Encode(s.Data)
@@ -140,6 +145,7 @@ func (s *Script) Load(b *bus.Bus) error {
 	return s.load(b)
 }
 func (s *Script) load(b *bus.Bus) error {
+	s.Mapper.Reset()
 	err := s.open(b)
 	if err != nil {
 		return err
@@ -253,6 +259,8 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetStatus = s.GetStatus
 	b.SetStatus = b.WrapHandleString(s.SetStatus)
 
+	b.GetMapper = s.GetMapper
+
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)
@@ -261,5 +269,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 }
 
 func New() *Script {
-	return &Script{}
+	return &Script{
+		Mapper: mapper.New(),
+	}
 }

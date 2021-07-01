@@ -10,7 +10,7 @@ type RegexpMatcher struct {
 }
 
 func (m *RegexpMatcher) Match(message string) (*world.MatchResult, error) {
-	result := m.matcher.FindAllString(message, -1)
+	result := m.matcher.FindStringSubmatch(message)
 	if result == nil {
 		return nil, nil
 	}
