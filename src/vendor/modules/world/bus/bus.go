@@ -1,6 +1,7 @@
 package bus
 
 import (
+	"modules/mapper"
 	"modules/world"
 	"sync"
 
@@ -116,6 +117,8 @@ type Bus struct {
 	DoMultiLinesAppend func(string)
 	DoMultiLinesFlush  func()
 	DoMultiLinesLast   func(int) []string
+
+	GetMapper func() *mapper.Mapper
 
 	AddHistory           func(string)
 	GetHistories         func() []string

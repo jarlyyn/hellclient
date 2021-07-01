@@ -3,6 +3,8 @@ package main
 import (
 	"strconv"
 	"strings"
+
+	"github.com/herb-go/uniqueid"
 )
 
 func MustAtoi(v string) int {
@@ -41,6 +43,7 @@ type MclTimer struct {
 
 func (t *MclTimer) Convert() *Timer {
 	ti := &Timer{}
+	ti.ID = uniqueid.MustGenerateID()
 	ti.Enabled = t.Enabled == "y"
 	ti.Group = t.Group
 	ti.Name = t.Name
@@ -82,6 +85,7 @@ type MclAlias struct {
 
 func (a *MclAlias) Convert() *Alias {
 	al := &Alias{}
+	al.ID = uniqueid.MustGenerateID()
 	al.Enabled = a.Enabled == "y"
 	al.Group = a.Group
 	al.KeepEvaluating = a.KeepEvaluating == "y"
@@ -122,6 +126,7 @@ type MclTrigger struct {
 
 func (t *MclTrigger) Convert() *Trigger {
 	tr := &Trigger{}
+	tr.ID = uniqueid.MustGenerateID()
 	tr.Enabled = t.Enabled == "y"
 	tr.Group = t.Group
 	tr.KeepEvaluating = t.KeepEvaluating == "y"

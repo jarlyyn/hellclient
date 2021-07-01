@@ -20,7 +20,9 @@ func newLuaInitializer(b *bus.Bus) *lua51plugin.Initializer {
 		ModuleConstsTimerFlag,
 		ModuleConstsAliasFlag,
 		ModuleConstsTriggersFlag,
+		ModuleRex,
 		NewAPIModule(b),
+		NewMapperModule(b),
 	}
 	return i
 }
@@ -131,9 +133,8 @@ func (e *LuaEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, resu
 		t.RawSetString(k, lua.LString(v))
 	}
 	if err := L.CallByParam(lua.P{
-		Fn:      L.GetGlobal(alias.Script),
-		NRet:    0,
-		Protect: true,
+		Fn:   L.GetGlobal(alias.Script),
+		NRet: 0,
 	}, lua.LString(alias.Name), lua.LString(message), t); err != nil {
 		b.HandleScriptError(err)
 	}

@@ -6,6 +6,7 @@ import (
 	"modules/world/bus"
 	"modules/world/component/script/api"
 	"strconv"
+	"strings"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/herbplugin/lua51plugin"
@@ -25,6 +26,7 @@ type luaapi struct {
 }
 
 func (a *luaapi) InstallAPIs(l *lua.LState) {
+	l.SetGlobal("print", l.NewFunction(a.Print))
 	l.SetGlobal("Note", l.NewFunction(a.Note))
 	l.SetGlobal("SendImmediate", l.NewFunction(a.SendImmediate))
 	l.SetGlobal("Send", l.NewFunction(a.Send))
@@ -58,10 +60,12 @@ func (a *luaapi) InstallAPIs(l *lua.LState) {
 	l.SetGlobal("DeleteCommandHistory", l.NewFunction(a.DeleteCommandHistory))
 	l.SetGlobal("DiscardQueue", l.NewFunction(a.DiscardQueue))
 	l.SetGlobal("GetQueue", l.NewFunction(a.GetQueue))
+	l.SetGlobal("Queue", l.NewFunction(a.Queue))
+
 	l.SetGlobal("DoAfter", l.NewFunction(a.DoAfter))
 	l.SetGlobal("DoAfterNote", l.NewFunction(a.DoAfterNote))
 	l.SetGlobal("DoAfterSpeedWalk", l.NewFunction(a.DoAfterSpeedWalk))
-	l.SetGlobal("DoAfterSpecail", l.NewFunction(a.DoAfterSpecial))
+	l.SetGlobal("DoAfterSpecial", l.NewFunction(a.DoAfterSpecial))
 	l.SetGlobal("AddTimer", l.NewFunction(a.AddTimer))
 	l.SetGlobal("DeleteTimer", l.NewFunction(a.DeleteTimer))
 	l.SetGlobal("DeleteTemporaryTimers", l.NewFunction(a.DeleteTemporaryTimers))
@@ -97,6 +101,19 @@ func (a *luaapi) InstallAPIs(l *lua.LState) {
 	l.SetGlobal("GetTriggerOption", l.NewFunction(a.GetTriggerOption))
 	l.SetGlobal("SetTriggerOption", l.NewFunction(a.SetTriggerOption))
 	l.SetGlobal("StopEvaluatingTriggers", l.NewFunction(a.StopEvaluatingTriggers))
+
+	l.SetGlobal("ColourNameToRGB", l.NewFunction(a.ColourNameToRGB))
+	l.SetGlobal("SetSpeedWalkDelay", l.NewFunction(a.SetSpeedWalkDelay))
+	l.SetGlobal("GetSpeedWalkDelay", l.NewFunction(a.GetSpeedWalkDelay))
+}
+func (a *luaapi) Print(L *lua.LState) int {
+	t := L.GetTop()
+	msg := make([]string, 0, t-1)
+	for i := 0; i < t; i++ {
+		msg = append(msg, L.Get(i+1).String())
+	}
+	a.API.Note(strings.Join(msg, " "))
+	return 0
 }
 func (a *luaapi) Note(L *lua.LState) int {
 	info := L.ToString(1)
@@ -618,6 +635,24 @@ func (a *luaapi) StopEvaluatingTriggers(L *lua.LState) int {
 	a.API.StopEvaluatingTriggers()
 	return 0
 }
+func (a *luaapi) ColourNameToRGB(L *lua.LState) int {
+	v := a.API.ColourNameToRGB(L.ToString(1))
+	L.Push(lua.LString(v))
+	return 1
+}
+func (a *luaapi) SetSpeedWalkDelay(L *lua.LState) int {
+	a.API.SetSpeedWalkDelay(L.ToInt(1))
+	return 0
+}
+func (a *luaapi) GetSpeedWalkDelay(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.SpeedWalkDelay()))
+	return 1
+}
+func (a *luaapi) Queue(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.Queue(L.ToString(1))))
+	return 1
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
