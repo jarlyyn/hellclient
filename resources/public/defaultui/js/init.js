@@ -2,6 +2,7 @@ requirejs.config({
     "paths": {
         "text":"/public/defaultui/js/text.min",
         "vue":"/public/defaultui/js/vue",
+        "lodash":"/public/defaultui/js/lodash",
         "ELEMENT":"/public/defaultui/theme-chalk/index",
         "html-top":"/public/defaultui/block/top.html",
         "html-creategameform":"/public/defaultui/block/creategameform.html",

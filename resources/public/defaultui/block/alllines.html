@@ -1,4 +1,4 @@
-<el-dialog width="80%"  :fullscreen="true"  title="历史输出" :visible.sync="allLinesVisible">
+<el-dialog width="80%"  :fullscreen="true"  id="alllinespop" title="历史输出" :visible.sync="allLinesVisible">
     <div v-if="allLines">
     <ul id="alllines">
             <li v-bind:class="'words '+ typeclass[line.Type]" v-for="line in allLines">
@@ -8,7 +8,7 @@
         </ul>
 
     </div>
-        <div slot="footer" class="dialog-footer">
+        <!-- <div slot="footer" class="dialog-footer">
           <el-button @click="allLinesVisible = false">关闭</el-button>
-        </div>
+        </div> -->
       </el-dialog>
