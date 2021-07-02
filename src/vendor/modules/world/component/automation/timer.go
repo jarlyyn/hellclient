@@ -16,15 +16,12 @@ type Timer struct {
 
 func (t *Timer) onFire() {
 	t.Locker.Lock()
-	defer t.Locker.Unlock()
+	data := *t.Data
 	t.Timer = nil
-	go func() {
-		t.OnFire(t.Data)
-	}()
+	t.Locker.Unlock()
+	t.OnFire(&data)
 	if !t.Data.OneShot {
-		go func() {
-			t.Start()
-		}()
+		t.Start()
 	}
 }
 func (t *Timer) start() {

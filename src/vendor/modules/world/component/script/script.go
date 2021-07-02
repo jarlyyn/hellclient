@@ -223,8 +223,8 @@ func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
 	}
 }
 func (s *Script) GetEngine() Engine {
-	s.Locker.Lock()
-	defer s.Locker.Unlock()
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	return s.Engine
 }
 func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {

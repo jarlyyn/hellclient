@@ -15,7 +15,7 @@
             <div id="top">
       
             </div>
-        <ul id="lines" @click="onButton('allLines')">
+        <ul id="lines" @mousedown="onButton('allLines')">
             <li v-bind:class="'words '+ typeclass[line.Type]" v-bind:key="line.ID" v-for="line in lines">
                 <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') " v-for="word in line.Words" >{{word.Text}}</span>
             </li>

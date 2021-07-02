@@ -172,15 +172,12 @@ func (m *LuaMapper) GetPath(L *lua.LState) int {
 		return 1
 	}
 	t := L.NewTable()
-	length := 0
 	for i := range steps {
 		s := &LuaStep{step: steps[i]}
 		t.Append(s.Convert(L))
-		length = length + s.step.Delay
 	}
 	L.Push(t)
-	L.Push(lua.LNumber(length))
-	return 2
+	return 1
 }
 func (m *LuaMapper) AddPath(L *lua.LState) int {
 	_ = L.Get(1) //self

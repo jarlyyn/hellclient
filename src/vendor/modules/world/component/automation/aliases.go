@@ -190,8 +190,8 @@ func (a *Aliases) DoDeleteAliasByType(byuser bool) {
 }
 func (a *Aliases) GetAlias(id string) *world.Alias {
 	a.Locker.Lock()
-	defer a.Locker.Unlock()
 	al := a.All[id]
+	a.Locker.Unlock()
 	if al == nil {
 		return nil
 	}
