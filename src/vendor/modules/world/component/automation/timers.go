@@ -18,11 +18,14 @@ type Timers struct {
 
 func (t *Timers) TimerCallback(timer *world.Timer) {
 	t.Locker.Lock()
-	defer t.Locker.Unlock()
-	t.OnFire(timer)
-	if timer.OneShot {
-		t.removeTimer(timer.ID)
+	onfire := t.OnFire
+	ti := *timer
+	if ti.OneShot {
+		t.removeTimer(ti.ID)
 	}
+	t.Locker.Unlock()
+	onfire(&ti)
+
 }
 func (t *Timers) createTimer(ti *world.Timer) *Timer {
 	result := &Timer{
@@ -218,8 +221,8 @@ func (t *Timers) ResetTimers() {
 }
 func (t *Timers) GetTimerOption(name string, option string) (string, bool, bool) {
 	t.Locker.Lock()
-	defer t.Locker.Unlock()
 	ti := t.Named[name]
+	t.Locker.Unlock()
 	if ti == nil {
 		return "", false, false
 	}

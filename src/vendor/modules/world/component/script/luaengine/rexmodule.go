@@ -105,7 +105,11 @@ func (r *Rex) Match(L *lua.LState) int {
 	t := L.NewTable()
 	for i := 1; i < len(result.List); i++ {
 		v := result.List[i]
-		t.RawSetInt(i, lua.LString(v))
+		if v == "" {
+			t.RawSetInt(i, lua.LBool(false))
+		} else {
+			t.RawSetInt(i, lua.LString(v))
+		}
 	}
 	for k, v := range result.Named {
 		if v == "" {

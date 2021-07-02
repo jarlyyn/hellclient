@@ -156,14 +156,14 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 			send = strings.NewReplacer(rl...).Replace(data.Send)
 		}
 		v.Locker.Unlock()
+		if data.OneShot {
+			a.Triggers.RemoveTrigger(data.ID)
+		}
 		if send != "" {
-			a.trySendTo(b, data.SendTo, send, data.Variable, data.OmitFromLog, data.OmitFromOutput)
+			go a.trySendTo(b, data.SendTo, send, data.Variable, data.OmitFromLog, data.OmitFromOutput)
 		}
 		if data.Script != "" {
 			b.DoSendTriggerToScript(line, &data, r)
-		}
-		if data.OneShot {
-			a.Triggers.RemoveTrigger(data.ID)
 		}
 		if !data.KeepEvaluating || a.EvaluatingTriggersStop() {
 			return

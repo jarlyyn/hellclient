@@ -161,14 +161,15 @@ func (a *Triggers) DoDeleteTriggerByType(byuser bool) {
 }
 func (a *Triggers) GetTrigger(id string) *world.Trigger {
 	a.Locker.Lock()
-	defer a.Locker.Unlock()
 	tr := a.All[id]
+	a.Locker.Unlock()
 	if tr == nil {
 		return nil
 	}
 	tr.Locker.Lock()
-	defer tr.Locker.Unlock()
-	return tr.Data
+	data := *tr.Data
+	tr.Locker.Unlock()
+	return &data
 }
 func (a *Triggers) DoUpdateTrigger(tr *world.Trigger) int {
 	a.Locker.Lock()
