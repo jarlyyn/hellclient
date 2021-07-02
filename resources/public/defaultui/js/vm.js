@@ -1,4 +1,4 @@
-define(["vue","/public/defaultui/js/app.js"],function (Vue,app) {
+define(["vue","/public/defaultui/js/app.js","lodash"],function (Vue,app,_) {
     var onButton=app.onButton; 
 var data={
     typeclass:{
@@ -166,6 +166,12 @@ var vm = new Vue({
                 Form:{},
             }
             vm.triggerUpdateFormVisible=true
+        },
+        RenderLines:function(){
+                vm.lines=_.clone(app.linesbuffer)
+                setTimeout(function(){
+                body.scrollTo(body.offsetLeft,body.offsetHeight)
+                },0)        
         }
     }
 })

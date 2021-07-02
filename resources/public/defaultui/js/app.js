@@ -3,6 +3,8 @@ define(["vue","ELEMENT"],function(Vue,Element) {
     return {
         handlers:{},
         onButton:{},
+        linesbuffer:[],
+        
 }
 })
 

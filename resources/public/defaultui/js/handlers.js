@@ -1,17 +1,21 @@
 define(function (require) {
     var app=require("/public/defaultui/js/app.js")
     var vm=require("/public/defaultui/js/vm.js")
+    var _=require("lodash")
     var handlers=app.handlers;
     var send=app.send;
    
-
+var     render=_.debounce(vm.RenderLines,80,{
+    leading:true,
+    maxWait:150,
+})
 handlers.current=function(data){
     vm.current=data
     vm.currenttab=data
     vm.lines=[]
 }
 handlers.line=function(data){
-    var lines=vm.lines
+    var lines=app.linesbuffer
     lines.push(data)
     lines.sort(function(a, b) {
         return a.ID>b.ID?1:-1;
@@ -19,11 +23,9 @@ handlers.line=function(data){
     if (lines.length>50){
         lines.shift()
     }else{
-        setTimeout(function(){
-        body.scrollTo(body.offsetLeft,body.offsetHeight)
-        },0)
     }
-    vm.lines=lines
+    app.linesbuffer=lines
+    render()
 }
 handlers.prompt=function(data){
     vm.prompt=data
@@ -43,10 +45,8 @@ handlers.lines=function(data){
         lines.shift()
     }
     })
-    vm.lines=lines
-    setTimeout(function(){
-        body.scrollTo(body.offsetLeft,body.offsetHeight)
-        },0)
+    app.linesbuffer=lines
+    render()
 }
 handlers.connected=function(data){
     if (vm.info[data]){
@@ -76,6 +76,11 @@ handlers.triggerSuccess=function(data){
 }
 handlers.allLines=function(data){
     vm.allLines=data
+    var allliens=document.getElementById("alllinespop").children[0]
+    setTimeout(function(){
+        allliens.scrollTo(0,9999999)
+    },0)        
+
 }
 handlers.notopened=function(data){
     vm.notopened=data
