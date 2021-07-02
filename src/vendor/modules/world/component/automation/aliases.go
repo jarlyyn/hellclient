@@ -98,7 +98,7 @@ func (a *Aliases) loadAlias(alias *Alias) {
 			g = map[string]*Alias{}
 			a.Grouped[al.Group] = g
 		}
-		g[al.Group] = alias
+		g[al.ID] = alias
 	}
 	if al.Temporary {
 		a.Temporary[al.ID] = alias

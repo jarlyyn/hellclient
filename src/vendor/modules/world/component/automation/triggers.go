@@ -69,7 +69,7 @@ func (a *Triggers) loadTrigger(trigger *Trigger) {
 			g = map[string]*Trigger{}
 			a.Grouped[tr.Group] = g
 		}
-		g[tr.Group] = trigger
+		g[tr.ID] = trigger
 	}
 	if tr.Temporary {
 		a.Temporary[tr.ID] = trigger
@@ -273,14 +273,14 @@ func (a *Triggers) GetTriggerOption(name string, option string) (string, bool, b
 	result, ok := tr.Option(option)
 	return result, ok, true
 }
-func (a *Triggers) SetTriggerOption(name string, option string, vtrue string) (bool, bool, bool) {
+func (a *Triggers) SetTriggerOption(name string, option string, value string) (bool, bool, bool) {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
 	tr := a.Named[name]
 	if tr == nil {
 		return false, false, false
 	}
-	result, ok := tr.SetOption(option, vtrue)
+	result, ok := tr.SetOption(option, value)
 	if result && ok {
 		a.unloadTrigger(tr.Data.ID)
 		a.loadTrigger(tr)

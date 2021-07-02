@@ -16,7 +16,7 @@
       
             </div>
         <ul id="lines">
-            <li v-bind:class="'words '+ typeclass[line.Type]" v-for="line in lines">
+            <li v-bind:class="'words '+ typeclass[line.Type]" v-bind:key="line.ID" v-for="line in lines">
                 <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') " v-for="word in line.Words" >{{word.Text}}</span>
             </li>
         </ul>

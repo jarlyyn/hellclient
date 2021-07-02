@@ -71,10 +71,12 @@ func (m *Mapper) Tags() []string {
 	}
 	return result
 }
-func (m *Mapper) GetPath(form string, to []string) []*Step {
+func (m *Mapper) GetPath(from string, fly bool, to []string) []*Step {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
 	w := m.newWalking()
+	w.from = from
+	w.to = to
 	return w.Walk()
 }
 func (m *Mapper) newWalking() *Walking {

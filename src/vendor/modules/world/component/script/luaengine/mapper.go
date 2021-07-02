@@ -17,7 +17,7 @@ func ConvertLuaPath(v lua.LValue) *LuaPath {
 	}
 	t := v.(*lua.LTable)
 	p := &LuaPath{
-		path: &mapper.Path{},
+		path: mapper.NewPath(),
 	}
 	p.path.Command = t.RawGetString("command").String()
 	p.path.From = t.RawGetString("from").String()
@@ -29,7 +29,7 @@ func ConvertLuaPath(v lua.LValue) *LuaPath {
 	case lua.LTTable:
 		t := tags.(*lua.LTable)
 		max := t.MaxN()
-		for i := 1; i < max; i++ {
+		for i := 1; i <= max; i++ {
 			p.path.Tags[lua.LVAsString(t.RawGetInt(i))] = true
 		}
 	default:
@@ -133,6 +133,21 @@ func (m *LuaMapper) SetTag(L *lua.LState) int {
 	m.mapper.SetTag(tag, enabled)
 	return 0
 }
+func (m *LuaMapper) SetTags(L *lua.LState) int {
+	_ = L.Get(1) //self
+	tags := L.Get(2)
+	if tags.Type() != lua.LTTable {
+		panic("tags must be table")
+	}
+	t := tags.(*lua.LTable)
+	result := []string{}
+	t.ForEach(func(k lua.LValue, v lua.LValue) {
+		result = append(result, v.String())
+	})
+	m.mapper.AddTags(result)
+	return 0
+}
+
 func (m *LuaMapper) Tags(L *lua.LState) int {
 	result := m.mapper.Tags()
 	t := L.NewTable()
@@ -145,23 +160,27 @@ func (m *LuaMapper) Tags(L *lua.LState) int {
 func (m *LuaMapper) GetPath(L *lua.LState) int {
 	_ = L.Get(1) //self
 	from := L.ToString(2)
+	fly := L.ToInt(3)
 	count := L.GetTop()
 	to := []string{}
-	for i := 2; i < count; i++ {
+	for i := 3; i < count; i++ {
 		to = append(to, L.ToString(i+1))
 	}
-	steps := m.mapper.GetPath(from, to)
+	steps := m.mapper.GetPath(from, fly == 1, to)
 	if steps == nil {
 		L.Push(lua.LNil)
 		return 1
 	}
 	t := L.NewTable()
+	length := 0
 	for i := range steps {
 		s := &LuaStep{step: steps[i]}
 		t.Append(s.Convert(L))
+		length = length + s.step.Delay
 	}
 	L.Push(t)
-	return 1
+	L.Push(lua.LNumber(length))
+	return 2
 }
 func (m *LuaMapper) AddPath(L *lua.LState) int {
 	_ = L.Get(1) //self
@@ -201,7 +220,7 @@ func (m *LuaMapper) GetRoomName(L *lua.LState) int {
 func (m *LuaMapper) SetRoomName(L *lua.LState) int {
 	_ = L.Get(1) //self
 	id := L.ToString(2)
-	name := L.ToString(2)
+	name := L.ToString(3)
 	m.mapper.SetRoomName(id, name)
 	return 0
 }
@@ -242,6 +261,7 @@ func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("reset", L.NewFunction(m.Reset))
 	t.RawSetString("addtags", L.NewFunction(m.AddTags))
 	t.RawSetString("settag", L.NewFunction(m.SetTag))
+	t.RawSetString("settags", L.NewFunction(m.SetTags))
 	t.RawSetString("tags", L.NewFunction(m.Tags))
 	t.RawSetString("getpath", L.NewFunction(m.GetPath))
 	t.RawSetString("addpath", L.NewFunction(m.AddPath))
@@ -257,7 +277,6 @@ func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
 func NewMapperModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("mapper",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
-			next(ctx, plugin)
 			luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
 			l := luapluing.LState
 			m := &LuaMapper{b.GetMapper()}

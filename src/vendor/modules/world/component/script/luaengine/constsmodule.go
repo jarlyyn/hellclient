@@ -11,7 +11,6 @@ import (
 
 var ModuleConstsTriggersFlag = herbplugin.CreateModule("aliasflag",
 	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
-		next(ctx, plugin)
 		luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
 		l := luapluing.LState
 		consts := l.NewTable()
