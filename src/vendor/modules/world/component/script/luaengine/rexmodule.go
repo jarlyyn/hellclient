@@ -108,7 +108,11 @@ func (r *Rex) Match(L *lua.LState) int {
 		t.RawSetInt(i, lua.LString(v))
 	}
 	for k, v := range result.Named {
-		t.RawSetString(k, lua.LString(v))
+		if v == "" {
+			t.RawSetString(k, lua.LBool(false))
+		} else {
+			t.RawSetString(k, lua.LString(v))
+		}
 	}
 	L.Push(t)
 	return 3
@@ -172,7 +176,6 @@ func CreateRex(L *lua.LState) int {
 
 var ModuleRex = herbplugin.CreateModule("rex",
 	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
-		next(ctx, plugin)
 		luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
 		l := luapluing.LState
 		rex := l.NewTable()

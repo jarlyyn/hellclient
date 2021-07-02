@@ -4,12 +4,16 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/hex"
+	"fmt"
 	"modules/version"
 	"modules/world"
 	"modules/world/bus"
+	"os"
 	"strconv"
 	"strings"
 	"sync/atomic"
+
+	"github.com/herb-go/herbplugin"
 
 	uuid "github.com/satori/go.uuid"
 
@@ -393,6 +397,7 @@ func (a *API) AddAlias(aliasName string, match string, responseText string, flag
 }
 
 func (a *API) DeleteAlias(name string) int {
+	world.PrefixedName(name, false)
 	ok := a.Bus.DoDeleteAlias(name)
 	if !ok {
 		return EAliasNotFound
@@ -403,6 +408,7 @@ func (a *API) DeleteAliasGroup(group string) int {
 	return a.Bus.DoDeleteAliasGroup(group)
 }
 func (a *API) EnableAlias(name string, enabled bool) int {
+	world.PrefixedName(name, false)
 	ok := a.Bus.DoEnableAliasByName(name, enabled)
 	if !ok {
 		return EAliasNotFound
@@ -505,6 +511,7 @@ func (a *API) AddTriggerEx(triggerName string, match string, responseText string
 }
 
 func (a *API) DeleteTrigger(name string) int {
+	name = world.PrefixedName(name, false)
 	ok := a.Bus.DoDeleteTrigger(name)
 	if !ok {
 		return ETriggerNotFound
@@ -515,6 +522,7 @@ func (a *API) DeleteTriggerGroup(group string) int {
 	return a.Bus.DoDeleteTriggerGroup(group)
 }
 func (a *API) EnableTrigger(name string, enabled bool) int {
+	name = world.PrefixedName(name, false)
 	ok := a.Bus.DoEnableTriggerByName(name, enabled)
 	if !ok {
 		return ETriggerNotFound
@@ -544,6 +552,7 @@ func (a *API) GetTriggerOption(name string, option string) (string, int) {
 }
 
 func (a *API) IsTrigger(name string) int {
+	name = world.PrefixedName(name, false)
 	if !a.Bus.HasNamedTrigger(name) {
 		return ETriggerNotFound
 	}
@@ -567,4 +576,40 @@ func (a *API) StopEvaluatingTriggers() {
 
 func (a *API) ColourNameToRGB(v string) string {
 	return v
+}
+
+func (a *API) ReadFile(p herbplugin.Plugin, name string) string {
+	o := p.PluginOptions()
+	filename := o.GetLocation().MustCleanInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("read %s not allowed", name))
+	}
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+
+var lineReplacer = strings.NewReplacer("\r\n", "\n", "\n\r", "\n")
+
+func (a *API) ReadLines(p herbplugin.Plugin, name string) []string {
+	data := a.ReadFile(p, name)
+	return strings.Split(lineReplacer.Replace(data), "\n")
+}
+
+func (a *API) SplitN(text string, sep string, n int) []string {
+	return strings.SplitN(text, sep, n)
+}
+
+func (a *API) UTF8Len(text string) int {
+	v := []rune(text)
+	return len(v)
+}
+func (a *API) UTF8Sub(text string, start int, end int) string {
+	v := []rune(text)
+	if end > len(v) || end <= 0 {
+		end = len(v)
+	}
+	return string(v[start:end])
 }

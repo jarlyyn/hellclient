@@ -217,32 +217,33 @@ func (s *Script) SetStatus(b *bus.Bus, val string) {
 	}()
 }
 func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
-	s.Locker.Lock()
-	defer s.Locker.Unlock()
-	if s.Engine != nil {
-		s.Engine.OnTimer(b, timer)
+	e := s.GetEngine()
+	if e != nil {
+		go e.OnTimer(b, timer)
 	}
 }
-func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
+func (s *Script) GetEngine() Engine {
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
-	if s.Engine != nil {
-		s.Engine.OnAlias(b, message, alias, result)
+	return s.Engine
+}
+func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
+	e := s.GetEngine()
+	if e != nil {
+		go e.OnAlias(b, message, alias, result)
 	}
 }
 func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigger, result *world.MatchResult) {
-	s.Locker.Lock()
-	defer s.Locker.Unlock()
-	if s.Engine != nil {
-		s.Engine.OnTrigger(b, line, trigger, result)
+	e := s.GetEngine()
+	if e != nil {
+		e.OnTrigger(b, line, trigger, result)
 	}
 }
 
 func (s *Script) Run(b *bus.Bus, cmd string) {
-	s.Locker.Lock()
-	defer s.Locker.Unlock()
-	if s.Engine != nil {
-		s.Engine.Run(b, cmd)
+	e := s.GetEngine()
+	if e != nil {
+		go e.Run(b, cmd)
 	}
 }
 func (s *Script) InstallTo(b *bus.Bus) {

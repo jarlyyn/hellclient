@@ -50,7 +50,7 @@ func (t *Timers) loadTimer(timer *Timer) {
 			g = map[string]*Timer{}
 			t.Grouped[ti.Group] = g
 		}
-		g[ti.Group] = timer
+		g[ti.ID] = timer
 	}
 	if ti.Temporary {
 		t.Temporary[ti.ID] = timer
@@ -89,7 +89,7 @@ func (t *Timers) removeTimer(id string) bool {
 	if ti == nil {
 		return false
 	}
-	ti.Stop()
+	go ti.Stop()
 	return true
 }
 
@@ -119,7 +119,7 @@ func (t *Timers) unloadTimer(id string) *Timer {
 	if ti.Data.Temporary {
 		delete(t.Temporary, ti.Data.ID)
 	}
-	ti.Stop()
+	go ti.Stop()
 	return ti
 }
 func (t *Timers) RemoveTimer(id string) bool {
@@ -156,18 +156,18 @@ func (t *Timers) DeleteTimerGroup(group string) int {
 }
 func (t *Timers) EnableTimerByName(name string, enabled bool) bool {
 	t.Locker.Lock()
-	defer t.Locker.Unlock()
 	ti := t.Named[name]
+	t.Locker.Unlock()
 	if ti == nil {
 		return false
 	}
 	ti.Locker.Lock()
-	defer ti.Locker.Unlock()
 	ti.Data.Enabled = enabled
+	ti.Locker.Unlock()
 	if enabled {
-		ti.Start()
+		go ti.Start()
 	} else {
-		ti.Stop()
+		go ti.Stop()
 	}
 	return true
 }
@@ -228,15 +228,18 @@ func (t *Timers) GetTimerOption(name string, option string) (string, bool, bool)
 }
 func (t *Timers) SetTimerOption(name string, option string, value string) (bool, bool, bool) {
 	t.Locker.Lock()
-	defer t.Locker.Unlock()
 	ti := t.Named[name]
+	t.Locker.Unlock()
+
 	if ti == nil {
 		return false, false, false
 	}
 	result, ok := ti.SetOption(option, value)
 	if result && ok {
+		t.Locker.Lock()
 		t.unloadTimer(ti.Data.ID)
 		t.loadTimer(ti)
+		t.Locker.Unlock()
 	}
 	return result, ok, true
 }

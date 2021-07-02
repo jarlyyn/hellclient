@@ -48,11 +48,12 @@ func (c *Queue) Flush() int {
 }
 func (c *Queue) Append(b *bus.Bus, cmd *world.Command) {
 	c.Locker.Lock()
-	defer c.Locker.Unlock()
 	if c.List.Len() > 0 || c.Pending {
 		c.List.PushBack(cmd)
+		c.Locker.Unlock()
 		return
 	}
+	c.Locker.Unlock()
 	c.exec(b, cmd)
 }
 func (c *Queue) check(b *bus.Bus) {
@@ -62,22 +63,24 @@ func (c *Queue) check(b *bus.Bus) {
 		cmd := e.Value.(*world.Command)
 		c.exec(b, cmd)
 	}
-
 }
 func (c *Queue) AfterDelay(b *bus.Bus) {
 	c.Locker.Lock()
-	defer c.Locker.Unlock()
 	c.Pending = false
 	c.Timer = nil
+	c.Locker.Unlock()
 	c.check(b)
 }
 func (c *Queue) exec(b *bus.Bus, cmd *world.Command) {
-	b.DoSend(cmd)
 	delay := b.GetQueueDelay()
-	if delay >= 0 {
-		c.Pending = true
-		c.Timer = time.AfterFunc(time.Duration(delay)*time.Millisecond, func() { c.AfterDelay(b) })
+	if delay < 1 {
+		delay = 1
 	}
+	c.Locker.Lock()
+	c.Pending = true
+	c.Timer = time.AfterFunc(time.Duration(delay)*time.Millisecond, func() { c.AfterDelay(b) })
+	c.Locker.Unlock()
+	b.DoSend(cmd)
 }
 
 func New() *Queue {

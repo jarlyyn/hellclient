@@ -16,7 +16,7 @@ handlers.line=function(data){
     lines.sort(function(a, b) {
         return a.ID>b.ID?1:-1;
     });      
-    if (lines.length>500){
+    if (lines.length>50){
         lines.shift()
     }else{
         setTimeout(function(){
@@ -39,7 +39,7 @@ handlers.lines=function(data){
     var lines=[]
     data.forEach(function(element) {
         lines.push(element)
-    if (lines.length>500){
+    if (lines.length>50){
         lines.shift()
     }
     })

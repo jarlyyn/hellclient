@@ -25,7 +25,7 @@ type luaapi struct {
 	API *api.API
 }
 
-func (a *luaapi) InstallAPIs(l *lua.LState) {
+func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("print", l.NewFunction(a.Print))
 	l.SetGlobal("Note", l.NewFunction(a.Note))
 	l.SetGlobal("SendImmediate", l.NewFunction(a.SendImmediate))
@@ -105,6 +105,13 @@ func (a *luaapi) InstallAPIs(l *lua.LState) {
 	l.SetGlobal("ColourNameToRGB", l.NewFunction(a.ColourNameToRGB))
 	l.SetGlobal("SetSpeedWalkDelay", l.NewFunction(a.SetSpeedWalkDelay))
 	l.SetGlobal("GetSpeedWalkDelay", l.NewFunction(a.GetSpeedWalkDelay))
+
+	l.SetGlobal("ReadFile", l.NewFunction(a.NewReadFileAPI(p)))
+	l.SetGlobal("ReadLines", l.NewFunction(a.NewReadLinesAPI(p)))
+	l.SetGlobal("SplitN", l.NewFunction(a.SplitNfunc))
+	l.SetGlobal("UTF8Len", l.NewFunction(a.UTF8Len))
+	l.SetGlobal("UTF8Sub", l.NewFunction(a.UTF8Sub))
+
 }
 func (a *luaapi) Print(L *lua.LState) int {
 	t := L.GetTop()
@@ -593,7 +600,7 @@ func (a *luaapi) IsTrigger(L *lua.LState) int {
 func (a *luaapi) GetTriggerOption(L *lua.LState) int {
 	name := L.ToString(1)
 	option := L.ToString(2)
-	result, code := a.API.GetTimerOption(name, option)
+	result, code := a.API.GetTriggerOption(name, option)
 	if code != api.EOK {
 		L.Push(lua.LNil)
 	} else {
@@ -627,7 +634,7 @@ func (a *luaapi) SetTriggerOption(L *lua.LState) int {
 	case "send_to", "user", "sequence":
 		value = L.ToString(3)
 	}
-	L.Push(lua.LNumber(a.API.SetTimerOption(name, option, value)))
+	L.Push(lua.LNumber(a.API.SetTriggerOption(name, option, value)))
 	return 1
 }
 
@@ -652,13 +659,56 @@ func (a *luaapi) Queue(L *lua.LState) int {
 	L.Push(lua.LNumber(a.API.Queue(L.ToString(1))))
 	return 1
 }
+func (a *luaapi) NewReadFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		L.Push(lua.LString(a.API.ReadFile(p, L.ToString(1))))
+		return 1
+	}
+}
+func (a *luaapi) NewReadLinesAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		lines := a.API.ReadLines(p, L.ToString(1))
+		t := L.NewTable()
+		for _, v := range lines {
+			t.Append(lua.LString(v))
+		}
+		L.Push(t)
+		return 1
+	}
+}
+
+func (a *luaapi) SplitNfunc(L *lua.LState) int {
+	text := L.ToString(1)
+	sep := L.ToString(2)
+	n := L.ToInt(3)
+	s := a.API.SplitN(text, sep, n)
+	t := L.NewTable()
+	for _, v := range s {
+		t.Append(lua.LString(v))
+	}
+	L.Push(t)
+	return 1
+}
+
+func (a *luaapi) UTF8Len(L *lua.LState) int {
+	text := L.ToString(1)
+	L.Push(lua.LNumber(a.API.UTF8Len(text)))
+	return 1
+}
+func (a *luaapi) UTF8Sub(L *lua.LState) int {
+	text := L.ToString(1)
+	start := L.ToInt(2)
+	end := L.ToInt(3)
+	L.Push(lua.LString(a.API.UTF8Sub(text, start, end)))
+	return 1
+}
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
 			luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
 			l := luapluing.LState
-			createApi(b).InstallAPIs(l)
+			createApi(b).InstallAPIs(plugin, l)
 			next(ctx, plugin)
 		},
 		nil,

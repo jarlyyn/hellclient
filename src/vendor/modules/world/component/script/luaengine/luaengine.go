@@ -3,6 +3,7 @@ package luaengine
 import (
 	"modules/world"
 	"modules/world/bus"
+	"sync"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/util"
@@ -28,6 +29,7 @@ func newLuaInitializer(b *bus.Bus) *lua51plugin.Initializer {
 }
 
 type LuaEngine struct {
+	Locker       sync.RWMutex
 	Plugin       *lua51plugin.Plugin
 	onClose      string
 	onDisconnect string
@@ -65,7 +67,8 @@ func (e *LuaEngine) Open(b *bus.Bus) error {
 }
 func (e *LuaEngine) Close(b *bus.Bus) {
 	if e.onClose != "" {
-		b.HandleScriptError(e.Plugin.LState.DoString(e.onClose + "()"))
+		e.Call(b, e.Plugin.LState.GetGlobal(e.onClose))
+		// b.HandleScriptError(e.Plugin.LState.DoString(e.onClose + "()"))
 	}
 	b.HandleScriptError(util.Catch(func() {
 		e.Plugin.MustClosePlugin()
@@ -73,12 +76,14 @@ func (e *LuaEngine) Close(b *bus.Bus) {
 }
 func (e *LuaEngine) OnConnect(b *bus.Bus) {
 	if e.onConnect != "" {
-		b.HandleScriptError(e.Plugin.LState.DoString(e.onConnect + "()"))
+		e.Call(b, e.Plugin.LState.GetGlobal(e.onConnect))
+		// b.HandleScriptError(e.Plugin.LState.DoString(e.onConnect + "()"))
 	}
 }
 func (e *LuaEngine) OnDisconnect(b *bus.Bus) {
 	if e.onDisconnect != "" {
-		b.HandleScriptError(e.Plugin.LState.DoString(e.onDisconnect + "()"))
+		e.Call(b, e.Plugin.LState.GetGlobal(e.onDisconnect))
+		// b.HandleScriptError(e.Plugin.LState.DoString(e.onDisconnect + "()"))
 	}
 }
 
@@ -103,6 +108,8 @@ func (e *LuaEngine) OnTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigg
 	if trigger.Script == "" {
 		return
 	}
+	e.Locker.Lock()
+	fn := e.Plugin.LState.GetGlobal(trigger.Script)
 	L := e.Plugin.LState
 	t := L.NewTable()
 	for k, v := range result.List {
@@ -111,33 +118,40 @@ func (e *LuaEngine) OnTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigg
 	for k, v := range result.Named {
 		t.RawSetString(k, lua.LString(v))
 	}
-	if err := L.CallByParam(lua.P{
-		Fn:      L.GetGlobal(trigger.Script),
-		NRet:    0,
-		Protect: true,
-	}, lua.LString(trigger.Name), lua.LString(line.Plain()), t, e.ConvertStyle(L, line)); err != nil {
-		b.HandleScriptError(err)
-	}
+	e.Locker.Unlock()
+	// if err := L.CallByParam(lua.P{
+	// 	Fn:      L.GetGlobal(trigger.Script),
+	// 	NRet:    0,
+	// 	Protect: true,
+	// }, lua.LString(trigger.Name), lua.LString(line.Plain()), t, e.ConvertStyle(L, line)); err != nil {
+	// 	b.HandleScriptError(err)
+	// }
+	e.Call(b, fn, lua.LString(trigger.Name), lua.LString(line.Plain()), t, e.ConvertStyle(L, line))
 
 }
 func (e *LuaEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
 	if alias.Script == "" {
 		return
 	}
+	e.Locker.Lock()
+	fn := e.Plugin.LState.GetGlobal(alias.Script)
 	L := e.Plugin.LState
 	t := L.NewTable()
-	for _, v := range result.List {
-		t.Append(lua.LString(v))
+	for k, v := range result.List {
+		t.RawSetInt(k, lua.LString(v))
 	}
 	for k, v := range result.Named {
 		t.RawSetString(k, lua.LString(v))
 	}
-	if err := L.CallByParam(lua.P{
-		Fn:   L.GetGlobal(alias.Script),
-		NRet: 0,
-	}, lua.LString(alias.Name), lua.LString(message), t); err != nil {
-		b.HandleScriptError(err)
-	}
+	e.Locker.Unlock()
+
+	// if err := L.CallByParam(lua.P{
+	// 	Fn:   L.GetGlobal(alias.Script),
+	// 	NRet: 0,
+	// }, lua.LString(alias.Name), lua.LString(message), t); err != nil {
+	// 	b.HandleScriptError(err)
+	// }
+	e.Call(b, fn, lua.LString(alias.Name), lua.LString(message), t)
 
 }
 func (e *LuaEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
@@ -145,15 +159,35 @@ func (e *LuaEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
 		return
 	}
 
-	L := e.Plugin.LState
-	if err := L.CallByParam(lua.P{
-		Fn:      L.GetGlobal(timer.Script),
-		NRet:    0,
-		Protect: true,
-	}, lua.LString(timer.Name)); err != nil {
-		b.HandleScriptError(err)
-	}
+	// L := e.Plugin.LState
+	// if err := L.CallByParam(lua.P{
+	// 	Fn:      L.GetGlobal(timer.Script),
+	// 	NRet:    0,
+	// 	Protect: true,
+	// }, lua.LString(timer.Name)); err != nil {
+	// 	b.HandleScriptError(err)
+	// }
+	e.Locker.Lock()
+	fn := e.Plugin.LState.GetGlobal(timer.Script)
+	e.Locker.Unlock()
+	e.Call(b, fn, lua.LString(timer.Name))
+
 }
 func (e *LuaEngine) Run(b *bus.Bus, cmd string) {
+	e.Locker.Lock()
+	defer e.Locker.Unlock()
 	b.HandleScriptError(e.Plugin.LState.DoString(cmd))
+}
+
+func (e *LuaEngine) Call(b *bus.Bus, fn lua.LValue, args ...lua.LValue) {
+	e.Locker.Lock()
+	defer e.Locker.Unlock()
+	L := e.Plugin.LState
+	if err := L.CallByParam(lua.P{
+		Fn:      fn,
+		NRet:    0,
+		Protect: true,
+	}, args...); err != nil {
+		b.HandleScriptError(err)
+	}
 }

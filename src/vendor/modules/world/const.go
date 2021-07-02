@@ -12,7 +12,7 @@ func ToStringBool(v bool) string {
 }
 
 func FromStringBool(v string) bool {
-	return v == StringYes
+	return v == StringYes || v == "1"
 }
 func FromStringInt(v string) int {
 	i, err := strconv.Atoi(v)
