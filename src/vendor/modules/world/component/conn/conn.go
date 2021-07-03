@@ -93,7 +93,7 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 	conn.running = false
 	conn.buffer = []byte{}
 	close(conn.c)
-	bus.RaiseDisconnectedEvent()
+	go bus.RaiseDisconnectedEvent()
 	err := conn.telnet.Close()
 	conn.telnet = nil
 	return err
