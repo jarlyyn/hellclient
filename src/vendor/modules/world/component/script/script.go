@@ -18,12 +18,15 @@ import (
 )
 
 type Script struct {
-	Locker       sync.Mutex
-	EngineLocker sync.Mutex
-	Status       string
-	Data         *world.ScriptData
-	Mapper       *mapper.Mapper
-	Engine       Engine
+	CreatorLocker sync.Mutex
+	creator       string
+	creatorType   string
+	Locker        sync.Mutex
+	EngineLocker  sync.Mutex
+	Status        string
+	Data          *world.ScriptData
+	Mapper        *mapper.Mapper
+	Engine        Engine
 }
 
 func (s *Script) GetMapper() *mapper.Mapper {
@@ -128,10 +131,22 @@ func (s *Script) Unload(b *bus.Bus) {
 	s.unload(b)
 
 }
+func (s *Script) SetCreator(creatortype string, creator string) {
+	s.CreatorLocker.Lock()
+	s.creator = creator
+	s.creatorType = creatortype
+	s.CreatorLocker.Unlock()
+}
+func (s *Script) CreatorAndType() (string, string) {
+	s.CreatorLocker.Lock()
+	defer s.CreatorLocker.Unlock()
+	return s.creator, s.creatorType
+}
 func (s *Script) unload(b *bus.Bus) {
 	if s.Engine != nil {
 		s.Engine.Close(b)
 	}
+	s.SetCreator("", "")
 	b.DoDeleteTimerByType(false)
 	b.DoDeleteAliasByType(false)
 	b.DoDeleteTriggerByType(false)
@@ -183,6 +198,7 @@ func (s *Script) connected(b *bus.Bus) {
 	s.EngineLocker.Lock()
 	defer s.EngineLocker.Unlock()
 	if s.Engine != nil {
+		s.SetCreator("system", "connected")
 		s.Engine.OnConnect(b)
 	}
 }
@@ -190,6 +206,7 @@ func (s *Script) disconnected(b *bus.Bus) {
 	s.EngineLocker.Lock()
 	defer s.EngineLocker.Unlock()
 	if s.Engine != nil {
+		s.SetCreator("system", "disconnected")
 		s.Engine.OnDisconnect(b)
 	}
 }
@@ -219,7 +236,14 @@ func (s *Script) SetStatus(b *bus.Bus, val string) {
 func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
 	e := s.GetEngine()
 	if e != nil {
-		go e.OnTimer(b, timer)
+		go func() {
+			if timer.Script != "" {
+				s.SetCreator("timer", timer.Script)
+			} else {
+				s.SetCreator("timer", "#"+timer.ID)
+			}
+			e.OnTimer(b, timer)
+		}()
 	}
 }
 func (s *Script) GetEngine() Engine {
@@ -230,12 +254,24 @@ func (s *Script) GetEngine() Engine {
 func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
 	e := s.GetEngine()
 	if e != nil {
-		go e.OnAlias(b, message, alias, result)
+		go func() {
+			if alias.Script != "" {
+				s.SetCreator("alias", alias.Script)
+			} else {
+				s.SetCreator("alias", "#"+alias.ID)
+			}
+			e.OnAlias(b, message, alias, result)
+		}()
 	}
 }
 func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigger, result *world.MatchResult) {
 	e := s.GetEngine()
 	if e != nil {
+		if trigger.Script != "" {
+			s.SetCreator("trigger", trigger.Script)
+		} else {
+			s.SetCreator("trigger", "#"+trigger.ID)
+		}
 		e.OnTrigger(b, line, trigger, result)
 	}
 }
@@ -243,7 +279,10 @@ func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigge
 func (s *Script) Run(b *bus.Bus, cmd string) {
 	e := s.GetEngine()
 	if e != nil {
-		go e.Run(b, cmd)
+		s.SetCreator("run", "")
+		go func() {
+			e.Run(b, cmd)
+		}()
 	}
 }
 func (s *Script) InstallTo(b *bus.Bus) {
@@ -262,6 +301,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 
 	b.GetMapper = s.GetMapper
 
+	b.GetScriptCaller = s.CreatorAndType
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)

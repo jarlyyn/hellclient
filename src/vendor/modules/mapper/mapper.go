@@ -163,7 +163,7 @@ func (m *Mapper) GetExits(id string) []*Path {
 		return result
 	}
 	for _, v := range room.Exits {
-		if len(v.Tags) == 0 && len(v.ExcludeTags) == 0 {
+		if ValidateTags(m.tags, v) {
 			result = append(result, v)
 		}
 	}

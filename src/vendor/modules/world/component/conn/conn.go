@@ -125,10 +125,11 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 				bus.HandleConnError(err)
 				return
 			}
+			buf := conn.buffer
 			conn.Debounce.Reset()
-			bus.HandleConnReceive(conn.buffer)
 			conn.buffer = []byte{}
 			conn.Lock.Unlock()
+			bus.HandleConnReceive(buf)
 			continue
 		}
 		conn.buffer = append(conn.buffer, s)

@@ -53,7 +53,7 @@ func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
 		bus.RaisePromptEvent(world.NewLine())
 	}
 	if cmd.Echo {
-		c.DoPrintEcho(bus, string(cmd.Mesasge))
+		c.DoPrintEcho(bus, cmd)
 	}
 	if cmd.History {
 		bus.AddHistory(cmd.Mesasge)
@@ -61,11 +61,13 @@ func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
 	bus.DoSendToConn(b)
 	bus.DoSendToConn([]byte("\n"))
 }
-func (c *Converter) DoPrintEcho(b *bus.Bus, msg string) {
+func (c *Converter) DoPrintEcho(b *bus.Bus, cmd *world.Command) {
 	line := world.NewLine()
+	line.Creator = cmd.Creator
+	line.CreatorType = cmd.CreatorType
 	line.Type = world.LineTypeEcho
 	w := world.Word{
-		Text: msg,
+		Text: cmd.Mesasge,
 	}
 	line.Append(w)
 	b.RaiseLineEvent(line)

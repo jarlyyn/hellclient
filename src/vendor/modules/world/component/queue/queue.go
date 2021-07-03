@@ -48,38 +48,34 @@ func (c *Queue) Flush() int {
 }
 func (c *Queue) Append(b *bus.Bus, cmd *world.Command) {
 	c.Locker.Lock()
-	if c.List.Len() > 0 || c.Pending {
-		c.List.PushBack(cmd)
-		c.Locker.Unlock()
-		return
-	}
+	c.List.PushBack(cmd)
 	c.Locker.Unlock()
-	c.exec(b, cmd)
+	c.Check(b)
 }
-func (c *Queue) check(b *bus.Bus) {
+func (c *Queue) Check(b *bus.Bus) {
+	c.Locker.Lock()
 	if c.List.Len() != 0 && !c.Pending {
 		e := c.List.Front()
 		c.List.Remove(e)
 		cmd := e.Value.(*world.Command)
 		c.exec(b, cmd)
 	}
+	c.Locker.Unlock()
 }
 func (c *Queue) AfterDelay(b *bus.Bus) {
 	c.Locker.Lock()
 	c.Pending = false
 	c.Timer = nil
 	c.Locker.Unlock()
-	c.check(b)
+	c.Check(b)
 }
 func (c *Queue) exec(b *bus.Bus, cmd *world.Command) {
 	delay := b.GetQueueDelay()
 	if delay < 1 {
 		delay = 1
 	}
-	c.Locker.Lock()
 	c.Pending = true
 	c.Timer = time.AfterFunc(time.Duration(delay)*time.Millisecond, func() { c.AfterDelay(b) })
-	c.Locker.Unlock()
 	b.DoSend(cmd)
 }
 

@@ -41,13 +41,12 @@ func ConvertLuaPath(v lua.LValue) *LuaPath {
 	case lua.LTTable:
 		t := etags.(*lua.LTable)
 		max := t.MaxN()
-		for i := 1; i < max; i++ {
+		for i := 1; i <= max; i++ {
 			p.path.ExcludeTags[lua.LVAsString(t.RawGetInt(i))] = true
 		}
 	default:
 		panic("excludetags must be table")
 	}
-
 	return p
 }
 

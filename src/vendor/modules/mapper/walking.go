@@ -42,10 +42,9 @@ func (w *Walking) step(p *Path) *Step {
 		// Length:  length,
 	}
 }
-
-func (w *Walking) validateTags(p *Path) bool {
+func ValidateTags(tags map[string]bool, p *Path) bool {
 	var matched = false
-	for k, v := range w.tags {
+	for k, v := range tags {
 		if v {
 			if p.ExcludeTags[k] {
 				return false
@@ -56,6 +55,9 @@ func (w *Walking) validateTags(p *Path) bool {
 		}
 	}
 	return len(p.Tags) == 0 || matched
+}
+func (w *Walking) validateTags(p *Path) bool {
+	return ValidateTags(w.tags, p)
 }
 func (w *Walking) Walk() []*Step {
 	rooms := *w.rooms

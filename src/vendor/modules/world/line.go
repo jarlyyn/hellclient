@@ -26,6 +26,9 @@ type Line struct {
 	Type           int
 	OmitFromLog    bool
 	OmitFromOutput bool
+	Triggers       []string
+	CreatorType    string
+	Creator        string
 }
 
 func (l *Line) Append(w Word) {
