@@ -120,19 +120,19 @@ type Bus struct {
 
 	GetMapper func() *mapper.Mapper
 
-	AddHistory           func(string)
-	GetHistories         func() []string
-	FlushHistories       func()
-	HandleConnReceive    func(msg []byte)
-	HandleConnError      func(err error)
-	HandleConnPrompt     func(msg []byte)
-	DoConnectServer      func() error
-	DoCloseServer        func() error
-	HandleConverterError func(err error)
-	HandleCmdError       func(err error)
-	HandleTriggerError   func(err error)
-	HandleScriptError    func(err error)
-
+	AddHistory               func(string)
+	GetHistories             func() []string
+	FlushHistories           func()
+	HandleConnReceive        func(msg []byte)
+	HandleConnError          func(err error)
+	HandleConnPrompt         func(msg []byte)
+	DoConnectServer          func() error
+	DoCloseServer            func() error
+	HandleConverterError     func(err error)
+	HandleCmdError           func(err error)
+	HandleTriggerError       func(err error)
+	HandleScriptError        func(err error)
+	GetScriptCaller          func() (string, string)
 	DoStopEvaluatingTriggers func()
 	LineEvent                busevent.Event
 	PromptEvent              busevent.Event

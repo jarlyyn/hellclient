@@ -147,10 +147,16 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 		if r == nil {
 			continue
 		}
+
 		var send string
 		var data world.Trigger
 		v.Locker.Lock()
 		data = *v.Data
+		if data.Script != "" {
+			line.Triggers = append(line.Triggers, data.Script)
+		} else {
+			line.Triggers = append(line.Triggers, "#"+data.ID)
+		}
 		if v.Data.Send != "" {
 			rl := r.ReplaceList(v.Data.Name)
 			send = strings.NewReplacer(rl...).Replace(data.Send)
