@@ -42,6 +42,10 @@ const MsgTypeCreateTriggerSuccess = "createTriggerSuccess"
 const MsgTypeTrigger = "trigger"
 const MsgTypeUpdateTriggerSuccess = "updateTriggerSuccess"
 
+const MsgTypeParamsinfo = "paramsinfo"
+const MsgTypeParamUpdated = "paramupdated"
+const MsgTypeParamDeleted = "paramdeleted"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -156,4 +160,15 @@ func PublishTrigger(p Publisher, world string, trigger *world.Trigger) {
 }
 func PublishUpdateTriggerSuccess(p Publisher, world string, id string) {
 	p.Publish(New(MsgTypeUpdateTriggerSuccess, world, id))
+}
+
+func PublishParamsinfo(p Publisher, world string, info *world.ParamsInfo) {
+	p.Publish(New(MsgTypeParamsinfo, world, info))
+}
+func PublishParamUpdated(p Publisher, world string, name string) {
+	p.Publish(New(MsgTypeParamUpdated, world, name))
+}
+
+func PublishParamDeleted(p Publisher, world string, name string) {
+	p.Publish(New(MsgTypeParamDeleted, world, name))
 }

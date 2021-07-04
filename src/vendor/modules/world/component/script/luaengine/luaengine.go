@@ -109,6 +109,10 @@ func (e *LuaEngine) OnTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigg
 		return
 	}
 	e.Locker.Lock()
+	if e.Plugin.LState == nil {
+		e.Locker.Unlock()
+		return
+	}
 	fn := e.Plugin.LState.GetGlobal(trigger.Script)
 	L := e.Plugin.LState
 	t := L.NewTable()
@@ -134,6 +138,10 @@ func (e *LuaEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, resu
 		return
 	}
 	e.Locker.Lock()
+	if e.Plugin.LState == nil {
+		e.Locker.Unlock()
+		return
+	}
 	fn := e.Plugin.LState.GetGlobal(alias.Script)
 	L := e.Plugin.LState
 	t := L.NewTable()
@@ -168,6 +176,10 @@ func (e *LuaEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
 	// 	b.HandleScriptError(err)
 	// }
 	e.Locker.Lock()
+	if e.Plugin.LState == nil {
+		e.Locker.Unlock()
+		return
+	}
 	fn := e.Plugin.LState.GetGlobal(timer.Script)
 	e.Locker.Unlock()
 	e.Call(b, fn, lua.LString(timer.Name))
@@ -182,7 +194,14 @@ func (e *LuaEngine) Run(b *bus.Bus, cmd string) {
 func (e *LuaEngine) Call(b *bus.Bus, fn lua.LValue, args ...lua.LValue) {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()
+	if e.Plugin.LState == nil {
+		e.Locker.Unlock()
+		return
+	}
 	L := e.Plugin.LState
+	if L == nil {
+		return
+	}
 	if err := L.CallByParam(lua.P{
 		Fn:      fn,
 		NRet:    0,

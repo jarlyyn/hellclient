@@ -20,7 +20,7 @@ requirejs.config({
         "html-timerlist":"/public/defaultui/block/timerlist.html",
         "html-aliaslist":"/public/defaultui/block/aliaslist.html",
         "html-triggerlist":"/public/defaultui/block/triggerlist.html",
-
+        "html-variablelist":"/public/defaultui/block/variablelist.html",
         "html-script":"/public/defaultui/block/script.html",
         "main":"/public/defaultui/js/main"
     },
@@ -58,7 +58,9 @@ define(function (require) {
     document.getElementById("createtriggerform").innerHTML=htmlcreatetriggerform;
     var htmlupdatetriggerform=require("text!html-updatetriggerform");
     document.getElementById("updatetriggerform").innerHTML=htmlupdatetriggerform;
-    
+    var htmlvariablelist=require("text!html-variablelist");
+    document.getElementById("variablelist").innerHTML=htmlvariablelist;
+
     
     
     var htmlalllines=require("text!html-alllines");

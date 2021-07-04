@@ -156,6 +156,18 @@ handlers.trigger=function(data){
         vm.updatingTrigger.Form=data
     }
 }
-
+handlers.paramsinfo=function(data){
+     if (!data.RequiredParams){
+         vm.showRequiredParams=false
+     }
+     data.ParamList=[]
+     for (const value of Object.keys(data.Params)) {
+        data.ParamList.push({Name:value,Value:data.Params[value]})
+      }
+      data.ParamList.sort(function(a, b) {
+        return a.Name>b.Name?1:-1;
+    });      
+     vm.paramsinfo=data
+}
 
 })

@@ -39,5 +39,7 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("createTriggerSuccess", p.newRoomAdapter("createTriggerSuccess"))
 	adapter.Register("trigger", p.newRoomAdapter("trigger"))
 	adapter.Register("updateTriggerSuccess", p.newRoomAdapter("updateTriggerSuccess"))
-
+	adapter.Register("paramsinfo", p.newRoomAdapter("paramsinfo"))
+	adapter.Register("paramupdated", p.newRoomAdapter("paramupdated"))
+	adapter.Register("paramdeleted", p.newRoomAdapter("paramdeleted"))
 }

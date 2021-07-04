@@ -285,6 +285,11 @@ func (s *Script) Run(b *bus.Bus, cmd string) {
 		}()
 	}
 }
+func (s *Script) GetRequiredParams() []*world.RequiredParam {
+	s.Locker.Lock()
+	defer s.Locker.Unlock()
+	return append([]*world.RequiredParam{}, s.Data.RequiredParams...)
+}
 func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptData = b.WrapGetScriptData(s.ScriptData)
 	b.DoReloadScript = b.WrapDo(s.Reload)
@@ -300,6 +305,8 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.SetStatus = b.WrapHandleString(s.SetStatus)
 
 	b.GetMapper = s.GetMapper
+
+	b.GetRequiredParams = s.GetRequiredParams
 
 	b.GetScriptCaller = s.CreatorAndType
 	b.BindReadyEvent(s, s.ready)

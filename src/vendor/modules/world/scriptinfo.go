@@ -23,15 +23,17 @@ func initTemplates() {
 }
 
 type ScriptData struct {
-	Type         string
-	Desc         string
-	OnOpen       string
-	OnClose      string
-	OnConnect    string
-	OnDisconnect string
-	Triggers     []*Trigger
-	Timers       []*Timer
-	Aliases      []*Alias
+	Type           string
+	Intro          string
+	Desc           string
+	OnOpen         string
+	OnClose        string
+	OnConnect      string
+	OnDisconnect   string
+	Triggers       []*Trigger
+	Timers         []*Timer
+	Aliases        []*Alias
+	RequiredParams []*RequiredParam
 }
 
 func (d *ScriptData) ConvertInfo(id string) *ScriptInfo {
@@ -40,6 +42,8 @@ func (d *ScriptData) ConvertInfo(id string) *ScriptInfo {
 	}
 	if d != nil {
 		info.Type = d.Type
+		info.Intro = d.Intro
+		info.Desc = d.Desc
 		info.OnOpen = d.OnOpen
 		info.OnClose = d.OnClose
 		info.OnConnect = d.OnConnect
@@ -54,6 +58,7 @@ func NewScriptData() *ScriptData {
 type ScriptInfo struct {
 	ID           string
 	Desc         string
+	Intro        string
 	Type         string
 	OnOpen       string
 	OnClose      string
