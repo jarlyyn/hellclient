@@ -596,7 +596,40 @@ func (t *Titan) OpenWorld(id string) (bool, error) {
 
 	return true, nil
 }
+func (t *Titan) HandleCmdParams(id string) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	if t.Worlds[id] == nil {
+		return
+	}
+	i := &world.ParamsInfo{}
+	i.Params = t.Worlds[id].GetParams()
+	i.RequiredParams = t.Worlds[id].GetRequiredParams()
+	msg.PublishParamsinfo(t, id, i)
 
+}
+func (t *Titan) HandleCmdDeleteParam(id string, name string) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	if t.Worlds[id] == nil {
+		return
+	}
+	t.Worlds[id].DeleteParam(name)
+	msg.PublishParamDeleted(t, id, name)
+	go t.HandleCmdParams(id)
+
+}
+func (t *Titan) HandleCmdUpdateParam(id string, name string, value string) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	if t.Worlds[id] == nil {
+		return
+	}
+	t.Worlds[id].SetParam(name, value)
+	msg.PublishParamUpdated(t, id, name)
+	go t.HandleCmdParams(id)
+
+}
 func (t *Titan) NewScript(id string, scripttype string) error {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()

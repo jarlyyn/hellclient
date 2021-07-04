@@ -222,4 +222,22 @@ onButton.updateTriggerSubmit=function(){
     vm.updatingTrigger.Form.SendTo=vm.updatingTrigger.Form.SendTo*1
     send("updateTrigger",vm.updatingTrigger.Form);
 }
+onButton.variable=function(){
+    vm.paramsinfo=null;
+    vm.variablesVisible=true;
+    vm.showRequiredParams=true;
+    app.send("params",vm.current)
+}
+onButton.createVariable=function(){
+    vm.$prompt('请输入变量名', '创建变量', {
+        confirmButtonText: '添加',
+        cancelButtonText: '取消',
+        inputPattern: /.+/,
+        inputErrorMessage: '格式不正确'
+      }).then(({ value }) => {
+          app.send("updateParam",[vm.current ,value,""])
+      }).catch(() => {
+      });
+
+}
 })

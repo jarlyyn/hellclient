@@ -53,6 +53,7 @@ type Bus struct {
 	DoReloadScript         func() error
 	DoSaveScript           func() error
 	DoUseScript            func(string)
+	GetRequiredParams      func() []*world.RequiredParam
 	DoRunScript            func(string)
 	DoPrint                func(msg string)
 	DoPrintSystem          func(msg string)

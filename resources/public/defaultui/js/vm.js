@@ -56,7 +56,9 @@ var data={
     triggerCreateFormVisible:false,
     updatingTrigger:null,
     triggerUpdateFormVisible:false,
-
+    variablesVisible:false,
+    paramsinfo:null,
+    showRequiredParams:false,
     sendto:{
         0:"游戏",
         1:"命令",
@@ -172,6 +174,38 @@ var vm = new Vue({
                 setTimeout(function(){
                 body.scrollTo(body.offsetLeft,body.offsetHeight)
                 },0)        
+        },
+        onDeleteVariable:function (name){
+            vm.$confirm('是否要删除该变量?', '删除', {
+                confirmButtonText: '删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                app.send("deleteParam",[vm.current,name])
+              }).catch(()=>{
+              })
+        },
+        onUpdateVariable:function(name,current){
+            vm.$prompt('请输入变量值', '编辑变量'+name, {
+                confirmButtonText: '编辑',
+                cancelButtonText: '取消',
+                inputValue:current,
+              }).then(({ value }) => {
+                  app.send("updateParam",[vm.current ,name,value])
+              }).catch(() => {
+              });
+        
+        },
+        onUpdateRequiredParam:function(row){
+            vm.$prompt(row.Intro, '设置变量'+row.Name+"["+row.Desc+"]", {
+                confirmButtonText: '设置',
+                cancelButtonText: '取消',
+                customClass:"update-required",
+                inputValue:vm.paramsinfo.Params[row.Name],
+              }).then(({ value }) => {
+                  app.send("updateParam",[vm.current ,row.Name,value])
+              }).catch(() => {
+              });
         }
     }
 })

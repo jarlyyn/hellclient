@@ -1,0 +1,87 @@
+<el-dialog width="80%"  :fullscreen="true"  title="变量设置" :visible.sync="variablesVisible">
+  <div id="variablelist" v-if="paramsinfo">
+    <el-row>
+  <el-switch
+  v-model="showRequiredParams"
+  active-color="#13ce66"
+  inactive-color="#ff4949"
+  active-text="脚本变量"
+  inactive-text="全部变量"
+  :disabled="paramsinfo.RequiredParams?false:true"
+  >
+</el-switch>
+</el-row>
+
+
+    <div id="variablelist-required" v-if="showRequiredParams">
+    <h2>脚本变量列表</h2>
+        <el-table
+        :data="paramsinfo.RequiredParams"
+        style="width: 100%">
+        <el-table-column
+        prop="Name"
+        label="变量名"
+        width="200"
+        >
+      </el-table-column>
+        <el-table-column
+        label="变量值"
+        >
+        <template slot-scope="scope">
+          <span>{{paramsinfo.Params[scope.row.Name] ? paramsinfo.Params[scope.row.Name]:""}}</span>
+     </template>
+      </el-table-column>
+       <el-table-column
+       prop="Desc"
+       label="描述"
+       >
+     </el-table-column>
+
+    <el-table-column
+    fixed="right"
+    label="操作"
+    width="100">
+    <template slot-scope="scope">
+      <el-button @click="onUpdateRequiredParam(scope.row)" type="text" size="small">设置</el-button>
+    </template>
+  </el-table-column>
+
+      </el-table>
+    </div>
+
+    <div id="variablelist-all" v-if="!showRequiredParams">
+      <h2>全部变量列表</h2>
+      <el-button-group >
+        <el-tooltip class="item" effect="light" content="添加" placement="bottom">
+        <el-button @click="onButton('createVariable')" size="mini" type="primary" icon="el-icon-plus"></el-button>
+        </el-tooltip>
+      </el-button-group >
+          <el-table
+          :data="paramsinfo.ParamList"
+          style="width: 100%">
+          <el-table-column
+          prop="Name"
+          label="变量名"
+          width="200"
+          >
+        </el-table-column>
+          <el-table-column
+          label="变量值"
+          >
+          <template slot-scope="scope">
+            <span>{{paramsinfo.Params[scope.row.Name] ? paramsinfo.Params[scope.row.Name]:""}}</span>
+       </template>
+        </el-table-column>  
+      <el-table-column
+      fixed="right"
+      label="操作"
+      width="100">
+      <template slot-scope="scope">
+        <el-button @click="onUpdateVariable(scope.row.Name,scope.row.Value)" type="text" size="small">编辑</el-button>
+        <el-button @click="onDeleteVariable(scope.row.Name)" type="text" size="small">删除</el-button>
+      </template>
+    </el-table-column>
+        </el-table>
+      </div>    
+    </div>
+</el-dialog>

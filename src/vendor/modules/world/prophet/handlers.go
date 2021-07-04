@@ -300,6 +300,36 @@ func (p *Prophet) onCmdUpdateTrigger(conn connections.OutputConnection, cmd comm
 	forms.UpdateTrigger(p.Titan, cmd.Data())
 	return nil
 }
+func (p *Prophet) onCmdParams(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdParams(msg)
+	return nil
+}
+func (p *Prophet) onCmdUpdateParam(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 3 {
+		return nil
+	}
+	p.Titan.HandleCmdUpdateParam(msg[0], msg[1], msg[2])
+	return nil
+}
+func (p *Prophet) onCmdDeleteParam(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 2 {
+		return nil
+	}
+	p.Titan.HandleCmdDeleteParam(msg[0], msg[1])
+	return nil
+}
 
 // func (p *Prophet) onCmdSaveTrigger(conn connections.OutputConnection, cmd command.Command) error {
 // 	forms.SaveTrigger(CurrentGameID(), cmd.Data())
@@ -344,6 +374,10 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("deleteTrigger", p.onCmdDeleteTrigger)
 	handlers.Register("loadTrigger", p.onCmdLoadTrigger)
 	handlers.Register("updateTrigger", p.onCmdUpdateTrigger)
+
+	handlers.Register("params", p.onCmdParams)
+	handlers.Register("updateParam", p.onCmdUpdateParam)
+	handlers.Register("deleteParam", p.onCmdDeleteParam)
 
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)
