@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #settings
-binname="hellclient"
-buildername="build-linux.sh"
+binname="hellclient.exe"
+buildername="build-win.sh"
 
 
 if [ -z "$1" ]

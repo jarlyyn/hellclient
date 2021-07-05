@@ -10,11 +10,12 @@ import (
 
 var Pangu *Titan
 
-const WorldsFolder = "worlds"
+const WorldsFolder = "game/worlds"
 const Ext = ".toml"
-const WorldsPrefix = "/worlds/"
-const ScriptsFolder = "scripts"
-const ScriptsPrefix = "/scripts/"
+
+const ScriptsFolder = "/game/scripts"
+const GamePrefix = "/game/"
+const GameFolder = "game"
 
 func CreatePangu() {
 	Pangu = New()
@@ -27,8 +28,8 @@ func CreatePangu() {
 
 func NewWebdavServer() http.Handler {
 	webdavserver := &webdav.Handler{
-		Prefix:     WorldsPrefix,
-		FileSystem: webdav.Dir(util.AppData(WorldsFolder)),
+		Prefix:     GamePrefix,
+		FileSystem: webdav.Dir(util.AppData(GameFolder)),
 		LockSystem: webdav.NewMemLS(),
 		Logger: func(r *http.Request, err error) {
 			if err != nil {

@@ -1,0 +1,13 @@
+[Unit]
+Description=Filebuckets server
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Restart=on-failure
+RestartSec=5s
+ExecStart=/opt/hellclient/bin/hellclient
+
+[Install]
+WantedBy=multi-user.target
