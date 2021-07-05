@@ -107,7 +107,7 @@ onButton.saveTriggerSubmit=function(){
     send("saveTrigger",vm.triggerSaveForm);
 }
 onButton.allLines=function(){
-    vm.alllines=[]
+    vm.allLines=null
     vm.allLinesVisible=true;
     send("allLines");
 }

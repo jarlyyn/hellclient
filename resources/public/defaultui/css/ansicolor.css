@@ -37,9 +37,9 @@
 .words.system::before{content:"⯳";color:purple}
 .words.print{color:mediumspringgreen;}
 .words.print::before{content:"↢";color:green;padding-left: 0.5em}
-#alllines .has-trigger::after{content:"⚙" ;color: rgb(0,255,255);padding-left: 0.5em}
-#alllines .creator-type-trigger::after{content:"⚙" ;color:rgb(255,255,0);padding-left: 0.5em}
-#alllines .creator-type-timer::after{content:"⏲" ;color:rgb(255,255,0);padding-left: 0.5em}
-#alllines .creator-type-alias::after{content:"⌨" ;color:rgb(255,255,0);padding-left: 0.5em}
-#alllines .creator-type-system::after{content:"⏻" ;color:rgb(255,255,0);padding-left: 0.5em}
-#alllines .creator-type-run::after{content:"⏯" ;color:rgb(255,255,0);padding-left: 0.5em}
+.advancemode #alllines .has-trigger::after{content:"⚙" ;color: rgb(0,255,255);padding-left: 0.5em}
+.advancemode #alllines .creator-type-trigger::after{content:"⚙" ;color:rgb(255,255,0);padding-left: 0.5em}
+.advancemode #alllines .creator-type-timer::after{content:"⏲" ;color:rgb(255,255,0);padding-left: 0.5em}
+.advancemode #alllines .creator-type-alias::after{content:"⌨" ;color:rgb(255,255,0);padding-left: 0.5em}
+.advancemode #alllines .creator-type-system::after{content:"⏻" ;color:rgb(255,255,0);padding-left: 0.5em}
+.advancemode #alllines .creator-type-run::after{content:"⏯" ;color:rgb(255,255,0);padding-left: 0.5em}

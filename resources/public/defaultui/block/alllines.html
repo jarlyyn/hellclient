@@ -5,8 +5,8 @@
   :visible.sync="allLinesVisible"
   direction="rtl">
 
-    <div id="alllines-wrapper">
-    <ul id="alllines"  v-if="allLines">
+    <div id="alllines-wrapper" :class="advancemode?'advancemode':''">
+    <ul id="alllines"  v-if="allLines"     v-loading="!allLines">
             <li v-bind:class="'words '+ typeclass[line.Type] + ' '+(line.Triggers?'has-trigger':'')+ (line.CreatorType?(' creator-type-'+line.CreatorType):'')" :title="Date(line.Time).toString()+(line.Triggers?('\nTriggers:\n'+line.Triggers.join('\n')):'')+(line.Creator?('\n'+line.CreatorType+':'+line.Creator):'')" v-for="line in allLines">
                 <span v-if="line.IsSystem">🗨️</span>
                 <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') " v-for="word in line.Words" >{{word.Text}}</span>
