@@ -1,7 +1,6 @@
 package routers
 
 import (
-	"modules/scripts"
 	prophetactions "modules/world/prophet/actions"
 	"modules/world/titan"
 
@@ -24,8 +23,7 @@ var RouterUIFactory = router.NewFactory(func() router.Router {
 		HandleFunc(simplehttpserver.ServeFolder(util.Resources("public")))
 	Router.HandleHomepage().HandleFunc(simplehttpserver.ServeFile(util.Resources("defaultui", "index.html")))
 	Router.Handle("/ws").HandleFunc(prophetactions.WebsocketAction)
-	Router.Handle(scripts.ScriptPrefix).Handle(scripts.NewWebdavServer())
-	Router.Handle(titan.WorldsPrefix).Handle(titan.NewWebdavServer())
+	Router.Handle(titan.GamePrefix).Handle(titan.NewWebdavServer())
 
 	//Put your router configure code here
 	return Router
