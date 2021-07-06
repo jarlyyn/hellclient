@@ -1,7 +1,6 @@
 package converter
 
 import (
-	"fmt"
 	"modules/world"
 
 	"github.com/jarlyyn/ansi"
@@ -177,7 +176,7 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *worl
 
 				}
 			} else {
-				fmt.Println(s, s.Code)
+				// fmt.Println(s, s.Code)
 			}
 		}
 		if err != nil {

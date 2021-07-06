@@ -656,7 +656,7 @@ func (a *luaapi) GetSpeedWalkDelay(L *lua.LState) int {
 	return 1
 }
 func (a *luaapi) Queue(L *lua.LState) int {
-	L.Push(lua.LNumber(a.API.Queue(L.ToString(1))))
+	L.Push(lua.LNumber(a.API.Queue(L.ToString(1), L.ToBool(2))))
 	return 1
 }
 func (a *luaapi) NewReadFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
