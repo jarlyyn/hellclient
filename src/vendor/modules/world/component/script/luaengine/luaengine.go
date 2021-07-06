@@ -195,7 +195,6 @@ func (e *LuaEngine) Call(b *bus.Bus, fn lua.LValue, args ...lua.LValue) {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()
 	if e.Plugin.LState == nil {
-		e.Locker.Unlock()
 		return
 	}
 	L := e.Plugin.LState

@@ -1,11 +1,11 @@
 <el-drawer
-  title="历史输出"
+  title="历史输出。选中并拖拽文字后会把文字追加到输入框内"
   id="alllinespop"
   size="90%"
   :visible.sync="allLinesVisible"
   direction="rtl">
 
-    <div id="alllines-wrapper" :class="advancemode?'advancemode':''">
+    <div id="alllines-wrapper" :class="advancemode?'advancemode':''" v-on:dragend="onDrop">
     <ul id="alllines"  v-if="allLines"     v-loading="!allLines">
             <li v-bind:class="'words '+ typeclass[line.Type] + ' '+(line.Triggers?'has-trigger':'')+ (line.CreatorType?(' creator-type-'+line.CreatorType):'')" :title="Date(line.Time).toString()+(line.Triggers?('\nTriggers:\n'+line.Triggers.join('\n')):'')+(line.Creator?('\n'+line.CreatorType+':'+line.Creator):'')" v-for="line in allLines">
                 <span v-if="line.IsSystem">🗨️</span>

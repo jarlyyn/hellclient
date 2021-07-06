@@ -206,6 +206,10 @@ var vm = new Vue({
                   app.send("updateParam",[vm.current ,row.Name,value])
               }).catch(() => {
               });
+        },
+        onDrop:function(){
+            vm.allLinesVisible=false
+            vm.cmd=vm.cmd+document.getSelection().toString()
         }
     }
 })

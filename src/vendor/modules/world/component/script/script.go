@@ -26,7 +26,7 @@ type Script struct {
 	Status        string
 	Data          *world.ScriptData
 	Mapper        *mapper.Mapper
-	Engine        Engine
+	engine        Engine
 }
 
 func (s *Script) GetMapper() *mapper.Mapper {
@@ -143,15 +143,16 @@ func (s *Script) CreatorAndType() (string, string) {
 	return s.creator, s.creatorType
 }
 func (s *Script) unload(b *bus.Bus) {
-	if s.Engine != nil {
-		s.Engine.Close(b)
+	if s.engine != nil {
+		s.engine.Close(b)
 	}
+	s.Mapper.Reset()
 	s.SetCreator("", "")
 	b.DoDeleteTimerByType(false)
 	b.DoDeleteAliasByType(false)
 	b.DoDeleteTriggerByType(false)
 	s.Data = nil
-	s.Engine = nil
+	s.engine = nil
 }
 
 func (s *Script) Load(b *bus.Bus) error {
@@ -169,11 +170,11 @@ func (s *Script) load(b *bus.Bus) error {
 	if data != nil {
 		switch data.Type {
 		case "lua":
-			s.Engine = luaengine.NewLuaEngeine()
+			s.engine = luaengine.NewLuaEngeine()
 		}
 	}
-	if s.Engine != nil {
-		return s.Engine.Open(b)
+	if s.engine != nil {
+		return s.engine.Open(b)
 	}
 	return nil
 }
@@ -197,17 +198,17 @@ func (s *Script) connected(b *bus.Bus) {
 	b.DoMultiLinesFlush()
 	s.EngineLocker.Lock()
 	defer s.EngineLocker.Unlock()
-	if s.Engine != nil {
+	if s.engine != nil {
 		s.SetCreator("system", "connected")
-		s.Engine.OnConnect(b)
+		s.engine.OnConnect(b)
 	}
 }
 func (s *Script) disconnected(b *bus.Bus) {
 	s.EngineLocker.Lock()
 	defer s.EngineLocker.Unlock()
-	if s.Engine != nil {
+	if s.engine != nil {
 		s.SetCreator("system", "disconnected")
-		s.Engine.OnDisconnect(b)
+		s.engine.OnDisconnect(b)
 	}
 }
 func (s *Script) UseScript(b *bus.Bus, id string) {
@@ -234,7 +235,7 @@ func (s *Script) SetStatus(b *bus.Bus, val string) {
 	}()
 }
 func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
-	e := s.GetEngine()
+	e := s.getEngine()
 	if e != nil {
 		go func() {
 			if timer.Script != "" {
@@ -246,13 +247,13 @@ func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
 		}()
 	}
 }
-func (s *Script) GetEngine() Engine {
+func (s *Script) getEngine() Engine {
 	s.EngineLocker.Lock()
 	defer s.EngineLocker.Unlock()
-	return s.Engine
+	return s.engine
 }
 func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
-	e := s.GetEngine()
+	e := s.getEngine()
 	if e != nil {
 		go func() {
 			if alias.Script != "" {
@@ -265,7 +266,7 @@ func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, resul
 	}
 }
 func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigger, result *world.MatchResult) {
-	e := s.GetEngine()
+	e := s.getEngine()
 	if e != nil {
 		if trigger.Script != "" {
 			s.SetCreator("trigger", trigger.Script)
@@ -277,7 +278,7 @@ func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigge
 }
 
 func (s *Script) Run(b *bus.Bus, cmd string) {
-	e := s.GetEngine()
+	e := s.getEngine()
 	if e != nil {
 		s.SetCreator("run", "")
 		go func() {

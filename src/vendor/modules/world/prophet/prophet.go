@@ -113,7 +113,7 @@ func (p *Prophet) Change(roomid string) {
 	}()
 }
 func (p *Prophet) Enter(w http.ResponseWriter, r *http.Request) error {
-	wc, err := websocket.Upgrade(w, r, websocket.MsgTypeText)
+	wc, err := websocket.Upgrade(w, r, nil)
 	if err != nil {
 		return err
 	}
@@ -145,11 +145,13 @@ func (p *Prophet) OnError(err *connections.Error) {
 //OnClose called when connection closed.
 func (p *Prophet) OnClose(conn connections.OutputConnection) {
 	ctx := p.Context(conn.ID())
-	ctx.Lock.Lock()
-	defer ctx.Lock.Unlock()
-	v, _ := ctx.Data.Load("rooms")
-	r := v.(*room.Location)
-	r.LeaveAll()
+	if ctx != nil {
+		ctx.Lock.Lock()
+		defer ctx.Lock.Unlock()
+		v, _ := ctx.Data.Load("rooms")
+		r := v.(*room.Location)
+		r.LeaveAll()
+	}
 	p.Contexts.OnClose(conn)
 }
 

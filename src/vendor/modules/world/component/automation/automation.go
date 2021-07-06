@@ -165,6 +165,12 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 		if data.OneShot {
 			a.Triggers.RemoveTrigger(data.ID)
 		}
+		if data.OmitFromOutput {
+			line.OmitFromOutput = true
+		}
+		if data.OmitFromLog {
+			line.OmitFromLog = true
+		}
 		if send != "" {
 			go a.trySendTo(b, data.SendTo, send, data.Variable, data.OmitFromLog, data.OmitFromOutput)
 		}

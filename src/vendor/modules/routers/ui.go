@@ -1,8 +1,11 @@
 package routers
 
 import (
+	"modules/app"
 	prophetactions "modules/world/prophet/actions"
 	"modules/world/titan"
+
+	"net/http/pprof"
 
 	"github.com/herb-go/herb/file/simplehttpserver"
 	"github.com/herb-go/herb/middleware"
@@ -24,7 +27,13 @@ var RouterUIFactory = router.NewFactory(func() router.Router {
 	Router.HandleHomepage().HandleFunc(simplehttpserver.ServeFile(util.Resources("defaultui", "index.html")))
 	Router.Handle("/ws").HandleFunc(prophetactions.WebsocketAction)
 	Router.Handle(titan.GamePrefix).Handle(titan.NewWebdavServer())
-
+	if app.Development.Profiling {
+		Router.Handle("/debug/pprof/").HandleFunc(pprof.Index)
+		Router.Handle("/debug/pprof/cmdline").HandleFunc(pprof.Cmdline)
+		Router.Handle("/debug/pprof/profile").HandleFunc(pprof.Profile)
+		Router.Handle("/debug/pprof/symbol").HandleFunc(pprof.Symbol)
+		Router.Handle("/debug/pprof/trace").HandleFunc(pprof.Trace)
+	}
 	//Put your router configure code here
 	return Router
 })

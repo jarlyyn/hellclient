@@ -213,8 +213,9 @@ func (a *API) GetQueue() []string {
 	}
 	return result
 }
-func (a *API) Queue(message string) int {
+func (a *API) Queue(message string, echo bool) int {
 	cmd := world.CreateCommand(message)
+	cmd.Echo = echo
 	cmd.Creator, cmd.CreatorType = a.Bus.GetScriptCaller()
 	a.Bus.DoSendToQueue(cmd)
 	return EOK
