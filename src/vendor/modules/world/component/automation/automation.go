@@ -99,8 +99,11 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.DoExecute = b.WrapHandleString(a.DoExecute)
 
 	b.BindLineEvent(b, a.OnLine)
+	b.BindBeforeCloseEvent(a, a.OnClose)
 }
-
+func (a *Automation) OnClose(b *bus.Bus) {
+	a.Timers.Flush()
+}
 func (a *Automation) DoMultiLinesAppend(message string) {
 	a.MultiLines.Append(message)
 }

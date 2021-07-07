@@ -12,12 +12,14 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *worl
 		return line
 	}
 	w := world.Word{}
-	for {
-		out, s, err := ansi.Decode(msg)
-		msg = out
+	var s *ansi.S
+	var err error
+	var b []byte
+	for len(msg) > 0 {
+		msg, s, err = ansi.Decode(msg)
 		if s != nil {
 			if s.Type == "" {
-				b, err := ToUTF8(charset, []byte(s.Code))
+				b, err = ToUTF8(charset, []byte(s.Code))
 				if err != nil {
 					errhandler(err)
 					continue
@@ -183,13 +185,6 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *worl
 			errhandler(err)
 			// return
 		}
-		if msg == nil {
-			break
-		}
-		if (len(msg)) == 0 {
-			break
-		}
-
 	}
 	return line
 }

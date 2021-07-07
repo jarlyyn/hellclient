@@ -3,7 +3,6 @@ package bus
 import (
 	"modules/mapper"
 	"modules/world"
-	"sync"
 
 	"github.com/herb-go/herbplugin"
 
@@ -11,9 +10,7 @@ import (
 )
 
 type Bus struct {
-	ID     string
-	Locker sync.RWMutex
-
+	ID                     string
 	GetConnBuffer          func() []byte
 	GetConnConnected       func() bool
 	GetHost                func() string
@@ -384,7 +381,9 @@ func (b *Bus) BindStatusEvent(id interface{}, fn func(b *Bus, status string)) {
 		},
 	)
 }
-
+func (b *Bus) Reset() {
+	*b = Bus{}
+}
 func New() *Bus {
 	return &Bus{}
 }
