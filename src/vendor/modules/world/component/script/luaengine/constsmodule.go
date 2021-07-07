@@ -35,7 +35,6 @@ var ModuleConstsTriggersFlag = herbplugin.CreateModule("aliasflag",
 
 var ModuleConstsAliasFlag = herbplugin.CreateModule("aliasflag",
 	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
-		next(ctx, plugin)
 		luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
 		l := luapluing.LState
 		consts := l.NewTable()
@@ -59,7 +58,6 @@ var ModuleConstsAliasFlag = herbplugin.CreateModule("aliasflag",
 )
 var ModuleConstsTimerFlag = herbplugin.CreateModule("timerflag",
 	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
-		next(ctx, plugin)
 		luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
 		l := luapluing.LState
 		consts := l.NewTable()
@@ -79,7 +77,6 @@ var ModuleConstsTimerFlag = herbplugin.CreateModule("timerflag",
 )
 var ModuleConstsSendTo = herbplugin.CreateModule("sendto",
 	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
-		next(ctx, plugin)
 		luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
 		l := luapluing.LState
 		consts := l.NewTable()

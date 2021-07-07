@@ -56,7 +56,7 @@ func (conn *Conn) UpdatePrompt(bus *bus.Bus) {
 	conn.Lock.Lock()
 	defer conn.Lock.Unlock()
 	if conn.running {
-		bus.HandleConnPrompt(conn.buffer)
+		go bus.HandleConnPrompt(conn.buffer)
 	}
 }
 func (conn *Conn) Stop(b *bus.Bus) {
@@ -74,12 +74,12 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	if err != nil {
 		return err
 	}
-	go bus.RaiseConnectedEvent()
 	conn.running = true
 	conn.c = make(chan int)
 	conn.buffer = make([]byte, 1024)
 	conn.telnet = t
 	go conn.Receiver(bus)
+	go bus.RaiseConnectedEvent()
 	return nil
 }
 
@@ -92,10 +92,11 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 	}
 	conn.running = false
 	conn.buffer = []byte{}
+	go conn.Debounce.Discard()
 	close(conn.c)
-	go bus.RaiseDisconnectedEvent()
 	err := conn.telnet.Close()
 	conn.telnet = nil
+	go bus.RaiseDisconnectedEvent()
 	return err
 }
 func (conn *Conn) Receiver(bus *bus.Bus) {

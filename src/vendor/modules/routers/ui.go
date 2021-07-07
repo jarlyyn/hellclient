@@ -4,6 +4,8 @@ import (
 	"modules/app"
 	prophetactions "modules/world/prophet/actions"
 	"modules/world/titan"
+	"runtime"
+	"time"
 
 	"net/http/pprof"
 
@@ -28,6 +30,8 @@ var RouterUIFactory = router.NewFactory(func() router.Router {
 	Router.Handle("/ws").HandleFunc(prophetactions.WebsocketAction)
 	Router.Handle(titan.GamePrefix).Handle(titan.NewWebdavServer())
 	if app.Development.Profiling {
+		runtime.SetBlockProfileRate(int(10 * time.Second))
+		runtime.SetMutexProfileFraction(int(10 * time.Second))
 		Router.Handle("/debug/pprof/").HandleFunc(pprof.Index)
 		Router.Handle("/debug/pprof/cmdline").HandleFunc(pprof.Cmdline)
 		Router.Handle("/debug/pprof/profile").HandleFunc(pprof.Profile)

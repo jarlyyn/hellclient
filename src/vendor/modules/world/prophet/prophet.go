@@ -56,7 +56,7 @@ func (p *Prophet) newRoomAdapter(cmdtype string) func(m *message.Message) error 
 			if err != nil {
 				return err
 			}
-			p.Rooms.Broadcast(m.Room, msg)
+			p.Rooms.Broadcast(m.Room, msg, nil)
 		}
 		return nil
 	}
@@ -189,7 +189,6 @@ func (p *Prophet) Start() {
 
 // Stop stop consumer
 func (p *Prophet) Stop() {
-	p.Contexts.Stop()
 }
 func (p *Prophet) Publish(t *titan.Titan, msg *message.Message) {
 	p.Adapter.Exec(msg)

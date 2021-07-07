@@ -307,6 +307,13 @@ func (t *Timers) DoUpdateTimer(ti *world.Timer) int {
 	t.loadTimer(old)
 	return world.UpdateOK
 }
+func (t *Timers) Flush() {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	for _, v := range t.All {
+		t.removeTimer(v.Data.ID)
+	}
+}
 func NewTimers() *Timers {
 	timers := &Timers{}
 	timers.All = map[string]*Timer{}
