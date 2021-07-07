@@ -132,6 +132,12 @@ func (m *LuaMapper) SetTag(L *lua.LState) int {
 	m.mapper.SetTag(tag, enabled)
 	return 0
 }
+func (m *LuaMapper) FlashTags(L *lua.LState) int {
+	_ = L.Get(1) //self
+	m.mapper.FlashTags()
+	return 0
+}
+
 func (m *LuaMapper) SetTags(L *lua.LState) int {
 	_ = L.Get(1) //self
 	tags := L.Get(2)
@@ -268,6 +274,7 @@ func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("clearroom", L.NewFunction(m.ClearRoom))
 	t.RawSetString("newarea", L.NewFunction(m.NewArea))
 	t.RawSetString("getexits", L.NewFunction(m.GetExits))
+	t.RawSetString("flashtags", L.NewFunction(m.FlashTags))
 	return t
 }
 func NewMapperModule(b *bus.Bus) *herbplugin.Module {
