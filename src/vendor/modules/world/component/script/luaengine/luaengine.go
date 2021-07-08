@@ -36,7 +36,7 @@ type LuaEngine struct {
 	onConnect    string
 }
 
-func NewLuaEngeine() *LuaEngine {
+func NewLuaEngine() *LuaEngine {
 	return &LuaEngine{
 		Plugin: lua51plugin.New(),
 	}
