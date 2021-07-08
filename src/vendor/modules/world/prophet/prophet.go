@@ -86,6 +86,9 @@ func (p *Prophet) newUserAdapter(cmdtype string) func(m *message.Message) error 
 }
 func (p *Prophet) Location(conn connections.OutputConnection) *room.Location {
 	ctx := p.Context(conn.ID())
+	if ctx == nil {
+		return nil
+	}
 	v, _ := ctx.Data.Load("rooms")
 	return v.(*room.Location)
 }
@@ -98,6 +101,9 @@ func (p *Prophet) Change(roomid string) {
 	if v != nil {
 		conn = v.(connections.OutputConnection)
 		location := p.Location(conn)
+		if location == nil {
+			return
+		}
 		v := p.Current.Load()
 		if v != nil {
 			crid := v.(string)

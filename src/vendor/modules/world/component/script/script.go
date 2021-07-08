@@ -5,6 +5,7 @@ import (
 	"modules/mapper"
 	"modules/world"
 	"modules/world/bus"
+	"modules/world/component/script/jsengine"
 	"modules/world/component/script/luaengine"
 	"os"
 	"path"
@@ -170,7 +171,9 @@ func (s *Script) load(b *bus.Bus) error {
 	if data != nil {
 		switch data.Type {
 		case "lua":
-			s.engine = luaengine.NewLuaEngeine()
+			s.engine = luaengine.NewLuaEngine()
+		case "jscript":
+			s.engine = jsengine.NewJsEngine()
 		}
 	}
 	if s.engine != nil {

@@ -1,5 +1,11 @@
 package main
 
+type RequiredParam struct {
+	Name  string
+	Desc  string
+	Intro string
+}
+
 type Timer struct {
 	ID                    string
 	Name                  string
@@ -78,13 +84,14 @@ type Trigger struct {
 }
 
 type ScriptData struct {
-	Type         string
-	Desc         string
-	OnOpen       string
-	OnClose      string
-	OnConnect    string
-	OnDisconnect string
-	Triggers     []*Trigger
-	Timers       []*Timer
-	Aliases      []*Alias
+	Type           string
+	Desc           string
+	OnOpen         string
+	OnClose        string
+	OnConnect      string
+	OnDisconnect   string
+	Triggers       []*Trigger
+	Timers         []*Timer
+	Aliases        []*Alias
+	RequiredParams []*RequiredParam
 }

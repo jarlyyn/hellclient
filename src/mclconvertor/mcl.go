@@ -27,7 +27,27 @@ func MustAtoFloat(v string) float64 {
 	}
 	return f
 }
+func (v *MclVariable) Convert() *RequiredParam {
+	return &RequiredParam{
+		Name: v.Name,
+	}
+}
 
+type MclVariable struct {
+	Name string `xml:"name,attr"`
+}
+
+func (vs *MclVariables) Convert() []*RequiredParam {
+	var result = []*RequiredParam{}
+	for _, v := range vs.Variables {
+		result = append(result, v.Convert())
+	}
+	return result
+}
+
+type MclVariables struct {
+	Variables []*MclVariable `xml:"variables"`
+}
 type MclTimer struct {
 	Enabled        string `xml:"enabled,attr"`
 	Group          string `xml:"group,attr"`
@@ -157,10 +177,11 @@ type MclWorld struct {
 	ScriptLanguage    string `xml:"script_language,attr"`
 }
 type Mcl struct {
-	World    *MclWorld    `xml:"world"`
-	Triggers *MclTriggers `xml:"triggers"`
-	Aliases  *MclAliases  `xml:"aliases"`
-	Timers   *MclTimers   `xml:"timers"`
+	World     *MclWorld     `xml:"world"`
+	Triggers  *MclTriggers  `xml:"triggers"`
+	Aliases   *MclAliases   `xml:"aliases"`
+	Timers    *MclTimers    `xml:"timers"`
+	Variables *MclVariables `xml:"variables"`
 }
 
 func (m *Mcl) ToScriptData() *ScriptData {
@@ -170,5 +191,6 @@ func (m *Mcl) ToScriptData() *ScriptData {
 	data.Triggers = m.Triggers.Convert()
 	data.Aliases = m.Aliases.Convert()
 	data.Timers = m.Timers.Convert()
+	data.RequiredParams = m.Variables.Convert()
 	return data
 }
