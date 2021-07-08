@@ -2,8 +2,10 @@ package jsengine
 
 import (
 	"context"
+	"modules/world"
 	"modules/world/bus"
 	"modules/world/component/script/api"
+	"strconv"
 	"strings"
 
 	"github.com/dop251/goja"
@@ -77,45 +79,45 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "DeleteTimerGroup", a.DeleteTimerGroup)
 	AppendToWorld(jp.Runtime, world, "EnableTimer", a.EnableTimer)
 	AppendToWorld(jp.Runtime, world, "EnableTimerGroup", a.EnableTimerGroup)
-	// AppendToWorld(jp,"GetTimerList", a.GetTimerList)
-	// AppendToWorld(jp,"IsTimer", a.IsTimer)
-	// AppendToWorld(jp,"ResetTimer", a.ResetTimer)
-	// AppendToWorld(jp,"ResetTimers", a.ResetTimers)
-	// AppendToWorld(jp,"GetTimerOption", a.GetTimerOption)
-	// AppendToWorld(jp,"SetTimerOption", a.SetTimerOption)
-	// AppendToWorld(jp,"AddAlias", a.AddAlias)
-	// AppendToWorld(jp,"DeleteAlias", a.DeleteAlias)
-	// AppendToWorld(jp,"DeleteTemporaryAliases", a.DeleteTemporaryAliases)
-	// AppendToWorld(jp,"DeleteAliasGroup", a.DeleteAliasGroup)
-	// AppendToWorld(jp,"EnableAlias", a.EnableAlias)
-	// AppendToWorld(jp,"EnableAliasGroup", a.EnableAliasGroup)
-	// AppendToWorld(jp,"GetAliasList", a.GetAliasList)
-	// AppendToWorld(jp,"IsAlias", a.IsAlias)
-	// AppendToWorld(jp,"GetAliasOption", a.GetAliasOption)
-	// AppendToWorld(jp,"SetAliasOption", a.SetAliasOption)
+	AppendToWorld(jp.Runtime, world, "GetTimerList", a.GetTimerList)
+	AppendToWorld(jp.Runtime, world, "IsTimer", a.IsTimer)
+	AppendToWorld(jp.Runtime, world, "ResetTimer", a.ResetTimer)
+	AppendToWorld(jp.Runtime, world, "ResetTimers", a.ResetTimers)
+	AppendToWorld(jp.Runtime, world, "GetTimerOption", a.GetTimerOption)
+	AppendToWorld(jp.Runtime, world, "SetTimerOption", a.SetTimerOption)
+	AppendToWorld(jp.Runtime, world, "AddAlias", a.AddAlias)
+	AppendToWorld(jp.Runtime, world, "DeleteAlias", a.DeleteAlias)
+	AppendToWorld(jp.Runtime, world, "DeleteTemporaryAliases", a.DeleteTemporaryAliases)
+	AppendToWorld(jp.Runtime, world, "DeleteAliasGroup", a.DeleteAliasGroup)
+	AppendToWorld(jp.Runtime, world, "EnableAlias", a.EnableAlias)
+	AppendToWorld(jp.Runtime, world, "EnableAliasGroup", a.EnableAliasGroup)
+	AppendToWorld(jp.Runtime, world, "GetAliasList", a.GetAliasList)
+	AppendToWorld(jp.Runtime, world, "IsAlias", a.IsAlias)
+	AppendToWorld(jp.Runtime, world, "GetAliasOption", a.GetAliasOption)
+	AppendToWorld(jp.Runtime, world, "SetAliasOption", a.SetAliasOption)
 
-	// AppendToWorld(jp,"AddTrigger", a.AddTrigger)
-	// AppendToWorld(jp,"AddTriggerEx", a.AddTrigger)
-	// AppendToWorld(jp,"DeleteTrigger", a.DeleteTrigger)
-	// AppendToWorld(jp,"DeleteTemporaryTriggers", a.DeleteTemporaryTriggers)
-	// AppendToWorld(jp,"DeleteTriggerGroup", a.DeleteTriggerGroup)
-	// AppendToWorld(jp,"EnableTrigger", a.EnableTrigger)
-	// AppendToWorld(jp,"EnableTriggerGroup", a.EnableTriggerGroup)
-	// AppendToWorld(jp,"GetTriggerList", a.GetTriggerList)
-	// AppendToWorld(jp,"IsTrigger", a.IsTrigger)
-	// AppendToWorld(jp,"GetTriggerOption", a.GetTriggerOption)
-	// AppendToWorld(jp,"SetTriggerOption", a.SetTriggerOption)
-	// AppendToWorld(jp,"StopEvaluatingTriggers", a.StopEvaluatingTriggers)
+	AppendToWorld(jp.Runtime, world, "AddTrigger", a.AddTrigger)
+	AppendToWorld(jp.Runtime, world, "AddTriggerEx", a.AddTrigger)
+	AppendToWorld(jp.Runtime, world, "DeleteTrigger", a.DeleteTrigger)
+	AppendToWorld(jp.Runtime, world, "DeleteTemporaryTriggers", a.DeleteTemporaryTriggers)
+	AppendToWorld(jp.Runtime, world, "DeleteTriggerGroup", a.DeleteTriggerGroup)
+	AppendToWorld(jp.Runtime, world, "EnableTrigger", a.EnableTrigger)
+	AppendToWorld(jp.Runtime, world, "EnableTriggerGroup", a.EnableTriggerGroup)
+	AppendToWorld(jp.Runtime, world, "GetTriggerList", a.GetTriggerList)
+	AppendToWorld(jp.Runtime, world, "IsTrigger", a.IsTrigger)
+	AppendToWorld(jp.Runtime, world, "GetTriggerOption", a.GetTriggerOption)
+	AppendToWorld(jp.Runtime, world, "SetTriggerOption", a.SetTriggerOption)
+	AppendToWorld(jp.Runtime, world, "StopEvaluatingTriggers", a.StopEvaluatingTriggers)
 
-	// AppendToWorld(jp,"ColourNameToRGB", a.ColourNameToRGB)
-	// AppendToWorld(jp,"SetSpeedWalkDelay", a.SetSpeedWalkDelay)
-	// AppendToWorld(jp,"GetSpeedWalkDelay", a.GetSpeedWalkDelay)
+	AppendToWorld(jp.Runtime, world, "ColourNameToRGB", a.ColourNameToRGB)
+	AppendToWorld(jp.Runtime, world, "SetSpeedWalkDelay", a.SetSpeedWalkDelay)
+	AppendToWorld(jp.Runtime, world, "GetSpeedWalkDelay", a.GetSpeedWalkDelay)
 
-	// AppendToWorld(jp,"ReadFile", a.NewReadFileAPI(p))
-	// AppendToWorld(jp,"ReadLines", a.NewReadLinesAPI(p))
-	// AppendToWorld(jp,"SplitN", a.SplitNfunc)
-	// AppendToWorld(jp,"UTF8Len", a.UTF8Len)
-	// AppendToWorld(jp,"UTF8Sub", a.UTF8Sub)
+	AppendToWorld(jp.Runtime, world, "ReadFile", a.NewReadFileAPI(p))
+	AppendToWorld(jp.Runtime, world, "ReadLines", a.NewReadLinesAPI(p))
+	AppendToWorld(jp.Runtime, world, "SplitN", a.SplitNfunc)
+	AppendToWorld(jp.Runtime, world, "UTF8Len", a.UTF8Len)
+	AppendToWorld(jp.Runtime, world, "UTF8Sub", a.UTF8Sub)
 
 }
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -326,339 +328,304 @@ func (a *jsapi) EnableTimerGroup(call goja.FunctionCall, r *goja.Runtime) goja.V
 	return r.ToValue(a.API.EnableTimerGroup(group, enabled))
 }
 
-// func (a *jsapi) GetTimerList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	list := a.API.GetTimerList()
-// 	reuslt := L.NewTable()
-// 	for _, v := range list {
-// 		reuslt.Append(lua.LString(v))
-// 	}
-// 	L.Push(reuslt)
-// 	return 1
-// }
-// func (a *jsapi) IsTimer(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	L.Push(lua.LNumber(a.API.IsTimer(name)))
-// 	return 1
-// }
+func (a *jsapi) GetTimerList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	list := a.API.GetTimerList()
+	result := []interface{}{}
+	for _, v := range list {
+		result = append(result, v)
+	}
+	return r.NewArray(result)
+}
+func (a *jsapi) IsTimer(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	return r.ToValue(a.API.IsTimer(name))
+}
 
-// func (a *jsapi) ResetTimer(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	L.Push(lua.LNumber(a.API.ResetTimer(name)))
-// 	return 1
-// }
+func (a *jsapi) ResetTimer(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	return r.ToValue(a.API.ResetTimer(name))
+}
 
-// func (a *jsapi) ResetTimers(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	a.API.ResetTimers()
-// 	return goja.Null()
-// }
+func (a *jsapi) ResetTimers(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	a.API.ResetTimers()
+	return goja.Null()
+}
 
-// func (a *jsapi) GetTimerOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	option := call.Argument(1).String()
-// 	result, code := a.API.GetTimerOption(name, option)
-// 	if code != api.EOK {
-// 		L.Push(lua.LNil)
-// 	} else {
-// 		switch option {
-// 		case "active_closed", "at_time", "enabled", "omit_from_log", "omit_from_output", "one_shot":
-// 			L.Push(lua.LBool(result == world.StringYes))
-// 		case "group", "name", "script", "send", "variable":
-// 			L.Push(lua.LString(result))
-// 		case "hour", "minute", "offset_hour", "offset_minute", "offset_second", "second", "send_to", "user":
-// 			i, _ := strconv.Atoi(result)
-// 			L.Push(lua.LNumber(i))
-// 		default:
-// 			L.Push(lua.LNil)
-// 		}
-// 	}
-// 	return 1
-// }
-// func (a *jsapi) SetTimerOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	option := call.Argument(1).String()
-// 	var value string
-// 	switch option {
-// 	case "active_closed", "at_time", "enabled", "omit_from_log", "omit_from_output", "one_shot":
-// 		if MustBool(call.Argument(3) {
-// 			value = world.StringYes
-// 		} else {
-// 			value = ""
-// 		}
-// 	case "group", "name", "script", "send", "variable":
-// 		value = MustString(call.Argument(2))
-// 	case "hour", "minute", "offset_hour", "offset_minute", "offset_second", "second", "send_to", "user":
-// 		value = MustString(call.Argument(2))
-// 	}
-// 	L.Push(lua.LNumber(a.API.SetTimerOption(name, option, value)))
-// 	return 1
-// }
+func (a *jsapi) GetTimerOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	option := call.Argument(1).String()
+	result, code := a.API.GetTimerOption(name, option)
+	if code != api.EOK {
+		return goja.Null()
+	} else {
+		switch option {
+		case "active_closed", "at_time", "enabled", "omit_from_log", "omit_from_output", "one_shot":
+			return r.ToValue(result == world.StringYes)
+		case "group", "name", "script", "send", "variable":
+			return r.ToValue(result)
+		case "hour", "minute", "offset_hour", "offset_minute", "offset_second", "second", "send_to", "user":
+			i, _ := strconv.Atoi(result)
+			return r.ToValue(i)
+		}
+	}
+	return goja.Null()
+}
+func (a *jsapi) SetTimerOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	option := call.Argument(1).String()
+	var value string
+	switch option {
+	case "active_closed", "at_time", "enabled", "omit_from_log", "omit_from_output", "one_shot":
+		if call.Argument(2).ToBoolean() {
+			value = world.StringYes
+		} else {
+			value = ""
+		}
+	case "group", "name", "script", "send", "variable":
+		value = call.Argument(2).String()
+	case "hour", "minute", "offset_hour", "offset_minute", "offset_second", "second", "send_to", "user":
+		value = call.Argument(2).String()
+	}
+	return r.ToValue(a.API.SetTimerOption(name, option, value))
+}
 
-// func (a *jsapi) AddAlias(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	match := call.Argument(1).String()
-// 	send := MustString(call.Argument(2))
-// 	flags := int(L.ToNumber(4))
-// 	script := L.ToString(5)
-// 	L.Push(lua.LNumber(a.API.AddAlias(name, match, send, flags, script)))
-// 	return 1
-// }
-// func (a *jsapi) DeleteAlias(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	L.Push(lua.LNumber(a.API.DeleteAlias(name)))
-// 	return 1
-// }
-// func (a *jsapi) DeleteTemporaryAliases(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	L.Push(lua.LNumber(a.API.DeleteTemporaryTimers()))
-// 	return 1
+func (a *jsapi) AddAlias(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	match := call.Argument(1).String()
+	send := call.Argument(2).String()
+	flags := int(call.Argument(3).ToInteger())
+	script := call.Argument(4).String()
+	return r.ToValue(a.API.AddAlias(name, match, send, flags, script))
+}
+func (a *jsapi) DeleteAlias(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	return r.ToValue(a.API.DeleteAlias(name))
+}
+func (a *jsapi) DeleteTemporaryAliases(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.DeleteTemporaryTimers())
 
-// }
-// func (a *jsapi) DeleteAliasGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	L.Push(lua.LNumber(a.API.DeleteAliasGroup(name)))
-// 	return 1
-// }
+}
+func (a *jsapi) DeleteAliasGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	return r.ToValue(a.API.DeleteAliasGroup(name))
+}
 
-// func (a *jsapi) EnableAlias(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	enabled := MustBool(call.Argument(2)
-// 	L.Push(lua.LNumber(a.API.EnableAlias(name, enabled)))
-// 	return 1
-// }
-// func (a *jsapi) EnableAliasGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	group := call.Argument(0).String()
-// 	enabled := MustBool(call.Argument(2)
-// 	L.Push(lua.LNumber(a.API.EnableAliasGroup(group, enabled)))
-// 	return 1
-// }
+func (a *jsapi) EnableAlias(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	enabled := call.Argument(1).ToBoolean()
+	return r.ToValue(a.API.EnableAlias(name, enabled))
+}
+func (a *jsapi) EnableAliasGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	group := call.Argument(0).String()
+	enabled := call.Argument(1).ToBoolean()
+	return r.ToValue(a.API.EnableAliasGroup(group, enabled))
+}
 
-// func (a *jsapi) GetAliasList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	list := a.API.GetAliasList()
-// 	reuslt := L.NewTable()
-// 	for _, v := range list {
-// 		reuslt.Append(lua.LString(v))
-// 	}
-// 	L.Push(reuslt)
-// 	return 1
-// }
-// func (a *jsapi) IsAlias(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	L.Push(lua.LNumber(a.API.IsAlias(name)))
-// 	return 1
-// }
+func (a *jsapi) GetAliasList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	list := a.API.GetAliasList()
+	result := []interface{}{}
+	for _, v := range list {
+		result = append(result, v)
+	}
+	return r.NewArray(result...)
+}
+func (a *jsapi) IsAlias(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	return r.ToValue(a.API.IsAlias(name))
+}
 
-// func (a *jsapi) GetAliasOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	option := call.Argument(1).String()
-// 	result, code := a.API.GetTimerOption(name, option)
-// 	if code != api.EOK {
-// 		L.Push(lua.LNil)
-// 	} else {
-// 		switch option {
-// 		case "echo_alias", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "regexp", "omit_from_log", "omit_from_output", "one_shot":
-// 			L.Push(lua.LBool(result == world.StringYes))
-// 		case "group", "name", "match", "script", "send", "variable":
-// 			L.Push(lua.LString(result))
-// 		case "send_to", "user", "sequence":
-// 			i, _ := strconv.Atoi(result)
-// 			L.Push(lua.LNumber(i))
-// 		default:
-// 			L.Push(lua.LNil)
-// 		}
-// 	}
-// 	return 1
-// }
-// func (a *jsapi) SetAliasOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	option := call.Argument(1).String()
-// 	var value string
-// 	switch option {
-// 	case "echo_alias", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "omit_from_log", "omit_from_output", "one_shot", "regexp":
-// 		if MustBool(call.Argument(3) {
-// 			value = world.StringYes
-// 		} else {
-// 			value = ""
-// 		}
-// 	case "group", "name", "match", "script", "send", "variable":
-// 		value = MustString(call.Argument(2))
-// 	case "send_to", "user", "sequence":
-// 		value = MustString(call.Argument(2))
-// 	}
-// 	L.Push(lua.LNumber(a.API.SetTimerOption(name, option, value)))
-// 	return 1
-// }
+func (a *jsapi) GetAliasOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	option := call.Argument(1).String()
+	result, code := a.API.GetTimerOption(name, option)
+	if code != api.EOK {
+		return goja.Null()
+	} else {
+		switch option {
+		case "echo_alias", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "regexp", "omit_from_log", "omit_from_output", "one_shot":
+			return r.ToValue(result == world.StringYes)
+		case "group", "name", "match", "script", "send", "variable":
+			return r.ToValue(result)
+		case "send_to", "user", "sequence":
+			i, _ := strconv.Atoi(result)
+			return r.ToValue(i)
+		}
+	}
+	return goja.Null()
+}
+func (a *jsapi) SetAliasOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	option := call.Argument(1).String()
+	var value string
+	switch option {
+	case "echo_alias", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "omit_from_log", "omit_from_output", "one_shot", "regexp":
+		if call.Argument(2).ToBoolean() {
+			value = world.StringYes
+		} else {
+			value = ""
+		}
+	case "group", "name", "match", "script", "send", "variable":
+		value = call.Argument(2).String()
+	case "send_to", "user", "sequence":
+		value = call.Argument(2).String()
+	}
+	return r.ToValue(a.API.SetTimerOption(name, option, value))
+}
 
-// func (a *jsapi) AddTrigger(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	match := call.Argument(1).String()
-// 	send := MustString(call.Argument(2))
-// 	flags := int(L.ToNumber(4))
-// 	color := int(L.ToNumber(5))
-// 	wildcard := int(L.ToNumber(6))
-// 	sound := L.ToString(7)
-// 	script := L.ToString(8)
-// 	L.Push(lua.LNumber(a.API.AddTrigger(name, match, send, flags, color, wildcard, sound, script)))
-// 	return 1
-// }
-// func (a *jsapi) AddTriggerEx(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	match := call.Argument(1).String()
-// 	send := MustString(call.Argument(2))
-// 	flags := int(L.ToNumber(4))
-// 	color := int(L.ToNumber(5))
-// 	wildcard := int(L.ToNumber(6))
-// 	sound := L.ToString(7)
-// 	script := L.ToString(8)
-// 	sendto := int(L.ToNumber(9))
-// 	sequence := int(L.ToNumber(10))
-// 	L.Push(lua.LNumber(a.API.AddTriggerEx(name, match, send, flags, color, wildcard, sound, script, sendto, sequence)))
-// 	return 1
-// }
-// func (a *jsapi) DeleteTrigger(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	L.Push(lua.LNumber(a.API.DeleteTrigger(name)))
-// 	return 1
-// }
-// func (a *jsapi) DeleteTemporaryTriggers(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	L.Push(lua.LNumber(a.API.DeleteTemporaryTimers()))
-// 	return 1
+func (a *jsapi) AddTrigger(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	match := call.Argument(1).String()
+	send := call.Argument(2).String()
+	flags := int(call.Argument(3).ToInteger())
+	color := int(call.Argument(4).ToInteger())
+	wildcard := int(call.Argument(5).ToInteger())
+	sound := call.Argument(6).String()
+	script := call.Argument(7).String()
+	return r.ToValue(a.API.AddTrigger(name, match, send, flags, color, wildcard, sound, script))
+}
+func (a *jsapi) AddTriggerEx(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	match := call.Argument(1).String()
+	send := call.Argument(2).String()
+	flags := int(call.Argument(3).ToInteger())
+	color := int(call.Argument(4).ToInteger())
+	wildcard := int(call.Argument(5).ToInteger())
+	sound := call.Argument(6).String()
+	script := call.Argument(7).String()
+	sendto := int(call.Argument(8).ToInteger())
+	sequence := int(call.Argument(9).ToInteger())
+	return r.ToValue(a.API.AddTriggerEx(name, match, send, flags, color, wildcard, sound, script, sendto, sequence))
+}
+func (a *jsapi) DeleteTrigger(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	return r.ToValue(a.API.DeleteTrigger(name))
+}
+func (a *jsapi) DeleteTemporaryTriggers(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.DeleteTemporaryTimers())
 
-// }
-// func (a *jsapi) DeleteTriggerGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	L.Push(lua.LNumber(a.API.DeleteTriggerGroup(name)))
-// 	return 1
-// }
+}
+func (a *jsapi) DeleteTriggerGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	return r.ToValue(a.API.DeleteTriggerGroup(name))
+}
 
-// func (a *jsapi) EnableTrigger(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	enabled := MustBool(call.Argument(2)
-// 	L.Push(lua.LNumber(a.API.EnableTrigger(name, enabled)))
-// 	return 1
-// }
-// func (a *jsapi) EnableTriggerGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	group := call.Argument(0).String()
-// 	enabled := MustBool(call.Argument(2)
-// 	L.Push(lua.LNumber(a.API.EnableTriggerGroup(group, enabled)))
-// 	return 1
-// }
+func (a *jsapi) EnableTrigger(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	enabled := call.Argument(1).ToBoolean()
+	return r.ToValue(a.API.EnableTrigger(name, enabled))
+}
+func (a *jsapi) EnableTriggerGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	group := call.Argument(0).String()
+	enabled := call.Argument(1).ToBoolean()
+	return r.ToValue(a.API.EnableTriggerGroup(group, enabled))
+}
 
-// func (a *jsapi) GetTriggerList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	list := a.API.GetTriggerList()
-// 	reuslt := L.NewTable()
-// 	for _, v := range list {
-// 		reuslt.Append(lua.LString(v))
-// 	}
-// 	L.Push(reuslt)
-// 	return 1
-// }
-// func (a *jsapi) IsTrigger(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	L.Push(lua.LNumber(a.API.IsTrigger(name)))
-// 	return 1
-// }
+func (a *jsapi) GetTriggerList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	list := a.API.GetTriggerList()
+	result := []interface{}{}
+	for _, v := range list {
+		result = append(result, v)
+	}
+	return r.NewArray(result...)
+}
+func (a *jsapi) IsTrigger(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	return r.ToValue(a.API.IsTrigger(name))
+}
 
-// func (a *jsapi) GetTriggerOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	option := call.Argument(1).String()
-// 	result, code := a.API.GetTriggerOption(name, option)
-// 	if code != api.EOK {
-// 		L.Push(lua.LNil)
-// 	} else {
-// 		switch option {
-// 		case "echo_trigger", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "regexp", "omit_from_log", "omit_from_output", "one_shot":
-// 			L.Push(lua.LBool(result == world.StringYes))
-// 		case "group", "name", "match", "script", "send", "variable":
-// 			L.Push(lua.LString(result))
-// 		case "send_to", "user", "sequence":
-// 			i, _ := strconv.Atoi(result)
-// 			L.Push(lua.LNumber(i))
-// 		default:
-// 			L.Push(lua.LNil)
-// 		}
-// 	}
-// 	return 1
-// }
-// func (a *jsapi) SetTriggerOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	name := call.Argument(0).String()
-// 	option := call.Argument(1).String()
-// 	var value string
-// 	switch option {
-// 	case "echo_trigger", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "omit_from_log", "omit_from_output", "one_shot", "regexp":
-// 		if MustBool(call.Argument(3) {
-// 			value = world.StringYes
-// 		} else {
-// 			value = ""
-// 		}
-// 	case "group", "name", "match", "script", "send", "variable":
-// 		value = MustString(call.Argument(2))
-// 	case "send_to", "user", "sequence":
-// 		value = MustString(call.Argument(2))
-// 	}
-// 	L.Push(lua.LNumber(a.API.SetTriggerOption(name, option, value)))
-// 	return 1
-// }
+func (a *jsapi) GetTriggerOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	option := call.Argument(1).String()
+	result, code := a.API.GetTriggerOption(name, option)
+	if code != api.EOK {
+		return goja.Null()
+	} else {
+		switch option {
+		case "echo_trigger", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "regexp", "omit_from_log", "omit_from_output", "one_shot":
+			return r.ToValue(result == world.StringYes)
+		case "group", "name", "match", "script", "send", "variable":
+			return r.ToValue(result)
+		case "send_to", "user", "sequence":
+			i, _ := strconv.Atoi(result)
+			return r.ToValue(i)
+		}
+	}
+	return goja.Null()
+}
+func (a *jsapi) SetTriggerOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	option := call.Argument(1).String()
+	var value string
+	switch option {
+	case "echo_trigger", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "omit_from_log", "omit_from_output", "one_shot", "regexp":
+		if call.Argument(2).ToBoolean() {
+			value = world.StringYes
+		} else {
+			value = ""
+		}
+	case "group", "name", "match", "script", "send", "variable":
+		value = call.Argument(2).String()
+	case "send_to", "user", "sequence":
+		value = call.Argument(2).String()
+	}
+	return r.ToValue(a.API.SetTriggerOption(name, option, value))
+}
 
-// func (a *jsapi) StopEvaluatingTriggers(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	a.API.StopEvaluatingTriggers()
-// 	return goja.Null()
-// }
-// func (a *jsapi) ColourNameToRGB(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	v := a.API.ColourNameToRGB(call.Argument(0).String())
-// 	L.Push(lua.LString(v))
-// 	return 1
-// }
-// func (a *jsapi) SetSpeedWalkDelay(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	a.API.SetSpeedWalkDelay(L.ToInt(1))
-// 	return goja.Null()
-// }
-// func (a *jsapi) GetSpeedWalkDelay(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	L.Push(lua.LNumber(a.API.SpeedWalkDelay()))
-// 	return 1
-// }
+func (a *jsapi) StopEvaluatingTriggers(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	a.API.StopEvaluatingTriggers()
+	return goja.Null()
+}
+func (a *jsapi) ColourNameToRGB(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	v := a.API.ColourNameToRGB(call.Argument(0).String())
+	return r.ToValue(v)
+}
+func (a *jsapi) SetSpeedWalkDelay(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	a.API.SetSpeedWalkDelay(int(call.Argument(0).ToInteger()))
+	return goja.Null()
+}
+func (a *jsapi) GetSpeedWalkDelay(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.SpeedWalkDelay())
+}
 
-// func (a *jsapi) NewReadFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 		L.Push(lua.LString(a.API.ReadFile(p, call.Argument(0).String())))
-// 		return 1
-// 	}
-// }
-// func (a *jsapi) NewReadLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 		lines := a.API.ReadLines(p, call.Argument(0).String())
-// 		t := L.NewTable()
-// 		for _, v := range lines {
-// 			t.Append(lua.LString(v))
-// 		}
-// 		L.Push(t)
-// 		return 1
-// 	}
-// }
+func (a *jsapi) NewReadFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.ReadFile(p, call.Argument(0).String()))
+	}
+}
+func (a *jsapi) NewReadLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		lines := a.API.ReadLines(p, call.Argument(0).String())
+		t := []interface{}{}
+		for _, v := range lines {
+			t = append(t, v)
+		}
+		return r.NewArray(t...)
 
-// func (a *jsapi) SplitNfunc(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	text := call.Argument(0).String()
-// 	sep := call.Argument(1).String()
-// 	n := L.ToInt(3)
-// 	s := a.API.SplitN(text, sep, n)
-// 	t := L.NewTable()
-// 	for _, v := range s {
-// 		t.Append(lua.LString(v))
-// 	}
-// 	L.Push(t)
-// 	return 1
-// }
+	}
+}
 
-// func (a *jsapi) UTF8Len(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	text := call.Argument(0).String()
-// 	L.Push(lua.LNumber(a.API.UTF8Len(text)))
-// 	return 1
-// }
-// func (a *jsapi) UTF8Sub(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-// 	text := call.Argument(0).String()
-// 	start := L.ToInt(2)
-// 	end := L.ToInt(3)
-// 	L.Push(lua.LString(a.API.UTF8Sub(text, start, end)))
-// 	return 1
-// }
+func (a *jsapi) SplitNfunc(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	text := call.Argument(0).String()
+	sep := call.Argument(1).String()
+	n := int(call.Argument(2).ToInteger())
+	s := a.API.SplitN(text, sep, n)
+	t := []interface{}{}
+	for _, v := range s {
+		t = append(t, v)
+	}
+	return r.NewArray(t...)
+}
+
+func (a *jsapi) UTF8Len(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	text := call.Argument(0).String()
+	return r.ToValue(a.API.UTF8Len(text))
+}
+func (a *jsapi) UTF8Sub(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	text := call.Argument(0).String()
+	start := int(call.Argument(1).ToInteger())
+	end := int(call.Argument(2).ToInteger())
+	return r.ToValue(a.API.UTF8Sub(text, start, end))
+}
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
