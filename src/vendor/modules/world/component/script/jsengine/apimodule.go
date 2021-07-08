@@ -24,14 +24,60 @@ func createApi(b *bus.Bus) *jsapi {
 type jsapi struct {
 	API *api.API
 }
+type World struct {
+	Map map[string]goja.Value
+}
 
+func NewWorld() *World {
+	return &World{
+		Map: map[string]goja.Value{},
+	}
+}
+
+// Get a property value for the key. May return nil if the property does not exist.
+func (w *World) Get(key string) goja.Value {
+	v, ok := w.Map[strings.ToLower(key)]
+	if !ok {
+		return nil
+	}
+	return v
+}
+
+// Set a property value for the key. Return true if success, false otherwise.
+func (w *World) Set(key string, val goja.Value) bool {
+	w.Map[strings.ToLower(key)] = val
+	return true
+}
+
+// Has should return true if and only if the property exists.
+func (w *World) Has(key string) bool {
+	_, ok := w.Map[strings.ToLower(key)]
+	return ok
+
+}
+
+// Delete the property for the key. Returns true on success (note, that includes missing property).
+func (w *World) Delete(key string) bool {
+	delete(w.Map, strings.ToLower(key))
+	return true
+}
+
+// Keys returns a list of all existing property keys. There are no checks for duplicates or to make sure
+// that the order conforms to https://262.ecma-international.org/#sec-ordinaryownpropertykeys
+func (w *World) Keys() []string {
+	keys := []string{}
+	for k := range w.Map {
+		keys = append(keys, strings.ToLower(k))
+	}
+	return keys
+}
 func AppendToWorld(r *goja.Runtime, world *goja.Object, name string, call func(call goja.FunctionCall, r *goja.Runtime) goja.Value) {
 	r.Set(name, call)
-	world.Set(name, call)
+	world.Set(strings.ToLower(name), call)
 }
 func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	jp := p.(*jsplugin.Plugin)
-	world := jp.Runtime.NewObject()
+	world := jp.Runtime.NewDynamicObject(NewWorld())
 	jp.Runtime.Set("world", world)
 	AppendToWorld(jp.Runtime, world, "print", a.Print)
 	AppendToWorld(jp.Runtime, world, "Note", a.Note)
