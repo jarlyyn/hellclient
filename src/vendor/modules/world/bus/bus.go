@@ -10,13 +10,20 @@ import (
 )
 
 type Bus struct {
-	ID                     string
-	GetConnBuffer          func() []byte
-	GetConnConnected       func() bool
-	GetHost                func() string
-	SetHost                func(string)
-	GetPort                func() string
-	SetPort                func(string)
+	ID                       string
+	GetConnBuffer            func() []byte
+	GetConnConnected         func() bool
+	GetHost                  func() string
+	SetHost                  func(string)
+	GetPort                  func() string
+	SetPort                  func(string)
+	GetName                  func() string
+	SetName                  func(string)
+	GetCommandStackCharacter func() string
+	SetCommandStackCharacter func(string)
+	GetScriptPrefix          func() string
+	SetScriptPrefix          func(string)
+
 	GetStatus              func() string
 	SetStatus              func(string)
 	GetQueueDelay          func() int
