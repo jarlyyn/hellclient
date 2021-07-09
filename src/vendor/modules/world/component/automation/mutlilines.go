@@ -30,6 +30,8 @@ func (l *MultiLines) Flush() {
 }
 
 func (l *MultiLines) Last(count int) []string {
+	l.Locker.Lock()
+	defer l.Locker.Unlock()
 	if count <= 0 {
 		return []string{}
 	}
@@ -38,9 +40,12 @@ func (l *MultiLines) Last(count int) []string {
 	}
 	result := make([]string, 0, count)
 
-	r := l.Ring.Move(-count)
+	r := l.Ring.Move(1 - count)
+	var i = 0
 	r.Do(func(v interface{}) {
-		if v != nil {
+		i = i + 1
+
+		if i <= count && v != nil {
 			result = append(result, v.(string))
 		}
 	})

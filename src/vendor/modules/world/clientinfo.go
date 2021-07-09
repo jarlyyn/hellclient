@@ -30,17 +30,20 @@ func (info ClientInfos) Swap(i, j int) {
 }
 
 type WorldData struct {
-	Host        string
-	Port        string
-	Charset     string
-	QueueDelay  int
-	Params      map[string]string
-	Permissions []string
-	ScriptID    string
-	Trusted     herbplugin.Trusted
-	Triggers    []*Trigger
-	Timers      []*Timer
-	Aliases     []*Alias
+	Host                  string
+	Port                  string
+	Charset               string
+	Name                  string
+	CommandStackCharacter string
+	ScriptPrefix          string
+	QueueDelay            int
+	Params                map[string]string
+	Permissions           []string
+	ScriptID              string
+	Trusted               herbplugin.Trusted
+	Triggers              []*Trigger
+	Timers                []*Timer
+	Aliases               []*Alias
 }
 
 func NewWorldData() *WorldData {

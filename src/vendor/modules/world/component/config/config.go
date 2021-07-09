@@ -156,6 +156,36 @@ func (c *Config) Decode(bus *bus.Bus, data []byte) error {
 	bus.AddAliases(c.Data.Aliases)
 	return nil
 }
+func (c *Config) GetName() string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.Name
+}
+func (c *Config) SetName(n string) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.Name = n
+}
+func (c *Config) GetCommandStackCharacter() string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.CommandStackCharacter
+}
+func (c *Config) SetCommandStackCharacter(ch string) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.CommandStackCharacter = ch
+}
+func (c *Config) GetScriptPrefix() string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.ScriptPrefix
+}
+func (c *Config) SetScriptPrefix(p string) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.ScriptPrefix = p
+}
 
 func (c *Config) OnReady(b *bus.Bus) {
 	c.ReadyAt = time.Now().Unix()
@@ -182,6 +212,14 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetPermissions = c.SetPermissions
 	b.GetScriptID = c.GetScriptID
 	b.SetScriptID = c.SetScriptID
+
+	b.GetName = c.GetName
+	b.SetName = c.SetName
+	b.GetCommandStackCharacter = c.GetCommandStackCharacter
+	b.SetCommandStackCharacter = c.SetCommandStackCharacter
+	b.GetScriptPrefix = c.GetScriptPrefix
+	b.SetScriptPrefix = c.SetScriptPrefix
+
 	b.BindInitEvent(b, c.OnReady)
 }
 

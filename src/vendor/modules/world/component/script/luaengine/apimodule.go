@@ -111,7 +111,10 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("SplitN", l.NewFunction(a.SplitNfunc))
 	l.SetGlobal("UTF8Len", l.NewFunction(a.UTF8Len))
 	l.SetGlobal("UTF8Sub", l.NewFunction(a.UTF8Sub))
-
+	l.SetGlobal("Info", l.NewFunction(a.Info))
+	l.SetGlobal("InfoClear", l.NewFunction(a.InfoClear))
+	l.SetGlobal("GetAlphaOption", l.NewFunction(a.GetAlphaOption))
+	l.SetGlobal("SetAlphaOption", l.NewFunction(a.SetAlphaOption))
 }
 func (a *luaapi) Print(L *lua.LState) int {
 	t := L.GetTop()
@@ -605,11 +608,11 @@ func (a *luaapi) GetTriggerOption(L *lua.LState) int {
 		L.Push(lua.LNil)
 	} else {
 		switch option {
-		case "echo_trigger", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "regexp", "omit_from_log", "omit_from_output", "one_shot":
+		case "echo_trigger", "multi_line", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "regexp", "omit_from_log", "omit_from_output", "one_shot":
 			L.Push(lua.LBool(result == world.StringYes))
 		case "group", "name", "match", "script", "send", "variable":
 			L.Push(lua.LString(result))
-		case "send_to", "user", "sequence":
+		case "lines_to_match", "send_to", "user", "sequence":
 			i, _ := strconv.Atoi(result)
 			L.Push(lua.LNumber(i))
 		default:
@@ -623,7 +626,7 @@ func (a *luaapi) SetTriggerOption(L *lua.LState) int {
 	option := L.ToString(2)
 	var value string
 	switch option {
-	case "echo_trigger", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "omit_from_log", "omit_from_output", "one_shot", "regexp":
+	case "echo_trigger", "multi_line", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "omit_from_log", "omit_from_output", "one_shot", "regexp":
 		if L.ToBool(3) {
 			value = world.StringYes
 		} else {
@@ -631,7 +634,7 @@ func (a *luaapi) SetTriggerOption(L *lua.LState) int {
 		}
 	case "group", "name", "match", "script", "send", "variable":
 		value = L.ToString(3)
-	case "send_to", "user", "sequence":
+	case "lines_to_match", "send_to", "user", "sequence":
 		value = L.ToString(3)
 	}
 	L.Push(lua.LNumber(a.API.SetTriggerOption(name, option, value)))
@@ -700,6 +703,25 @@ func (a *luaapi) UTF8Sub(L *lua.LState) int {
 	start := L.ToInt(2)
 	end := L.ToInt(3)
 	L.Push(lua.LString(a.API.UTF8Sub(text, start, end)))
+	return 1
+}
+func (a *luaapi) Info(L *lua.LState) int {
+	a.API.Info(L.ToString(1))
+	return 0
+}
+func (a *luaapi) InfoClear(L *lua.LState) int {
+	a.API.InfoClear()
+	return 0
+}
+func (a *luaapi) GetAlphaOption(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LString(a.API.GetAlphaOption(name)))
+	return 1
+}
+func (a *luaapi) SetAlphaOption(L *lua.LState) int {
+	name := L.ToString(1)
+	value := L.ToString(2)
+	L.Push(lua.LNumber(a.API.SetAlphaOption(name, value)))
 	return 1
 }
 

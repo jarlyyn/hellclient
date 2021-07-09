@@ -164,6 +164,11 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "SplitN", a.SplitNfunc)
 	AppendToWorld(jp.Runtime, world, "UTF8Len", a.UTF8Len)
 	AppendToWorld(jp.Runtime, world, "UTF8Sub", a.UTF8Sub)
+	AppendToWorld(jp.Runtime, world, "Info", a.Info)
+	AppendToWorld(jp.Runtime, world, "InfoClear", a.InfoClear)
+
+	AppendToWorld(jp.Runtime, world, "GetAlphaOption", a.GetAlphaOption)
+	AppendToWorld(jp.Runtime, world, "SetAlphaOption", a.SetAlphaOption)
 
 }
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -603,7 +608,7 @@ func (a *jsapi) SetTriggerOption(call goja.FunctionCall, r *goja.Runtime) goja.V
 	option := call.Argument(1).String()
 	var value string
 	switch option {
-	case "echo_trigger", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "omit_from_log", "omit_from_output", "one_shot", "regexp":
+	case "echo_trigger", "multi_line", "enabled", "expand_variables", "ignore_case", "keep_evaluating", "menu", "omit_from_command_history", "omit_from_log", "omit_from_output", "one_shot", "regexp":
 		if call.Argument(2).ToBoolean() {
 			value = world.StringYes
 		} else {
@@ -611,7 +616,7 @@ func (a *jsapi) SetTriggerOption(call goja.FunctionCall, r *goja.Runtime) goja.V
 		}
 	case "group", "name", "match", "script", "send", "variable":
 		value = call.Argument(2).String()
-	case "send_to", "user", "sequence":
+	case "lines_to_match", "send_to", "user", "sequence":
 		value = call.Argument(2).String()
 	}
 	return r.ToValue(a.API.SetTriggerOption(name, option, value))
@@ -671,6 +676,23 @@ func (a *jsapi) UTF8Sub(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	start := int(call.Argument(1).ToInteger())
 	end := int(call.Argument(2).ToInteger())
 	return r.ToValue(a.API.UTF8Sub(text, start, end))
+}
+func (a *jsapi) Info(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	text := call.Argument(0).String()
+	a.API.Info(text)
+	return nil
+}
+func (a *jsapi) InfoClear(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	a.API.InfoClear()
+	return nil
+}
+
+func (a *jsapi) GetAlphaOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.GetAlphaOption(call.Argument(0).String()))
+}
+
+func (a *jsapi) SetAlphaOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.SetAlphaOption(call.Argument(0).String(), call.Argument(1).String()))
 }
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {

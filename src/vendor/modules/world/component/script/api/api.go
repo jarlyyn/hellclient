@@ -284,6 +284,7 @@ func (a *API) DoAfterSpecial(seconds float64, sendtext string, sendto int) int {
 
 func (a *API) AddTimer(timerName string, hour int, minute int, second float64, responseText string, flags int, scriptName string) int {
 	t := world.CreateTimer()
+	t.Name = timerName
 	t.Hour = hour
 	t.Minute = minute
 	t.Second = int(second)
@@ -620,3 +621,78 @@ func (a *API) UTF8Sub(text string, start int, end int) string {
 	}
 	return string(v[start:end])
 }
+
+func (a *API) Info(text string) {
+	a.Bus.SetStatus(a.Bus.GetStatus() + text)
+}
+func (a *API) InfoClear() {
+	a.Bus.SetStatus("")
+}
+
+func (a *API) GetAlphaOption(name string) string {
+	switch name {
+	case "name":
+		return a.Bus.GetName()
+	case "id":
+		return a.Bus.ID
+	case "command_stack_character":
+		return a.Bus.GetCommandStackCharacter()
+	case "script_prefix":
+		return a.Bus.GetScriptPrefix()
+	}
+	panic(fmt.Errorf("world alpha option %s not supported", name))
+}
+
+func (a *API) SetAlphaOption(name string, value string) int {
+	switch name {
+	case "name":
+		a.Bus.SetName(value)
+	default:
+		panic(fmt.Errorf("world alpha option %s not supported", name))
+	}
+	return EOK
+}
+
+//
+// func (a *API) GetLinesInBufferCount() int {
+
+// }
+// func (a *API) DeleteOutput() {
+
+// }
+// func (a *API) DeleteLines(count int) {
+
+// }
+// func (a *API) GetRecentLines(count int) string {
+
+// }
+// func (a *API) WriteLog(message string) int {
+// }
+// func (a *API) CloseLog() int {
+// 	return EOK
+// }
+// func (a *API) FlushLog() int {
+// 	return EOK
+// }
+// func (a *API) GetTimerInfo(name string, infotype int) {
+
+// }
+// func (a *API) GetTriggerInfo(name string, infotype int) {
+
+// }
+// func (a *API) GetAliasInfo(name string, infotype int) {
+
+// }
+// func (a *API) GetLineInfo() {
+
+// }
+// func (a *API) GetStyleInfo(linenumber int, style int, infotype int) (string, bool) {
+
+// }
+
+// func (a *API) BoldColour(WhichColour int) int {
+
+// }
+// func (a *API) GetLineCount() int {
+
+// }
