@@ -38,6 +38,7 @@ type Titan struct {
 	Worlds     map[string]*bus.Bus
 	Path       string
 	Scriptpath string
+	Logpath    string
 	msgEvent   *busevent.Event
 }
 
@@ -258,6 +259,7 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindStatusEvent(t, t.onStatus)
 	b.BindHistoriesEvent(t, t.onHistory)
 	b.GetScriptPath = t.GetScriptPath
+	b.GetLogsPath = t.GetLogsPath
 }
 
 func (t *Titan) RaiseMsgEvent(msg *message.Message) {
@@ -463,6 +465,9 @@ func (t *Titan) HandleCmdSend(id string, msg string) {
 
 func (t *Titan) GetScriptPath() string {
 	return t.Scriptpath
+}
+func (t *Titan) GetLogsPath() string {
+	return t.Logpath
 }
 func (t *Titan) IsScriptExist(id string) (bool, error) {
 	_, err := os.Stat(path.Join(t.Scriptpath, id))

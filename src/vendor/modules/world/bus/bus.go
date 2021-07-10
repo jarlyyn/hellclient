@@ -45,6 +45,8 @@ type Bus struct {
 	GetScriptID            func() string
 	SetScriptID            func(string)
 	GetScriptPath          func() string
+	GetLogsPath            func() string
+	DoLog                  func(string)
 	SetTrusted             func(*herbplugin.Trusted)
 	GetTrusted             func() *herbplugin.Trusted
 	GetScriptPluginOptions func() herbplugin.Options
