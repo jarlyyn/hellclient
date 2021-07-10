@@ -15,41 +15,41 @@
 <div id="buttons">
     <span  v-if="current && info[current]">
     <el-button-group>
-                <el-tooltip v-if="!info[current].Running" class="item" effect="light" content="连线"  placement="bottom">
+                <el-tooltip id="doconnect" v-if="!info[current].Running" class="item" effect="light" content="连线"  placement="bottom">
                     <el-button  @click="onButton('connect')" size="mini" type="success" icon="el-icon-arrow-right"></el-button>
                     </el-tooltip>
                     <el-tooltip v-if="info[current].Running" class="item" effect="light" content="断线"  placement="bottom">
-                    <el-button  @click="onButton('disconnect')" size="mini" type="warning" icon="el-icon-switch-button"></el-button>
+                    <el-button  id="disconnect" @click="onButton('disconnect')" size="mini" type="warning" icon="el-icon-switch-button"></el-button>
                     </el-tooltip>
 
                     <el-tooltip  class="item" effect="light" content="关闭"  placement="bottom">
-                        <el-button  @click="onButton('close')" size="mini" type="danger" icon="el-icon-close" ></el-button>
+                        <el-button  id="doclose" @click="onButton('close')" size="mini" type="danger" icon="el-icon-close" ></el-button>
                         </el-tooltip>
                     <el-tooltip class="item" effect="light" content="历史输出"  placement="bottom">
-                            <el-button  @click="onButton('allLines')" size="mini" icon="el-icon-chat-line-square"></el-button>
+                            <el-button  id="doalllines" @click="onButton('allLines')" size="mini" icon="el-icon-chat-line-square"></el-button>
                             </el-tooltip>
 
     </el-button-group>
     <el-button-group>
-        <el-tooltip class="item" effect="light" content="设置"  placement="bottom">
+        <el-tooltip id="dootpions" class="item" effect="light" content="设置"  placement="bottom">
             <el-button  @click="onButton('options')" size="mini" icon="el-icon-set-up"></el-button>
             </el-tooltip>
-            <el-tooltip class="item" effect="light" content="脚本"  placement="bottom">
+            <el-tooltip id="doscript" class="item" effect="light" content="脚本"  placement="bottom">
                 <el-button  @click="onButton('script')" size="mini" icon="el-icon-cpu"></el-button>
             </el-tooltip>
     </el-button-group>
-    <el-button-group>
+    <el-button-group >
                     <el-tooltip class="item" effect="light" content="变量"  placement="bottom">
                         <el-button  @click="onButton('variable')" size="mini" icon="el-icon-s-data"></el-button>
                         </el-tooltip>
         <el-tooltip class="item" effect="light" content="触发器"  placement="bottom">
-            <el-button  @click="onButton('usertriggers')" size="mini" icon="el-icon-s-tools"></el-button>
+            <el-button  id="dousertriggers" @click="onButton('usertriggers')" size="mini" icon="el-icon-s-tools"></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="light" content="计时器"  placement="bottom">
-                <el-button  @click="onButton('usertimers')" size="mini" icon="el-icon-time"></el-button>
+                <el-button  id="dousertimers" @click="onButton('usertimers')" size="mini" icon="el-icon-time"></el-button>
                 </el-tooltip>
                 <el-tooltip class="item" effect="light" content="别名"  placement="bottom">
-                    <el-button  @click="onButton('useraliases')" size="mini" icon="el-icon-s-promotion"></el-button>
+                    <el-button  id="douseraliases" @click="onButton('useraliases')" size="mini" icon="el-icon-s-promotion"></el-button>
                     </el-tooltip>
     </el-button-group>
 <el-button-group>
@@ -62,14 +62,14 @@
     <el-tooltip  class="item" effect="light" content="重新加载"  placement="bottom">
         <el-button  @click="onButton('reload')" size="mini"  icon="el-icon-refresh-left" ></el-button>
         </el-tooltip>
-        <el-tooltip  v-if="advancemode" class="item" effect="light" content="关闭脚本编辑模式"  placement="bottom">
+        <el-tooltip  id="dolock" v-if="advancemode" class="item" effect="light" content="关闭脚本编辑模式"  placement="bottom">
             <el-button  @click="onButton('lock')" size="mini" type="info" icon="el-icon-unlock" type=""></el-button>
             </el-tooltip>
-            <el-tooltip  v-if="!advancemode" class="item" effect="light" content="开启脚本编辑模式"  placement="bottom">
+            <el-tooltip  id="dounlock" v-if="!advancemode" class="item" effect="light" content="开启脚本编辑模式"  placement="bottom">
                 <el-button  @click="onButton('unlock')" size="mini" type="warning" icon="el-icon-lock" ></el-button>
                 </el-tooltip>
 </el-button-group>
-<el-button-group v-if="info[current] && info[current].ScriptID && advancemode ">
+<el-button-group id="advancebuttons" v-if="info[current] && info[current].ScriptID && advancemode ">
 <el-tooltip class="item" effect="light" content="脚本基本设置"  placement="bottom">
 <el-button  @click="onButton('triggers')" size="mini" plain type="warning" icon="el-icon-set-up"></el-button>
 </el-tooltip>
