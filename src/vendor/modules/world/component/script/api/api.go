@@ -666,14 +666,17 @@ func (a *API) SetAlphaOption(name string, value string) int {
 // func (a *API) GetRecentLines(count int) string {
 
 // }
-// func (a *API) WriteLog(message string) int {
-// }
-// func (a *API) CloseLog() int {
-// 	return EOK
-// }
-// func (a *API) FlushLog() int {
-// 	return EOK
-// }
+func (a *API) WriteLog(message string) int {
+	a.Bus.DoLog(message)
+	return EOK
+}
+func (a *API) CloseLog() int {
+	return EOK
+}
+func (a *API) FlushLog() int {
+	return EOK
+}
+
 // func (a *API) GetTimerInfo(name string, infotype int) {
 
 // }
