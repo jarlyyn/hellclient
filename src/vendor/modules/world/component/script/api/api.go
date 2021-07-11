@@ -743,9 +743,9 @@ func (a *API) GetStyleInfo(linenumber int, style int, infotype int) (string, boo
 	case 11:
 		return world.ToStringBool(word.Inverse), true
 	case 14:
-		return strconv.Itoa(word.GetColorCode()), true
+		return strconv.Itoa(word.GetColorRGB()), true
 	case 15:
-		return strconv.Itoa(word.GetBGColorCode()), true
+		return strconv.Itoa(word.GetBGColorRGB()), true
 	}
 	return "", false
 
