@@ -123,11 +123,13 @@ type Bus struct {
 	DoUpdateTrigger           func(*world.Trigger) int
 	DoSendTriggerToScript     func(line *world.Line, trigger *world.Trigger, result *world.MatchResult)
 
-	DoMultiLinesAppend func(string)
-	DoMultiLinesFlush  func()
-	DoMultiLinesLast   func(int) []string
-
-	GetMapper func() *mapper.Mapper
+	DoMultiLinesAppend    func(string)
+	DoMultiLinesFlush     func()
+	DoMultiLinesLast      func(int) []string
+	GetLinesInBufferCount func() int
+	GetRecentLines        func(count int) []*world.Line
+	GetLine               func(idx int) *world.Line
+	GetMapper             func() *mapper.Mapper
 
 	AddHistory               func(string)
 	GetHistories             func() []string
@@ -394,10 +396,10 @@ func (b *Bus) BindStatusEvent(id interface{}, fn func(b *Bus, status string)) {
 	)
 }
 func (b *Bus) RaiseLinesEvent(lines []*world.Line) {
-	b.StatusEvent.Raise(lines)
+	b.LinesEvent.Raise(lines)
 }
 func (b *Bus) BindLinesEvent(id interface{}, fn func(b *Bus, lines []*world.Line)) {
-	b.StatusEvent.BindAs(
+	b.LinesEvent.BindAs(
 		id,
 		func(data interface{}) {
 			fn(b, data.([]*world.Line))

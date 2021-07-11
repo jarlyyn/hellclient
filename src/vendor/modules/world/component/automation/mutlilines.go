@@ -39,15 +39,14 @@ func (l *MultiLines) Last(count int) []string {
 		count = MaxMultiLines
 	}
 	result := make([]string, 0, count)
-
 	r := l.Ring.Move(1 - count)
-	var i = 0
-	r.Do(func(v interface{}) {
-		i = i + 1
-
-		if i <= count && v != nil {
+	var current = 0
+	for current < count {
+		current = current + 1
+		v := r.Value
+		if v != nil {
 			result = append(result, v.(string))
 		}
-	})
+	}
 	return result
 }

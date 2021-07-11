@@ -653,10 +653,9 @@ func (a *API) SetAlphaOption(name string, value string) int {
 	return EOK
 }
 
-//
-// func (a *API) GetLinesInBufferCount() int {
-
-// }
+func (a *API) GetLinesInBufferCount() int {
+	return a.Bus.GetLinesInBufferCount()
+}
 func (a *API) DeleteOutput() {
 	a.Bus.FlushHistories()
 }
@@ -669,12 +668,83 @@ func (a *API) GetLineCount() int {
 	return a.Bus.GetLineCount()
 }
 
-// func (a *API) GetRecentLines(count int) string {
+func (a *API) GetRecentLines(count int) string {
+	if count > 100 {
+		count = 100
+	}
+	lines := a.Bus.GetRecentLines(count)
+	var result = make([]string, 0, len(lines))
+	for _, v := range lines {
+		result = append(result, v.Plain())
+	}
+	return strings.Join(result, "\n")
+}
 
-// }
-// func (a *API) GetLineInfo() {
+func (a *API) GetLineInfo(linenumber int, infotype int) (string, bool) {
+	line := a.Bus.GetLine(linenumber)
+	if line == nil {
+		return "", false
+	}
+	switch infotype {
+	case 1:
+		return line.Plain(), true
+	case 2:
+		return strconv.Itoa(len(line.Plain())), true
+	case 3:
+		t := line.Plain()
+		newline := len(t) > 1 && t[len(t)-1] == '\n'
+		return world.ToStringBool(newline), true
+	case 4:
+		return world.ToStringBool(line.Type == world.LineTypePrint), true
+	case 5:
+		return world.ToStringBool(line.Type == world.LineTypeEcho), true
+	case 6:
+		return world.ToStringBool(!line.OmitFromLog), true
+	case 7:
+		return world.ToStringBool(false), true
+	case 8:
+		return world.ToStringBool(false), true
+	case 9:
+		return strconv.FormatInt(line.Time, 10), true
+	case 10:
+		return line.ID, true
+	case 11:
+		return strconv.Itoa(len(line.Words)), true
 
-// }
+	}
+	return "", false
+}
+
+func (a *API) GetStyleInfo(linenumber int, style int, infotype int) (string, bool) {
+	line := a.Bus.GetLine(linenumber)
+	if line == nil {
+		return "", false
+	}
+	if style < 1 || style > len(line.Words) {
+		return "", false
+	}
+	word := line.Words[style-1]
+	switch infotype {
+	case 1:
+		return word.Text, true
+	case 2:
+		return strconv.Itoa(len(word.Text)), true
+	case 3:
+		sc := line.GetWordStartColumn(style)
+		return strconv.Itoa(sc), true
+	case 8:
+		return world.ToStringBool(word.Bold), true
+	case 9:
+		return world.ToStringBool(word.Underlined), true
+	case 10:
+		return world.ToStringBool(word.Blinking), true
+	case 11:
+		return world.ToStringBool(word.Inverse), true
+
+	}
+	return "", false
+
+}
 func (a *API) WriteLog(message string) int {
 	a.Bus.DoLog(message)
 	return EOK
@@ -693,9 +763,6 @@ func (a *API) FlushLog() int {
 
 // }
 // func (a *API) GetAliasInfo(name string, infotype int) {
-
-// }
-// func (a *API) GetStyleInfo(linenumber int, style int, infotype int) (string, bool) {
 
 // }
 
