@@ -652,7 +652,7 @@ func (a *luaapi) StopEvaluatingTriggers(L *lua.LState) int {
 }
 func (a *luaapi) ColourNameToRGB(L *lua.LState) int {
 	v := a.API.ColourNameToRGB(L.ToString(1))
-	L.Push(lua.LString(v))
+	L.Push(lua.LNumber(v))
 	return 1
 }
 func (a *luaapi) SetSpeedWalkDelay(L *lua.LState) int {
