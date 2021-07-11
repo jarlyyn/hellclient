@@ -2,11 +2,13 @@ package luaengine
 
 import (
 	"context"
+	"modules/app"
 	"modules/world"
 	"modules/world/bus"
 	"modules/world/component/script/api"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/herbplugin/lua51plugin"
@@ -119,6 +121,17 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("WriteLog", l.NewFunction(a.WriteLog))
 	l.SetGlobal("CloseLog", l.NewFunction(a.CloseLog))
 	l.SetGlobal("FlushLog", l.NewFunction(a.FlushLog))
+
+	l.SetGlobal("GetLinesInBufferCount", l.NewFunction(a.GetLinesInBufferCount))
+	l.SetGlobal("DeleteOutput", l.NewFunction(a.DeleteOutput))
+	l.SetGlobal("DeleteLines", l.NewFunction(a.DeleteLines))
+	l.SetGlobal("GetLineCount", l.NewFunction(a.GetLineCount))
+	l.SetGlobal("GetRecentLines", l.NewFunction(a.GetRecentLines))
+	l.SetGlobal("GetLineInfo", l.NewFunction(a.GetLineInfo))
+	l.SetGlobal("GetBoldColour", l.NewFunction(a.BoldColour))
+	l.SetGlobal("SetBoldColour", l.NewFunction(a.BoldColour))
+	l.SetGlobal("GetNormalColour", l.NewFunction(a.NormalColour))
+	l.SetGlobal("SetNormalColour", l.NewFunction(a.NormalColour))
 
 }
 func (a *luaapi) Print(L *lua.LState) int {
@@ -742,6 +755,95 @@ func (a *luaapi) CloseLog(L *lua.LState) int {
 func (a *luaapi) FlushLog(L *lua.LState) int {
 	L.Push(lua.LNumber(a.API.FlushLog()))
 	return 1
+}
+
+func (a *luaapi) GetLinesInBufferCount(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.GetLinesInBufferCount()))
+	return 1
+}
+func (a *luaapi) DeleteOutput(L *lua.LState) int {
+	a.API.DeleteOutput()
+	return 0
+}
+func (a *luaapi) DeleteLines(L *lua.LState) int {
+	a.API.DeleteOutput()
+	return 0
+}
+func (a *luaapi) GetLineCount(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.GetLineCount()))
+	return 1
+}
+func (a *luaapi) GetRecentLines(L *lua.LState) int {
+	L.Push(lua.LString(a.API.GetRecentLines(L.ToInt(1))))
+	return 1
+}
+func (a *luaapi) getLineInfo(L *lua.LState) int {
+	val, ok := a.API.GetLineInfo(L.ToInt(1), L.ToInt(2))
+	if !ok {
+		L.Push(lua.LNil)
+		return 1
+	}
+	switch L.ToInt(1) {
+	case 1:
+		L.Push(lua.LString(val))
+	case 2:
+		L.Push(lua.LNumber(world.FromStringInt(val)))
+	case 3:
+		L.Push(lua.LNumber(world.FromStringInt(val)))
+	case 8:
+		L.Push(lua.LBool(world.FromStringBool(val)))
+	case 9:
+		L.Push(lua.LBool(world.FromStringBool(val)))
+	case 10:
+		L.Push(lua.LBool(world.FromStringBool(val)))
+	case 11:
+		L.Push(lua.LBool(world.FromStringBool(val)))
+	case 14:
+		L.Push(lua.LNumber(world.FromStringInt(val)))
+	case 15:
+		L.Push(lua.LNumber(world.FromStringInt(val)))
+	default:
+		L.Push(lua.LNil)
+	}
+	return 1
+}
+func (a *luaapi) getLineTable(L *lua.LState) int {
+	line := a.API.Bus.GetLine(L.ToInt(1))
+	if line == nil {
+		L.Push(lua.LNil)
+		return 1
+	}
+	t := L.NewTable()
+	t.RawSetString("text", lua.LString(line.Plain()))
+	t.RawSetString("length", lua.LNumber(len(line.Plain())))
+	t.RawSetString("newline", lua.LBool(line.IsNewline()))
+	t.RawSetString("note", lua.LBool(line.Type == world.LineTypePrint))
+	t.RawSetString("user", lua.LBool(line.Type == world.LineTypeEcho))
+	t.RawSetString("log", lua.LBool(!line.OmitFromLog))
+	t.RawSetString("time", lua.LNumber(line.Time))
+	t.RawSetString("timestr", lua.LString(app.Time.Datetime(time.Unix(line.Time, 0))))
+	t.RawSetString("line", lua.LString(line.ID))
+	t.RawSetString("styles", lua.LNumber(len(line.Words)))
+
+	L.Push(t)
+	return 1
+
+}
+func (a *luaapi) GetLineInfo(L *lua.LState) int {
+	if L.ToInt(2) != 0 {
+		return a.getLineInfo(L)
+	}
+	return a.getLineTable(L)
+}
+func (a *luaapi) BoldColour(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.BoldColour(L.ToInt(1))))
+	return 1
+
+}
+func (a *luaapi) NormalColour(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.NormalColour(L.ToInt(1))))
+	return 1
+
 }
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
