@@ -43,6 +43,7 @@ type Bus struct {
 	GetPermissions           func() []string
 	GetScriptID              func() string
 	SetScriptID              func(string)
+	GetScriptType            func() string
 	GetScriptPath            func() string
 	GetLogsPath              func() string
 	DoLog                    func(string)

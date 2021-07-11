@@ -169,12 +169,15 @@ func (e *JsEngine) Call(b *bus.Bus, source string, args ...interface{}) {
 	}
 	fn, ok := goja.AssertFunction(r.Get(source))
 	if !ok {
-		panic(errors.New(fmt.Sprintf("js function %s not found", source)))
+		b.HandleScriptError(errors.New(fmt.Sprintf("js function %s not found", source)))
+		return
 	}
 	jargs := []goja.Value{}
 	for _, v := range args {
 		jargs = append(jargs, r.ToValue(v))
 	}
-	_, err := fn(goja.Undefined(), jargs...)
-	b.HandleScriptError(err)
+	b.HandleScriptError(util.Catch(func() {
+		_, err := fn(goja.Undefined(), jargs...)
+		b.HandleScriptError(err)
+	}))
 }

@@ -179,6 +179,8 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "BoldColour", a.BoldColour)
 	AppendToWorld(jp.Runtime, world, "NormalColour", a.NormalColour)
 	AppendToWorld(jp.Runtime, world, "GetStyleInfo", a.GetStyleInfo)
+
+	AppendToWorld(jp.Runtime, world, "GetInfo", a.GetInfo)
 }
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	msg := []string{}
@@ -794,6 +796,10 @@ func (a *jsapi) GetStyleInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value
 
 	}
 	return nil
+}
+
+func (a *jsapi) GetInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.GetInfo(int(call.Argument(1).ToInteger())))
 }
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
