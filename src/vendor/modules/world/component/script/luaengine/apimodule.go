@@ -115,6 +115,11 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("InfoClear", l.NewFunction(a.InfoClear))
 	l.SetGlobal("GetAlphaOption", l.NewFunction(a.GetAlphaOption))
 	l.SetGlobal("SetAlphaOption", l.NewFunction(a.SetAlphaOption))
+
+	l.SetGlobal("WriteLog", l.NewFunction(a.WriteLog))
+	l.SetGlobal("CloseLog", l.NewFunction(a.CloseLog))
+	l.SetGlobal("FlushLog", l.NewFunction(a.FlushLog))
+
 }
 func (a *luaapi) Print(L *lua.LState) int {
 	t := L.GetTop()
@@ -722,6 +727,20 @@ func (a *luaapi) SetAlphaOption(L *lua.LState) int {
 	name := L.ToString(1)
 	value := L.ToString(2)
 	L.Push(lua.LNumber(a.API.SetAlphaOption(name, value)))
+	return 1
+}
+
+func (a *luaapi) WriteLog(L *lua.LState) int {
+	message := L.ToString(1)
+	L.Push(lua.LNumber(a.API.WriteLog(message)))
+	return 1
+}
+func (a *luaapi) CloseLog(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.CloseLog()))
+	return 1
+}
+func (a *luaapi) FlushLog(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.FlushLog()))
 	return 1
 }
 

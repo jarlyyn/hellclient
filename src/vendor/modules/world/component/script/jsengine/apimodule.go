@@ -694,6 +694,17 @@ func (a *jsapi) GetAlphaOption(call goja.FunctionCall, r *goja.Runtime) goja.Val
 func (a *jsapi) SetAlphaOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.SetAlphaOption(call.Argument(0).String(), call.Argument(1).String()))
 }
+func (a *jsapi) WriteLog(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.WriteLog(call.Argument(0).String()))
+}
+
+func (a *jsapi) CloseLog(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.CloseLog())
+}
+
+func (a *jsapi) FlushLog(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.FlushLog())
+}
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
