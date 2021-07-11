@@ -23,48 +23,50 @@ type Bus struct {
 	SetCommandStackCharacter func(string)
 	GetScriptPrefix          func() string
 	SetScriptPrefix          func(string)
+	GetStatus                func() string
+	SetStatus                func(string)
+	GetQueueDelay            func() int
+	SetQueueDelay            func(int)
+	GetQueue                 func() []*world.Command
+	GetParam                 func(string) string
+	GetParams                func() map[string]string
+	SetParam                 func(string, string)
+	DeleteParam              func(string)
+	GetCharset               func() string
+	SetCharset               func(string)
+	GetReadyAt               func() int64
+	GetCurrentLines          func() []*world.Line
+	GetPrompt                func() *world.Line
+	GetClientInfo            func() *world.ClientInfo
+	GetScriptData            func() *world.ScriptData
+	SetPermissions           func([]string)
+	GetPermissions           func() []string
+	GetScriptID              func() string
+	SetScriptID              func(string)
+	GetScriptPath            func() string
+	GetLogsPath              func() string
+	DoLog                    func(string)
+	SetTrusted               func(*herbplugin.Trusted)
+	GetTrusted               func() *herbplugin.Trusted
+	GetScriptPluginOptions   func() herbplugin.Options
+	DoSendToConn             func(cmd []byte)
+	DoSend                   func(*world.Command)
+	DoSendToQueue            func(*world.Command)
+	DoExecute                func(message string)
+	DoEncode                 func() ([]byte, error)
+	DoDecode                 func([]byte) error
+	DoReloadScript           func() error
+	DoSaveScript             func() error
+	DoUseScript              func(string)
+	GetRequiredParams        func() []*world.RequiredParam
+	DoRunScript              func(string)
+	DoPrint                  func(msg string)
+	DoPrintSystem            func(msg string)
+	DoDiscardQueue           func() int
 
-	GetStatus              func() string
-	SetStatus              func(string)
-	GetQueueDelay          func() int
-	SetQueueDelay          func(int)
-	GetQueue               func() []*world.Command
-	GetParam               func(string) string
-	GetParams              func() map[string]string
-	SetParam               func(string, string)
-	DeleteParam            func(string)
-	GetCharset             func() string
-	SetCharset             func(string)
-	GetReadyAt             func() int64
-	GetCurrentLines        func() []*world.Line
-	GetPrompt              func() *world.Line
-	GetClientInfo          func() *world.ClientInfo
-	GetScriptData          func() *world.ScriptData
-	SetPermissions         func([]string)
-	GetPermissions         func() []string
-	GetScriptID            func() string
-	SetScriptID            func(string)
-	GetScriptPath          func() string
-	GetLogsPath            func() string
-	DoLog                  func(string)
-	SetTrusted             func(*herbplugin.Trusted)
-	GetTrusted             func() *herbplugin.Trusted
-	GetScriptPluginOptions func() herbplugin.Options
-	DoSendToConn           func(cmd []byte)
-	DoSend                 func(*world.Command)
-	DoSendToQueue          func(*world.Command)
-	DoExecute              func(message string)
-	DoEncode               func() ([]byte, error)
-	DoDecode               func([]byte) error
-	DoReloadScript         func() error
-	DoSaveScript           func() error
-	DoUseScript            func(string)
-	GetRequiredParams      func() []*world.RequiredParam
-	DoRunScript            func(string)
-	DoPrint                func(msg string)
-	DoPrintSystem          func(msg string)
-	DoDiscardQueue         func() int
-
+	DoOmitOutput            func()
+	DoDeleteLines           func(int)
+	GetLineCount            func() int
 	DoSendTimerToScript     func(*world.Timer)
 	DoDeleteTimer           func(string) bool
 	DoDeleteTimerByName     func(string) bool
@@ -151,6 +153,7 @@ type Bus struct {
 	CloseEvent               busevent.Event
 	HistoriesEvent           busevent.Event
 	StatusEvent              busevent.Event
+	LinesEvent               busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -387,6 +390,17 @@ func (b *Bus) BindStatusEvent(id interface{}, fn func(b *Bus, status string)) {
 		id,
 		func(data interface{}) {
 			fn(b, data.(string))
+		},
+	)
+}
+func (b *Bus) RaiseLinesEvent(lines []*world.Line) {
+	b.StatusEvent.Raise(lines)
+}
+func (b *Bus) BindLinesEvent(id interface{}, fn func(b *Bus, lines []*world.Line)) {
+	b.StatusEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b, data.([]*world.Line))
 		},
 	)
 }

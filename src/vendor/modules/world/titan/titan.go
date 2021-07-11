@@ -45,11 +45,11 @@ type Titan struct {
 func (t *Titan) CreateBus() *bus.Bus {
 	b := bus.New()
 	component.InstallComponents(b,
-		automation.New(),
 		config.New(),
 		conn.New(),
 		converter.New(),
 		info.New(),
+		automation.New(),
 		log.New(),
 		queue.New(),
 		script.New(),
@@ -110,7 +110,9 @@ func (t *Titan) onStatus(b *bus.Bus, status string) {
 func (t *Titan) onHistory(b *bus.Bus, h []string) {
 	msg.PublishHistory(t, b.ID, h)
 }
-
+func (t *Titan) onLines(b *bus.Bus, lines []*world.Line) {
+	msg.PublishLines(t, b.ID, lines)
+}
 func (t *Titan) onLine(b *bus.Bus, line *world.Line) {
 	if line.OmitFromOutput {
 		return
@@ -258,6 +260,7 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindPromptEvent(t, t.onPrompt)
 	b.BindStatusEvent(t, t.onStatus)
 	b.BindHistoriesEvent(t, t.onHistory)
+	b.BindLinesEvent(t, t.onLines)
 	b.GetScriptPath = t.GetScriptPath
 	b.GetLogsPath = t.GetLogsPath
 }
@@ -668,6 +671,7 @@ func (t *Titan) NewScript(id string, scripttype string) error {
 	return nil
 
 }
+
 func New() *Titan {
 	return &Titan{
 		Worlds:   map[string]*bus.Bus{},
