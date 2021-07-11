@@ -657,13 +657,22 @@ func (a *API) SetAlphaOption(name string, value string) int {
 // func (a *API) GetLinesInBufferCount() int {
 
 // }
-// func (a *API) DeleteOutput() {
+func (a *API) DeleteOutput() {
+	a.Bus.FlushHistories()
+}
 
-// }
-// func (a *API) DeleteLines(count int) {
+func (a *API) DeleteLines(count int) {
+	a.Bus.DoDeleteLines(count)
+}
 
-// }
+func (a *API) GetLineCount() int {
+	return a.Bus.GetLineCount()
+}
+
 // func (a *API) GetRecentLines(count int) string {
+
+// }
+// func (a *API) GetLineInfo() {
 
 // }
 func (a *API) WriteLog(message string) int {
@@ -686,16 +695,10 @@ func (a *API) FlushLog() int {
 // func (a *API) GetAliasInfo(name string, infotype int) {
 
 // }
-// func (a *API) GetLineInfo() {
-
-// }
 // func (a *API) GetStyleInfo(linenumber int, style int, infotype int) (string, bool) {
 
 // }
 
 // func (a *API) BoldColour(WhichColour int) int {
-
-// }
-// func (a *API) GetLineCount() int {
 
 // }

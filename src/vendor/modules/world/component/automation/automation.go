@@ -169,7 +169,7 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 			a.Triggers.RemoveTrigger(data.ID)
 		}
 		if data.OmitFromOutput {
-			line.OmitFromOutput = true
+			b.DoOmitOutput()
 		}
 		if data.OmitFromLog {
 			line.OmitFromLog = true
