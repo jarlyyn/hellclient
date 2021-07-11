@@ -54,6 +54,11 @@ func (l *Line) Plain() string {
 	}
 	return output
 }
+func (l *Line) IsNewline() bool {
+	t := l.Plain()
+	newline := len(t) > 1 && t[len(t)-1] == '\n'
+	return newline
+}
 func (l *Line) IsEmpty() bool {
 	return l == nil || len(l.Words) == 0
 }

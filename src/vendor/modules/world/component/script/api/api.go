@@ -691,9 +691,7 @@ func (a *API) GetLineInfo(linenumber int, infotype int) (string, bool) {
 	case 2:
 		return strconv.Itoa(len(line.Plain())), true
 	case 3:
-		t := line.Plain()
-		newline := len(t) > 1 && t[len(t)-1] == '\n'
-		return world.ToStringBool(newline), true
+		return world.ToStringBool(line.IsNewline()), true
 	case 4:
 		return world.ToStringBool(line.Type == world.LineTypePrint), true
 	case 5:
@@ -710,11 +708,15 @@ func (a *API) GetLineInfo(linenumber int, infotype int) (string, bool) {
 		return line.ID, true
 	case 11:
 		return strconv.Itoa(len(line.Words)), true
-
 	}
 	return "", false
 }
-
+func (a *API) BoldColour(WhichColour int) int {
+	return world.GetBoldColour(WhichColour)
+}
+func (a *API) NormalColour(WhichColour int) int {
+	return world.GetNormalColour(WhichColour)
+}
 func (a *API) GetStyleInfo(linenumber int, style int, infotype int) (string, bool) {
 	line := a.Bus.GetLine(linenumber)
 	if line == nil {
@@ -740,7 +742,10 @@ func (a *API) GetStyleInfo(linenumber int, style int, infotype int) (string, boo
 		return world.ToStringBool(word.Blinking), true
 	case 11:
 		return world.ToStringBool(word.Inverse), true
-
+	case 14:
+		return strconv.Itoa(word.GetColorCode()), true
+	case 15:
+		return strconv.Itoa(word.GetBGColorCode()), true
 	}
 	return "", false
 
@@ -763,9 +768,5 @@ func (a *API) FlushLog() int {
 
 // }
 // func (a *API) GetAliasInfo(name string, infotype int) {
-
-// }
-
-// func (a *API) BoldColour(WhichColour int) int {
 
 // }

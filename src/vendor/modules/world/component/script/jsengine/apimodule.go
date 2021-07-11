@@ -170,6 +170,15 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "GetAlphaOption", a.GetAlphaOption)
 	AppendToWorld(jp.Runtime, world, "SetAlphaOption", a.SetAlphaOption)
 
+	AppendToWorld(jp.Runtime, world, "GetLinesInBufferCount", a.GetLinesInBufferCount)
+	AppendToWorld(jp.Runtime, world, "DeleteOutput", a.DeleteOutput)
+	AppendToWorld(jp.Runtime, world, "DeleteLines", a.DeleteLines)
+	AppendToWorld(jp.Runtime, world, "GetLineCount", a.GetLineCount)
+	AppendToWorld(jp.Runtime, world, "GetRecentLines", a.GetRecentLines)
+	AppendToWorld(jp.Runtime, world, "GetLineInfo", a.GetLineInfo)
+	AppendToWorld(jp.Runtime, world, "BoldColour", a.BoldColour)
+	AppendToWorld(jp.Runtime, world, "NormalColour", a.NormalColour)
+	AppendToWorld(jp.Runtime, world, "GetStyleInfo", a.GetStyleInfo)
 }
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	msg := []string{}
@@ -704,6 +713,87 @@ func (a *jsapi) CloseLog(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 
 func (a *jsapi) FlushLog(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.FlushLog())
+}
+
+func (a *jsapi) GetLinesInBufferCount(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.GetLinesInBufferCount())
+}
+func (a *jsapi) DeleteOutput(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	a.API.DeleteOutput()
+	return nil
+}
+func (a *jsapi) DeleteLines(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	a.API.DeleteLines(int(call.Argument(0).ToInteger()))
+	return nil
+}
+func (a *jsapi) GetLineCount(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.GetLineCount())
+}
+func (a *jsapi) GetRecentLines(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.GetRecentLines(int(call.Argument(0).ToInteger())))
+}
+func (a *jsapi) GetLineInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	val, ok := a.API.GetLineInfo(int(call.Argument(0).ToInteger()), int(call.Argument(1).ToInteger()))
+	if !ok {
+		return nil
+	}
+	switch int(call.Argument(1).ToInteger()) {
+	case 1:
+		return r.ToValue(val)
+	case 2:
+		return r.ToValue(world.FromStringInt(val))
+	case 3:
+		return r.ToValue(world.FromStringInt(val))
+	case 8:
+		return r.ToValue(world.FromStringBool(val))
+	case 9:
+		return r.ToValue(world.FromStringBool(val))
+	case 10:
+		return r.ToValue(world.FromStringBool(val))
+	case 11:
+		return r.ToValue(world.FromStringBool(val))
+	case 14:
+		return r.ToValue(world.FromStringInt(val))
+	case 15:
+		return r.ToValue(world.FromStringInt(val))
+	}
+	return nil
+}
+func (a *jsapi) BoldColour(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.BoldColour(int(call.Argument(0).ToInteger())))
+
+}
+func (a *jsapi) NormalColour(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.NormalColour(int(call.Argument(0).ToInteger())))
+}
+
+func (a *jsapi) GetStyleInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	val, ok := a.API.GetStyleInfo(int(call.Argument(0).ToInteger()), int(call.Argument(1).ToInteger()), int(call.Argument(2).ToInteger()))
+	if !ok {
+		return nil
+	}
+	switch int(call.Argument(2).ToInteger()) {
+	case 1:
+		return r.ToValue(val)
+	case 2:
+		return r.ToValue(world.FromStringInt(val))
+	case 3:
+		return r.ToValue(world.FromStringInt(val))
+	case 8:
+		return r.ToValue(world.FromStringBool(val))
+	case 9:
+		return r.ToValue(world.FromStringBool(val))
+	case 10:
+		return r.ToValue(world.FromStringBool(val))
+	case 11:
+		return r.ToValue(world.FromStringBool(val))
+	case 14:
+		return r.ToValue(world.FromStringInt(val))
+	case 15:
+		return r.ToValue(world.FromStringInt(val))
+
+	}
+	return nil
 }
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
