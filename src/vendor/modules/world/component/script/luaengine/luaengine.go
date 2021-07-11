@@ -92,8 +92,8 @@ func (e *LuaEngine) ConvertStyle(L *lua.LState, line *world.Line) *lua.LTable {
 	for _, v := range line.Words {
 		style := L.NewTable()
 		style.RawSetString("text", lua.LString(v.Text))
-		style.RawSetString("textcolour", lua.LString(v.Color))
-		style.RawSetString("backcolour", lua.LString(v.Background))
+		style.RawSetString("textcolour", lua.LNumber(world.Colours[v.Color]))
+		style.RawSetString("backcolour", lua.LNumber(world.Colours[v.Background]))
 		style.RawSetString("length", lua.LNumber(len(v.Text)))
 		var s int
 		if v.Bold {

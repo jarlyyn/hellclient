@@ -179,7 +179,6 @@ func (i *Info) GetLine(idx int) *world.Line {
 	}
 	return v.(*world.Line)
 }
-
 func (i *Info) InstallTo(b *bus.Bus) {
 	b.GetCurrentLines = b.WrapGetLines(i.CurrentLines)
 	b.GetPrompt = b.WrapGetLine(i.CurrentPrompt)

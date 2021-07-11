@@ -582,8 +582,8 @@ func (a *API) StopEvaluatingTriggers() {
 	a.Bus.DoStopEvaluatingTriggers()
 }
 
-func (a *API) ColourNameToRGB(v string) string {
-	return v
+func (a *API) ColourNameToRGB(v string) int {
+	return world.Colours[v]
 }
 
 func (a *API) ReadFile(p herbplugin.Plugin, name string) string {
