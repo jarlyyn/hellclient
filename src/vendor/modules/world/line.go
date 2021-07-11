@@ -11,6 +11,9 @@ type Word struct {
 	Color      string
 	Background string
 	Bold       bool
+	Underlined bool
+	Blinking   bool
+	Inverse    bool
 }
 
 const LineTypePrint = 0
@@ -46,6 +49,20 @@ func (l *Line) Plain() string {
 }
 func (l *Line) IsEmpty() bool {
 	return l == nil || len(l.Words) == 0
+}
+func (l *Line) GetWordStartColumn(idx int) int {
+	if idx < 1 || idx > len(l.Words) {
+		return -1
+	}
+	var result = 1
+	for k, v := range l.Words {
+		if k < idx {
+			result = result + len(v.Text)
+			continue
+		}
+		break
+	}
+	return result
 }
 func NewLine() *Line {
 	return &Line{

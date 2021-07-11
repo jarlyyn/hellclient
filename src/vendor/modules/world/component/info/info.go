@@ -108,7 +108,30 @@ func (i *Info) AddHistory(b *bus.Bus, cmd string) {
 	i.History = i.History.Next()
 	i.CurrentHistories(b)
 }
+func (i *Info) GetRecentLines(count int) []*world.Line {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	if count < 0 {
+		count = 0
+	}
+	if count > i.Lines.Len() {
+		count = i.Lines.Len()
+	}
+	result := make([]*world.Line, 0, count)
 
+	r := i.Lines.Move(1 - count)
+	var current = 0
+	for current < count {
+		current = current + 1
+		v := r.Value
+		if v != nil {
+			result = append(result, v.(*world.Line))
+		}
+
+	}
+	return result
+
+}
 func (i *Info) getHistories() []string {
 	var result = make([]string, 0, i.History.Len())
 	i.History.Do(func(x interface{}) {
@@ -136,6 +159,27 @@ func (i *Info) CurrentHistories(b *bus.Bus) {
 		b.RaiseHistoriesEvent(i.getHistories())
 	}()
 }
+
+func (i *Info) GetLinesInBufferCount() int {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	return i.Lines.Len()
+}
+
+func (i *Info) GetLine(idx int) *world.Line {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	if idx < 0 || idx > i.Lines.Len() {
+		return nil
+	}
+	r := i.Lines.Move(idx)
+	v := r.Value
+	if v == nil {
+		return nil
+	}
+	return v.(*world.Line)
+}
+
 func (i *Info) InstallTo(b *bus.Bus) {
 	b.GetCurrentLines = b.WrapGetLines(i.CurrentLines)
 	b.GetPrompt = b.WrapGetLine(i.CurrentPrompt)
@@ -146,6 +190,9 @@ func (i *Info) InstallTo(b *bus.Bus) {
 	b.DoOmitOutput = b.Wrap(i.OmitOutput)
 	b.DoDeleteLines = b.WrapHandleInt(i.DeleteLines)
 	b.GetLineCount = i.GetLineCount
+	b.GetRecentLines = i.GetRecentLines
+	b.GetLinesInBufferCount = i.GetLinesInBufferCount
+	b.GetLine = i.GetLine
 	b.BindLineEvent(i, i.onNewLine)
 	b.BindPromptEvent(i, i.onPrompt)
 	b.BindInitEvent(i, i.Init)
