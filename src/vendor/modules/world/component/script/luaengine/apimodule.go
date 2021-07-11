@@ -132,8 +132,9 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("SetBoldColour", l.NewFunction(a.BoldColour))
 	l.SetGlobal("GetNormalColour", l.NewFunction(a.NormalColour))
 	l.SetGlobal("SetNormalColour", l.NewFunction(a.NormalColour))
-
 	l.SetGlobal("GetStyleInfo", l.NewFunction(a.GetStyleInfo))
+
+	l.SetGlobal("GetInfo", l.NewFunction(a.GetInfo))
 }
 func (a *luaapi) Print(L *lua.LState) int {
 	t := L.GetTop()
@@ -924,6 +925,12 @@ func (a *luaapi) GetStyleInfo(L *lua.LState) int {
 	L.Push(a.getStyleInfo(ln, sn, tp))
 	return 1
 }
+
+func (a *luaapi) GetInfo(L *lua.LState) int {
+	L.Push(lua.LString(a.API.GetInfo(L.ToInt(1))))
+	return 1
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

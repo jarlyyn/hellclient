@@ -761,6 +761,51 @@ func (a *API) FlushLog() int {
 	return EOK
 }
 
+func (a *API) GetInfo(infotype int) string {
+	switch infotype {
+	case 1:
+		return a.Bus.GetHost()
+	case 2:
+		return a.Bus.GetName()
+	case 8:
+		return ""
+	case 28:
+		return a.Bus.GetScriptType()
+	case 35:
+		return a.Bus.GetScriptID()
+	case 36:
+		return a.Bus.GetScriptPrefix()
+	case 40:
+		return a.Bus.ID + ".log"
+	case 51:
+		return a.Bus.ID + ".log"
+	case 53:
+		return a.Bus.GetStatus()
+	case 54:
+		return a.Bus.ID + ".toml"
+	case 55:
+		return a.Bus.ID
+	case 56:
+		return "hellclient"
+	case 57:
+		return "./"
+	case 58:
+		return "./"
+	case 59:
+		return "./"
+	case 64:
+		return "./"
+	case 66:
+		return "./"
+	case 67:
+		return "./"
+	case 68:
+		return "./"
+
+	}
+	panic(fmt.Errorf("unknown world.GetInfo infotype %d", infotype))
+}
+
 // func (a *API) GetTimerInfo(name string, infotype int) {
 
 // }

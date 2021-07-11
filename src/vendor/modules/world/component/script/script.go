@@ -294,6 +294,15 @@ func (s *Script) GetRequiredParams() []*world.RequiredParam {
 	defer s.Locker.Unlock()
 	return append([]*world.RequiredParam{}, s.Data.RequiredParams...)
 }
+
+func (s *Script) GetScriptType() string {
+	s.Locker.Lock()
+	defer s.Locker.Unlock()
+	if s.Data == nil {
+		return ""
+	}
+	return s.Data.Type
+}
 func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptData = b.WrapGetScriptData(s.ScriptData)
 	b.DoReloadScript = b.WrapDo(s.Reload)
@@ -311,7 +320,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetMapper = s.GetMapper
 
 	b.GetRequiredParams = s.GetRequiredParams
-
+	b.GetScriptType = s.GetScriptType
 	b.GetScriptCaller = s.CreatorAndType
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)

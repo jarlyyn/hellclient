@@ -43,7 +43,7 @@ func (l *Log) Log(b *bus.Bus, message string) {
 		return
 	}
 	defer f.Close()
-	line := app.Time.Datetime(time.Now()) + " " + message
+	line := app.Time.Datetime(time.Now()) + " " + message + "\n"
 	if _, err := f.Write([]byte(line)); err != nil {
 		log.Fatal(err)
 	}
