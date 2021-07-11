@@ -799,7 +799,7 @@ func (a *jsapi) GetStyleInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value
 }
 
 func (a *jsapi) GetInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	return r.ToValue(a.API.GetInfo(int(call.Argument(1).ToInteger())))
+	return r.ToValue(a.API.GetInfo(int(call.Argument(0).ToInteger())))
 }
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
