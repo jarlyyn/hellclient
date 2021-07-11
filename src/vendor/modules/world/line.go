@@ -16,10 +16,10 @@ type Word struct {
 	Inverse    bool
 }
 
-func (w *Word) GetColorCode() int {
+func (w *Word) GetColorRGB() int {
 	return Colours[w.Color]
 }
-func (w *Word) GetBGColorCode() int {
+func (w *Word) GetBGColorRGB() int {
 	return Colours[w.Background]
 }
 

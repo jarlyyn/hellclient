@@ -133,6 +133,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("GetNormalColour", l.NewFunction(a.NormalColour))
 	l.SetGlobal("SetNormalColour", l.NewFunction(a.NormalColour))
 
+	l.SetGlobal("GetStyleInfo", l.NewFunction(a.GetStyleInfo))
 }
 func (a *luaapi) Print(L *lua.LState) int {
 	t := L.GetTop()
@@ -843,9 +844,86 @@ func (a *luaapi) BoldColour(L *lua.LState) int {
 func (a *luaapi) NormalColour(L *lua.LState) int {
 	L.Push(lua.LNumber(a.API.NormalColour(L.ToInt(1))))
 	return 1
-
 }
-
+func (a *luaapi) getStyleInfo(ln int, st int, it int) lua.LValue {
+	val, ok := a.API.GetStyleInfo(ln, st, it)
+	if !ok {
+		return lua.LNil
+	}
+	switch it {
+	case 1:
+		return lua.LString(val)
+	case 2:
+		return lua.LNumber(world.FromStringInt(val))
+	case 3:
+		return lua.LNumber(world.FromStringInt(val))
+	case 8:
+		return lua.LBool(world.FromStringBool(val))
+	case 9:
+		return lua.LBool(world.FromStringBool(val))
+	case 10:
+		return lua.LBool(world.FromStringBool(val))
+	case 11:
+		return lua.LBool(world.FromStringBool(val))
+	case 14:
+		return lua.LNumber(world.FromStringInt(val))
+	case 15:
+		return lua.LNumber(world.FromStringInt(val))
+	}
+	return lua.LNil
+}
+func (a *luaapi) getStyleInfoTable(L *lua.LState, ln int, st int) lua.LValue {
+	line := a.API.Bus.GetLine(ln)
+	if line.IsEmpty() {
+		return lua.LNil
+	}
+	if st <= 0 || st > len(line.Words) {
+		return lua.LNil
+	}
+	word := line.Words[st-1]
+	t := L.NewTable()
+	t.RawSetString("text", lua.LString(word.Text))
+	t.RawSetString("length", lua.LNumber(len(word.Text)))
+	t.RawSetString("column", lua.LNumber(line.GetWordStartColumn(st)))
+	t.RawSetString("bold", lua.LBool(word.Bold))
+	t.RawSetString("ul", lua.LBool(word.Underlined))
+	t.RawSetString("blink", lua.LBool(word.Blinking))
+	t.RawSetString("inverse", lua.LBool(word.Inverse))
+	t.RawSetString("foreground", lua.LNumber(word.GetColorRGB()))
+	t.RawSetString("background", lua.LNumber(word.GetBGColorRGB()))
+	return t
+}
+func (a *luaapi) GetStyleInfo(L *lua.LState) int {
+	ln := L.ToInt(1)
+	sn := L.ToInt(2)
+	if sn < 0 {
+		L.Push(lua.LNil)
+		return 1
+	}
+	tp := L.ToInt(3)
+	if sn == 0 {
+		line := a.API.Bus.GetLine(ln)
+		if line == nil {
+			L.Push(lua.LNil)
+			return 1
+		}
+		v := L.NewTable()
+		for k := range line.Words {
+			if tp == 0 {
+				v.Append(a.getStyleInfoTable(L, ln, k+1))
+			} else {
+				v.Append(a.getStyleInfo(ln, k+1, tp))
+			}
+		}
+		L.Push(v)
+		return 1
+	} else if tp == 0 {
+		L.Push(a.getStyleInfoTable(L, ln, sn))
+		return 1
+	}
+	L.Push(a.getStyleInfo(ln, sn, tp))
+	return 1
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
