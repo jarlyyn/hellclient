@@ -154,7 +154,7 @@ func (m *Mapper) NewArea(size int) []string {
 	}
 	return result
 }
-func (m *Mapper) GetExits(id string) []*Path {
+func (m *Mapper) GetExits(id string, all bool) []*Path {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
 	result := []*Path{}
@@ -163,7 +163,7 @@ func (m *Mapper) GetExits(id string) []*Path {
 		return result
 	}
 	for _, v := range room.Exits {
-		if ValidateTags(m.tags, v) {
+		if all || ValidateTags(m.tags, v) {
 			result = append(result, v)
 		}
 	}

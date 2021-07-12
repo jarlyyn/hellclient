@@ -836,7 +836,7 @@ func (a *jsapi) GetInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.GetInfo(int(call.Argument(0).ToInteger())))
 }
 func (a *jsapi) GetTimerInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	v, ok := a.API.GetTimerInfo(call.Argument(0).String(), int(call.Argument(0).ToInteger()))
+	v, ok := a.API.GetTimerInfo(call.Argument(0).String(), int(call.Argument(1).ToInteger()))
 	if ok != api.EOK {
 		return nil
 	}
@@ -875,7 +875,7 @@ func (a *jsapi) GetTimerInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value
 	return nil
 }
 func (a *jsapi) GetTriggerInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	v, ok := a.API.GetTriggerInfo(call.Argument(0).String(), int(call.Argument(0).ToInteger()))
+	v, ok := a.API.GetTriggerInfo(call.Argument(0).String(), int(call.Argument(1).ToInteger()))
 	if ok != api.EOK {
 		return nil
 	}
@@ -925,7 +925,7 @@ func (a *jsapi) GetTriggerInfo(call goja.FunctionCall, r *goja.Runtime) goja.Val
 }
 
 func (a *jsapi) GetAliasInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	v, ok := a.API.GetAliasInfo(call.Argument(0).String(), int(call.Argument(0).ToInteger()))
+	v, ok := a.API.GetAliasInfo(call.Argument(0).String(), int(call.Argument(1).ToInteger()))
 	if ok != api.EOK {
 		return nil
 	}

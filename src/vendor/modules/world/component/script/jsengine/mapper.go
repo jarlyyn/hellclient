@@ -210,7 +210,7 @@ func (m *JsMapper) NewArea(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 }
 func (m *JsMapper) GetExits(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	id := call.Argument(0).String()
-	exits := m.mapper.GetExits(id)
+	exits := m.mapper.GetExits(id, call.Argument(1).ToBoolean())
 	t := []goja.Value{}
 	for _, v := range exits {
 		p := &JsPath{
