@@ -137,17 +137,18 @@ func (a *MclAliases) Convert() []*Alias {
 }
 
 type MclTrigger struct {
-	Enabled        string `xml:"enabled,attr"`
-	Group          string `xml:"group,attr"`
-	KeepEvaluating string `xml:"keep_evaluating,attr"`
-	Match          string `xml:"match,attr"`
-	Name           string `xml:"name,attr"`
-	OmitFromLog    string `xml:"omit_from_log,attr"`
-	OmitFromOutput string `xml:"omit_from_output,attr"`
-	Regexp         string `xml:"regexp,attr"`
-	Sequence       string `xml:"sequence,attr"`
-	Script         string `xml:"script,attr"`
-	Send           string `xml:"send"`
+	Enabled         string `xml:"enabled,attr"`
+	Group           string `xml:"group,attr"`
+	KeepEvaluating  string `xml:"keep_evaluating,attr"`
+	Match           string `xml:"match,attr"`
+	Name            string `xml:"name,attr"`
+	OmitFromLog     string `xml:"omit_from_log,attr"`
+	OmitFromOutput  string `xml:"omit_from_output,attr"`
+	Regexp          string `xml:"regexp,attr"`
+	Sequence        string `xml:"sequence,attr"`
+	Script          string `xml:"script,attr"`
+	ExpandVariables string `xml:"expand_variables,attr"`
+	Send            string `xml:"send"`
 }
 
 func (t *MclTrigger) Convert() *Trigger {
@@ -164,6 +165,7 @@ func (t *MclTrigger) Convert() *Trigger {
 	tr.Sequence = MustAtoi(t.Sequence)
 	tr.Script = t.Script
 	tr.Send = t.Send
+	tr.ExpandVariables = t.ExpandVariables == "y"
 	return tr
 }
 

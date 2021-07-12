@@ -246,7 +246,8 @@ func (m *LuaMapper) NewArea(L *lua.LState) int {
 func (m *LuaMapper) GetExits(L *lua.LState) int {
 	_ = L.Get(1) //self
 	id := L.ToString(2)
-	exits := m.mapper.GetExits(id)
+	all := L.ToBool(3)
+	exits := m.mapper.GetExits(id, all)
 	t := L.NewTable()
 	for _, v := range exits {
 		p := &LuaPath{
