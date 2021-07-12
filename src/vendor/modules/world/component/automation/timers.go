@@ -229,6 +229,17 @@ func (t *Timers) GetTimerOption(name string, option string) (string, bool, bool)
 	result, ok := ti.Option(option)
 	return result, ok, true
 }
+func (t *Timers) GetTimerInfo(name string, infotype int) (string, bool, bool) {
+	t.Locker.Lock()
+	ti := t.Named[name]
+	t.Locker.Unlock()
+	if ti == nil {
+		return "", false, false
+	}
+	result, ok := ti.Info(infotype)
+	return result, ok, true
+}
+
 func (t *Timers) SetTimerOption(name string, option string, value string) (bool, bool, bool) {
 	t.Locker.Lock()
 	ti := t.Named[name]

@@ -2,288 +2,251 @@ package jsengine
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"modules/mapper"
 	"modules/world/bus"
 
-	lua "github.com/yuin/gopher-lua"
+	"github.com/dop251/goja"
 
 	"github.com/herb-go/herbplugin"
-	"github.com/herb-go/herbplugin/lua51plugin"
+	"github.com/herb-go/herbplugin/jsplugin"
 )
 
-func ConvertLuaPath(v lua.LValue) *LuaPath {
-	if v.Type() != lua.LTTable {
-		return nil
-	}
-	t := v.(*lua.LTable)
-	p := &LuaPath{
+func ConvertJsPath(r *goja.Runtime, v goja.Value) *JsPath {
+	t := v.ToObject(r)
+	p := &JsPath{
 		path: mapper.NewPath(),
 	}
-	p.path.Command = t.RawGetString("command").String()
-	p.path.From = t.RawGetString("from").String()
-	p.path.To = t.RawGetString("to").String()
-	p.path.Delay = int(lua.LVAsNumber(t.RawGetString("delay")))
-	tags := t.RawGetString("tags")
-	switch tags.Type() {
-	case lua.LTNil:
-	case lua.LTTable:
-		t := tags.(*lua.LTable)
-		max := t.MaxN()
-		for i := 1; i <= max; i++ {
-			p.path.Tags[lua.LVAsString(t.RawGetInt(i))] = true
+	p.path.Command = t.Get("command").String()
+	p.path.From = t.Get("from").String()
+	p.path.To = t.Get("to").String()
+	p.path.Delay = int(t.Get("delay").ToInteger())
+	tags := []string{}
+	tagsvalue := t.Get("tags")
+	if tagsvalue != nil {
+		err := r.ExportTo(tagsvalue, &tags)
+		if err != nil {
+			fmt.Println(err.Error())
+			panic(errors.New("tags must be array"))
 		}
-	default:
-		panic("tags must be table")
 	}
-	etags := t.RawGetString("excludetags")
-	switch etags.Type() {
-	case lua.LTNil:
-	case lua.LTTable:
-		t := etags.(*lua.LTable)
-		max := t.MaxN()
-		for i := 1; i <= max; i++ {
-			p.path.ExcludeTags[lua.LVAsString(t.RawGetInt(i))] = true
+	for _, v := range tags {
+		p.path.Tags[v] = true
+	}
+	etags := []string{}
+	etagsvalue := t.Get("excludetags")
+	if etagsvalue != nil {
+		err := r.ExportTo(etagsvalue, &etags)
+		if err != nil {
+			fmt.Println(err.Error())
+			panic(errors.New("excludetags must be array"))
 		}
-	default:
-		panic("excludetags must be table")
+	}
+	for _, v := range etags {
+		p.path.ExcludeTags[v] = true
 	}
 	return p
 }
 
-type LuaPath struct {
+type JsPath struct {
 	path *mapper.Path
 }
 
-func (p *LuaPath) Convert(L *lua.LState) lua.LValue {
-	t := L.NewTable()
-	t.RawSetString("command", lua.LString(p.path.Command))
-	t.RawSetString("from", lua.LString(p.path.From))
-	t.RawSetString("to", lua.LString(p.path.To))
-	t.RawSetString("delay", lua.LNumber(p.path.Delay))
-	tags := L.NewTable()
+func (p *JsPath) Convert(r *goja.Runtime) goja.Value {
+	t := r.NewObject()
+	t.Set("command", p.path.Command)
+	t.Set("from", p.path.From)
+	t.Set("to", p.path.To)
+	t.Set("delay", p.path.Delay)
+	tags := []string{}
 	for k, v := range p.path.Tags {
 		if v {
-			tags.Append(lua.LString(k))
+			tags = append(tags, k)
 		}
 	}
-	t.RawSetString("tags", tags)
-	etags := L.NewTable()
-	for k, v := range p.path.ExcludeTags {
+	t.Set("tags", tags)
+	etags := []string{}
+	for k, v := range p.path.Tags {
 		if v {
-			etags.Append(lua.LString(k))
+			etags = append(etags, k)
 		}
 	}
-	t.RawSetString("excludetags", etags)
+	t.Set("excludetags", etags)
 	return t
-
 }
 
-func ConvertLuaStep(v lua.LValue) *LuaStep {
-	if v.Type() != lua.LTTable {
-		return nil
-	}
-	t := v.(*lua.LTable)
-	s := &LuaStep{
+func ConvertJsStep(r *goja.Runtime, v goja.Value) *JsStep {
+	t := v.ToObject(r)
+	s := &JsStep{
 		step: &mapper.Step{},
 	}
-	s.step.Command = t.RawGetString("command").String()
-	s.step.From = t.RawGetString("from").String()
-	s.step.To = t.RawGetString("to").String()
-	s.step.Delay = int(lua.LVAsNumber(t.RawGetString("delay")))
-
+	s.step.Command = t.Get("command").String()
+	s.step.From = t.Get("from").String()
+	s.step.To = t.Get("to").String()
+	s.step.Delay = int(t.Get("delay").ToInteger())
 	return s
 }
 
-type LuaStep struct {
+type JsStep struct {
 	step *mapper.Step
 }
 
-func (s *LuaStep) Convert(L *lua.LState) lua.LValue {
-	t := L.NewTable()
-	t.RawSetString("command", lua.LString(s.step.Command))
-	t.RawSetString("from", lua.LString(s.step.From))
-	t.RawSetString("to", lua.LString(s.step.To))
-	t.RawSetString("delay", lua.LNumber(s.step.Delay))
+func (s *JsStep) Convert(r *goja.Runtime) goja.Value {
+	t := r.NewObject()
+	t.Set("command", s.step.Command)
+	t.Set("from", s.step.From)
+	t.Set("to", s.step.To)
+	t.Set("delay", s.step.Delay)
 	return t
 }
 
-type LuaMapper struct {
+type JsMapper struct {
 	mapper *mapper.Mapper
 }
 
-func (m *LuaMapper) Reset(L *lua.LState) int {
+func (m *JsMapper) Reset(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	m.mapper.Reset()
-	return 0
+	return nil
 }
-func (m *LuaMapper) AddTags(L *lua.LState) int {
-	_ = L.Get(1) //self
+func (m *JsMapper) AddTags(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	tags := []string{}
-	count := L.GetTop()
-	for i := 1; i < count; i++ {
-		tags = append(tags, L.ToString(i+1))
+	for _, v := range call.Arguments {
+		tags = append(tags, v.String())
 	}
 	m.mapper.AddTags(tags)
-	return 0
+	return nil
 }
-func (m *LuaMapper) SetTag(L *lua.LState) int {
-	_ = L.Get(1) //self
-	tag := L.ToString(2)
-	enabled := L.ToBool(3)
-	m.mapper.SetTag(tag, enabled)
-	return 0
+func (m *JsMapper) SetTag(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	m.mapper.SetTag(call.Argument(0).String(), call.Argument(1).ToBoolean())
+	return nil
 }
-func (m *LuaMapper) FlashTags(L *lua.LState) int {
-	_ = L.Get(1) //self
+func (m *JsMapper) FlashTags(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	m.mapper.FlashTags()
-	return 0
+	return nil
 }
 
-func (m *LuaMapper) SetTags(L *lua.LState) int {
-	_ = L.Get(1) //self
-	tags := L.Get(2)
-	if tags.Type() != lua.LTTable {
-		panic("tags must be table")
+func (m *JsMapper) SetTags(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	tags := []string{}
+	tagsv := call.Argument(0)
+	if tagsv == nil {
+		return nil
 	}
-	t := tags.(*lua.LTable)
-	result := []string{}
-	t.ForEach(func(k lua.LValue, v lua.LValue) {
-		result = append(result, v.String())
-	})
-	m.mapper.AddTags(result)
-	return 0
+	err := r.ExportTo(call.Argument(0), &tags)
+	if err != nil {
+		panic(errors.New("tags must be array"))
+	}
+	m.mapper.AddTags(tags)
+	return nil
 }
 
-func (m *LuaMapper) Tags(L *lua.LState) int {
-	result := m.mapper.Tags()
-	t := L.NewTable()
-	for k := range result {
-		t.Append(lua.LString(result[k]))
-	}
-	L.Push(t)
-	return 1
+func (m *JsMapper) Tags(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(m.mapper.Tags())
 }
-func (m *LuaMapper) GetPath(L *lua.LState) int {
-	_ = L.Get(1) //self
-	from := L.ToString(2)
-	fly := L.ToInt(3)
-	count := L.GetTop()
+func (m *JsMapper) GetPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	if len(call.Arguments) < 3 {
+		return nil
+	}
+	from := call.Argument(0).String()
+	fly := int(call.Argument(1).ToInteger())
 	to := []string{}
-	for i := 3; i < count; i++ {
-		to = append(to, L.ToString(i+1))
+	err := r.ExportTo(call.Argument(2), &to)
+	if err != nil {
+		return nil
 	}
 	steps := m.mapper.GetPath(from, fly == 1, to)
 	if steps == nil {
-		L.Push(lua.LNil)
-		return 1
+		return nil
 	}
-	t := L.NewTable()
+	t := []goja.Value{}
 	for i := range steps {
-		s := &LuaStep{step: steps[i]}
-		t.Append(s.Convert(L))
+		s := &JsStep{step: steps[i]}
+		t = append(t, s.Convert(r))
 	}
-	L.Push(t)
-	return 1
+	return r.ToValue(t)
 }
-func (m *LuaMapper) AddPath(L *lua.LState) int {
-	_ = L.Get(1) //self
-	id := L.ToString(2)
-	path := ConvertLuaPath(L.Get(3))
+func (m *JsMapper) AddPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	if len(call.Arguments) < 2 {
+		return nil
+	}
+
+	id := call.Argument(0).String()
+	path := ConvertJsPath(r, call.Argument(1))
 	if path == nil {
-		L.Push(lua.LBool(false))
-		return 1
+		return nil
 	}
-	L.Push(lua.LBool(m.mapper.AddPath(id, path.path)))
-	return 1
+	return r.ToValue(m.mapper.AddPath(id, path.path))
 }
-func (m *LuaMapper) NewPath(L *lua.LState) int {
-	p := &LuaPath{
+func (m *JsMapper) NewPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	p := &JsPath{
 		path: &mapper.Path{},
 	}
-	L.Push(p.Convert(L))
-	return 1
+	return r.ToValue(p.Convert(r))
 }
-func (m *LuaMapper) GetRoomID(L *lua.LState) int {
-	_ = L.Get(1) //self
-	name := L.ToString(2)
+func (m *JsMapper) GetRoomID(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
 	ids := m.mapper.GetRoomID(name)
-	t := L.NewTable()
-	for _, v := range ids {
-		t.Append(lua.LString(v))
-	}
-	L.Push(t)
-	return 1
+	return r.ToValue(ids)
 }
-func (m *LuaMapper) GetRoomName(L *lua.LState) int {
-	_ = L.Get(1) //self
-	id := L.ToString(2)
-	L.Push(lua.LString(m.mapper.GetRoomName(id)))
-	return 1
+func (m *JsMapper) GetRoomName(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	id := call.Argument(0).String()
+	return r.ToValue(m.mapper.GetRoomName(id))
 }
-func (m *LuaMapper) SetRoomName(L *lua.LState) int {
-	_ = L.Get(1) //self
-	id := L.ToString(2)
-	name := L.ToString(3)
+func (m *JsMapper) SetRoomName(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	id := call.Argument(0).String()
+	name := call.Argument(1).String()
 	m.mapper.SetRoomName(id, name)
-	return 0
+	return nil
 }
-func (m *LuaMapper) ClearRoom(L *lua.LState) int {
-	_ = L.Get(1) //self
-	id := L.ToString(2)
+func (m *JsMapper) ClearRoom(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	id := call.Argument(0).String()
 	m.mapper.ClearRoom(id)
-	return 0
+	return nil
 }
-func (m *LuaMapper) NewArea(L *lua.LState) int {
-	_ = L.Get(1) //self
-	size := L.ToInt(2)
+func (m *JsMapper) NewArea(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	size := int(call.Argument(0).ToInteger())
 	ids := m.mapper.NewArea(size)
-	t := L.NewTable()
-	for _, v := range ids {
-		t.Append(lua.LString(v))
-	}
-	L.Push(t)
-	return 1
+	return r.ToValue(ids)
 }
-func (m *LuaMapper) GetExits(L *lua.LState) int {
-	_ = L.Get(1) //self
-	id := L.ToString(2)
+func (m *JsMapper) GetExits(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	id := call.Argument(0).String()
 	exits := m.mapper.GetExits(id)
-	t := L.NewTable()
+	t := []goja.Value{}
 	for _, v := range exits {
-		p := &LuaPath{
+		p := &JsPath{
 			path: v,
 		}
-		t.Append(p.Convert(L))
+		t = append(t, p.Convert(r))
 	}
-	L.Push(t)
-	return 1
+	return r.ToValue(t)
 
 }
-func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
-	t := L.NewTable()
-	t.RawSetString("reset", L.NewFunction(m.Reset))
-	t.RawSetString("addtags", L.NewFunction(m.AddTags))
-	t.RawSetString("settag", L.NewFunction(m.SetTag))
-	t.RawSetString("settags", L.NewFunction(m.SetTags))
-	t.RawSetString("tags", L.NewFunction(m.Tags))
-	t.RawSetString("getpath", L.NewFunction(m.GetPath))
-	t.RawSetString("addpath", L.NewFunction(m.AddPath))
-	t.RawSetString("newpath", L.NewFunction(m.NewPath))
-	t.RawSetString("getroomid", L.NewFunction(m.GetRoomID))
-	t.RawSetString("getroomname", L.NewFunction(m.GetRoomName))
-	t.RawSetString("setroomname", L.NewFunction(m.SetRoomName))
-	t.RawSetString("clearroom", L.NewFunction(m.ClearRoom))
-	t.RawSetString("newarea", L.NewFunction(m.NewArea))
-	t.RawSetString("getexits", L.NewFunction(m.GetExits))
-	t.RawSetString("flashtags", L.NewFunction(m.FlashTags))
+func (m *JsMapper) Convert(r *goja.Runtime) goja.Value {
+	t := r.NewObject()
+	t.Set("reset", m.Reset)
+	t.Set("addtags", m.AddTags)
+	t.Set("settag", m.SetTag)
+	t.Set("settags", m.SetTags)
+	t.Set("tags", m.Tags)
+	t.Set("getpath", m.GetPath)
+	t.Set("addpath", m.AddPath)
+	t.Set("newpath", m.NewPath)
+	t.Set("getroomid", m.GetRoomID)
+	t.Set("getroomname", m.GetRoomName)
+	t.Set("setroomname", m.SetRoomName)
+	t.Set("clearroom", m.ClearRoom)
+	t.Set("newarea", m.NewArea)
+	t.Set("getexits", m.GetExits)
+	t.Set("flashtags", m.FlashTags)
 	return t
 }
 func NewMapperModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("mapper",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
-			luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
-			l := luapluing.LState
-			m := &LuaMapper{b.GetMapper()}
-			l.SetGlobal("Mapper", m.Convert(l))
+			jsp := plugin.(*jsplugin.Plugin).LoadJsPlugin()
+			r := jsp.Runtime
+			m := &JsMapper{b.GetMapper()}
+			r.Set("Mapper", m.Convert(r))
 			next(ctx, plugin)
 		},
 		nil,

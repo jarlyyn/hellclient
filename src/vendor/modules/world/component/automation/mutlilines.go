@@ -47,6 +47,7 @@ func (l *MultiLines) Last(count int) []string {
 		if v != nil {
 			result = append(result, v.(string))
 		}
+		r = r.Next()
 	}
 	return result
 }

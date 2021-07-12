@@ -274,6 +274,17 @@ func (a *Triggers) GetTriggerOption(name string, option string) (string, bool, b
 	result, ok := tr.Option(option)
 	return result, ok, true
 }
+func (t *Triggers) GetTriggerInfo(name string, infotype int) (string, bool, bool) {
+	t.Locker.Lock()
+	ti := t.Named[name]
+	t.Locker.Unlock()
+	if ti == nil {
+		return "", false, false
+	}
+	result, ok := ti.Info(infotype)
+	return result, ok, true
+}
+
 func (a *Triggers) SetTriggerOption(name string, option string, value string) (bool, bool, bool) {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()

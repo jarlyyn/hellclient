@@ -82,6 +82,7 @@ type Bus struct {
 	AddTimers               func(ts []*world.Timer)
 	DoResetTimers           func()
 	GetTimerOption          func(name string, option string) (string, bool, bool)
+	GetTimerInfo            func(name string, infotype int) (string, bool, bool)
 	SetTimerOption          func(name string, option string, value string) (bool, bool, bool)
 	HasNamedTimer           func(string) bool
 	DoListTimerNames        func() []string
@@ -100,6 +101,7 @@ type Bus struct {
 	DoDeleteAliasByType      func(bool)
 	AddAliases               func([]*world.Alias)
 	GetAliasOption           func(name string, option string) (string, bool, bool)
+	GetAliasInfo             func(name string, infotype int) (string, bool, bool)
 	SetAliasOption           func(name string, option string, value string) (bool, bool, bool)
 	HasNamedAlias            func(string) bool
 	DoListAliasNames         func() []string
@@ -117,6 +119,7 @@ type Bus struct {
 	DoDeleteTriggerByType     func(bool)
 	AddTriggers               func([]*world.Trigger)
 	GetTriggerOption          func(name string, option string) (string, bool, bool)
+	GetTriggerInfo            func(name string, infotype int) (string, bool, bool)
 	SetTriggerOption          func(name string, option string, value string) (bool, bool, bool)
 	HasNamedTrigger           func(string) bool
 	DoListTriggerNames        func() []string

@@ -25,18 +25,28 @@ type jsapi struct {
 	API *api.API
 }
 type World struct {
-	Map map[string]goja.Value
+	API     *api.API
+	Runtime *goja.Runtime
+	Map     map[string]goja.Value
 }
 
-func NewWorld() *World {
+func CreateWorld(a *api.API, r *goja.Runtime) *World {
 	return &World{
-		Map: map[string]goja.Value{},
+		API:     a,
+		Runtime: r,
+		Map:     map[string]goja.Value{},
 	}
 }
 
 // Get a property value for the key. May return nil if the property does not exist.
 func (w *World) Get(key string) goja.Value {
-	v, ok := w.Map[strings.ToLower(key)]
+
+	lkey := strings.ToLower(key)
+	switch lkey {
+	case "speedwalkdelay":
+		return w.Runtime.ToValue(w.API.SpeedWalkDelay())
+	}
+	v, ok := w.Map[lkey]
 	if !ok {
 		return nil
 	}
@@ -45,13 +55,24 @@ func (w *World) Get(key string) goja.Value {
 
 // Set a property value for the key. Return true if success, false otherwise.
 func (w *World) Set(key string, val goja.Value) bool {
-	w.Map[strings.ToLower(key)] = val
+	lkey := strings.ToLower(key)
+	switch lkey {
+	case "speedwalkdelay":
+		w.API.SetSpeedWalkDelay(int(val.ToInteger()))
+	default:
+		w.Map[lkey] = val
+	}
 	return true
 }
 
 // Has should return true if and only if the property exists.
 func (w *World) Has(key string) bool {
-	_, ok := w.Map[strings.ToLower(key)]
+	lkey := strings.ToLower(key)
+	switch lkey {
+	case "speedwalkdelay":
+		return true
+	}
+	_, ok := w.Map[lkey]
 	return ok
 
 }
@@ -77,7 +98,7 @@ func AppendToWorld(r *goja.Runtime, world *goja.Object, name string, call func(c
 }
 func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	jp := p.(*jsplugin.Plugin)
-	world := jp.Runtime.NewDynamicObject(NewWorld())
+	world := jp.Runtime.NewDynamicObject(CreateWorld(a.API, jp.Runtime))
 	jp.Runtime.Set("world", world)
 	AppendToWorld(jp.Runtime, world, "print", a.Print)
 	AppendToWorld(jp.Runtime, world, "Note", a.Note)
@@ -181,7 +202,18 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "GetStyleInfo", a.GetStyleInfo)
 
 	AppendToWorld(jp.Runtime, world, "GetInfo", a.GetInfo)
+
+	AppendToWorld(jp.Runtime, world, "GetTimerInfo", a.GetTimerInfo)
+	AppendToWorld(jp.Runtime, world, "GetTriggerInfo", a.GetTriggerInfo)
+	AppendToWorld(jp.Runtime, world, "GetAliasInfo", a.GetAliasInfo)
+
+	AppendToWorld(jp.Runtime, world, "WriteLog", a.WriteLog)
+	AppendToWorld(jp.Runtime, world, "CloseLog", a.CloseLog)
+	AppendToWorld(jp.Runtime, world, "OpenLog", a.OpenLog)
+	AppendToWorld(jp.Runtime, world, "FlushLog", a.FlushLog)
+
 }
+
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	msg := []string{}
 	for _, v := range call.Arguments {
@@ -712,7 +744,9 @@ func (a *jsapi) WriteLog(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (a *jsapi) CloseLog(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.CloseLog())
 }
-
+func (a *jsapi) OpenLog(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.OpenLog())
+}
 func (a *jsapi) FlushLog(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.FlushLog())
 }
@@ -801,7 +835,138 @@ func (a *jsapi) GetStyleInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value
 func (a *jsapi) GetInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.GetInfo(int(call.Argument(0).ToInteger())))
 }
+func (a *jsapi) GetTimerInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	v, ok := a.API.GetTimerInfo(call.Argument(0).String(), int(call.Argument(0).ToInteger()))
+	if ok != api.EOK {
+		return nil
+	}
+	switch call.Argument(0).ToInteger() {
+	case 1:
+		return r.ToValue(world.FromStringInt(v))
+	case 2:
+		return r.ToValue(world.FromStringInt(v))
+	case 3:
+		return r.ToValue(world.FromStringInt(v))
+	case 4:
+		return r.ToValue(v)
+	case 5:
+		return r.ToValue(v)
+	case 6:
+		return r.ToValue(world.FromStringBool(v))
+	case 7:
+		return r.ToValue(world.FromStringBool(v))
+	case 8:
+		return r.ToValue(world.FromStringBool(v))
+	case 14:
+		return r.ToValue(world.FromStringBool(v))
+	case 19:
+		return r.ToValue(v)
+	case 20:
+		return r.ToValue(world.FromStringInt(v))
+	case 21:
+		return r.ToValue(world.FromStringInt(v))
+	case 22:
+		return r.ToValue(v)
+	case 23:
+		return r.ToValue(world.FromStringBool(v))
+	case 24:
+		return r.ToValue(world.FromStringBool(v))
+	}
+	return nil
+}
+func (a *jsapi) GetTriggerInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	v, ok := a.API.GetTriggerInfo(call.Argument(0).String(), int(call.Argument(0).ToInteger()))
+	if ok != api.EOK {
+		return nil
+	}
+	switch call.Argument(0).ToInteger() {
+	case 1:
+		return r.ToValue(v)
+	case 2:
+		return r.ToValue(v)
+	case 3:
+		return r.ToValue(v)
+	case 4:
+		return r.ToValue(v)
+	case 5:
+		return r.ToValue(world.FromStringBool(v))
+	case 6:
+		return r.ToValue(world.FromStringBool(v))
+	case 7:
+		return r.ToValue(world.FromStringBool(v))
+	case 8:
+		return r.ToValue(world.FromStringBool(v))
+	case 9:
+		return r.ToValue(world.FromStringBool(v))
+	case 10:
+		return r.ToValue(world.FromStringBool(v))
+	case 11:
+		return r.ToValue(world.FromStringBool(v))
+	case 13:
+		return r.ToValue(world.FromStringBool(v))
+	case 15:
+		return r.ToValue(world.FromStringInt(v))
+	case 16:
+		return r.ToValue(world.FromStringInt(v))
+	case 23:
+		return r.ToValue(world.FromStringBool(v))
+	case 25:
+		return r.ToValue(world.FromStringBool(v))
+	case 26:
+		return r.ToValue(v)
+	case 27:
+		return r.ToValue(v)
+	case 28:
+		return r.ToValue(world.FromStringInt(v))
+	case 36:
+		return r.ToValue(world.FromStringBool(v))
+	}
+	return nil
+}
 
+func (a *jsapi) GetAliasInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	v, ok := a.API.GetAliasInfo(call.Argument(0).String(), int(call.Argument(0).ToInteger()))
+	if ok != api.EOK {
+		return nil
+	}
+	switch call.Argument(0).ToInteger() {
+	case 1:
+		return r.ToValue(v)
+	case 2:
+		return r.ToValue(v)
+	case 3:
+		return r.ToValue(v)
+	case 4:
+		return r.ToValue(v)
+	case 5:
+		return r.ToValue(v)
+	case 6:
+		return r.ToValue(world.FromStringBool(v))
+	case 7:
+		return r.ToValue(world.FromStringBool(v))
+	case 8:
+		return r.ToValue(world.FromStringBool(v))
+	case 9:
+		return r.ToValue(world.FromStringBool(v))
+	case 14:
+		return r.ToValue(world.FromStringBool(v))
+	case 16:
+		return r.ToValue(v)
+	case 17:
+		return r.ToValue(v)
+	case 18:
+		return r.ToValue(world.FromStringInt(v))
+	case 19:
+		return r.ToValue(world.FromStringBool(v))
+	case 20:
+		return r.ToValue(world.FromStringInt(v))
+	case 22:
+		return r.ToValue(world.FromStringBool(v))
+	case 23:
+		return r.ToValue(world.FromStringInt(v))
+	}
+	return nil
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

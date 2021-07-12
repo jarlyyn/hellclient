@@ -20,7 +20,7 @@ func newJsInitializer(b *bus.Bus) *jsplugin.Initializer {
 	i.Entry = "main.js"
 	i.DisableBuiltin = true
 	i.Modules = []*herbplugin.Module{
-		// NewMapperModule(b),
+		NewMapperModule(b),
 		NewAPIModule(b),
 	}
 	return i
@@ -106,7 +106,7 @@ func (e *JsEngine) OnTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigge
 		} else if k > 9 {
 			break
 		}
-		t.Set(strconv.Itoa(k), v)
+		t.Set(strconv.Itoa(k-1), v)
 	}
 
 	e.Locker.Unlock()
@@ -134,7 +134,7 @@ func (e *JsEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, resul
 		} else if k > 9 {
 			break
 		}
-		t.Set(strconv.Itoa(k), v)
+		t.Set(strconv.Itoa(k-1), v)
 	}
 	e.Locker.Unlock()
 	e.Call(b, alias.Script, alias.Name, message, t)

@@ -59,6 +59,7 @@ type MclTimer struct {
 	Minute         string `xml:"minute,attr"`
 	AtTime         string `xml:"at_time,attr"`
 	Script         string `xml:"script,attr"`
+	ActiveClosed   string `xml:"active_closed"`
 }
 
 func (t *MclTimer) Convert() *Timer {
@@ -74,7 +75,7 @@ func (t *MclTimer) Convert() *Timer {
 	ti.Second = int(MustAtoFloat(t.Second))
 	ti.Hour = MustAtoi(t.Hour)
 	ti.Minute = MustAtoi(t.Minute)
-
+	ti.ActionWhenDisconnectd = t.ActiveClosed == "y"
 	return ti
 }
 
@@ -142,6 +143,7 @@ type MclTrigger struct {
 	Regexp         string `xml:"regexp,attr"`
 	Sequence       string `xml:"sequence,attr"`
 	Script         string `xml:"script,attr"`
+	Send           string `xml:"send,attr"`
 }
 
 func (t *MclTrigger) Convert() *Trigger {
@@ -157,6 +159,7 @@ func (t *MclTrigger) Convert() *Trigger {
 	tr.Regexp = t.Regexp == "y"
 	tr.Sequence = MustAtoi(t.Sequence)
 	tr.Script = t.Script
+	tr.Send = t.Send
 	return tr
 }
 
