@@ -83,7 +83,47 @@ func (a *Alias) Option(name string) (string, bool) {
 	}
 	return "", false
 }
-
+func (a *Alias) Info(infotype int) (string, bool) {
+	a.Locker.Lock()
+	defer a.Locker.Unlock()
+	switch infotype {
+	case 1:
+		return a.Data.Match, true
+	case 2:
+		return a.Data.Send, true
+	case 3:
+		return a.Data.Script, true
+	case 4:
+		return a.Data.Send, true
+	case 5:
+		return a.Data.Script, true
+	case 6:
+		return world.ToStringBool(a.Data.Enabled), true
+	case 7:
+		return world.ToStringBool(a.Data.Regexp), true
+	case 8:
+		return world.ToStringBool(a.Data.IgnoreCase), true
+	case 9:
+		return world.ToStringBool(a.Data.ExpandVariables), true
+	case 14:
+		return world.ToStringBool(a.Data.Temporary), true
+	case 16:
+		return a.Data.Group, true
+	case 17:
+		return a.Data.Variable, true
+	case 18:
+		return strconv.Itoa(a.Data.SendTo), true
+	case 19:
+		return world.ToStringBool(a.Data.KeepEvaluating), true
+	case 20:
+		return strconv.Itoa(a.Data.Sequence), true
+	case 22:
+		return world.ToStringBool(a.Data.OmitFromCommandHistory), true
+	case 23:
+		return strconv.Itoa(0), true
+	}
+	return "", false
+}
 func (a *Alias) SetOption(name string, val string) (bool, bool) {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()

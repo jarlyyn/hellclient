@@ -120,6 +120,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 
 	l.SetGlobal("WriteLog", l.NewFunction(a.WriteLog))
 	l.SetGlobal("CloseLog", l.NewFunction(a.CloseLog))
+	l.SetGlobal("OpenLog", l.NewFunction(a.OpenLog))
 	l.SetGlobal("FlushLog", l.NewFunction(a.FlushLog))
 
 	l.SetGlobal("GetLinesInBufferCount", l.NewFunction(a.GetLinesInBufferCount))
@@ -135,6 +136,10 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("GetStyleInfo", l.NewFunction(a.GetStyleInfo))
 
 	l.SetGlobal("GetInfo", l.NewFunction(a.GetInfo))
+	l.SetGlobal("GetTimerInfo", l.NewFunction(a.GetTimerInfo))
+	l.SetGlobal("GetTriggerInfo", l.NewFunction(a.GetTriggerInfo))
+	l.SetGlobal("GetAliasInfo", l.NewFunction(a.GetAliasInfo))
+
 }
 func (a *luaapi) Print(L *lua.LState) int {
 	t := L.GetTop()
@@ -754,6 +759,10 @@ func (a *luaapi) CloseLog(L *lua.LState) int {
 	L.Push(lua.LNumber(a.API.CloseLog()))
 	return 1
 }
+func (a *luaapi) OpenLog(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.OpenLog()))
+	return 1
+}
 func (a *luaapi) FlushLog(L *lua.LState) int {
 	L.Push(lua.LNumber(a.API.FlushLog()))
 	return 1
@@ -930,7 +939,147 @@ func (a *luaapi) GetInfo(L *lua.LState) int {
 	L.Push(lua.LString(a.API.GetInfo(L.ToInt(1))))
 	return 1
 }
+func (a *luaapi) GetTimerInfo(L *lua.LState) int {
+	v, ok := a.API.GetTimerInfo(L.ToString(1), L.ToInt(2))
+	if ok != api.EOK {
+		L.Push(lua.LNil)
+		return 1
+	}
+	switch L.ToInt(2) {
+	case 1:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 2:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 3:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 4:
+		L.Push(lua.LString(v))
+	case 5:
+		L.Push(lua.LString(v))
+	case 6:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 7:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 8:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 14:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 19:
+		L.Push(lua.LString(v))
+	case 20:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 21:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 22:
+		L.Push(lua.LString(v))
+	case 23:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 24:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	default:
+		L.Push(lua.LNil)
+	}
+	return 1
+}
 
+func (a *luaapi) GetTriggerInfo(L *lua.LState) int {
+	v, ok := a.API.GetTriggerInfo(L.ToString(1), L.ToInt(2))
+	if ok != api.EOK {
+		L.Push(lua.LNil)
+		return 1
+	}
+	switch L.ToInt(2) {
+	case 1:
+		L.Push(lua.LString(v))
+	case 2:
+		L.Push(lua.LString(v))
+	case 3:
+		L.Push(lua.LString(v))
+	case 4:
+		L.Push(lua.LString(v))
+	case 5:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 6:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 7:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 8:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 9:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 10:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 11:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 13:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 15:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 16:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 23:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 25:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 26:
+		L.Push(lua.LString(v))
+	case 27:
+		L.Push(lua.LString(v))
+	case 28:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 36:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	default:
+		L.Push(lua.LNil)
+
+	}
+	return 1
+}
+
+func (a *luaapi) GetAliasInfo(L *lua.LState) int {
+	v, ok := a.API.GetAliasInfo(L.ToString(1), L.ToInt(2))
+	if ok != api.EOK {
+		L.Push(lua.LNil)
+		return 1
+	}
+	switch L.ToInt(2) {
+	case 1:
+		L.Push(lua.LString(v))
+	case 2:
+		L.Push(lua.LString(v))
+	case 3:
+		L.Push(lua.LString(v))
+	case 4:
+		L.Push(lua.LString(v))
+	case 5:
+		L.Push(lua.LString(v))
+	case 6:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 7:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 8:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 9:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 14:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 16:
+		L.Push(lua.LString(v))
+	case 17:
+		L.Push(lua.LString(v))
+	case 18:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 19:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 20:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 22:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+	case 23:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	}
+	return 1
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

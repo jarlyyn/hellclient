@@ -53,6 +53,43 @@ func (t *Timer) Reset() {
 		t.Timer.Reset(t.Data.GetDuration())
 	}
 }
+func (t *Timer) Info(infotype int) (string, bool) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	switch infotype {
+	case 1:
+		return strconv.Itoa(t.Data.Hour), true
+	case 2:
+		return strconv.Itoa(t.Data.Minute), true
+	case 3:
+		return strconv.Itoa(t.Data.Second), true
+	case 4:
+		return t.Data.Send, true
+	case 5:
+		return t.Data.Script, true
+	case 6:
+		return world.ToStringBool(t.Data.Enabled), true
+	case 7:
+		return world.ToStringBool(t.Data.OneShot), true
+	case 8:
+		return world.ToStringBool(t.Data.AtTime), true
+	case 14:
+		return world.ToStringBool(t.Data.Temporary), true
+	case 19:
+		return t.Data.Group, true
+	case 20:
+		return strconv.Itoa(t.Data.SendTo), true
+	case 21:
+		return strconv.Itoa(0), true
+	case 22:
+		return t.Data.Name, true
+	case 23:
+		return world.ToStringBool(t.Data.OmitFromOutput), true
+	case 24:
+		return world.ToStringBool(t.Data.OmitFromLog), true
+	}
+	return "", false
+}
 func (t *Timer) Option(name string) (string, bool) {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()

@@ -760,7 +760,9 @@ func (a *API) CloseLog() int {
 func (a *API) FlushLog() int {
 	return EOK
 }
-
+func (a *API) OpenLog() int {
+	return EOK
+}
 func (a *API) GetInfo(infotype int) string {
 	switch infotype {
 	case 1:
@@ -806,12 +808,39 @@ func (a *API) GetInfo(infotype int) string {
 	panic(fmt.Errorf("unknown world.GetInfo infotype %d", infotype))
 }
 
-// func (a *API) GetTimerInfo(name string, infotype int) {
+func (a *API) GetTimerInfo(name string, infotype int) (string, int) {
+	name = world.PrefixedName(name, false)
+	result, ofound, tfound := a.Bus.GetTimerInfo(name, infotype)
+	if !tfound {
+		return "", ETimerNotFound
+	}
+	if !ofound {
+		panic(fmt.Errorf("unknown world.GetTimerInfo infotype %d", infotype))
+	}
+	return result, EOK
 
-// }
-// func (a *API) GetTriggerInfo(name string, infotype int) {
+}
 
-// }
-// func (a *API) GetAliasInfo(name string, infotype int) {
+func (a *API) GetTriggerInfo(name string, infotype int) (string, int) {
+	name = world.PrefixedName(name, false)
+	result, ofound, tfound := a.Bus.GetTriggerInfo(name, infotype)
+	if !tfound {
+		return "", ETriggerNotFound
+	}
+	if !ofound {
+		panic(fmt.Errorf("unknown world.GetTriggerInfo infotype %d", infotype))
+	}
+	return result, EOK
+}
 
-// }
+func (a *API) GetAliasInfo(name string, infotype int) (string, int) {
+	name = world.PrefixedName(name, false)
+	result, ofound, tfound := a.Bus.GetAliasInfo(name, infotype)
+	if !tfound {
+		return "", EAliasNotFound
+	}
+	if !ofound {
+		panic(fmt.Errorf("unknown world.GetAliasInfo infotype %d", infotype))
+	}
+	return result, EOK
+}

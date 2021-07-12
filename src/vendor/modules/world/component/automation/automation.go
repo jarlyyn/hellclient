@@ -34,6 +34,7 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.DoResetNamedTimer = a.ResetNamedTimer
 	b.DoResetTimers = a.ResetTimers
 	b.GetTimerOption = a.GetTimerOption
+	b.GetTimerInfo = a.GetTimerInfo
 	b.SetTimerOption = a.SetTimerOption
 	b.GetTimersByType = a.GetTimersByType
 	b.AddTimers = a.AddTimers
@@ -52,6 +53,7 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.DoDeleteAliasByType = a.DoDeleteAliasByType
 	b.AddAliases = a.AddAliases
 	b.GetAliasOption = a.GetAliasOption
+	b.GetAliasInfo = a.GetAliasInfo
 	b.SetAliasOption = a.SetAliasOption
 	b.HasNamedAlias = a.HasNamedAlias
 	b.DoListAliasNames = a.DoListAliasNames
@@ -86,6 +88,7 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.DoDeleteTriggerByType = a.DoDeleteTriggerByType
 	b.AddTriggers = a.AddTriggers
 	b.GetTriggerOption = a.GetTriggerOption
+	b.GetTriggerInfo = a.GetTriggerInfo
 	b.SetTriggerOption = a.SetTriggerOption
 	b.HasNamedTrigger = a.HasNamedTrigger
 	b.DoListTriggerNames = a.DoListTriggerNames
@@ -275,6 +278,9 @@ func (a *Automation) ResetTimers() {
 func (a *Automation) GetTimerOption(name string, option string) (string, bool, bool) {
 	return a.Timers.GetTimerOption(name, option)
 }
+func (a *Automation) GetTimerInfo(name string, infotype int) (string, bool, bool) {
+	return a.Timers.GetTimerInfo(name, infotype)
+}
 func (a *Automation) SetTimerOption(name string, option string, value string) (bool, bool, bool) {
 	return a.Timers.SetTimerOption(name, option, value)
 }
@@ -335,6 +341,9 @@ func (a *Automation) AddAliases(al []*world.Alias) {
 func (a *Automation) GetAliasOption(name string, option string) (string, bool, bool) {
 	return a.Aliases.GetAliasOption(name, option)
 }
+func (a *Automation) GetAliasInfo(name string, infotype int) (string, bool, bool) {
+	return a.Aliases.GetAliasInfo(name, infotype)
+}
 func (a *Automation) SetAliasOption(name string, option string, value string) (bool, bool, bool) {
 	return a.Aliases.SetAliasOption(name, option, value)
 }
@@ -383,6 +392,9 @@ func (a *Automation) AddTriggers(al []*world.Trigger) {
 }
 func (a *Automation) GetTriggerOption(name string, option string) (string, bool, bool) {
 	return a.Triggers.GetTriggerOption(name, option)
+}
+func (a *Automation) GetTriggerInfo(name string, infotype int) (string, bool, bool) {
+	return a.Triggers.GetTriggerInfo(name, infotype)
 }
 func (a *Automation) SetTriggerOption(name string, option string, value string) (bool, bool, bool) {
 	return a.Triggers.SetTriggerOption(name, option, value)

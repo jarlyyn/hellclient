@@ -25,7 +25,7 @@ func (i *Info) OmitOutput(b *bus.Bus) {
 	if l != nil {
 		l.(*world.Line).OmitFromOutput = true
 	}
-	i.linesUpdated(b)
+	// i.linesUpdated(b)
 
 }
 func (i *Info) DeleteLines(b *bus.Bus, count int) {
@@ -64,7 +64,7 @@ func (i *Info) lines() []*world.Line {
 	result := []*world.Line{}
 	i.Lines.Do(func(x interface{}) {
 		line, ok := x.(*world.Line)
-		if ok && line != nil {
+		if ok && line != nil && !line.OmitFromOutput {
 			result = append(result, line)
 		}
 	})
@@ -89,11 +89,8 @@ func (i *Info) onPrompt(b *bus.Bus, line *world.Line) {
 func (i *Info) onNewLine(b *bus.Bus, line *world.Line) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
-	if line.OmitFromOutput {
-		return
-	}
-	i.Lines.Value = line
 	i.Lines = i.Lines.Next()
+	i.Lines.Value = line
 	i.LineCount++
 }
 func (i *Info) GetLineCount() int {
@@ -127,7 +124,7 @@ func (i *Info) GetRecentLines(count int) []*world.Line {
 		if v != nil {
 			result = append(result, v.(*world.Line))
 		}
-
+		r = r.Next()
 	}
 	return result
 

@@ -92,7 +92,53 @@ func (t *Trigger) Option(name string) (string, bool) {
 
 	return "", false
 }
-
+func (t *Trigger) Info(infotype int) (string, bool) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	switch infotype {
+	case 1:
+		return t.Data.Match, true
+	case 2:
+		return t.Data.Send, true
+	case 3:
+		return t.Data.SoundFileName, true
+	case 4:
+		return t.Data.Script, true
+	case 5:
+		return world.ToStringBool(t.Data.OmitFromLog), true
+	case 6:
+		return world.ToStringBool(t.Data.OmitFromOutput), true
+	case 7:
+		return world.ToStringBool(t.Data.KeepEvaluating), true
+	case 8:
+		return world.ToStringBool(t.Data.Enabled), true
+	case 9:
+		return world.ToStringBool(t.Data.Regexp), true
+	case 10:
+		return world.ToStringBool(t.Data.IgnoreCase), true
+	case 11:
+		return world.ToStringBool(t.Data.Repeat), true
+	case 13:
+		return world.ToStringBool(t.Data.ExpandVariables), true
+	case 15:
+		return strconv.Itoa(t.Data.SendTo), true
+	case 16:
+		return strconv.Itoa(t.Data.Sequence), true
+	case 23:
+		return world.ToStringBool(t.Data.Temporary), true
+	case 25:
+		return world.ToStringBool(t.Data.WildcardLowerCase), true
+	case 26:
+		return t.Data.Group, true
+	case 27:
+		return t.Data.Variable, true
+	case 28:
+		return strconv.Itoa(0), true
+	case 36:
+		return world.ToStringBool(t.Data.OneShot), true
+	}
+	return "", false
+}
 func (t *Trigger) SetOption(name string, val string) (bool, bool) {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()

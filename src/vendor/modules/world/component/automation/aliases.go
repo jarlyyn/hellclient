@@ -302,6 +302,17 @@ func (a *Aliases) GetAliasOption(name string, option string) (string, bool, bool
 	result, ok := al.Option(option)
 	return result, ok, true
 }
+func (a *Aliases) GetAliasInfo(name string, infotype int) (string, bool, bool) {
+	a.Locker.Lock()
+	al := a.Named[name]
+	a.Locker.Unlock()
+	if al == nil {
+		return "", false, false
+	}
+	result, ok := al.Info(infotype)
+	return result, ok, true
+}
+
 func (a *Aliases) SetAliasOption(name string, option string, value string) (bool, bool, bool) {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
@@ -316,6 +327,7 @@ func (a *Aliases) SetAliasOption(name string, option string, value string) (bool
 	}
 	return result, ok, true
 }
+
 func (a *Aliases) HasNamedAlias(name string) bool {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
