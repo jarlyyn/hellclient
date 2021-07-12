@@ -46,7 +46,7 @@ func (vs *MclVariables) Convert() []*RequiredParam {
 }
 
 type MclVariables struct {
-	Variables []*MclVariable `xml:"variables"`
+	Variables []*MclVariable `xml:"variable"`
 }
 type MclTimer struct {
 	Enabled        string `xml:"enabled,attr"`
@@ -59,7 +59,8 @@ type MclTimer struct {
 	Minute         string `xml:"minute,attr"`
 	AtTime         string `xml:"at_time,attr"`
 	Script         string `xml:"script,attr"`
-	ActiveClosed   string `xml:"active_closed"`
+	ActiveClosed   string `xml:"active_closed,attr"`
+	Send           string `xml:"send"`
 }
 
 func (t *MclTimer) Convert() *Timer {
@@ -76,6 +77,7 @@ func (t *MclTimer) Convert() *Timer {
 	ti.Hour = MustAtoi(t.Hour)
 	ti.Minute = MustAtoi(t.Minute)
 	ti.ActionWhenDisconnectd = t.ActiveClosed == "y"
+	ti.Send = t.Send
 	return ti
 }
 
@@ -102,6 +104,7 @@ type MclAlias struct {
 	Regexp         string `xml:"regexp,attr"`
 	Sequence       string `xml:"sequence,attr"`
 	Script         string `xml:"script,attr"`
+	Send           string `xml:"send"`
 }
 
 func (a *MclAlias) Convert() *Alias {
@@ -117,6 +120,7 @@ func (a *MclAlias) Convert() *Alias {
 	al.Regexp = a.Regexp == "y"
 	al.Sequence = MustAtoi(a.Sequence)
 	al.Script = a.Script
+	al.Send = a.Send
 	return al
 }
 
@@ -143,7 +147,7 @@ type MclTrigger struct {
 	Regexp         string `xml:"regexp,attr"`
 	Sequence       string `xml:"sequence,attr"`
 	Script         string `xml:"script,attr"`
-	Send           string `xml:"send,attr"`
+	Send           string `xml:"send"`
 }
 
 func (t *MclTrigger) Convert() *Trigger {

@@ -365,25 +365,25 @@ func (a *jsapi) Queue(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.Queue(call.Argument(0).String(), call.Argument(2).ToBoolean()))
 }
 func (a *jsapi) DoAfter(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	seconds := call.Argument(1).ToFloat()
+	seconds := call.Argument(0).ToFloat()
 	send := call.Argument(1).String()
 	return r.ToValue(a.API.DoAfter(seconds, send))
 }
 func (a *jsapi) DoAfterNote(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	seconds := call.Argument(1).ToFloat()
+	seconds := call.Argument(0).ToFloat()
 	send := call.Argument(1).String()
 	return r.ToValue(a.API.DoAfterNote(seconds, send))
 
 }
 func (a *jsapi) DoAfterSpeedWalk(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	seconds := call.Argument(1).ToFloat()
+	seconds := call.Argument(0).ToFloat()
 	send := call.Argument(1).String()
 	return r.ToValue(a.API.DoAfterSpeedWalk(seconds, send))
 }
 func (a *jsapi) DoAfterSpecial(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	seconds := call.Argument(1).ToFloat()
+	seconds := call.Argument(0).ToFloat()
 	send := call.Argument(1).String()
-	sendto := int(call.Argument(3).ToInteger())
+	sendto := int(call.Argument(2).ToInteger())
 	return r.ToValue(a.API.DoAfterSpecial(seconds, send, sendto))
 
 }
@@ -413,12 +413,12 @@ func (a *jsapi) DeleteTimerGroup(call goja.FunctionCall, r *goja.Runtime) goja.V
 
 func (a *jsapi) EnableTimer(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	name := call.Argument(0).String()
-	enabled := call.Argument(2).ToBoolean()
+	enabled := call.Argument(1).ToBoolean()
 	return r.ToValue(a.API.EnableTimer(name, enabled))
 }
 func (a *jsapi) EnableTimerGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	group := call.Argument(0).String()
-	enabled := call.Argument(2).ToBoolean()
+	enabled := call.Argument(1).ToBoolean()
 	return r.ToValue(a.API.EnableTimerGroup(group, enabled))
 }
 
