@@ -325,7 +325,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)
-	b.BindDisconnectedEvent(s, s.disconnected)
+	b.BindServerCloseEvent(s, s.disconnected)
 
 }
 

@@ -1,5 +1,6 @@
 
-body{background: black;color:white;font-family: monospace;margin:0;padding:0;visibility: hidden;overflow-y: hidden;};
+body{background: black;color:white;font-family: monospace;margin:0;padding:0;visibility: hidden;overflow-y: hidden;}
+#world{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
 ul,li{padding:0;margin:0;list-style: none}
 ul#lines,ul#alllines{white-space: pre;font-family: monospace;}
 ul#alllines{background: black;padding:0;margin:0;color:white}

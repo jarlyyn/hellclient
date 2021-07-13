@@ -153,6 +153,7 @@ type Bus struct {
 	PromptEvent              busevent.Event
 	ConnectedEvent           busevent.Event
 	DisconnectedEvent        busevent.Event
+	ServerCloseEvent         busevent.Event
 	InitEvent                busevent.Event
 	ReadyEvent               busevent.Event
 	BeforeCloseEvent         busevent.Event
@@ -342,6 +343,18 @@ func (b *Bus) BindCloseEvent(id interface{}, fn func(b *Bus)) {
 		},
 	)
 }
+func (b *Bus) RaiseServerCloseEvent() {
+	b.ServerCloseEvent.Raise(nil)
+}
+func (b *Bus) BindServerCloseEvent(id interface{}, fn func(b *Bus)) {
+	b.ServerCloseEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b)
+		},
+	)
+}
+
 func (b *Bus) RaiseBeforeCloseEvent() {
 	b.BeforeCloseEvent.Raise(nil)
 }

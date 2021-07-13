@@ -112,7 +112,13 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 			if !isClosedError(err) {
 				bus.HandleConnError(err)
 			}
+			conn.Lock.Lock()
+			if conn.running == true {
+				go bus.RaiseServerCloseEvent()
+			}
+			conn.Lock.Unlock()
 			conn.Close(bus)
+
 			return
 		}
 		conn.Lock.Lock()
