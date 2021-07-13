@@ -62,7 +62,7 @@ func (i *Info) linesUpdated(b *bus.Bus) {
 }
 func (i *Info) lines() []*world.Line {
 	result := []*world.Line{}
-	i.Lines.Do(func(x interface{}) {
+	i.Lines.Next().Do(func(x interface{}) {
 		line, ok := x.(*world.Line)
 		if ok && line != nil && !line.OmitFromOutput {
 			result = append(result, line)
