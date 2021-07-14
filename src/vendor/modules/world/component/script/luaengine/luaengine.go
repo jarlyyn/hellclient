@@ -34,6 +34,7 @@ type LuaEngine struct {
 	onClose      string
 	onDisconnect string
 	onConnect    string
+	onBroadCast  string
 }
 
 func NewLuaEngine() *LuaEngine {
@@ -48,6 +49,7 @@ func (e *LuaEngine) Open(b *bus.Bus) error {
 	e.onClose = data.OnClose
 	e.onConnect = data.OnConnect
 	e.onDisconnect = data.OnDisconnect
+	e.onBroadCast = data.OnBroadcast
 	err := util.Catch(func() {
 		newLuaInitializer(b).MustApplyInitializer(e.Plugin)
 	})
@@ -123,13 +125,6 @@ func (e *LuaEngine) OnTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigg
 		t.RawSetString(k, lua.LString(v))
 	}
 	e.Locker.Unlock()
-	// if err := L.CallByParam(lua.P{
-	// 	Fn:      L.GetGlobal(trigger.Script),
-	// 	NRet:    0,
-	// 	Protect: true,
-	// }, lua.LString(trigger.Name), lua.LString(line.Plain()), t, e.ConvertStyle(L, line)); err != nil {
-	// 	b.HandleScriptError(err)
-	// }
 	e.Call(b, fn, lua.LString(trigger.Name), lua.LString(line.Plain()), t, e.ConvertStyle(L, line))
 
 }
@@ -152,13 +147,6 @@ func (e *LuaEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, resu
 		t.RawSetString(k, lua.LString(v))
 	}
 	e.Locker.Unlock()
-
-	// if err := L.CallByParam(lua.P{
-	// 	Fn:   L.GetGlobal(alias.Script),
-	// 	NRet: 0,
-	// }, lua.LString(alias.Name), lua.LString(message), t); err != nil {
-	// 	b.HandleScriptError(err)
-	// }
 	e.Call(b, fn, lua.LString(alias.Name), lua.LString(message), t)
 
 }
@@ -166,15 +154,6 @@ func (e *LuaEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
 	if timer.Script == "" {
 		return
 	}
-
-	// L := e.Plugin.LState
-	// if err := L.CallByParam(lua.P{
-	// 	Fn:      L.GetGlobal(timer.Script),
-	// 	NRet:    0,
-	// 	Protect: true,
-	// }, lua.LString(timer.Name)); err != nil {
-	// 	b.HandleScriptError(err)
-	// }
 	e.Locker.Lock()
 	if e.Plugin.LState == nil {
 		e.Locker.Unlock()
@@ -183,7 +162,16 @@ func (e *LuaEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
 	fn := e.Plugin.LState.GetGlobal(timer.Script)
 	e.Locker.Unlock()
 	e.Call(b, fn, lua.LString(timer.Name))
-
+}
+func (e *LuaEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
+	e.Locker.Lock()
+	if e.Plugin.LState == nil {
+		e.Locker.Unlock()
+		return
+	}
+	fn := e.Plugin.LState.GetGlobal(e.onBroadCast)
+	e.Locker.Unlock()
+	e.Call(b, fn, lua.LString(bc.Message), lua.LBool(bc.Global), lua.LString(bc.Channel), lua.LString(bc.ID))
 }
 func (e *LuaEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()

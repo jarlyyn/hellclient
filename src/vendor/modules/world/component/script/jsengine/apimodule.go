@@ -212,6 +212,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "OpenLog", a.OpenLog)
 	AppendToWorld(jp.Runtime, world, "FlushLog", a.FlushLog)
 
+	AppendToWorld(jp.Runtime, world, "Broadcast", a.Broadcast)
 }
 
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -967,6 +968,12 @@ func (a *jsapi) GetAliasInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value
 	}
 	return nil
 }
+
+func (a *jsapi) Broadcast(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	a.API.Broadcast(call.Argument(0).String(), call.Argument(1).ToBoolean())
+	return nil
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

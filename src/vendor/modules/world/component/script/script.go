@@ -279,7 +279,23 @@ func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigge
 		e.OnTrigger(b, line, trigger, result)
 	}
 }
-
+func (s *Script) verifyChannel(channel string) bool {
+	s.Locker.Lock()
+	defer s.Locker.Unlock()
+	if s.Data == nil || channel == "" || s.Data.OnBroadcast == "" {
+		return false
+	}
+	return channel == s.Data.Channel
+}
+func (s *Script) SendBroadcast(b *bus.Bus, bc *world.Broadcast) {
+	if !s.verifyChannel(bc.Channel) {
+		return
+	}
+	e := s.getEngine()
+	if e != nil {
+		e.OnBroadCast(b, bc)
+	}
+}
 func (s *Script) Run(b *bus.Bus, cmd string) {
 	e := s.getEngine()
 	if e != nil {
@@ -312,7 +328,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.DoSendTimerToScript = b.WrapHandleTimer(s.SendTimer)
 	b.DoSendAliasToScript = b.WrapHandleAlias(s.SendAlias)
 	b.DoSendTriggerToScript = b.WrapHandleTrigger(s.SendTrigger)
-
+	b.DoSendBroadcastToScript = b.WrapHandleBroadcast(s.SendBroadcast)
 	b.DoRunScript = b.WrapHandleString(s.Run)
 	b.GetStatus = s.GetStatus
 	b.SetStatus = b.WrapHandleString(s.SetStatus)

@@ -840,3 +840,14 @@ func (a *API) GetAliasInfo(name string, infotype int) (string, int) {
 	}
 	return result, EOK
 }
+func (a *API) Broadcast(msg string, gloabl bool) {
+	if msg == "" {
+		return
+	}
+	channel := a.Bus.GetScriptData().Channel
+	if channel == "" {
+		return
+	}
+	bc := world.CreateBroadcast(channel, msg, gloabl)
+	a.Bus.RaiseBroadcastEvent(bc)
+}

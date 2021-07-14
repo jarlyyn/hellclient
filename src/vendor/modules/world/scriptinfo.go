@@ -30,6 +30,8 @@ type ScriptData struct {
 	OnClose        string
 	OnConnect      string
 	OnDisconnect   string
+	OnBroadcast    string
+	Channel        string
 	Triggers       []*Trigger
 	Timers         []*Timer
 	Aliases        []*Alias

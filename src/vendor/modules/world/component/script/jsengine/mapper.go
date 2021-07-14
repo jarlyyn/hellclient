@@ -3,7 +3,6 @@ package jsengine
 import (
 	"context"
 	"errors"
-	"fmt"
 	"modules/mapper"
 	"modules/world/bus"
 
@@ -27,7 +26,6 @@ func ConvertJsPath(r *goja.Runtime, v goja.Value) *JsPath {
 	if tagsvalue != nil {
 		err := r.ExportTo(tagsvalue, &tags)
 		if err != nil {
-			fmt.Println(err.Error())
 			panic(errors.New("tags must be array"))
 		}
 	}
@@ -39,7 +37,6 @@ func ConvertJsPath(r *goja.Runtime, v goja.Value) *JsPath {
 	if etagsvalue != nil {
 		err := r.ExportTo(etagsvalue, &etags)
 		if err != nil {
-			fmt.Println(err.Error())
 			panic(errors.New("excludetags must be array"))
 		}
 	}

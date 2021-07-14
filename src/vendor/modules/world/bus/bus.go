@@ -68,6 +68,8 @@ type Bus struct {
 	DoOmitOutput            func()
 	DoDeleteLines           func(int)
 	GetLineCount            func() int
+	DoSendBroadcastToScript func(*world.Broadcast)
+
 	DoSendTimerToScript     func(*world.Timer)
 	DoDeleteTimer           func(string) bool
 	DoDeleteTimerByName     func(string) bool
@@ -149,6 +151,7 @@ type Bus struct {
 	HandleScriptError        func(err error)
 	GetScriptCaller          func() (string, string)
 	DoStopEvaluatingTriggers func()
+	BroadcastEvent           busevent.Event
 	LineEvent                busevent.Event
 	PromptEvent              busevent.Event
 	ConnectedEvent           busevent.Event
@@ -278,7 +281,11 @@ func (b *Bus) WrapHandleTrigger(f func(b *Bus, line *world.Line, trigger *world.
 		f(b, line, trigger, result)
 	}
 }
-
+func (b *Bus) WrapHandleBroadcast(f func(b *Bus, bc *world.Broadcast)) func(bc *world.Broadcast) {
+	return func(bc *world.Broadcast) {
+		f(b, bc)
+	}
+}
 func (b *Bus) WrapHandleStringForBool(f func(bus *Bus, str string) bool) func(str string) bool {
 	return func(str string) bool {
 		return f(b, str)
@@ -423,6 +430,19 @@ func (b *Bus) BindLinesEvent(id interface{}, fn func(b *Bus, lines []*world.Line
 		},
 	)
 }
+
+func (b *Bus) RaiseBroadcastEvent(bc *world.Broadcast) {
+	b.BroadcastEvent.Raise(bc)
+}
+func (b *Bus) BindBroadcastEvent(id interface{}, fn func(b *Bus, bc *world.Broadcast)) {
+	b.BroadcastEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b, data.(*world.Broadcast))
+		},
+	)
+}
+
 func (b *Bus) Reset() {
 	*b = Bus{}
 }
