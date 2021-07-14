@@ -46,12 +46,6 @@ func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
 		bus.HandleConverterError(err)
 		return
 	}
-	p := bus.GetPrompt()
-	if !p.IsEmpty() {
-		p.Type = world.LineTypePrompt
-		bus.RaiseLineEvent(p)
-		bus.RaisePromptEvent(world.NewLine())
-	}
 	if cmd.Echo {
 		c.DoPrintEcho(bus, cmd)
 	}

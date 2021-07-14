@@ -362,7 +362,7 @@ func (a *jsapi) GetQueue(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(cmds)
 }
 func (a *jsapi) Queue(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	return r.ToValue(a.API.Queue(call.Argument(0).String(), call.Argument(2).ToBoolean()))
+	return r.ToValue(a.API.Queue(call.Argument(0).String(), call.Argument(1).ToBoolean()))
 }
 func (a *jsapi) DoAfter(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	seconds := call.Argument(0).ToFloat()
@@ -840,7 +840,7 @@ func (a *jsapi) GetTimerInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value
 	if ok != api.EOK {
 		return nil
 	}
-	switch call.Argument(0).ToInteger() {
+	switch call.Argument(1).ToInteger() {
 	case 1:
 		return r.ToValue(world.FromStringInt(v))
 	case 2:
@@ -879,7 +879,7 @@ func (a *jsapi) GetTriggerInfo(call goja.FunctionCall, r *goja.Runtime) goja.Val
 	if ok != api.EOK {
 		return nil
 	}
-	switch call.Argument(0).ToInteger() {
+	switch call.Argument(1).ToInteger() {
 	case 1:
 		return r.ToValue(v)
 	case 2:
@@ -929,7 +929,7 @@ func (a *jsapi) GetAliasInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value
 	if ok != api.EOK {
 		return nil
 	}
-	switch call.Argument(0).ToInteger() {
+	switch call.Argument(1).ToInteger() {
 	case 1:
 		return r.ToValue(v)
 	case 2:

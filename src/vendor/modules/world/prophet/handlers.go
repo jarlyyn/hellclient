@@ -18,6 +18,9 @@ func Send(conn connections.OutputConnection, msgtype string, data interface{}) e
 }
 func (p *Prophet) change(conn connections.OutputConnection, id string) error {
 	ctx := p.Context(conn.ID())
+	if ctx == nil {
+		return nil
+	}
 	ctx.Lock.Lock()
 	defer ctx.Lock.Unlock()
 	v, ok := ctx.Data.Load("rooms")

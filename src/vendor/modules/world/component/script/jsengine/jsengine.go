@@ -22,6 +22,7 @@ func newJsInitializer(b *bus.Bus) *jsplugin.Initializer {
 	i.Modules = []*herbplugin.Module{
 		NewMapperModule(b),
 		NewAPIModule(b),
+		ModuleEval,
 	}
 	return i
 }
