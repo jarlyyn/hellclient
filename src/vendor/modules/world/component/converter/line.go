@@ -44,6 +44,30 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *worl
 						{
 							w.Bold = false
 						}
+					case "4":
+						{
+							w.Underlined = true
+						}
+					case "5":
+						{
+							w.Blinking = true
+						}
+					case "7":
+						{
+							w.Inverse = true
+						}
+					case "24":
+						{
+							w.Underlined = false
+						}
+					case "25":
+						{
+							w.Blinking = false
+						}
+					case "27":
+						{
+							w.Inverse = false
+						}
 					case "30":
 						{
 							w.Color = "Black"

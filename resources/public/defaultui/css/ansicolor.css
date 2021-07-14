@@ -1,3 +1,5 @@
+.words.underlined{text-decoration: underline;}
+
 .words .Black{color:rgb(0,0,0)}
 .words .Red{color:rgb(127,0,0)}
 .words .Green{color:rgb(0,147,0)}
@@ -30,7 +32,42 @@
 .words .BG-Bright-Magenta{background:rgb(255,0,255)}
 .words .BG-Bright-Cyan{background:rgb(0,255,255)}
 .words .BG-Bright-White{background:rgb(255,255,255)}
+
+.words .inverse.BG-Black{color:rgb(0,0,0)}
+.words .inverse.BG-Red{color:rgb(127,0,0)}
+.words .inverse.BG-Green{color:rgb(0,147,0)}
+.words .inverse.BG-Yellow{color:rgb(252,127,0)}
+.words .inverse.BG-Blue{color:rgb(0,0,127)}
+.words .inverse.BG-Magenta{color:rgb(156,0,156)}
+.words .inverse.BG-Cyan{color:rgb(0,147,147)}
+.words .inverse.BG-White{color:rgb(210,210,210)}
+.words .inverse.BG-Bright-Black{color:rgb(127,127,127)}
+.words .inverse.BG-Bright-Red{color:rgb(255,0,0)}
+.words .inverse.BG-Bright-Green{color:rgb(0,252,0)}
+.words .inverse.BG-Bright-Yellow{color:rgb(255,255,0)}
+.words .inverse.BG-Bright-Blue{color:rgb(0,0,252)}
+.words .inverse.BG-Bright-Magenta{color:rgb(255,0,255)}
+.words .inverse.BG-Bright-Cyan{color:rgb(0,255,255)}
+.words .inverse.BG-Bright-White{color:rgb(255,255,255)}
+.words .inverse.Black{background:rgb(0,0,0)}
+.words .inverse.Red{background:rgb(127,0,0)}
+.words .inverse.Green{background:rgb(0,147,0)}
+.words .inverse.Yellow{background:rgb(252,127,0)}
+.words .inverse.Blue{background:rgb(0,0,127)}
+.words .inverse.Magenta{background:rgb(156,0,156)}
+.words .inverse.Cyan{background:rgb(0,147,147)}
+.words .inverse.White{background:rgb(210,210,210)}
+.words .inverse.Bright-Black{background:rgb(127,127,127)}
+.words .inverse.Bright-Red{background:rgb(255,0,0)}
+.words .inverse.Bright-Green{background:rgb(0,252,0)}
+.words .inverse.Bright-Yellow{background:rgb(255,255,0)}
+.words .inverse.Bright-Blue{background:rgb(0,0,252)}
+.words .inverse.Bright-Magenta{background:rgb(255,0,255)}
+.words .inverse.Bright-Cyan{background:rgb(0,255,255)}
+.words .inverse.Bright-White{background:rgb(255,255,255)}
+
 .words .bold{font-weight: bold}
+.words .underlined{text-decoration: underline;}
 .words.echo{color: cyan;font-style:italic}
 .words.echo::before{content:"↣";color:teal}
 .words.system{color: red;}
@@ -43,3 +80,20 @@
 .advancemode #alllines .creator-type-alias::after{content:"⌨" ;color:rgb(255,255,0);padding-left: 0.5em}
 .advancemode #alllines .creator-type-system::after{content:"⏻" ;color:rgb(255,255,0);padding-left: 0.5em}
 .advancemode #alllines .creator-type-run::after{content:"⏯" ;color:rgb(255,255,0);padding-left: 0.5em}
+
+@keyframes blinking {
+    from {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    to {
+        opacity: 1.0;
+    }
+}
+
+.blinking{
+    animation: blinking 1200ms infinite;
+
+}

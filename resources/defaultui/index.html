@@ -18,7 +18,12 @@
             </div>
         <ul id="lines" @mousedown="onButton('allLines')">
             <li v-bind:class="'words '+ typeclass[line.Type]" v-bind:key="line.ID" v-for="line in lines">
-                <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') " v-for="word in line.Words" >{{word.Text}}</span>
+                <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')" v-for="word in line.Words" >{{word.Text}}</span>
+            </li>
+            <li class="prompt words">
+                <div v-if="prompt &&  prompt.Words &&  prompt.Words.length">
+                <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')" v-for="word in prompt.Words" >{{word.Text}}</span>
+            </div>
             </li>
         </ul>
 <div id="triggerlist"></div>
@@ -44,8 +49,6 @@
                 </div>
         <div  id="user-input" v-on:keyup.13="send">
         <el-input size="small" placeholder="请输入命令" v-model="cmd" >
-                <template  v-if="prompt &&  prompt.Words &&  prompt.Words.length" slot="prepend">          <div class="words">      <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.IsPrint?' print':'')" v-for="word in prompt.Words" >{{word.Text}}</span></div>
-                </template>
                 <template slot="append">
                     <el-dropdown size="mini" @command="onHistory">
                     <span class="el-dropdown-link"><i class="el-icon-more"></i></span>
