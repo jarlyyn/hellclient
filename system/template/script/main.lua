@@ -9,3 +9,6 @@ end
 
 onDisconnected=function ()
 end
+
+onBroadcast=function(msg,global,channel,global)
+end

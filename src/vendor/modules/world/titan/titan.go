@@ -119,6 +119,13 @@ func (t *Titan) onLine(b *bus.Bus, line *world.Line) {
 	}
 	msg.PublishLine(t, b.ID, line)
 }
+func (t *Titan) onBroadcast(b *bus.Bus, bc *world.Broadcast) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	for _, v := range t.Worlds {
+		go v.DoSendBroadcastToScript(bc)
+	}
+}
 func (t *Titan) OnCreateFail(errors []*validator.FieldError) {
 	msg.PublishCreateFail(t, errors)
 }
@@ -261,6 +268,7 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindStatusEvent(t, t.onStatus)
 	b.BindHistoriesEvent(t, t.onHistory)
 	b.BindLinesEvent(t, t.onLines)
+	b.BindBroadcastEvent(t, t.onBroadcast)
 	b.GetScriptPath = t.GetScriptPath
 	b.GetLogsPath = t.GetLogsPath
 }

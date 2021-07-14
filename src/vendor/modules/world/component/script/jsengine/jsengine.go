@@ -33,6 +33,7 @@ type JsEngine struct {
 	onClose      string
 	onDisconnect string
 	onConnect    string
+	onBroadCast  string
 }
 
 func NewJsEngine() *JsEngine {
@@ -47,6 +48,7 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 	e.onClose = data.OnClose
 	e.onConnect = data.OnConnect
 	e.onDisconnect = data.OnDisconnect
+	e.onBroadCast = data.OnBroadcast
 	err := util.Catch(func() {
 		newJsInitializer(b).MustApplyInitializer(e.Plugin)
 	})
@@ -152,7 +154,15 @@ func (e *JsEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
 	}
 	e.Locker.Unlock()
 	e.Call(b, timer.Script, timer.Name)
-
+}
+func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil {
+		e.Locker.Unlock()
+		return
+	}
+	e.Locker.Unlock()
+	e.Call(b, bc.Message, bc.Global, bc.Channel, bc.ID)
 }
 func (e *JsEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()
