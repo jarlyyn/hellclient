@@ -293,6 +293,7 @@ func (s *Script) SendBroadcast(b *bus.Bus, bc *world.Broadcast) {
 	}
 	e := s.getEngine()
 	if e != nil {
+		s.SetCreator("broadcast", bc.Message)
 		e.OnBroadCast(b, bc)
 	}
 }
