@@ -142,6 +142,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 
 	l.SetGlobal("Broadcast", l.NewFunction(a.Broadcast))
 
+	l.SetGlobal("GetGlobalOption", l.NewFunction(a.GetGlobalOption))
 }
 func (a *luaapi) Print(L *lua.LState) int {
 	t := L.GetTop()
@@ -1082,6 +1083,22 @@ func (a *luaapi) GetAliasInfo(L *lua.LState) int {
 func (a *luaapi) Broadcast(L *lua.LState) int {
 	a.API.Broadcast(L.ToString(1), L.ToBool(2))
 	return 0
+}
+
+func (a *luaapi) GetGlobalOption(L *lua.LState) int {
+	result := a.API.GetGlobalOption(L.ToString(1))
+	switch L.ToString(1) {
+	default:
+		switch result {
+		case "0":
+			L.Push(lua.LNumber(0))
+		case "1":
+			L.Push(lua.LNumber(1))
+		default:
+			L.Push(lua.LString(result))
+		}
+	}
+	return 1
 }
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",

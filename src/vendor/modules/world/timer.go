@@ -57,7 +57,11 @@ func (t *Timer) GetDuration() time.Duration {
 		}
 		return at.Sub(now)
 	}
-	return time.Duration(t.Hour)*time.Hour + time.Duration(t.Minute)*time.Minute + time.Duration(t.Second)*time.Second
+	d := time.Duration(t.Hour)*time.Hour + time.Duration(t.Minute)*time.Minute + time.Duration(t.Second)*time.Second
+	if d <= 0 {
+		d = 1
+	}
+	return d
 }
 func NewTimer() *Timer {
 	return &Timer{}
