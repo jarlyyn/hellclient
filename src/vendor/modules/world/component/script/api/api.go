@@ -759,6 +759,89 @@ func (a *API) FlushLog() int {
 func (a *API) OpenLog() int {
 	return EOK
 }
+func (a *API) GetGlobalOption(optionname string) string {
+	switch optionname {
+	case "AllTypingToCommandWindow":
+	case "AlwaysOnTop":
+	case "AppendToLogFiles":
+	case "AutoConnectWorlds":
+	case "AutoExpandConfig":
+	case "FlatToolbars":
+	case "AutoLogWorld":
+	case "BleedBackground":
+	case "ColourGradientConfig":
+	case "ConfirmBeforeClosingMXPdebug":
+	case "ConfirmBeforeClosingMushclient":
+	case "ConfirmBeforeClosingWorld":
+	case "ConfirmBeforeSavingVariables":
+	case "ConfirmLogFileClose":
+	case "EnableSpellCheck":
+	case "AllowLoadingDlls":
+	case "F1macro":
+	case "FixedFontForEditing":
+	case "NotepadWordWrap":
+	case "NotifyIfCannotConnect":
+	case "ErrorNotificationToOutputWindow":
+	case "NotifyOnDisconnect":
+	case "OpenActivityWindow":
+	case "OpenWorldsMaximised":
+	case "WindowTabsStyle":
+	case "ReconnectOnLinkFailure":
+	case "RegexpMatchEmpty":
+	case "ShowGridLinesInListViews":
+	case "SmoothScrolling":
+	case "SmootherScrolling":
+	case "DisableKeyboardMenuActivation":
+	case "TriggerRemoveCheck":
+	case "NotepadBackColour":
+	case "NotepadTextColour":
+	case "ActivityButtonBarStyle":
+	case "AsciiArtLayout":
+	case "DefaultInputFontHeight":
+	case "DefaultInputFontItalic ":
+	case "DefaultInputFontWeight":
+	case "DefaultOutputFontHeight":
+	case "Icon Placement":
+	case "Tray Icon":
+	case "ActivityWindowRefreshInterval":
+	case "ParenMatchFlags":
+	case "PrinterFontSize":
+	case "PrinterLeftMargin":
+	case "PrinterLinesPerPage":
+	case "PrinterTopMargin":
+	case "FixedPitchFontSize":
+	case "TabInsertsTabInMultiLineDialogs":
+	case "AsciiArtFont":
+	case "FixedPitchFont":
+	case "WordDelimitersDblClick":
+		return "0"
+	case "TimerInterval":
+		return "1"
+	case "ActivityWindowRefreshType":
+	case "PluginList":
+	case "PluginsDirectory":
+	case "StateFilesDirectory":
+	case "PrinterFont":
+	case "TrayIconFileName":
+	case "WordDelimiters":
+	case "WorldList":
+	case "LuaScript":
+	case "Locale":
+	case "DefaultAliasesFile":
+	case "DefaultColoursFile":
+	case "DefaultInputFont":
+	case "DefaultLogFileDirectory":
+	case "DefaultMacrosFile":
+	case "DefaultNameGenerationFile":
+	case "DefaultOutputFont ":
+	case "DefaultTimersFile ":
+	case "DefaultTriggersFile":
+	case "DefaultWorldFileDirectory":
+	case "NotepadQuoteString":
+		return ""
+	}
+	return ""
+}
 func (a *API) GetInfo(infotype int) string {
 	switch infotype {
 	case 1:

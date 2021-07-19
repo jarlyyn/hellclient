@@ -23,6 +23,8 @@ func newJsInitializer(b *bus.Bus) *jsplugin.Initializer {
 		NewMapperModule(b),
 		NewAPIModule(b),
 		ModuleEval,
+		ModuleJScript,
+		NewFileSystemObjectModule(b),
 	}
 	return i
 }
@@ -140,7 +142,7 @@ func (e *JsEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, resul
 		t.Set(strconv.Itoa(k-1), v)
 	}
 	e.Locker.Unlock()
-	e.Call(b, alias.Script, alias.Name, message, t)
+	go e.Call(b, alias.Script, alias.Name, message, t)
 
 }
 func (e *JsEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
@@ -153,7 +155,7 @@ func (e *JsEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
 		return
 	}
 	e.Locker.Unlock()
-	e.Call(b, timer.Script, timer.Name)
+	go e.Call(b, timer.Script, timer.Name)
 }
 func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Lock()
@@ -162,7 +164,7 @@ func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 		return
 	}
 	e.Locker.Unlock()
-	e.Call(b, bc.Message, bc.Global, bc.Channel, bc.ID)
+	go e.Call(b, bc.Message, bc.Global, bc.Channel, bc.ID)
 }
 func (e *JsEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()

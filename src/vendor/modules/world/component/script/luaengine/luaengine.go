@@ -147,7 +147,7 @@ func (e *LuaEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, resu
 		t.RawSetString(k, lua.LString(v))
 	}
 	e.Locker.Unlock()
-	e.Call(b, fn, lua.LString(alias.Name), lua.LString(message), t)
+	go e.Call(b, fn, lua.LString(alias.Name), lua.LString(message), t)
 
 }
 func (e *LuaEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
@@ -161,7 +161,7 @@ func (e *LuaEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
 	}
 	fn := e.Plugin.LState.GetGlobal(timer.Script)
 	e.Locker.Unlock()
-	e.Call(b, fn, lua.LString(timer.Name))
+	go e.Call(b, fn, lua.LString(timer.Name))
 }
 func (e *LuaEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Lock()
@@ -171,7 +171,7 @@ func (e *LuaEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	}
 	fn := e.Plugin.LState.GetGlobal(e.onBroadCast)
 	e.Locker.Unlock()
-	e.Call(b, fn, lua.LString(bc.Message), lua.LBool(bc.Global), lua.LString(bc.Channel), lua.LString(bc.ID))
+	go e.Call(b, fn, lua.LString(bc.Message), lua.LBool(bc.Global), lua.LString(bc.Channel), lua.LString(bc.ID))
 }
 func (e *LuaEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()

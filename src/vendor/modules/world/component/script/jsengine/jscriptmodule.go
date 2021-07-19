@@ -1,9 +1,13 @@
 package jsengine
 
 import (
+	"context"
 	"errors"
+	"strconv"
 
 	"github.com/dop251/goja"
+	"github.com/herb-go/herbplugin"
+	"github.com/herb-go/herbplugin/jsplugin"
 )
 
 type VBArray struct {
@@ -44,6 +48,32 @@ func (a *VBArray) GetItem(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return a.data[idx]
 }
 
+func (a *VBArray) ConvertTo(obj *goja.Object) {
+	obj.Set("dimensions", a.Dimensions)
+	obj.Set("getitem", a.GetItem)
+	obj.Set("lbound", a.LBound)
+	obj.Set("ubound", a.UBound)
+	obj.Set("toArray", a.ToArray)
+}
+
+func CreateVBArray(call goja.ConstructorCall, r *goja.Runtime) *goja.Object {
+	data := call.Argument(0).ToObject(r)
+	result := &VBArray{}
+	l := []goja.Value{}
+	var i = 0
+	for {
+		v := data.Get(strconv.Itoa(i))
+		if v == nil {
+			break
+		}
+		l = append(l, v)
+		i++
+	}
+	result.data = l
+	result.ConvertTo(call.This)
+	return call.This
+}
+
 type Enumerator struct {
 	data []goja.Value
 	iter int
@@ -66,3 +96,42 @@ func (e *Enumerator) Item(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	}
 	return e.data[e.iter]
 }
+
+func (e *Enumerator) ConvertTo(obj *goja.Object) {
+	obj.Set("atEnd", e.AtEnd)
+	obj.Set("moveFirst", e.MoveFirst)
+	obj.Set("moveNext", e.MoveNext)
+	obj.Set("item", e.Item)
+}
+
+func CreateEnumerator(call goja.ConstructorCall, r *goja.Runtime) *goja.Object {
+	data := call.Argument(0).ToObject(r)
+	result := &VBArray{}
+	if data != nil {
+		l := []goja.Value{}
+		var i = 0
+		for {
+			v := data.Get(strconv.Itoa(i))
+			if v == nil {
+				break
+			}
+			l = append(l, v)
+			i++
+		}
+		result.data = l
+	}
+	result.ConvertTo(call.This)
+	return call.This
+}
+
+var ModuleJScript = herbplugin.CreateModule("jscript",
+	func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
+		jsp := plugin.(*jsplugin.Plugin).LoadJsPlugin()
+		r := jsp.Runtime
+		r.Set("VBArray", CreateVBArray)
+		r.Set("Enumerator", CreateEnumerator)
+		next(ctx, plugin)
+	},
+	nil,
+	nil,
+)

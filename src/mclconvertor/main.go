@@ -22,6 +22,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	outpout := bytes.SplitN(data, []byte("\n"), 2)
+	if len(outpout) == 2 {
+		data = outpout[1]
+	}
 	reader := bytes.NewReader(data)
 	decoder := xml.NewDecoder(reader)
 	decoder.CharsetReader = charset.NewReaderLabel
