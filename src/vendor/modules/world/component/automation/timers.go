@@ -166,12 +166,12 @@ func (t *Timers) EnableTimerByName(name string, enabled bool) bool {
 	}
 	ti.Locker.Lock()
 	ti.Data.Enabled = enabled
-	ti.Locker.Unlock()
 	if enabled {
 		go ti.Start()
 	} else {
 		go ti.Stop()
 	}
+	ti.Locker.Unlock()
 	return true
 }
 func (t *Timers) EnableTimerGroup(group string, enabled bool) int {
