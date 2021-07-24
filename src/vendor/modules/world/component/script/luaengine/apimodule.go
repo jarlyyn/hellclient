@@ -29,7 +29,10 @@ type luaapi struct {
 
 func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("print", l.NewFunction(a.Print))
+	l.SetGlobal("Milliseconds", l.NewFunction(a.Milliseconds))
+
 	l.SetGlobal("Note", l.NewFunction(a.Note))
+
 	l.SetGlobal("SendImmediate", l.NewFunction(a.SendImmediate))
 	l.SetGlobal("Send", l.NewFunction(a.Send))
 	l.SetGlobal("SendNoEcho", l.NewFunction(a.SendNoEcho))
@@ -143,6 +146,12 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("Broadcast", l.NewFunction(a.Broadcast))
 
 	l.SetGlobal("GetGlobalOption", l.NewFunction(a.GetGlobalOption))
+}
+
+func (a *luaapi) Milliseconds(L *lua.LState) int {
+	ts := time.Now().UnixNano() / int64(time.Millisecond)
+	L.Push(lua.LNumber(ts))
+	return 1
 }
 func (a *luaapi) Print(L *lua.LState) int {
 	t := L.GetTop()
