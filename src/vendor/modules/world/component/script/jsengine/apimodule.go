@@ -460,8 +460,11 @@ func (a *jsapi) GetTimerOption(call goja.FunctionCall, r *goja.Runtime) goja.Val
 			return r.ToValue(result == world.StringYes)
 		case "group", "name", "script", "send", "variable":
 			return r.ToValue(result)
-		case "hour", "minute", "offset_hour", "offset_minute", "offset_second", "second", "send_to", "user":
+		case "hour", "minute", "offset_hour", "offset_minute", "offset_second", "send_to", "user":
 			i, _ := strconv.Atoi(result)
+			return r.ToValue(i)
+		case "second":
+			i, _ := strconv.ParseFloat(result, 64)
 			return r.ToValue(i)
 		}
 	}

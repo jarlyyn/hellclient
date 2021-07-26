@@ -21,6 +21,13 @@ func FromStringInt(v string) int {
 	}
 	return i
 }
+func FromStringFloat(v string) float64 {
+	i, err := strconv.ParseFloat(v, 64)
+	if err != nil {
+		i = 0
+	}
+	return i
+}
 
 const UpdateOK = 0
 const UpdateFailNotFound = 1

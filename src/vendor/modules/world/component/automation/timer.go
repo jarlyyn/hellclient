@@ -62,7 +62,7 @@ func (t *Timer) Info(infotype int) (string, bool) {
 	case 2:
 		return strconv.Itoa(t.Data.Minute), true
 	case 3:
-		return strconv.Itoa(t.Data.Second), true
+		return strconv.FormatFloat(t.Data.Second, 'f', 2, 64), true
 	case 4:
 		return t.Data.Send, true
 	case 5:
@@ -123,7 +123,7 @@ func (t *Timer) Option(name string) (string, bool) {
 	case "script":
 		return t.Data.Script, true
 	case "second":
-		return strconv.Itoa(t.Data.Second), true
+		return strconv.FormatFloat(t.Data.Second, 'f', 2, 64), true
 	case "send":
 		return t.Data.Send, true
 	case "send_to":
@@ -183,7 +183,7 @@ func (t *Timer) SetOption(name string, val string) (bool, bool) {
 		t.Data.Script = val
 		return true, true
 	case "second":
-		t.Data.Second = world.FromStringInt(val)
+		t.Data.Second = world.FromStringFloat(val)
 		return true, true
 	case "send":
 		t.Data.Send = val

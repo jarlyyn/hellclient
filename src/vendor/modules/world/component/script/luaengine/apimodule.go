@@ -440,9 +440,13 @@ func (a *luaapi) GetTimerOption(L *lua.LState) int {
 			L.Push(lua.LBool(result == world.StringYes))
 		case "group", "name", "script", "send", "variable":
 			L.Push(lua.LString(result))
-		case "hour", "minute", "offset_hour", "offset_minute", "offset_second", "second", "send_to", "user":
+		case "hour", "minute", "offset_hour", "offset_minute", "offset_second", "send_to", "user":
 			i, _ := strconv.Atoi(result)
 			L.Push(lua.LNumber(i))
+		case "second":
+			i, _ := strconv.ParseFloat(result, 64)
+			L.Push(lua.LNumber(i))
+
 		default:
 			L.Push(lua.LNil)
 		}

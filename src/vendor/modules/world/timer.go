@@ -21,7 +21,7 @@ type Timer struct {
 	Enabled               bool
 	Hour                  int
 	Minute                int
-	Second                int
+	Second                float64
 	Send                  string
 	Script                string
 	AtTime                bool
@@ -51,13 +51,13 @@ func (t *Timer) PrefixedName() string {
 func (t *Timer) GetDuration() time.Duration {
 	if t.AtTime {
 		now := time.Now()
-		at := time.Date(now.Year(), now.Month(), now.Day(), t.Hour, t.Minute, t.Second, 0, now.Location())
+		at := time.Date(now.Year(), now.Month(), now.Day(), t.Hour, t.Minute, int(t.Second), 0, now.Location())
 		if at.Before(now) {
 			at = at.Add(24 * time.Hour)
 		}
 		return at.Sub(now)
 	}
-	d := time.Duration(t.Hour)*time.Hour + time.Duration(t.Minute)*time.Minute + time.Duration(t.Second)*time.Second
+	d := time.Duration(t.Hour)*time.Hour + time.Duration(t.Minute)*time.Minute + time.Duration(t.Second*float64(time.Second))
 	if d <= 0 {
 		d = time.Second
 	}

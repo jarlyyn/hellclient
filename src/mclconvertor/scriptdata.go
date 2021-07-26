@@ -12,7 +12,7 @@ type Timer struct {
 	Enabled               bool
 	Hour                  int
 	Minute                int
-	Second                int
+	Second                float64
 	Send                  string
 	Script                string
 	AtTime                bool

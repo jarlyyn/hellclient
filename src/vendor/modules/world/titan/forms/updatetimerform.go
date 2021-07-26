@@ -20,7 +20,7 @@ type UpdateTimerForm struct {
 	ID                    string
 	Hour                  int
 	Minute                int
-	Second                int
+	Second                float64
 	Name                  string
 	SendTo                int
 	Send                  string

@@ -73,7 +73,7 @@ func (t *MclTimer) Convert() *Timer {
 	ti.OmitFromOutput = t.OmitFromOutput == "y"
 	ti.AtTime = t.AtTime == "y"
 	ti.Script = t.Script
-	ti.Second = int(MustAtoFloat(t.Second))
+	ti.Second = MustAtoFloat(t.Second)
 	ti.Hour = MustAtoi(t.Hour)
 	ti.Minute = MustAtoi(t.Minute)
 	ti.ActionWhenDisconnectd = t.ActiveClosed == "y"

@@ -234,7 +234,7 @@ func (a *API) DoAfter(seconds float64, sendtext string) int {
 	t.SetByUser(false)
 	t.Enabled = true
 	t.OneShot = true
-	t.Second = int(seconds)
+	t.Second = seconds
 	t.SendTo = world.SendtoWorld
 	t.Send = sendtext
 	t.Temporary = true
@@ -246,7 +246,7 @@ func (a *API) DoAfterNote(seconds float64, sendtext string) int {
 	t.SetByUser(false)
 	t.Enabled = true
 	t.OneShot = true
-	t.Second = int(seconds)
+	t.Second = seconds
 	t.SendTo = world.SendtoOutput
 	t.Send = sendtext
 	t.Temporary = true
@@ -258,7 +258,7 @@ func (a *API) DoAfterSpeedWalk(seconds float64, sendtext string) int {
 	t.SetByUser(false)
 	t.Enabled = true
 	t.OneShot = true
-	t.Second = int(seconds)
+	t.Second = seconds
 	t.SendTo = world.SendtoSpeedwalk
 	t.Send = sendtext
 	t.Temporary = true
@@ -270,7 +270,7 @@ func (a *API) DoAfterSpecial(seconds float64, sendtext string, sendto int) int {
 	t := world.CreateTimer()
 	t.Enabled = true
 	t.OneShot = true
-	t.Second = int(seconds)
+	t.Second = seconds
 	t.SendTo = sendto
 	t.Send = sendtext
 	t.Temporary = true
@@ -283,7 +283,7 @@ func (a *API) AddTimer(timerName string, hour int, minute int, second float64, r
 	t.Name = timerName
 	t.Hour = hour
 	t.Minute = minute
-	t.Second = int(second)
+	t.Second = second
 	t.Send = responseText
 	t.Script = scriptName
 	t.Enabled = flags&world.TimerFlagEnabled != 0

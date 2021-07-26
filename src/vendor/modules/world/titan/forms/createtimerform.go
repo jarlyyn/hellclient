@@ -20,7 +20,7 @@ type CreateTimerForm struct {
 	ByUser                bool
 	Hour                  int
 	Minute                int
-	Second                int
+	Second                float64
 	Name                  string
 	SendTo                int
 	Send                  string
