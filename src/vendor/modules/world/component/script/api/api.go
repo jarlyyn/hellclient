@@ -816,7 +816,7 @@ func (a *API) GetGlobalOption(optionname string) string {
 	case "WordDelimitersDblClick":
 		return "0"
 	case "TimerInterval":
-		return "1"
+		return "0"
 	case "ActivityWindowRefreshType":
 	case "PluginList":
 	case "PluginsDirectory":

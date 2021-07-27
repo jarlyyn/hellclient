@@ -41,6 +41,16 @@ type Mapper struct {
 	fly    []*Path
 }
 
+func (m *Mapper) FlyList() []*Path {
+	m.Locker.Lock()
+	defer m.Locker.Unlock()
+	return append(m.fly)
+}
+func (m *Mapper) SetFlyList(fly []*Path) {
+	m.Locker.Lock()
+	defer m.Locker.Unlock()
+	m.fly = fly
+}
 func (m *Mapper) FlashTags() {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
@@ -77,6 +87,9 @@ func (m *Mapper) GetPath(from string, fly bool, to []string) []*Step {
 	w := m.newWalking()
 	w.from = from
 	w.to = to
+	if !fly {
+		w.fly = nil
+	}
 	return w.Walk()
 }
 func (m *Mapper) newWalking() *Walking {

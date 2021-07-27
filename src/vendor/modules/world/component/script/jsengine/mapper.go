@@ -64,7 +64,7 @@ func (p *JsPath) Convert(r *goja.Runtime) goja.Value {
 	}
 	t.Set("tags", tags)
 	etags := []string{}
-	for k, v := range p.path.Tags {
+	for k, v := range p.path.ExcludeTags {
 		if v {
 			etags = append(etags, k)
 		}
@@ -218,6 +218,32 @@ func (m *JsMapper) GetExits(call goja.FunctionCall, r *goja.Runtime) goja.Value 
 	return r.ToValue(t)
 
 }
+func (m *JsMapper) SetFlyList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	fl := []*goja.Object{}
+	flv := call.Argument(0)
+	if flv == nil {
+		return nil
+	}
+	err := r.ExportTo(call.Argument(0), &fl)
+	if err != nil {
+		panic(errors.New("flylist must be array"))
+	}
+	var result = []*mapper.Path{}
+	for _, v := range fl {
+		p := ConvertJsPath(r, v).path
+		result = append(result, p)
+	}
+	m.mapper.SetFlyList(result)
+	return nil
+}
+func (m *JsMapper) FlyList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	fl := []goja.Value{}
+	result := m.mapper.FlyList()
+	for _, v := range result {
+		fl = append(fl, (&JsPath{path: v}).Convert(r))
+	}
+	return r.ToValue(fl)
+}
 func (m *JsMapper) Convert(r *goja.Runtime) goja.Value {
 	t := r.NewObject()
 	t.Set("reset", m.Reset)
@@ -235,6 +261,8 @@ func (m *JsMapper) Convert(r *goja.Runtime) goja.Value {
 	t.Set("newarea", m.NewArea)
 	t.Set("getexits", m.GetExits)
 	t.Set("flashtags", m.FlashTags)
+	t.Set("flylist", m.FlyList)
+	t.Set("setflylist", m.SetFlyList)
 	return t
 }
 func NewMapperModule(b *bus.Bus) *herbplugin.Module {

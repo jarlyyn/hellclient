@@ -2,6 +2,7 @@ package luaengine
 
 import (
 	"context"
+	"errors"
 	"modules/mapper"
 	"modules/world/bus"
 
@@ -259,6 +260,31 @@ func (m *LuaMapper) GetExits(L *lua.LState) int {
 	return 1
 
 }
+
+func (m *LuaMapper) SetFlyList(L *lua.LState) int {
+	_ = L.Get(1) //self
+	flv := L.ToTable(2)
+	if flv == nil {
+		panic(errors.New("flylist must be array"))
+	}
+	var result = []*mapper.Path{}
+	flv.ForEach(func(key lua.LValue, value lua.LValue) {
+		p := ConvertLuaPath(value).path
+		result = append(result, p)
+	})
+	m.mapper.SetFlyList(result)
+	return 0
+}
+func (m *LuaMapper) FlyList(L *lua.LState) int {
+	fl := L.NewTable()
+	result := m.mapper.FlyList()
+	for _, v := range result {
+		p := &LuaPath{path: v}
+		fl.Append(p.Convert(L))
+	}
+	L.Push(fl)
+	return 1
+}
 func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
 	t := L.NewTable()
 	t.RawSetString("reset", L.NewFunction(m.Reset))
@@ -276,6 +302,9 @@ func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("newarea", L.NewFunction(m.NewArea))
 	t.RawSetString("getexits", L.NewFunction(m.GetExits))
 	t.RawSetString("flashtags", L.NewFunction(m.FlashTags))
+	t.RawSetString("flylist", L.NewFunction(m.FlyList))
+	t.RawSetString("setflylist", L.NewFunction(m.SetFlyList))
+
 	return t
 }
 func NewMapperModule(b *bus.Bus) *herbplugin.Module {

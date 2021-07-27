@@ -34,7 +34,8 @@ func (v *MclVariable) Convert() *RequiredParam {
 }
 
 type MclVariable struct {
-	Name string `xml:"name,attr"`
+	Name  string `xml:"name,attr"`
+	Value string `xml:",innerxml"`
 }
 
 func (vs *MclVariables) Convert() []*RequiredParam {
@@ -182,9 +183,14 @@ func (t *MclTriggers) Convert() []*Trigger {
 }
 
 type MclWorld struct {
-	OnWorldConnect    string `xml:"on_world_connect,attr"`
-	OnWorldDisconnect string `xml:"on_world_disconnect,attr"`
-	ScriptLanguage    string `xml:"script_language,attr"`
+	OnWorldConnect        string `xml:"on_world_connect,attr"`
+	OnWorldDisconnect     string `xml:"on_world_disconnect,attr"`
+	Site                  string `xml:"site,attr"`
+	Port                  string `xml:"port,attr"`
+	Name                  string `xml:"name,attr"`
+	CommandStackCharacter string `xml:"command_stack_character,attr"`
+	ScriptPrefix          string `xml:"script_prefix,attr"`
+	ScriptLanguage        string `xml:"script_language,attr"`
 }
 type Mcl struct {
 	World     *MclWorld     `xml:"world"`
@@ -203,5 +209,19 @@ func (m *Mcl) ToScriptData() *ScriptData {
 	data.Aliases = m.Aliases.Convert()
 	data.Timers = m.Timers.Convert()
 	data.RequiredParams = m.Variables.Convert()
+	return data
+}
+func (m *Mcl) ToWorldData() *WorldData {
+	data := &WorldData{
+		Params: map[string]string{},
+	}
+	data.Host = m.World.Site
+	data.Port = m.World.Port
+	data.ScriptPrefix = m.World.ScriptPrefix
+	data.CommandStackCharacter = m.World.CommandStackCharacter
+	data.Name = m.World.Name
+	for _, v := range m.Variables.Variables {
+		data.Params[v.Name] = v.Value
+	}
 	return data
 }

@@ -569,7 +569,7 @@ func (a *jsapi) SetAliasOption(call goja.FunctionCall, r *goja.Runtime) goja.Val
 	case "send_to", "user", "sequence":
 		value = call.Argument(2).String()
 	}
-	return r.ToValue(a.API.SetTimerOption(name, option, value))
+	return r.ToValue(a.API.SetAliasOption(name, option, value))
 }
 
 func (a *jsapi) AddTrigger(call goja.FunctionCall, r *goja.Runtime) goja.Value {

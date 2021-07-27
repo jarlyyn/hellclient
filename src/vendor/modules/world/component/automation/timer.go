@@ -50,7 +50,8 @@ func (t *Timer) Reset() {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
 	if t.Timer != nil {
-		t.Timer.Reset(t.Data.GetDuration())
+		t.stop()
+		t.start()
 	}
 }
 func (t *Timer) Info(infotype int) (string, bool) {
