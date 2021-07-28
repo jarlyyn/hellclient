@@ -786,17 +786,19 @@ func (a *jsapi) GetLineInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value 
 		return r.ToValue(world.FromStringInt(val))
 	case 3:
 		return r.ToValue(world.FromStringInt(val))
+	case 4:
+		return r.ToValue(world.FromStringBool(val))
+	case 5:
+		return r.ToValue(world.FromStringBool(val))
+	case 6:
+		return r.ToValue(world.FromStringBool(val))
+	case 7:
+		return r.ToValue(world.FromStringBool(val))
 	case 8:
 		return r.ToValue(world.FromStringBool(val))
 	case 9:
-		return r.ToValue(world.FromStringBool(val))
-	case 10:
-		return r.ToValue(world.FromStringBool(val))
-	case 11:
-		return r.ToValue(world.FromStringBool(val))
-	case 14:
 		return r.ToValue(world.FromStringInt(val))
-	case 15:
+	case 11:
 		return r.ToValue(world.FromStringInt(val))
 	}
 	return nil

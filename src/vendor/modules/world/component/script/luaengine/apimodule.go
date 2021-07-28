@@ -806,24 +806,26 @@ func (a *luaapi) getLineInfo(L *lua.LState) int {
 		L.Push(lua.LNil)
 		return 1
 	}
-	switch L.ToInt(1) {
+	switch L.ToInt(2) {
 	case 1:
 		L.Push(lua.LString(val))
 	case 2:
 		L.Push(lua.LNumber(world.FromStringInt(val)))
 	case 3:
 		L.Push(lua.LNumber(world.FromStringInt(val)))
+	case 4:
+		L.Push(lua.LBool(world.FromStringBool(val)))
+	case 5:
+		L.Push(lua.LBool(world.FromStringBool(val)))
+	case 6:
+		L.Push(lua.LBool(world.FromStringBool(val)))
+	case 7:
+		L.Push(lua.LBool(world.FromStringBool(val)))
 	case 8:
 		L.Push(lua.LBool(world.FromStringBool(val)))
 	case 9:
-		L.Push(lua.LBool(world.FromStringBool(val)))
-	case 10:
-		L.Push(lua.LBool(world.FromStringBool(val)))
-	case 11:
-		L.Push(lua.LBool(world.FromStringBool(val)))
-	case 14:
 		L.Push(lua.LNumber(world.FromStringInt(val)))
-	case 15:
+	case 11:
 		L.Push(lua.LNumber(world.FromStringInt(val)))
 	default:
 		L.Push(lua.LNil)
