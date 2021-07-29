@@ -280,6 +280,16 @@ func (t *Trigger) Match(ctx *Context) (*world.MatchResult, error) {
 	}
 	return t.Matcher.Match(line)
 }
+func (t *Trigger) Clone() *Trigger {
+	d := *t.Data
+	return &Trigger{
+		Deleted:  t.Deleted,
+		Data:     &d,
+		Matcher:  t.Matcher,
+		ByUser:   t.ByUser,
+		RawMatch: t.RawMatch,
+	}
+}
 
 type TriggerQueue []*Trigger
 

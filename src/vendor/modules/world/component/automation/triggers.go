@@ -111,7 +111,7 @@ func (a *Triggers) Queue() TriggerQueue {
 	}
 	q := make(TriggerQueue, 0, len(a.All))
 	for _, v := range a.All {
-		q = append(q, v)
+		q = append(q, v.Clone())
 	}
 	sort.Sort(q)
 	a.cachedqueue = q
