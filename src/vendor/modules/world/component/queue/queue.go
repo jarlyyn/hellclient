@@ -52,14 +52,17 @@ func (c *Queue) Append(b *bus.Bus, cmd *world.Command) {
 	c.Locker.Unlock()
 	c.Check(b)
 }
-func (c *Queue) Check(b *bus.Bus) {
-	c.Locker.Lock()
+func (c *Queue) check(b *bus.Bus) {
 	if c.List.Len() != 0 && !c.Pending {
 		e := c.List.Front()
 		c.List.Remove(e)
 		cmd := e.Value.(*world.Command)
 		c.exec(b, cmd)
 	}
+}
+func (c *Queue) Check(b *bus.Bus) {
+	c.Locker.Lock()
+	c.check(b)
 	c.Locker.Unlock()
 }
 func (c *Queue) AfterDelay(b *bus.Bus) {
@@ -71,12 +74,17 @@ func (c *Queue) AfterDelay(b *bus.Bus) {
 }
 func (c *Queue) exec(b *bus.Bus, cmd *world.Command) {
 	delay := b.GetQueueDelay()
-	if delay < 1 {
-		delay = 1
+	if delay < 0 {
+		delay = 0
 	}
-	c.Pending = true
-	c.Timer = time.AfterFunc(time.Duration(delay)*time.Millisecond, func() { c.AfterDelay(b) })
-	b.DoSend(cmd)
+	if delay != 0 {
+		c.Pending = true
+		c.Timer = time.AfterFunc(time.Duration(delay)*time.Millisecond, func() { c.AfterDelay(b) })
+		b.DoSend(cmd)
+	} else {
+		b.DoSend(cmd)
+		c.check(b)
+	}
 }
 
 func New() *Queue {
