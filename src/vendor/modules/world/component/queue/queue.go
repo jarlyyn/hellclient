@@ -20,6 +20,7 @@ func (c *Queue) InstallTo(b *bus.Bus) {
 	b.DoSendToQueue = b.WrapHandleSend(c.Append)
 	b.DoDiscardQueue = c.Flush
 	b.GetQueue = c.ListQueue
+	b.BindQueueDelayUpdatedEvent(c, c.onDelayUpdate)
 }
 func (c *Queue) ListQueue() []*world.Command {
 	c.Locker.RLock()
@@ -48,45 +49,63 @@ func (c *Queue) Flush() int {
 }
 func (c *Queue) Append(b *bus.Bus, cmd *world.Command) {
 	c.Locker.Lock()
-	c.List.PushBack(cmd)
+	cmds := cmd.Split("\n")
+	for _, v := range cmds {
+		c.List.PushBack(v)
+	}
+	if !c.Pending {
+		c.delay(b)
+	}
 	c.Locker.Unlock()
-	c.Check(b)
 }
-func (c *Queue) check(b *bus.Bus) {
-	if c.List.Len() != 0 && !c.Pending {
+
+func (c *Queue) AfterDelay(b *bus.Bus) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.send(b)
+	if c.List.Len() == 0 {
+		c.Pending = false
+		if c.Timer != nil {
+			c.Timer.Stop()
+		}
+		c.Timer = nil
+	}
+}
+func (c *Queue) send(b *bus.Bus) {
+	if c.List.Len() != 0 {
 		e := c.List.Front()
 		c.List.Remove(e)
 		cmd := e.Value.(*world.Command)
-		c.exec(b, cmd)
+		b.DoSend(cmd)
+		if c.List.Len() != 0 {
+			c.delay(b)
+		}
 	}
+
 }
-func (c *Queue) Check(b *bus.Bus) {
-	c.Locker.Lock()
-	c.check(b)
-	c.Locker.Unlock()
-}
-func (c *Queue) AfterDelay(b *bus.Bus) {
-	c.Locker.Lock()
-	c.Pending = false
-	c.Timer = nil
-	c.Locker.Unlock()
-	c.Check(b)
-}
-func (c *Queue) exec(b *bus.Bus, cmd *world.Command) {
+func (c *Queue) delay(b *bus.Bus) {
 	delay := b.GetQueueDelay()
-	if delay < 0 {
-		delay = 0
-	}
-	if delay != 0 {
+	if delay > 0 {
 		c.Pending = true
-		c.Timer = time.AfterFunc(time.Duration(delay)*time.Millisecond, func() { c.AfterDelay(b) })
-		b.DoSend(cmd)
+		c.Timer = time.AfterFunc(time.Duration(delay)*time.Millisecond, func() {
+			c.AfterDelay(b)
+		})
 	} else {
-		b.DoSend(cmd)
-		c.check(b)
+		c.send(b)
 	}
 }
 
+func (c *Queue) onDelayUpdate(b *bus.Bus) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Pending = false
+	if c.Timer != nil {
+		c.Timer.Stop()
+		c.Timer = nil
+	}
+	c.delay(b)
+
+}
 func New() *Queue {
 	q := &Queue{}
 	q.List = list.New()

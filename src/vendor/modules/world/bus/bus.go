@@ -164,6 +164,7 @@ type Bus struct {
 	HistoriesEvent           busevent.Event
 	StatusEvent              busevent.Event
 	LinesEvent               busevent.Event
+	QueueDelayUpdatedEvent   busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -442,7 +443,17 @@ func (b *Bus) BindBroadcastEvent(id interface{}, fn func(b *Bus, bc *world.Broad
 		},
 	)
 }
-
+func (b *Bus) RaiseQueueDelayUpdatedEvent() {
+	b.QueueDelayUpdatedEvent.Raise(nil)
+}
+func (b *Bus) BindQueueDelayUpdatedEvent(id interface{}, fn func(b *Bus)) {
+	b.QueueDelayUpdatedEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b)
+		},
+	)
+}
 func (b *Bus) Reset() {
 	*b = Bus{}
 }

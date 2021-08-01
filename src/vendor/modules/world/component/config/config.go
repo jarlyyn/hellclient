@@ -41,8 +41,9 @@ func (c *Config) GetQueueDelay(bus *bus.Bus) int {
 }
 func (c *Config) SetQueueDelay(bus *bus.Bus, delay int) {
 	c.Locker.Lock()
-	defer c.Locker.Unlock()
 	c.Data.QueueDelay = delay
+	c.Locker.Unlock()
+	bus.RaiseQueueDelayUpdatedEvent()
 }
 func (c *Config) GetPermissions() []string {
 	c.Locker.Lock()

@@ -1,5 +1,9 @@
 package world
 
+import (
+	"strings"
+)
+
 type Command struct {
 	Mesasge     string
 	Echo        bool
@@ -10,6 +14,21 @@ type Command struct {
 	CreatorType string
 }
 
+func (c *Command) Clone() *Command {
+	cmd := *c
+	return &cmd
+}
+
+func (c *Command) Split(sep string) []*Command {
+	var reuslt = []*Command{}
+	msgs := strings.Split(c.Mesasge, sep)
+	for _, v := range msgs {
+		cmd := c.Clone()
+		cmd.Mesasge = v
+		reuslt = append(reuslt, cmd)
+	}
+	return reuslt
+}
 func CreateCommand(message string) *Command {
 	return &Command{
 		Mesasge: message,
