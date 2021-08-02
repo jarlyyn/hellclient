@@ -240,4 +240,7 @@ onButton.createVariable=function(){
       });
 
 }
+onButton.all=function(){
+    vm.allgameVisible=true
+}
 })

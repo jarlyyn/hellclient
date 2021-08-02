@@ -233,11 +233,29 @@ func (a *Automation) DoExecute(b *bus.Bus, message string) {
 	if message == "" {
 		return
 	}
-	if !a.MatchAlias(b, message) {
-		cmd := world.CreateCommand(message)
+	replacers := []string{"\\\\", "\\"}
+	sep := b.GetCommandStackCharacter()
+	if sep != "" {
+		replacers = append(replacers, "\\"+sep, sep, sep, "\n")
+	}
+	m := strings.NewReplacer(replacers...).Replace(message)
+	cmds := strings.Split(m, "\n")
+	for _, v := range cmds {
+		a.executecmd(b, v)
+	}
+}
+func (a *Automation) executecmd(b *bus.Bus, cmd string) {
+	p := b.GetScriptPrefix()
+	if p != "" && strings.HasPrefix(cmd, p) {
+		b.DoRunScript(strings.TrimPrefix(cmd, p))
+		return
+	}
+	if !a.MatchAlias(b, cmd) {
+		cmd := world.CreateCommand(cmd)
 		cmd.History = true
 		b.DoSend(cmd)
 	}
+
 }
 func (a *Automation) AddTimer(timer *world.Timer, replace bool) bool {
 	return a.Timers.AddTimer(timer, replace)

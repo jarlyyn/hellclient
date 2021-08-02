@@ -5,9 +5,9 @@ define(function (require) {
     var handlers=app.handlers;
     var send=app.send;
    
-var     render=_.debounce(vm.RenderLines,80,{
+var render=_.debounce(vm.RenderLines,80,{
     leading:true,
-    maxWait:150,
+    maxWait:350,
 })
 handlers.current=function(data){
     vm.current=data
@@ -17,13 +17,6 @@ handlers.current=function(data){
 handlers.line=function(data){
     var lines=app.linesbuffer
     lines.push(data)
-    lines.sort(function(a, b) {
-        return a.ID>b.ID?1:-1;
-    });      
-    if (lines.length>50){
-        lines.shift()
-    }else{
-    }
     app.linesbuffer=lines
     render()
 }

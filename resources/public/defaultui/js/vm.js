@@ -59,6 +59,7 @@ var data={
     variablesVisible:false,
     paramsinfo:null,
     showRequiredParams:false,
+    allgameVisible:false,
     sendto:{
         0:"游戏",
         1:"命令",
@@ -94,6 +95,12 @@ var vm = new Vue({
                 app.send("change",current.name)
             }
             return false
+        },
+        onGamelistClick:function(row, column, event){
+            if (vm.clients.length){
+                app.send("change",row.ID)
+            }
+            this.allgameVisible=false
         },
         onButton:function(data){
             onButton[data]()
@@ -170,6 +177,14 @@ var vm = new Vue({
             vm.triggerUpdateFormVisible=true
         },
         RenderLines:function(){
+                var lines=app.linesbuffer
+                lines.sort(function(a, b) {
+                    return a.ID>b.ID?1:-1;
+                });      
+                if (lines.length>60){
+                    lines=_.clone(lines.slice(-60))
+                }
+                app.linesbuffer=lines
                 vm.lines=_.clone(app.linesbuffer)
                 setTimeout(function(){
                 body.scrollTo(body.offsetLeft,body.offsetHeight)
@@ -210,7 +225,10 @@ var vm = new Vue({
         onDrop:function(){
             vm.allLinesVisible=false
             vm.cmd=vm.cmd+document.getSelection().toString()
-        }
+        },
+        gamelistRowClassName:function(data){
+            return data.row.Running?"game-list-running":"game-list-not-running"
+        },
     }
 })
     return vm

@@ -3,6 +3,9 @@
         <el-tooltip class="item" effect="light" content="打开游戏" placement="bottom">
         <el-button @click="onButton('notopened')" size="mini" type="primary" icon="el-icon-folder-opened"></el-button>
         </el-tooltip>
+        <el-tooltip class="item" effect="light" content="全部游戏" placement="bottom">
+            <el-button @click="onButton('all')" size="mini" type="success" icon="el-icon-s-order"></el-button>
+            </el-tooltip>
         </el-button-group >
     <span v-if="clients.length && current && info[current]" id="world-intro">当前游戏:{{current}} @ {{info[current].HostPort}} </span> <span v-if="status" id="top-status">[ {{status}} ]</span>
 </div>

@@ -1,0 +1,28 @@
+<el-drawer size="80%"  direction="ltr"  title="游戏列表" :visible.sync="allgameVisible">
+    <div id="game-list" v-if="clients.length">
+        <template>
+            <el-table
+            @row-click="onGamelistClick" 
+            :row-class-name="gamelistRowClassName"
+              :data="clients"
+              style="width: 100%">
+              <el-table-column
+                prop="ID"
+                label="ID">
+              </el-table-column>
+              <el-table-column
+                prop="HostPort"
+                label="地址"
+                >
+            </el-table-column>
+                <el-table-column
+                prop="ScriptID"
+                label="脚本"
+                >
+                
+              </el-table-column>
+            </el-table>
+          </template>
+        
+</div>
+</el-drawer>

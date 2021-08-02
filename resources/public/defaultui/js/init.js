@@ -22,6 +22,7 @@ requirejs.config({
         "html-triggerlist":"/public/defaultui/block/triggerlist.html",
         "html-variablelist":"/public/defaultui/block/variablelist.html",
         "html-script":"/public/defaultui/block/script.html",
+        "html-gamelist":"/public/defaultui/block/gamelist.html",
         "main":"/public/defaultui/js/main"
     },
 });
@@ -61,7 +62,9 @@ define(function (require) {
     var htmlvariablelist=require("text!html-variablelist");
     document.getElementById("variablelist").innerHTML=htmlvariablelist;
 
-    
+    var htmlgamelist=require("text!html-gamelist");
+    document.getElementById("gamelist").innerHTML=htmlgamelist;
+
     
     var htmlalllines=require("text!html-alllines");
 

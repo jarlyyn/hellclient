@@ -29,6 +29,9 @@ func (info ClientInfos) Swap(i, j int) {
 	info[i], info[j] = info[j], info[i]
 }
 
+const DefaultCommandStackCharacter = ";"
+const DefaultScriptPrefix = "/"
+
 type WorldData struct {
 	Host                  string
 	Port                  string
@@ -48,6 +51,8 @@ type WorldData struct {
 
 func NewWorldData() *WorldData {
 	return &WorldData{
-		Params: map[string]string{},
+		Params:                map[string]string{},
+		CommandStackCharacter: DefaultCommandStackCharacter,
+		ScriptPrefix:          DefaultScriptPrefix,
 	}
 }
