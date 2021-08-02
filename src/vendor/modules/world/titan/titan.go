@@ -13,6 +13,7 @@ import (
 	"modules/world/component/converter"
 	"modules/world/component/info"
 	"modules/world/component/log"
+	"modules/world/component/metronome"
 	"modules/world/component/queue"
 	"modules/world/component/script"
 
@@ -53,6 +54,7 @@ func (t *Titan) CreateBus() *bus.Bus {
 		log.New(),
 		queue.New(),
 		script.New(),
+		metronome.New(),
 		t,
 	)
 	b.RaiseInitEvent()

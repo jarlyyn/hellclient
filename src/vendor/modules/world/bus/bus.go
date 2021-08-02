@@ -3,6 +3,7 @@ package bus
 import (
 	"modules/mapper"
 	"modules/world"
+	"time"
 
 	"github.com/herb-go/herbplugin"
 
@@ -151,20 +152,35 @@ type Bus struct {
 	HandleScriptError        func(err error)
 	GetScriptCaller          func() (string, string)
 	DoStopEvaluatingTriggers func()
-	BroadcastEvent           busevent.Event
-	LineEvent                busevent.Event
-	PromptEvent              busevent.Event
-	ConnectedEvent           busevent.Event
-	DisconnectedEvent        busevent.Event
-	ServerCloseEvent         busevent.Event
-	InitEvent                busevent.Event
-	ReadyEvent               busevent.Event
-	BeforeCloseEvent         busevent.Event
-	CloseEvent               busevent.Event
-	HistoriesEvent           busevent.Event
-	StatusEvent              busevent.Event
-	LinesEvent               busevent.Event
-	QueueDelayUpdatedEvent   busevent.Event
+
+	GetMetronomeBeats    func() int
+	SetMetronomeBeats    func(int)
+	DoResetMetronome     func()
+	GetMetronomeSpace    func() int
+	GetMetronomeQueue    func() []string
+	DoDiscardMetronome   func() bool
+	DoFullMetronome      func()
+	DoFullTickMetronome  func()
+	SetMetronomeInterval func(time.Duration)
+	GetMetronomeInterval func() time.Duration
+	SetMetronomeTick     func(time.Duration)
+	GetMetronomeTick     func() time.Duration
+	DoPushMetronome      func(cmds []*world.Command, grouped bool)
+
+	BroadcastEvent         busevent.Event
+	LineEvent              busevent.Event
+	PromptEvent            busevent.Event
+	ConnectedEvent         busevent.Event
+	DisconnectedEvent      busevent.Event
+	ServerCloseEvent       busevent.Event
+	InitEvent              busevent.Event
+	ReadyEvent             busevent.Event
+	BeforeCloseEvent       busevent.Event
+	CloseEvent             busevent.Event
+	HistoriesEvent         busevent.Event
+	StatusEvent            busevent.Event
+	LinesEvent             busevent.Event
+	QueueDelayUpdatedEvent busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -232,6 +248,11 @@ func (b *Bus) WrapGetScriptPluginOptions(f func(bus *Bus) herbplugin.Options) fu
 		return f(b)
 	}
 }
+func (b *Bus) WrapSetDuration(f func(bus *Bus, d time.Duration)) func(time.Duration) {
+	return func(d time.Duration) {
+		f(b, d)
+	}
+}
 func (b *Bus) WrapHandleSend(f func(bus *Bus, cmd *world.Command)) func(cmd *world.Command) {
 	return func(cmd *world.Command) {
 		f(b, cmd)
@@ -290,6 +311,11 @@ func (b *Bus) WrapHandleBroadcast(f func(b *Bus, bc *world.Broadcast)) func(bc *
 func (b *Bus) WrapHandleStringForBool(f func(bus *Bus, str string) bool) func(str string) bool {
 	return func(str string) bool {
 		return f(b, str)
+	}
+}
+func (b *Bus) WrapHandlePushGroupedCommands(f func(b *Bus, cmds []*world.Command, grouped bool)) func(cmds []*world.Command, grouped bool) {
+	return func(cmds []*world.Command, grouped bool) {
+		f(b, cmds, grouped)
 	}
 }
 func (b *Bus) RaiseLineEvent(line *world.Line) {

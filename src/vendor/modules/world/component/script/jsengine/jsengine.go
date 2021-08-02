@@ -25,6 +25,7 @@ func newJsInitializer(b *bus.Bus) *jsplugin.Initializer {
 		ModuleEval,
 		ModuleJScript,
 		NewFileSystemObjectModule(b),
+		NewMetronomeModule(b),
 	}
 	return i
 }
