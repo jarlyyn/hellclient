@@ -165,6 +165,9 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 		}
 		if v.Data.Send != "" {
 			rl := r.ReplaceList(v.Data.Name)
+			if v.Data.ExpandVariables {
+				rl = append(rl, BuildParamsReplacer(b)...)
+			}
 			send = strings.NewReplacer(rl...).Replace(data.Send)
 		}
 		v.Locker.Unlock()
