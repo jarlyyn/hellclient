@@ -35,6 +35,10 @@
        prop="Desc"
        label="描述"
        >
+       <template slot-scope="scope">
+        <span>{{scope.row.Desc}}</span>
+        <span :class="paramsinfo.ParamComments[scope.row.Name]?'param-comment':''"><i class="el-icon-s-comment" @click="onUpdateParamComment(scope.row)"></i></span>
+   </template>
      </el-table-column>
 
     <el-table-column

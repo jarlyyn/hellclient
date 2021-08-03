@@ -41,6 +41,7 @@ type WorldData struct {
 	ScriptPrefix          string
 	QueueDelay            int
 	Params                map[string]string
+	ParamComments         map[string]string
 	Permissions           []string
 	ScriptID              string
 	Trusted               herbplugin.Trusted
@@ -52,6 +53,7 @@ type WorldData struct {
 func NewWorldData() *WorldData {
 	return &WorldData{
 		Params:                map[string]string{},
+		ParamComments:         map[string]string{},
 		CommandStackCharacter: DefaultCommandStackCharacter,
 		ScriptPrefix:          DefaultScriptPrefix,
 	}

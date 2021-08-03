@@ -33,6 +33,9 @@ type Bus struct {
 	GetParams                func() map[string]string
 	SetParam                 func(string, string)
 	DeleteParam              func(string)
+	GetParamComment          func(string) string
+	GetParamComments         func() map[string]string
+	SetParamComment          func(string, string)
 	GetCharset               func() string
 	SetCharset               func(string)
 	GetReadyAt               func() int64

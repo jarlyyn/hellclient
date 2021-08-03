@@ -46,6 +46,8 @@ const MsgTypeParamsinfo = "paramsinfo"
 const MsgTypeParamUpdated = "paramupdated"
 const MsgTypeParamDeleted = "paramdeleted"
 
+const MsgTypeParamCommentUpdated = "paramcommentupdated"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -168,7 +170,9 @@ func PublishParamsinfo(p Publisher, world string, info *world.ParamsInfo) {
 func PublishParamUpdated(p Publisher, world string, name string) {
 	p.Publish(New(MsgTypeParamUpdated, world, name))
 }
-
+func PublishParamCommentUpdated(p Publisher, world string, name string) {
+	p.Publish(New(MsgTypeParamCommentUpdated, world, name))
+}
 func PublishParamDeleted(p Publisher, world string, name string) {
 	p.Publish(New(MsgTypeParamDeleted, world, name))
 }

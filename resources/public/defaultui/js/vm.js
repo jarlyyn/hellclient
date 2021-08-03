@@ -222,6 +222,19 @@ var vm = new Vue({
               }).catch(() => {
               });
         },
+        onUpdateParamComment:function(row){
+            vm.$prompt("备注", '备注变量'+row.Name+"["+row.Desc+"]", {
+                confirmButtonText: '备注',
+                cancelButtonText: '取消',
+                customClass:"update-comment",
+                inputType:"textarea",
+                inputValue:vm.paramsinfo.ParamComments[row.Name],
+              }).then(({ value }) => {
+                  app.send("updateParamComment",[vm.current ,row.Name,value])
+              }).catch(() => {
+              });
+        },
+
         onDrop:function(){
             vm.allLinesVisible=false
             vm.cmd=vm.cmd+document.getSelection().toString()

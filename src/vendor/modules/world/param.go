@@ -12,5 +12,6 @@ func NewRequiredParam() *RequiredParam {
 
 type ParamsInfo struct {
 	Params         map[string]string
+	ParamComments  map[string]string
 	RequiredParams []*RequiredParam
 }

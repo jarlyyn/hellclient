@@ -622,6 +622,7 @@ func (t *Titan) HandleCmdParams(id string) {
 	}
 	i := &world.ParamsInfo{}
 	i.Params = t.Worlds[id].GetParams()
+	i.ParamComments = t.Worlds[id].GetParamComments()
 	i.RequiredParams = t.Worlds[id].GetRequiredParams()
 	msg.PublishParamsinfo(t, id, i)
 
@@ -648,6 +649,18 @@ func (t *Titan) HandleCmdUpdateParam(id string, name string, value string) {
 	go t.HandleCmdParams(id)
 
 }
+func (t *Titan) HandleCmdUpdateParamComment(id string, name string, value string) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	if t.Worlds[id] == nil {
+		return
+	}
+	t.Worlds[id].SetParamComment(name, value)
+	msg.PublishParamUpdated(t, id, name)
+	go t.HandleCmdParams(id)
+
+}
+
 func (t *Titan) NewScript(id string, scripttype string) error {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()

@@ -106,6 +106,22 @@ func (c *Config) GetParams() map[string]string {
 	return c.Data.Params
 }
 
+func (c *Config) GetParamComment(key string) string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.ParamComments[key]
+}
+func (c *Config) SetParamComment(key string, value string) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.ParamComments[key] = value
+}
+func (c *Config) GetParamComments() map[string]string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.ParamComments
+}
+
 func (c *Config) GetScriptID() string {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
@@ -205,6 +221,9 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetParam = c.SetParam
 	b.GetParam = c.GetParam
 	b.GetParams = c.GetParams
+	b.SetParamComment = c.SetParamComment
+	b.GetParamComment = c.GetParamComment
+	b.GetParamComments = c.GetParamComments
 	b.DeleteParam = c.DeleteParam
 	b.GetReadyAt = c.GetReadyAt
 	b.GetTrusted = c.GetTrusted

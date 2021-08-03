@@ -309,6 +309,9 @@ func (s *Script) Run(b *bus.Bus, cmd string) {
 func (s *Script) GetRequiredParams() []*world.RequiredParam {
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
+	if s.Data == nil {
+		return nil
+	}
 	return append([]*world.RequiredParam{}, s.Data.RequiredParams...)
 }
 

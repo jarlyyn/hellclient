@@ -322,6 +322,18 @@ func (p *Prophet) onCmdUpdateParam(conn connections.OutputConnection, cmd comman
 	p.Titan.HandleCmdUpdateParam(msg[0], msg[1], msg[2])
 	return nil
 }
+func (p *Prophet) onCmdUpdateParamComment(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 3 {
+		return nil
+	}
+	p.Titan.HandleCmdUpdateParamComment(msg[0], msg[1], msg[2])
+	return nil
+}
+
 func (p *Prophet) onCmdDeleteParam(conn connections.OutputConnection, cmd command.Command) error {
 	var msg []string
 	if json.Unmarshal(cmd.Data(), &msg) != nil {
@@ -381,6 +393,8 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("params", p.onCmdParams)
 	handlers.Register("updateParam", p.onCmdUpdateParam)
 	handlers.Register("deleteParam", p.onCmdDeleteParam)
+
+	handlers.Register("updateParamComment", p.onCmdUpdateParamComment)
 
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)
