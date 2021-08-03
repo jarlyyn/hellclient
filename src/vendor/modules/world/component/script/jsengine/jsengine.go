@@ -167,6 +167,18 @@ func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Unlock()
 	go e.Call(b, bc.Message, bc.Global, bc.Channel, bc.ID)
 }
+
+func (e *JsEngine) OnCallback(b *bus.Bus, script string, name string, id string, data string) {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil {
+		e.Locker.Unlock()
+		return
+	}
+	e.Locker.Unlock()
+	go e.Call(b, script, name, id, data)
+
+}
+
 func (e *JsEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()
@@ -181,7 +193,12 @@ func (e *JsEngine) Call(b *bus.Bus, source string, args ...interface{}) {
 	if r == nil {
 		return
 	}
-	fn, ok := goja.AssertFunction(r.Get(source))
+	s, err := r.RunString(source)
+	if err != nil {
+		b.HandleScriptError(err)
+		return
+	}
+	fn, ok := goja.AssertFunction(s)
 	if !ok {
 		b.HandleScriptError(errors.New(fmt.Sprintf("js function %s not found", source)))
 		return

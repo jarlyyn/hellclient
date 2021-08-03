@@ -174,6 +174,18 @@ func (e *LuaEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Unlock()
 	go e.Call(b, fn, lua.LString(bc.Message), lua.LBool(bc.Global), lua.LString(bc.Channel), lua.LString(bc.ID))
 }
+func (e *LuaEngine) OnCallback(b *bus.Bus, script string, name string, id string, data string) {
+	e.Locker.Lock()
+	if e.Plugin.LState == nil {
+		e.Locker.Unlock()
+		return
+	}
+	fn := e.Plugin.LState.GetGlobal(script)
+	e.Locker.Unlock()
+	go e.Call(b, fn, lua.LString(script), lua.LString(name), lua.LString(id), lua.LString(data))
+
+}
+
 func (e *LuaEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()
