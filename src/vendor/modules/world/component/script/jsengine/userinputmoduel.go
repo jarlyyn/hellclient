@@ -45,19 +45,19 @@ func (u *Userinput) Prompt(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	ui := userinput.SendPrompt(u.bus, call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String(), call.Argument(3).String())
 	return r.ToValue(ui.ID)
 }
-func (u *Userinput) MessageBox(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	ui := userinput.SendMessageBox(u.bus, call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String())
+func (u *Userinput) Confirm(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	ui := userinput.SendConfirm(u.bus, call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String())
 	return r.ToValue(ui.ID)
 }
 func (u *Userinput) Alert(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	ui := userinput.SendMessageBox(u.bus, call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String())
+	ui := userinput.SendAlert(u.bus, call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String())
 	return r.ToValue(ui.ID)
 }
 
 func (u *Userinput) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("prompt", u.Prompt)
-	obj.Set("mesagebox", u.MessageBox)
+	obj.Set("confirm", u.Confirm)
 	obj.Set("alert", u.Alert)
 	obj.Set("newlist", u.NewList)
 	return obj

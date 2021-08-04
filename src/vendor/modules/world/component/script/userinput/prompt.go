@@ -21,12 +21,12 @@ func CreateUserInput(name string, script string, data interface{}) *Userinput {
 		Data:   data,
 	}
 }
-func SendMessageBox(b *bus.Bus, script string, title string, intro string) *Userinput {
+func SendConfirm(b *bus.Bus, script string, title string, intro string) *Userinput {
 	data := map[string]interface{}{
 		"Title": title,
 		"Intro": intro,
 	}
-	ui := CreateUserInput(NameMessageBox, script, data)
+	ui := CreateUserInput(NameConfirm, script, data)
 	b.RaiseScriptMessageEvent(ui)
 	return ui
 }
