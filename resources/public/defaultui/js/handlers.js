@@ -162,5 +162,11 @@ handlers.paramsinfo=function(data){
     });      
      vm.paramsinfo=data
 }
+handlers.scriptMessage=function(data){
+    var h=app.onScriptMessage[data.Name]
+    if (h){
+        h(data)
+    }
+}
 
 })

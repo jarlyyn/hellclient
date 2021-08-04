@@ -48,6 +48,8 @@ const MsgTypeParamDeleted = "paramdeleted"
 
 const MsgTypeParamCommentUpdated = "paramcommentupdated"
 
+const MsgTypeScriptMessage = "scriptMessage"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -175,4 +177,8 @@ func PublishParamCommentUpdated(p Publisher, world string, name string) {
 }
 func PublishParamDeleted(p Publisher, world string, name string) {
 	p.Publish(New(MsgTypeParamDeleted, world, name))
+}
+
+func PublishScriptMessage(p Publisher, world string, msg interface{}) {
+	p.Publish(New(MsgTypeScriptMessage, world, msg))
 }

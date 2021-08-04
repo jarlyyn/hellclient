@@ -2,6 +2,7 @@ package prophet
 
 import (
 	"encoding/json"
+	"modules/world"
 	"modules/world/titan/forms"
 
 	"github.com/herb-go/connections"
@@ -345,6 +346,29 @@ func (p *Prophet) onCmdDeleteParam(conn connections.OutputConnection, cmd comman
 	p.Titan.HandleCmdDeleteParam(msg[0], msg[1])
 	return nil
 }
+func (p *Prophet) onCmdCallback(conn connections.OutputConnection, cmd command.Command) error {
+	var msg = []string{}
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	if len(msg) < 2 {
+		return nil
+	}
+	cb := &world.Callback{}
+	if json.Unmarshal([]byte(msg[1]), &cb) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdCallback(msg[0], cb)
+	return nil
+}
+func (p *Prophet) onCmdAssist(conn connections.OutputConnection, cmd command.Command) error {
+	var msg = ""
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdAssist(msg)
+	return nil
+}
 
 // func (p *Prophet) onCmdSaveTrigger(conn connections.OutputConnection, cmd command.Command) error {
 // 	forms.SaveTrigger(CurrentGameID(), cmd.Data())
@@ -395,6 +419,8 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("deleteParam", p.onCmdDeleteParam)
 
 	handlers.Register("updateParamComment", p.onCmdUpdateParamComment)
+	handlers.Register("callback", p.onCmdCallback)
+	handlers.Register("assist", p.onCmdAssist)
 
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)

@@ -38,6 +38,8 @@
 <div id="updatetriggerform"></div>
 <div id="aliaslist"></div>
 <div id="variablelist"></div>
+<div id="userinputlist"></div>
+
 
 <div id="notopened"></div>
 <div id="gamelist"></div>
@@ -50,6 +52,11 @@
                 </div>
         <div  id="user-input" v-on:keyup.13="send">
         <el-input size="small" placeholder="请输入命令" v-model="cmd" >
+            <template slot="prepend">    <el-tooltip  effect="light" content="助理" placement="top">
+                <i class="el-icon-user" @click="assist"></i>
+                </el-tooltip>
+            </template>
+
                 <template slot="append">
                     <el-dropdown size="mini" @command="onHistory">
                     <span class="el-dropdown-link"><i class="el-icon-more"></i></span>

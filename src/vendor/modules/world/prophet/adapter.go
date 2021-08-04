@@ -43,5 +43,5 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("paramupdated", p.newRoomAdapter("paramupdated"))
 	adapter.Register("paramdeleted", p.newRoomAdapter("paramdeleted"))
 	adapter.Register("paramcommentupdated", p.newRoomAdapter("paramcommentupdated"))
-
+	adapter.Register("scriptMessage", p.newRoomAdapter("scriptMessage"))
 }

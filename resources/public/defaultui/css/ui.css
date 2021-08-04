@@ -23,6 +23,7 @@ ul#lines{padding-bottom: 40px;margin-bottom:-32px;padding-top: 110px;padding-lef
 #triggers .el-table .cell{color:#333333}
 .el-form .el-switch{height:40px;line-height: 40px}
 #world{color:#303133}
+#userinput-list-body{color:#303133;padding:0 2em}
 .el-message-box.update-required .el-message-box__content{
     white-space: pre-line;
 }

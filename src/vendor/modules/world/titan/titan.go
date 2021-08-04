@@ -112,6 +112,10 @@ func (t *Titan) onStatus(b *bus.Bus, status string) {
 func (t *Titan) onHistory(b *bus.Bus, h []string) {
 	msg.PublishHistory(t, b.ID, h)
 }
+func (t *Titan) onScriptMessage(b *bus.Bus, data interface{}) {
+	msg.PublishScriptMessage(t, b.ID, data)
+}
+
 func (t *Titan) onLines(b *bus.Bus, lines []*world.Line) {
 	msg.PublishLines(t, b.ID, lines)
 }
@@ -249,6 +253,19 @@ func (t *Titan) HandleCmdReloadScript(id string) {
 		w.HandleCmdError(w.DoReloadScript())
 	}
 }
+func (t *Titan) HandleCmdCallback(id string, cb *world.Callback) {
+	w := t.World(id)
+	if w != nil {
+		go w.DoSendCallbackToScript(cb)
+	}
+}
+func (t *Titan) HandleCmdAssist(id string) {
+	w := t.World(id)
+	if w != nil {
+		go w.DoAssist()
+	}
+}
+
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()
@@ -271,6 +288,7 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindHistoriesEvent(t, t.onHistory)
 	b.BindLinesEvent(t, t.onLines)
 	b.BindBroadcastEvent(t, t.onBroadcast)
+	b.BindScriptMessageEvent(t, t.onScriptMessage)
 	b.GetScriptPath = t.GetScriptPath
 	b.GetLogsPath = t.GetLogsPath
 }

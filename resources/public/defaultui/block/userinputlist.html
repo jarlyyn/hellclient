@@ -1,0 +1,37 @@
+<el-drawer v-if="userinputList"
+  :title="userinputList.Data.Title"
+  :visible.sync="userinputListVisible"
+  size="80%"
+  direction="btt"
+  :close="onUserinputListClose"
+  >
+  <div id="userinput-list-body">
+  <span>{{userinputList.Data.Intro}}</span>
+  <el-table
+  :data="userinputList.Data.Items.filter(data => !userinputListSearch || data.Value.toLowerCase().includes(userinputListSearch.toLowerCase()))"
+  style="width: 100%">
+  <el-table-column
+    label=""
+    prop="Value">
+  </el-table-column>
+  <el-table-column
+    align="right">
+    <template slot="header" slot-scope="scope">
+      <el-input
+        v-if="userinputList.Data.WithFilter"
+        v-model="userinputListSearch"
+        size="mini"
+        placeholder="输入关键字搜索"/>
+    </template>
+    <template slot-scope="scope">
+      <el-button
+        size="mini" type="success"
+        @click="handleSelectUserinputList(scope.$index, scope.row)">选择</el-button>
+    </template>
+  </el-table-column>
+</el-table>
+</template>
+
+
+  </div>
+</el-drawer>

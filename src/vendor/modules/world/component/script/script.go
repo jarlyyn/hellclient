@@ -279,6 +279,31 @@ func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigge
 		e.OnTrigger(b, line, trigger, result)
 	}
 }
+func (s *Script) Assist(b *bus.Bus) {
+	s.Locker.Lock()
+	onAssist := s.Data.OnAssist
+	s.Locker.Unlock()
+	if onAssist == "" {
+		return
+	}
+	e := s.getEngine()
+	if e != nil {
+		s.SetCreator("onAssist", "")
+		e.OnAssist(b, onAssist)
+	}
+}
+
+func (s *Script) SendCallback(b *bus.Bus, cb *world.Callback) {
+	e := s.getEngine()
+	if e != nil {
+		if cb.Script == "" {
+			return
+		}
+		s.SetCreator("callback", cb.Script)
+		e.OnCallback(b, cb)
+	}
+}
+
 func (s *Script) verifyChannel(channel string) bool {
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
@@ -333,6 +358,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.DoSendAliasToScript = b.WrapHandleAlias(s.SendAlias)
 	b.DoSendTriggerToScript = b.WrapHandleTrigger(s.SendTrigger)
 	b.DoSendBroadcastToScript = b.WrapHandleBroadcast(s.SendBroadcast)
+	b.DoSendCallbackToScript = b.WrapHandleCallback(s.SendCallback)
 	b.DoRunScript = b.WrapHandleString(s.Run)
 	b.GetStatus = s.GetStatus
 	b.SetStatus = b.WrapHandleString(s.SetStatus)
@@ -342,6 +368,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetRequiredParams = s.GetRequiredParams
 	b.GetScriptType = s.GetScriptType
 	b.GetScriptCaller = s.CreatorAndType
+	b.DoAssist = b.Wrap(s.Assist)
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)

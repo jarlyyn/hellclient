@@ -31,6 +31,7 @@ type ScriptData struct {
 	OnConnect      string
 	OnDisconnect   string
 	OnBroadcast    string
+	OnAssist       string
 	Channel        string
 	Triggers       []*Trigger
 	Timers         []*Timer
@@ -50,6 +51,7 @@ func (d *ScriptData) ConvertInfo(id string) *ScriptInfo {
 		info.OnClose = d.OnClose
 		info.OnConnect = d.OnConnect
 		info.OnDisconnect = d.OnDisconnect
+		info.OnAssist = d.OnAssist
 	}
 	return info
 }
@@ -66,4 +68,5 @@ type ScriptInfo struct {
 	OnClose      string
 	OnConnect    string
 	OnDisconnect string
+	OnAssist     string
 }

@@ -174,7 +174,18 @@ func (e *LuaEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Unlock()
 	go e.Call(b, fn, lua.LString(bc.Message), lua.LBool(bc.Global), lua.LString(bc.Channel), lua.LString(bc.ID))
 }
-func (e *LuaEngine) OnCallback(b *bus.Bus, script string, name string, id string, data string) {
+func (e *LuaEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
+	e.Locker.Lock()
+	if e.Plugin.LState == nil {
+		e.Locker.Unlock()
+		return
+	}
+	fn := e.Plugin.LState.GetGlobal(cb.Script)
+	e.Locker.Unlock()
+	go e.Call(b, fn, lua.LString(cb.Script), lua.LString(cb.Name), lua.LString(cb.ID), lua.LNumber(cb.Code), lua.LString(cb.Data))
+
+}
+func (e *LuaEngine) OnAssist(b *bus.Bus, script string) {
 	e.Locker.Lock()
 	if e.Plugin.LState == nil {
 		e.Locker.Unlock()
@@ -182,10 +193,8 @@ func (e *LuaEngine) OnCallback(b *bus.Bus, script string, name string, id string
 	}
 	fn := e.Plugin.LState.GetGlobal(script)
 	e.Locker.Unlock()
-	go e.Call(b, fn, lua.LString(script), lua.LString(name), lua.LString(id), lua.LString(data))
-
+	go e.Call(b, fn)
 }
-
 func (e *LuaEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()

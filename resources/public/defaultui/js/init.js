@@ -13,7 +13,7 @@ requirejs.config({
         "html-updatealiasform":"/public/defaultui/block/updatealiasform.html",
         "html-createtriggerform":"/public/defaultui/block/createtriggerform.html",
         "html-updatetriggerform":"/public/defaultui/block/updatetriggerform.html",
-        
+        "html-userinputlist":"/public/defaultui/block/userinputlist.html",
         "html-alllines":"/public/defaultui/block/alllines.html",
         "html-notopened":"/public/defaultui/block/notopened.html",
         "html-scriptlist":"/public/defaultui/block/scriptlist.html",
@@ -64,8 +64,9 @@ define(function (require) {
 
     var htmlgamelist=require("text!html-gamelist");
     document.getElementById("gamelist").innerHTML=htmlgamelist;
+    var htmluserinputlist=require("text!html-userinputlist");
+    document.getElementById("userinputlist").innerHTML=htmluserinputlist;
 
-    
     var htmlalllines=require("text!html-alllines");
 
     require(["main"],function(main){

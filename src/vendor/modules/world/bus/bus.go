@@ -133,13 +133,15 @@ type Bus struct {
 	DoUpdateTrigger           func(*world.Trigger) int
 	DoSendTriggerToScript     func(line *world.Line, trigger *world.Trigger, result *world.MatchResult)
 
-	DoMultiLinesAppend    func(string)
-	DoMultiLinesFlush     func()
-	DoMultiLinesLast      func(int) []string
-	GetLinesInBufferCount func() int
-	GetRecentLines        func(count int) []*world.Line
-	GetLine               func(idx int) *world.Line
-	GetMapper             func() *mapper.Mapper
+	DoSendCallbackToScript func(cb *world.Callback)
+	DoAssist               func()
+	DoMultiLinesAppend     func(string)
+	DoMultiLinesFlush      func()
+	DoMultiLinesLast       func(int) []string
+	GetLinesInBufferCount  func() int
+	GetRecentLines         func(count int) []*world.Line
+	GetLine                func(idx int) *world.Line
+	GetMapper              func() *mapper.Mapper
 
 	AddHistory               func(string)
 	GetHistories             func() []string
@@ -184,6 +186,7 @@ type Bus struct {
 	StatusEvent            busevent.Event
 	LinesEvent             busevent.Event
 	QueueDelayUpdatedEvent busevent.Event
+	ScriptMessageEvent     busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -309,6 +312,11 @@ func (b *Bus) WrapHandleTrigger(f func(b *Bus, line *world.Line, trigger *world.
 func (b *Bus) WrapHandleBroadcast(f func(b *Bus, bc *world.Broadcast)) func(bc *world.Broadcast) {
 	return func(bc *world.Broadcast) {
 		f(b, bc)
+	}
+}
+func (b *Bus) WrapHandleCallback(f func(b *Bus, bc *world.Callback)) func(bc *world.Callback) {
+	return func(cb *world.Callback) {
+		f(b, cb)
 	}
 }
 func (b *Bus) WrapHandleStringForBool(f func(bus *Bus, str string) bool) func(str string) bool {
@@ -480,6 +488,18 @@ func (b *Bus) BindQueueDelayUpdatedEvent(id interface{}, fn func(b *Bus)) {
 		id,
 		func(data interface{}) {
 			fn(b)
+		},
+	)
+}
+
+func (b *Bus) RaiseScriptMessageEvent(msg interface{}) {
+	b.ScriptMessageEvent.Raise(msg)
+}
+func (b *Bus) BindScriptMessageEvent(id interface{}, fn func(b *Bus, msg interface{})) {
+	b.ScriptMessageEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b, data)
 		},
 	)
 }

@@ -26,6 +26,7 @@ func newJsInitializer(b *bus.Bus) *jsplugin.Initializer {
 		ModuleJScript,
 		NewFileSystemObjectModule(b),
 		NewMetronomeModule(b),
+		NewUserinputModule(b),
 	}
 	return i
 }
@@ -168,17 +169,25 @@ func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	go e.Call(b, bc.Message, bc.Global, bc.Channel, bc.ID)
 }
 
-func (e *JsEngine) OnCallback(b *bus.Bus, script string, name string, id string, data string) {
+func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
 	e.Locker.Lock()
 	if e.Plugin.Runtime == nil {
 		e.Locker.Unlock()
 		return
 	}
 	e.Locker.Unlock()
-	go e.Call(b, script, name, id, data)
+	go e.Call(b, cb.Script, cb.Name, cb.ID, cb.Code, cb.Data)
 
 }
-
+func (e *JsEngine) OnAssist(b *bus.Bus, script string) {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil {
+		e.Locker.Unlock()
+		return
+	}
+	e.Locker.Unlock()
+	go e.Call(b, script)
+}
 func (e *JsEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()

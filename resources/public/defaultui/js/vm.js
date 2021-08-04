@@ -60,6 +60,9 @@ var data={
     paramsinfo:null,
     showRequiredParams:false,
     allgameVisible:false,
+    userinputList:null,
+    userinputListVisible:false,
+    userinputListSearch:"",
     sendto:{
         0:"游戏",
         1:"命令",
@@ -234,7 +237,16 @@ var vm = new Vue({
               }).catch(() => {
               });
         },
-
+        callback:function(msg,code,data){
+            var cb={
+                Name:msg.Name,
+                Script:msg.Script,
+                ID:msg.ID,
+                Code:code,
+                data:data,
+            }
+            app.send("callback",[this.current,JSON.stringify(cb)])
+        },
         onDrop:function(){
             vm.allLinesVisible=false
             vm.cmd=vm.cmd+document.getSelection().toString()
@@ -242,6 +254,21 @@ var vm = new Vue({
         gamelistRowClassName:function(data){
             return data.row.Running?"game-list-running":"game-list-not-running"
         },
+        handleSelectUserinputList:function(index,row){
+            this.callback(this.userinputList,0,row.Key)
+            vm.userinputList=null
+            vm.userinputListVisible=false
+            vm.userinputListSearch=""    
+        },
+       onUserinputListClose:function(){
+            this.callback(this.userinputList,-1,"")
+            vm.userinputList=null
+            vm.userinputListVisible=false
+            vm.userinputListSearch=""    
+        },
+        assist:function(){
+            app.send("assist",this.current)
+        }
     }
 })
     return vm

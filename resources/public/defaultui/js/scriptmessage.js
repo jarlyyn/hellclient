@@ -1,0 +1,31 @@
+define(function (require) {
+    var app=require("/public/defaultui/js/app.js")
+    var vm=require("/public/defaultui/js/vm.js")
+    var _=require("lodash")
+    var handlers=app.onScriptMessage;
+    var send=app.send;
+    handlers["userinput.prompt"]=function(data){
+        var msgbody=data.Data
+        if (msgbody==undefined){
+            msgbody={}
+        }
+        vm.$prompt(msgbody.Intro,msgbody.Title, {
+            confirmButtonText: '提交',
+            cancelButtonText: '取消',
+            inputValue:msgbody.Value,
+            onClose:function(){
+                vm.callback(data,-1,"")
+            }
+          }).then(({ value }) => {
+            vm.callback(data,0,value)
+          }).catch(() => {
+          });
+    }
+    handlers["userinput.list"]=function(data){
+        vm.userinputList=data
+        vm.userinputListVisible=true
+        vm.userinputListSearch=""
+    
+    }
+    
+})
