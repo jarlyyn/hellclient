@@ -109,6 +109,9 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "SetVariable", a.SetVariable)
 	AppendToWorld(jp.Runtime, world, "DeleteVariable", a.DeleteVariable)
 	AppendToWorld(jp.Runtime, world, "GetVariableList", a.GetVariableList)
+	AppendToWorld(jp.Runtime, world, "GetVariableComment", a.GetVariableComment)
+	AppendToWorld(jp.Runtime, world, "SetVariableComment", a.SetVariableComment)
+
 	AppendToWorld(jp.Runtime, world, "Version", a.Version)
 	AppendToWorld(jp.Runtime, world, "Hash", a.Hash)
 	AppendToWorld(jp.Runtime, world, "Base64Encode", a.Base64Encode)
@@ -268,7 +271,15 @@ func (a *jsapi) SetVariable(call goja.FunctionCall, r *goja.Runtime) goja.Value 
 func (a *jsapi) GetVariableList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	list := a.API.GetVariableList()
 	return r.ToValue(list)
-
+}
+func (a *jsapi) GetVariableComment(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	val := a.API.GetVariableComment(call.Argument(0).String())
+	return r.ToValue(val)
+}
+func (a *jsapi) SetVariableComment(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	value := call.Argument(1).String()
+	return r.ToValue(a.API.SetVariableComment(name, value))
 }
 func (a *jsapi) Version(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.Version())

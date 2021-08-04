@@ -40,6 +40,8 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("SetVariable", l.NewFunction(a.SetVariable))
 	l.SetGlobal("DeleteVariable", l.NewFunction(a.DeleteVariable))
 	l.SetGlobal("GetVariableList", l.NewFunction(a.GetVariableList))
+	l.SetGlobal("GetVariableComment", l.NewFunction(a.GetVariable))
+	l.SetGlobal("SetVariableComment", l.NewFunction(a.SetVariable))
 	l.SetGlobal("Version", l.NewFunction(a.Version))
 	l.SetGlobal("Hash", l.NewFunction(a.Hash))
 	l.SetGlobal("Base64Encode", l.NewFunction(a.Base64Encode))
@@ -216,6 +218,18 @@ func (a *luaapi) GetVariableList(L *lua.LState) int {
 		L.Push(result)
 	}
 	return 1
+}
+func (a *luaapi) GetVariableComment(L *lua.LState) int {
+	name := L.ToString(1)
+	val := a.API.GetVariableComment(name)
+	L.Push(lua.LString(val))
+	return 1
+}
+func (a *luaapi) SetVariableComment(L *lua.LState) int {
+	name := L.ToString(1)
+	value := L.ToString(2)
+	L.Push(lua.LNumber(a.API.SetVariableComment(name, value)))
+	return 0
 }
 func (a *luaapi) Version(L *lua.LState) int {
 	L.Push(lua.LString(a.API.Version()))

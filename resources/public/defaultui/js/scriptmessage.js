@@ -21,6 +21,54 @@ define(function (require) {
           }).catch(() => {
           });
     }
+    handlers["userinput.alert"]=function(data){
+        var msgbody=data.Data
+        if (msgbody==undefined){
+            msgbody={}
+        }
+        vm.$alert(msgbody.Intro,msgbody.Title, {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            onClose:function(){
+                vm.callback(data,-1,"")
+            }
+          }).then(({ value }) => {
+            vm.callback(data,0,value)
+          }).catch(() => {
+          });
+    }
+    handlers["userinput.alert"]=function(data){
+        var msgbody=data.Data
+        if (msgbody==undefined){
+            msgbody={}
+        }
+        vm.$alert(msgbody.Intro,msgbody.Title, {
+            confirmButtonText: '确定',
+            onClose:function(){
+                vm.callback(data,-1,"")
+            }
+          }).then(({ value }) => {
+            vm.callback(data,0,value)
+          }).catch(() => {
+          });
+    }
+    handlers["userinput.messagebox"]=function(data){
+        var msgbody=data.Data
+        if (msgbody==undefined){
+            msgbody={}
+        }
+        vm.$alert(msgbody.Intro,msgbody.Title, {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            onClose:function(){
+                vm.callback(data,-1,"")
+            }
+          }).then(({ value }) => {
+            vm.callback(data,0,value)
+          }).catch(() => {
+          });
+    }
+
     handlers["userinput.list"]=function(data){
         vm.userinputList=data
         vm.userinputListVisible=true

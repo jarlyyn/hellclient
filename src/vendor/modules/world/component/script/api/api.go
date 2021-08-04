@@ -142,7 +142,13 @@ func (a *API) GetVariableList() map[string]string {
 	}
 	return result
 }
-
+func (a *API) GetVariableComment(text string) string {
+	return a.Bus.GetParamComment(text)
+}
+func (a *API) SetVariableComment(name string, content string) int {
+	a.Bus.SetParamComment(name, content)
+	return EOK
+}
 func (a *API) GetUniqueNumber() int {
 	v := atomic.AddInt32(&uniqueNumber, 1)
 	if v < 0 {
