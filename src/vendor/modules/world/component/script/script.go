@@ -281,6 +281,10 @@ func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigge
 }
 func (s *Script) Assist(b *bus.Bus) {
 	s.Locker.Lock()
+	if s.Data == nil {
+		s.Locker.Unlock()
+		return
+	}
 	onAssist := s.Data.OnAssist
 	s.Locker.Unlock()
 	if onAssist == "" {
