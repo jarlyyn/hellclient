@@ -35,3 +35,4 @@ node_modules
 
 # /src/vendor/*/*
 !/src/vendor/modules/*
+src/__debug_bin

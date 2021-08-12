@@ -16,6 +16,7 @@ type SystemConfig struct {
 	Addr     string
 	Username string
 	Password string
+	Switch   string
 }
 
 //System config instance of system.
