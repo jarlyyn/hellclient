@@ -158,20 +158,20 @@ type Bus struct {
 	GetScriptCaller          func() (string, string)
 	DoStopEvaluatingTriggers func()
 
-	GetMetronomeBeats    func() int
-	SetMetronomeBeats    func(int)
-	DoResetMetronome     func()
-	GetMetronomeSpace    func() int
-	GetMetronomeQueue    func() []string
-	DoDiscardMetronome   func() bool
-	DoFullMetronome      func()
-	DoFullTickMetronome  func()
-	SetMetronomeInterval func(time.Duration)
-	GetMetronomeInterval func() time.Duration
-	SetMetronomeTick     func(time.Duration)
-	GetMetronomeTick     func() time.Duration
-	DoPushMetronome      func(cmds []*world.Command, grouped bool)
-
+	GetMetronomeBeats      func() int
+	SetMetronomeBeats      func(int)
+	DoResetMetronome       func()
+	GetMetronomeSpace      func() int
+	GetMetronomeQueue      func() []string
+	DoDiscardMetronome     func() bool
+	DoFullMetronome        func()
+	DoFullTickMetronome    func()
+	SetMetronomeInterval   func(time.Duration)
+	GetMetronomeInterval   func() time.Duration
+	SetMetronomeTick       func(time.Duration)
+	GetMetronomeTick       func() time.Duration
+	DoPushMetronome        func(cmds []*world.Command, grouped bool)
+	DoMetronomeSend        func(cmds *world.Command)
 	BroadcastEvent         busevent.Event
 	LineEvent              busevent.Event
 	PromptEvent            busevent.Event

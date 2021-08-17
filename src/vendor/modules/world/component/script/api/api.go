@@ -35,26 +35,26 @@ func (a *API) Note(cmd string) {
 func (a *API) SendImmediate(message string) int {
 	cmd := world.CreateCommand(message)
 	cmd.Creator, cmd.CreatorType = a.Bus.GetScriptCaller()
-	a.Bus.DoSend(cmd)
+	a.Bus.DoMetronomeSend(cmd)
 	return EOK
 }
 func (a *API) Send(message string) int {
 	cmd := world.CreateCommand(message)
 	cmd.Creator, cmd.CreatorType = a.Bus.GetScriptCaller()
-	a.Bus.DoSendToQueue(cmd)
+	a.Bus.DoMetronomeSend(cmd)
 	return EOK
 }
 func (a *API) SendNoEcho(message string) int {
 	cmd := world.CreateCommand(message)
 	cmd.Creator, cmd.CreatorType = a.Bus.GetScriptCaller()
 	cmd.Echo = false
-	a.Bus.DoSend(cmd)
+	a.Bus.DoMetronomeSend(cmd)
 	return EOK
 }
 func (a *API) SendPush(message string) int {
 	cmd := world.CreateCommand(message)
 	cmd.History = true
-	a.Bus.DoSend(cmd)
+	a.Bus.DoMetronomeSend(cmd)
 	return EOK
 }
 func (a *API) SendSpecial(message string, echo bool, queue bool, log bool, history bool) int {
@@ -66,7 +66,7 @@ func (a *API) SendSpecial(message string, echo bool, queue bool, log bool, histo
 	if queue {
 		a.Bus.DoSendToQueue(cmd)
 	} else {
-		a.Bus.DoSend(cmd)
+		a.Bus.DoMetronomeSend(cmd)
 	}
 	return EOK
 }
@@ -74,7 +74,7 @@ func (a *API) LogSend(message string) int {
 	cmd := world.CreateCommand(message)
 	cmd.Creator, cmd.CreatorType = a.Bus.GetScriptCaller()
 	cmd.Log = true
-	a.Bus.DoSend(cmd)
+	a.Bus.DoMetronomeSend(cmd)
 	return EOK
 }
 func (a *API) Execute(message string) int {

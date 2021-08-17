@@ -445,7 +445,7 @@ func (a *Automation) trySendTo(b *bus.Bus, target int, message string, variable 
 		if omit_from_log {
 			cmd.Log = false
 		}
-		b.DoSend(cmd)
+		b.DoMetronomeSend(cmd)
 	case world.SendtoCommand:
 	case world.SendtoOutput:
 		b.DoPrint(message)
@@ -480,7 +480,7 @@ func (a *Automation) trySendTo(b *bus.Bus, target int, message string, variable 
 		if omit_from_log {
 			cmd.Log = false
 		}
-		b.DoSend(cmd)
+		b.DoMetronomeSend(cmd)
 	case world.SendtoScriptAfterOmit:
 		b.DoRunScript(message)
 	default:

@@ -76,7 +76,7 @@ func (c *Queue) send(b *bus.Bus) {
 		e := c.List.Front()
 		c.List.Remove(e)
 		cmd := e.Value.(*world.Command)
-		b.DoSend(cmd)
+		b.DoMetronomeSend(cmd)
 		if c.List.Len() != 0 {
 			c.delay(b)
 		}

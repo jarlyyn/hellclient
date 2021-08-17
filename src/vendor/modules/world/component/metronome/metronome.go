@@ -115,6 +115,14 @@ func (m *Metronome) fullTick() {
 		m.sent.PushBack(&t)
 	}
 }
+
+func (m *Metronome) Send(bus *bus.Bus, cmd *world.Command) {
+	m.Locker.Lock()
+	defer m.Locker.Unlock()
+	t := time.Now()
+	m.sent.PushBack(&t)
+	bus.DoSend(cmd)
+}
 func (m *Metronome) append(rawcmds []*world.Command, grouped bool) {
 	cmds := make([]*world.Command, 0, len(rawcmds))
 	for k := range rawcmds {
@@ -227,6 +235,7 @@ func (m *Metronome) InstallTo(b *bus.Bus) {
 	b.SetMetronomeTick = m.SetTick
 	b.GetMetronomeTick = m.Tick
 	b.DoPushMetronome = b.WrapHandlePushGroupedCommands(m.Push)
+	b.DoMetronomeSend = b.WrapHandleSend(m.Send)
 	b.BindCloseEvent(m, m.Stop)
 }
 func (m *Metronome) Push(b *bus.Bus, cmds []*world.Command, grouped bool) {
