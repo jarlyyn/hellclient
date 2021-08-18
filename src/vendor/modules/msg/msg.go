@@ -2,6 +2,7 @@ package msg
 
 import (
 	"modules/world"
+	"strconv"
 
 	"github.com/herb-go/connections/room/message"
 	"github.com/herb-go/herb/ui/validator"
@@ -49,6 +50,7 @@ const MsgTypeParamDeleted = "paramdeleted"
 const MsgTypeParamCommentUpdated = "paramcommentupdated"
 
 const MsgTypeScriptMessage = "scriptMessage"
+const MsgTypeSwitchStatusMessage = "switchStatus"
 
 type Publisher interface {
 	Publish(msg *message.Message)
@@ -181,4 +183,7 @@ func PublishParamDeleted(p Publisher, world string, name string) {
 
 func PublishScriptMessage(p Publisher, world string, msg interface{}) {
 	p.Publish(New(MsgTypeScriptMessage, world, msg))
+}
+func PublishSwitchStatusMessage(p Publisher, status int) {
+	p.Publish(New(MsgTypeSwitchStatusMessage, "", strconv.Itoa(status)))
 }

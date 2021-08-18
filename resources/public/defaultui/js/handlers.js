@@ -30,6 +30,9 @@ handlers.clients=function(data){
         vm.info[client.ID]=client
     })
 }
+handlers.switchStatus=function(data){
+    vm.switchstatus=data
+}
 handlers.lines=function(data){
     var lines=[]
     data.forEach(function(element) {

@@ -60,3 +60,20 @@ html body .el-table .game-list-running{
 html body .el-table .game-list-not-running{
     background-color: #fbc4c4
 }
+
+#switchstatus .connected{
+    color:#67C23A
+}
+#switchstatus .disconnected{
+    color:#E6A23C
+}
+#switchstatus{
+    position: absolute;
+    right:0;
+    top:0;
+    background: white;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+}

@@ -10,8 +10,10 @@ func Start() {
 	prophet.Laozi = prophet.New()
 	prophet.Laozi.Init(titan.Pangu)
 	prophet.Laozi.Start()
+	titan.Pangu.Start()
 }
 
 func Stop() {
 	prophet.Laozi.Stop()
+	titan.Pangu.Stop()
 }

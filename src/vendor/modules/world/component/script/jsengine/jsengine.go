@@ -166,7 +166,7 @@ func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 		return
 	}
 	e.Locker.Unlock()
-	go e.Call(b, bc.Message, bc.Global, bc.Channel, bc.ID)
+	go e.Call(b, e.onBroadCast, bc.Message, bc.Global, bc.Channel, bc.ID)
 }
 
 func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {

@@ -7,7 +7,14 @@
             <el-button @click="onButton('all')" size="mini" type="success" icon="el-icon-s-order"></el-button>
             </el-tooltip>
         </el-button-group >
+
+
     <span v-if="clients.length && current && info[current]" id="world-intro">当前游戏:{{current}} @ {{info[current].HostPort}} </span> <span v-if="status" id="top-status">[ {{status}} ]</span>
+    <div id="switchstatus">
+    <el-tooltip slot="append" v-if="switchstatus!=0"class="item" effect="light" :content="switchstatus==2?'已连接到Hellclient网络':'未连接到Hellclient网络'" placement="bottom">
+        <span id="":class="switchstatus==2?'el-icon-connection connected':'el-icon-loading disconnected'"></span>
+    </el-tooltip>
+    <div></div>
 </div>
 <div id="tabs">
     <div id="no-clients" v-if="!clients.length">还未打开游戏，请点击上方按钮打开或创建游戏</div>

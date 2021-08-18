@@ -178,6 +178,7 @@ func (p *Prophet) OnOpen(conn connections.OutputConnection) {
 		r.Join(crid)
 	}
 	p.Titan.ExecClients()
+	p.Titan.ExecSwitchStatus()
 	p.onCurrent(crid)
 	ctx.Data.Store("rooms", r)
 
@@ -190,7 +191,7 @@ func (p *Prophet) onCurrent(roomid string) {
 	p.Titan.HandleCmdHistory(roomid)
 }
 func (p *Prophet) Start() {
-	connections.Consume(p.Gateway, p)
+	go connections.Consume(p.Gateway, p)
 }
 
 // Stop stop consumer

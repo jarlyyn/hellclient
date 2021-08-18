@@ -1,6 +1,7 @@
 package titan
 
 import (
+	"bytes"
 	"errors"
 	"modules/app"
 	"modules/msg"
@@ -16,6 +17,7 @@ import (
 	"modules/world/component/metronome"
 	"modules/world/component/queue"
 	"modules/world/component/script"
+	"modules/world/hellswitch"
 
 	"path"
 	"sort"
@@ -38,6 +40,7 @@ type Titan struct {
 	Locker     sync.RWMutex
 	Worlds     map[string]*bus.Bus
 	Path       string
+	hellswitch *hellswitch.Hellswitch
 	Scriptpath string
 	Logpath    string
 	msgEvent   *busevent.Event
@@ -131,6 +134,9 @@ func (t *Titan) onBroadcast(b *bus.Bus, bc *world.Broadcast) {
 	for _, v := range t.Worlds {
 		go v.DoSendBroadcastToScript(bc)
 	}
+	if bc.Global {
+		go t.hellswitch.Broadcast(bytes.Join([][]byte{[]byte(bc.Channel), []byte(bc.Message)}, GlobalMessageSep))
+	}
 }
 func (t *Titan) OnCreateFail(errors []*validator.FieldError) {
 	msg.PublishCreateFail(t, errors)
@@ -168,6 +174,11 @@ func (t *Titan) HandleCmdStatus(id string) {
 		status := w.GetStatus()
 		msg.PublishStatus(t, id, status)
 	}
+}
+func (t *Titan) ExecSwitchStatus() {
+	go func() {
+		msg.PublishSwitchStatusMessage(t, t.hellswitch.Status())
+	}()
 }
 func (t *Titan) HandleCmdHistory(id string) {
 	w := t.World(id)
@@ -713,9 +724,43 @@ func (t *Titan) NewScript(id string, scripttype string) error {
 
 }
 
+var GlobalMessageSep = []byte(" ")
+
+func (t *Titan) OnGlobalMessage(msg []byte) {
+	var data = bytes.SplitN(msg, GlobalMessageSep, 3)
+	switch string(data[0]) {
+	case "broadcast":
+		if len(data) == 3 {
+			t.Locker.Lock()
+			bc := world.CreateBroadcast(string(data[1]), string(data[2]), true)
+			for _, v := range t.Worlds {
+				go v.DoSendBroadcastToScript(bc)
+			}
+			t.Locker.Unlock()
+		}
+	}
+
+}
+func (t *Titan) OnSwitchStatusChange(status int) {
+
+	go func() {
+		msg.PublishSwitchStatusMessage(t, status)
+	}()
+}
+func (t *Titan) Start() {
+	go t.hellswitch.Start()
+}
+func (t *Titan) Stop() {
+	t.hellswitch.Stop()
+	t.hellswitch.Close()
+}
 func New() *Titan {
-	return &Titan{
+	t := &Titan{
 		Worlds:   map[string]*bus.Bus{},
 		msgEvent: busevent.New(),
 	}
+	t.hellswitch = hellswitch.New()
+	t.hellswitch.OnGlobalMessage = t.OnGlobalMessage
+	t.hellswitch.OnSwitchStatusChange = t.OnSwitchStatusChange
+	return t
 }

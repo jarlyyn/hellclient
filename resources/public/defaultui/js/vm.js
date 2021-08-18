@@ -63,6 +63,7 @@ var data={
     userinputList:null,
     userinputListVisible:false,
     userinputListSearch:"",
+    switchstatus:0,
     sendto:{
         0:"游戏",
         1:"命令",
