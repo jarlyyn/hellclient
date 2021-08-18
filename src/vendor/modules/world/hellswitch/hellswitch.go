@@ -58,18 +58,15 @@ func (h *Hellswitch) listen(conn *websocket.Conn) {
 	for {
 		_, message, err := conn.ReadMessage()
 		if err != nil {
-			if _, ok := err.(*websocket.CloseError); !ok {
-				util.LogError(err)
-				conn.Close()
-			} else {
-				h.locker.Lock()
-				h.conn = nil
-				h.locker.Unlock()
-				go h.OnSwitchStatusChange(StatusDisconnected)
-				return
-			}
-			go h.OnGlobalMessage(message)
+			h.locker.Lock()
+			h.conn = nil
+			conn.Close()
+			h.locker.Unlock()
+			go h.OnSwitchStatusChange(StatusDisconnected)
+			return
 		}
+		go h.OnGlobalMessage(message)
+
 	}
 }
 func (h *Hellswitch) basicAuth(username, password string) string {
