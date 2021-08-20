@@ -5,9 +5,9 @@ define(function (require) {
     var handlers=app.handlers;
     var send=app.send;
    
-var render=_.debounce(vm.RenderLines,80,{
+var render=_.debounce(vm.RenderLines,50,{
     leading:true,
-    maxWait:350,
+    maxWait:200,
 })
 handlers.current=function(data){
     vm.current=data

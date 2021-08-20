@@ -186,7 +186,12 @@ var vm = new Vue({
                     return a.ID>b.ID?1:-1;
                 });      
                 if (lines.length>60){
-                    lines=_.clone(lines.slice(-60))
+                    var result=[]
+                    var remain=lines.slice(-60)
+                    remain.forEach(function(data){
+                        result.push(data)
+                    });
+                    lines=result
                 }
                 app.linesbuffer=lines
                 vm.lines=_.clone(app.linesbuffer)
