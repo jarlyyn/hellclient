@@ -172,6 +172,9 @@ onButton.scriptaliases=function(){
     vm.byuser=false;
     app.send("aliases",[vm.current,""])
 }
+onButton.about=function(){
+    app.send("about","")
+}
 onButton.createAlias=function(){
     vm.createFail=[];
     vm.aliasCreateForm={

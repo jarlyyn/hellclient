@@ -5,6 +5,7 @@ import (
 	"errors"
 	"modules/app"
 	"modules/msg"
+	"modules/version"
 	"modules/world"
 	"modules/world/bus"
 	"modules/world/component"
@@ -276,7 +277,9 @@ func (t *Titan) HandleCmdAssist(id string) {
 		go w.DoAssist()
 	}
 }
-
+func (t *Titan) HandleCmdAbout() {
+	go msg.PublishVersionMessage(t, version.Version)
+}
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()

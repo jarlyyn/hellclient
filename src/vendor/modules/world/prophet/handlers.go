@@ -369,6 +369,10 @@ func (p *Prophet) onCmdAssist(conn connections.OutputConnection, cmd command.Com
 	p.Titan.HandleCmdAssist(msg)
 	return nil
 }
+func (p *Prophet) onCmdAbout(conn connections.OutputConnection, cmd command.Command) error {
+	p.Titan.HandleCmdAbout()
+	return nil
+}
 
 // func (p *Prophet) onCmdSaveTrigger(conn connections.OutputConnection, cmd command.Command) error {
 // 	forms.SaveTrigger(CurrentGameID(), cmd.Data())
@@ -421,6 +425,7 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("updateParamComment", p.onCmdUpdateParamComment)
 	handlers.Register("callback", p.onCmdCallback)
 	handlers.Register("assist", p.onCmdAssist)
+	handlers.Register("about", p.onCmdAbout)
 
 	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
 	// handlers.Register("triggers", p.onCmdTriggers)

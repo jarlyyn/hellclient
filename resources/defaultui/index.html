@@ -45,6 +45,31 @@
 <div id="gamelist"></div>
 <div id="script"></div>
 <div id="scriptlist"></div>
+<el-dialog v-if="clients.length && current && info[current]" 
+  :title="'游戏'+current+ '@' +info[current].HostPort+'状态'"
+  :visible.sync="statusVisible"
+  width="80%">
+  <div >
+  <span v-if="status" id="pop-status">{{status}}</span>
+</div>
+  <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="statusVisible = false">确 定</el-button>
+  </span>
+</el-dialog>
+<el-dialog
+  title="关于"
+  :visible.sync="aboutVisible"
+  width="80%">
+  <div >
+      <h2>hellclient</h2>
+      <p><a href="https://github.com/jarlyyn/hellclient">Homepage</a></p>
+      <p>服务版本:{{version}}</p>
+      <p>界面版本:{{uiversion}}</p>
+</div>
+  <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="aboutVisible = false">关闭</el-button>
+  </span>
+</el-dialog>
 <div id="alllines"></div>
         <div id="footer">
                 <div id="current">

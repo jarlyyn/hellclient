@@ -171,5 +171,8 @@ handlers.scriptMessage=function(data){
         h(data)
     }
 }
-
+handlers.version=function(data){
+    vm.version=data
+    vm.aboutVisible=true
+}
 })

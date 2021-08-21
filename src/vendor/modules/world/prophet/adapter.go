@@ -45,4 +45,5 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("paramcommentupdated", p.newRoomAdapter("paramcommentupdated"))
 	adapter.Register("scriptMessage", p.newRoomAdapter("scriptMessage"))
 	adapter.Register("switchStatus", p.newUserAdapter("switchStatus"))
+	adapter.Register("version", p.newUserAdapter("version"))
 }

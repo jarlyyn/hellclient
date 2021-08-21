@@ -50,7 +50,10 @@ const MsgTypeParamDeleted = "paramdeleted"
 const MsgTypeParamCommentUpdated = "paramcommentupdated"
 
 const MsgTypeScriptMessage = "scriptMessage"
+
 const MsgTypeSwitchStatusMessage = "switchStatus"
+
+const MsgTypeVersionMessage = "version"
 
 type Publisher interface {
 	Publish(msg *message.Message)
@@ -186,4 +189,8 @@ func PublishScriptMessage(p Publisher, world string, msg interface{}) {
 }
 func PublishSwitchStatusMessage(p Publisher, status int) {
 	p.Publish(New(MsgTypeSwitchStatusMessage, "", strconv.Itoa(status)))
+}
+
+func PublishVersionMessage(p Publisher, version string) {
+	p.Publish(New(MsgTypeVersionMessage, "", version))
 }
