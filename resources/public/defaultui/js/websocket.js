@@ -46,6 +46,5 @@ app.send=function(cmd,data){
         ws.send(cmd+" "+JSON.stringify(data))
     }
 };
-
 return ws;
 })

@@ -1,5 +1,5 @@
 <el-dialog width="80%"  :fullscreen="true"  title="脚本信息" :visible.sync="scriptVisible">
-    <el-form  v-if="script"ref="form" :model="form" label-width="80px">
+    <el-form  v-if="script"ref="form" label-width="80px">
 
         <el-form-item label="脚本">
             {{script.ID ? script.ID : " - 未使用- "}}
