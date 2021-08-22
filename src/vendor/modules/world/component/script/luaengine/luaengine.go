@@ -25,6 +25,7 @@ func newLuaInitializer(b *bus.Bus) *lua51plugin.Initializer {
 		NewAPIModule(b),
 		NewMapperModule(b),
 		NewMetronomeModule(b),
+		NewUserinputModule(b),
 	}
 	return i
 }

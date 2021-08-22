@@ -31,7 +31,7 @@ func (n *Notifier) WorldNotify(world string, title string, body string) {
 	m.Subject = title
 	content := ""
 	if n.URL != "" {
-		content = fmt.Sprintf("<a href=\"%s\">%s:</a>", n.URL, world)
+		content = fmt.Sprintf("<a href='%s#%s'>%s:</a>", n.URL, world, html.EscapeString(world))
 	} else {
 		content = fmt.Sprintf("%s:", world)
 	}
