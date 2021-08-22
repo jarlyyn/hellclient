@@ -1,4 +1,5 @@
 <div id="world">
+    <div>
     <el-button-group id="main-button">
         <el-tooltip class="item" effect="light" content="打开游戏" placement="bottom">
         <el-button @click="onButton('notopened')" size="mini" type="primary" icon="el-icon-folder-opened"></el-button>
@@ -6,7 +7,7 @@
         <el-tooltip class="item" effect="light" content="全部游戏" placement="bottom">
             <el-button @click="onButton('all')" size="mini" type="success" icon="el-icon-s-order"></el-button>
             </el-tooltip>
-            <el-tooltip class="item" effect="light" content="关于" placement="bottom">
+            <el-tooltip id="about-button" class="item" effect="light" content="关于" placement="bottom">
                 <el-button @click="onButton('about')" size="mini"  icon="el-icon-info"></el-button>
                 </el-tooltip>
             </el-button-group >    
@@ -14,10 +15,10 @@
    
     <span v-if="clients.length && current && info[current]" @click="statusVisible = true" id="world-intro">当前游戏:{{current}} @ {{info[current].HostPort}} </span> <span @click="statusVisible = true" v-if="status" id="top-status">[ {{status}} ]</span>
     <div id="switchstatus">
-    <el-tooltip slot="append" v-if="switchstatus!=0"class="item" effect="light" :content="switchstatus==2?'已连接到Hellclient网络':'未连接到Hellclient网络'" placement="bottom">
+    <el-tooltip slot="append" v-if="switchstatus!=0" class="item" effect="light" :content="switchstatus==2?'已连接到Hellclient网络':'未连接到Hellclient网络'" placement="bottom">
         <span  :class="switchstatus==2?'el-icon-connection connected':'el-icon-loading disconnected'"></span>
     </el-tooltip>
-    <div></div>
+    </div>
 </div>
 <div id="tabs">
     <div id="no-clients" v-if="!clients.length">还未打开游戏，请点击上方按钮打开或创建游戏</div>
