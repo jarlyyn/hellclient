@@ -1,4 +1,4 @@
-Type="lua"
+Type="jscript"
 Intro=""
 Desc=""
 OnOpen="onOpen"

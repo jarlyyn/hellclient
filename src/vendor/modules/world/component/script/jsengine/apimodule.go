@@ -216,6 +216,8 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "FlushLog", a.FlushLog)
 
 	AppendToWorld(jp.Runtime, world, "Broadcast", a.Broadcast)
+	AppendToWorld(jp.Runtime, world, "Notify", a.Notify)
+
 	AppendToWorld(jp.Runtime, world, "GetGlobalOption", a.GetGlobalOption)
 
 }
@@ -989,6 +991,10 @@ func (a *jsapi) GetAliasInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value
 
 func (a *jsapi) Broadcast(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	a.API.Broadcast(call.Argument(0).String(), call.Argument(1).ToBoolean())
+	return nil
+}
+func (a *jsapi) Notify(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	a.API.Notify(call.Argument(0).String(), call.Argument(1).String())
 	return nil
 }
 func (a *jsapi) GetGlobalOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {

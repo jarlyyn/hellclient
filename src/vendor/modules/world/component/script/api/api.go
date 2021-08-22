@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"modules/notifier"
 	"modules/version"
 	"modules/world"
 	"modules/world/bus"
@@ -939,4 +940,8 @@ func (a *API) Broadcast(msg string, gloabl bool) {
 	}
 	bc := world.CreateBroadcast(channel, msg, gloabl)
 	a.Bus.RaiseBroadcastEvent(bc)
+}
+
+func (a *API) Notify(title string, body string) {
+	notifier.DefaultNotifier.WorldNotify(a.Bus.ID, title, body)
 }

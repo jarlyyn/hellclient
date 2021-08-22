@@ -4,6 +4,7 @@ import (
 	"sync/atomic"
 
 	"github.com/herb-go/herbconfig/source"
+	"github.com/herb-go/notification-drivers/delivery/emaildelivery"
 	"github.com/herb-go/util"
 	"github.com/herb-go/util/config"
 	"github.com/herb-go/util/config/tomlconfig"
@@ -17,6 +18,8 @@ type SystemConfig struct {
 	Username string
 	Password string
 	Switch   string
+	URL      string
+	SMTP     *emaildelivery.SMTP
 }
 
 //System config instance of system.
