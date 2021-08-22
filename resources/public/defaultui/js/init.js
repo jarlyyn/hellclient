@@ -70,5 +70,10 @@ define(function (require) {
     var htmlalllines=require("text!html-alllines");
 
     require(["main"],function(main){
+        if (location.hash){
+            var current=location.hash.slice(1)
+            location.hash=""
+            app.send("current",current)
+        }        
     });
 })
