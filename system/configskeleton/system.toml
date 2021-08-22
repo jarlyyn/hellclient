@@ -1,0 +1,46 @@
+#System config file
+#服务器的网页界面的监听地址
+#如果本地打开可以使用  Addr="127.0.0.1:4355"
+#如果在VPS上需要外部打开时可以使用 Addr=":4355"
+#从外部打开时，请开启Username和Password设置帐号密码
+Addr="127.0.0.1:4355"
+#网页和网盘方式登陆的帐号
+Username=""
+#网页和网盘方式登陆的密码
+Password=""
+#Hellclient网络的交换机地址
+#连入后可以在将各个客户端的广播Broadcast功能消息进行转发
+#一般用于全游戏找人/联合执行命令
+#服务程序地址可以在 https://github.com/hellclient-scripts/hellclientswitch 下载和安装
+#连接形式为Switch="ws://USERNAME:PASSWORD@HOST:PORT/PATH"
+Switch=""
+#对外的网址，用于通知时传递对外链接
+URL="http://127.0.0.1:4355"
+
+#邮件发送的设置。
+#出于推送的方便性，推荐可是使用QQ信箱，自己发送自己的模式
+#在Host和To都设置后生效
+[SMTP]
+#邮箱服务器地址,qq信箱为smtp.qq.com
+Host=""
+#邮箱端口，具体见邮箱服务器设置说明，QQ信箱客户可以使用465
+Port=465
+#信箱登陆凭证，一般就是邮箱
+Identity="123456790@qq.com"
+#发行人信息
+From="通知 <123456790@qq.com>"
+#用户名，一般是邮箱
+Username="123456790@qq.com"
+#收件人信息
+To="123456790@qq.com"
+#SMTP发信密码
+#对于QQ信箱来说一般是 开启SMTP的授权码
+Password=""
+#使用StartTLS协议连接,一般对应587端口
+StartTLS=false         
+#使用SSL协议连接，一般对应465端口
+SSL=true
+#发送人信息，一般情况不设
+Sender=""
+#强制掉过不安全证书，一般情况不设
+InsecureSkipVerify=false 
