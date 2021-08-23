@@ -59,7 +59,7 @@ handlers.createFail=function(data){
 }
 handlers.createSuccess=function(data){
     vm.gameCreateFormVisible=false;
-    vm.allgameVisible=false;
+    vm.notopenedVisible=false;
     send("change",data)
 }
 handlers.updateSuccess=function(){
