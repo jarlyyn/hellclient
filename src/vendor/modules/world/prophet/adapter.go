@@ -22,6 +22,7 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("scriptinfo", p.newRoomAdapter("scriptinfo"))
 	adapter.Register("createScriptFail", p.newUserAdapter("createScriptFail"))
 	adapter.Register("createScriptSuccess", p.newUserAdapter("createScriptSuccess"))
+	adapter.Register("updateScriptSuccess", p.newUserAdapter("updateScriptSuccess"))
 	adapter.Register("scriptinfoList", p.newUserAdapter("scriptinfoList"))
 	adapter.Register("status", p.newRoomAdapter("status"))
 	adapter.Register("history", p.newRoomAdapter("history"))

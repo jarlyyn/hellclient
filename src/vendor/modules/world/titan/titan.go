@@ -152,6 +152,10 @@ func (t *Titan) OnCreateSuccess(id string) {
 func (t *Titan) OnUpdateSuccess(id string) {
 	msg.PublishUpdateSuccess(t, id)
 }
+func (t *Titan) OnUpdateScriptSuccess(id string) {
+	msg.PublishUpdateScriptSuccess(t, id)
+}
+
 func (t *Titan) OnCreateScriptFail(errors []*validator.FieldError) {
 	msg.PublishCreateScriptFail(t, errors)
 }

@@ -339,7 +339,10 @@ func (p *Prophet) onCmdUpdateWorldSettings(conn connections.OutputConnection, cm
 	forms.UpdateGame(p.Titan, cmd.Data())
 	return nil
 }
-
+func (p *Prophet) onCmdUpdateScriptSettings(conn connections.OutputConnection, cmd command.Command) error {
+	forms.UpdateScript(p.Titan, cmd.Data())
+	return nil
+}
 func (p *Prophet) onCmdDeleteParam(conn connections.OutputConnection, cmd command.Command) error {
 	var msg []string
 	if json.Unmarshal(cmd.Data(), &msg) != nil {
@@ -461,5 +464,6 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("requiredParams", p.onCmdRequiredParams)
 	handlers.Register("updateRequiredParams", p.onCmdUpdateRequiredParams)
 	handlers.Register("updateWorldSettings", p.onCmdUpdateWorldSettings)
+	handlers.Register("updateScriptSettings", p.onCmdUpdateScriptSettings)
 
 }

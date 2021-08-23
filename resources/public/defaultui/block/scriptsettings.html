@@ -1,5 +1,11 @@
 <el-dialog size="80%"  :fullscreen="true"  title="脚本设置" :visible.sync="scriptSettingsVisible">
         <div v-if="scriptSettings" style="width:90%;margin:auto">
+            <el-button-group >
+                <el-tooltip class="item" effect="light" content="编辑" placement="bottom">
+                <el-button @click="onButton('updateScriptSettings')" size="mini" type="primary" icon="el-icon-edit"></el-button>
+                </el-tooltip>
+            </el-button-group >        
+
             <el-descriptions :title="scriptSettings.Name" border>
                 <el-descriptions-item label="类型">{{scriptSettings.Type}}</el-descriptions-item>
                 <el-descriptions-item label="描述">{{scriptSettings.Desc}}</el-descriptions-item>

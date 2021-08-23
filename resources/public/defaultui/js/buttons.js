@@ -267,10 +267,33 @@ onButton.worldsettingsUpdateSubmit=function(){
     vm.worldsettingsUpdateForm.ID=vm.current
     send("updateWorldSettings",vm.worldsettingsUpdateForm);
 }
+onButton.updateScriptSettings=function(){
+    vm.createFail=[]
+    vm.scriptsettingsUpdateForm={
+        Channel: vm.scriptSettings.Channel,
+        Desc: vm.scriptSettings.Desc,
+        Intro: vm.scriptSettings.Intro,
+        Name: vm.scriptSettings.Name,
+        OnAssist: vm.scriptSettings.OnAssist,
+        OnBroadcast: vm.scriptSettings.OnBroadcast,
+        OnClose: vm.scriptSettings.OnClose,
+        OnConnect: vm.scriptSettings.OnConnect,
+        OnDisconnect: vm.scriptSettings.OnDisconnect,
+        OnOpen: vm.scriptSettings.OnOpen,
+        Type: vm.scriptSettings.Type,
+    }
+    vm.scriptsettingsUpdateFormVisible=true
+}
 onButton.scriptSettings=function(){
     vm.scriptSettings=null;
     app.send("scriptSettings",vm.current)
 }
+onButton.scriptsettingsUpdateSubmit=function(){
+    vm.scriptsettingsUpdateForm.ID=vm.current
+    send("updateScriptSettings",vm.scriptsettingsUpdateForm);
+}
+
+
 onButton.requiredParams=function(){
     vm.requiredParams=null;
     app.send("requiredParams",vm.current)

@@ -1,0 +1,46 @@
+<el-dialog v-if="scriptsettingsUpdateForm" width="80%" :fullscreen="true" title="编辑脚本设置"
+  :visible.sync="scriptsettingsUpdateFormVisible">
+  <div v-if="createFail">
+    <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
+
+  </div>
+  <el-form :model="scriptsettingsUpdateForm" label-width="120px">
+    <el-form-item label="名称">
+      <span>{{scriptsettingsUpdateForm.Name}}</span>
+    </el-form-item>
+    <el-form-item label="类型">
+      <span>{{scriptsettingsUpdateForm.Type}}</span>
+    </el-form-item>
+    <el-form-item label="描述">
+      <el-input v-model="scriptsettingsUpdateForm.Desc"></el-input>
+    </el-form-item>
+    <el-form-item label="广播频道">
+      <el-input v-model="scriptsettingsUpdateForm.Channel"></el-input>
+    </el-form-item>
+    <el-form-item label="助理触发函数">
+      <el-input v-model="scriptsettingsUpdateForm.OnAssist"></el-input>
+    </el-form-item>
+    <el-form-item label="广播触发函数">
+      <el-input v-model="scriptsettingsUpdateForm.OnBroadcast"></el-input>
+    </el-form-item>
+    <el-form-item label="加载触发函数">
+      <el-input v-model="scriptsettingsUpdateForm.OnOpen"></el-input>
+    </el-form-item>
+    <el-form-item label="关闭触发函数">
+      <el-input v-model="scriptsettingsUpdateForm.OnClose"></el-input>
+    </el-form-item>
+    <el-form-item label="连线触发函数">
+      <el-input v-model="scriptsettingsUpdateForm.OnConnect"></el-input>
+    </el-form-item>
+    <el-form-item label="掉线触发函数">
+      <el-input v-model="scriptsettingsUpdateForm.OnDisconnect"></el-input>
+    </el-form-item>
+    <el-form-item label="简介">
+      <el-input v-model="scriptsettingsUpdateForm.Intro" type="textarea"></el-input>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="scriptsettingsUpdateFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="onButton('scriptsettingsUpdateSubmit')">确 定</el-button>
+  </div>
+</el-dialog>

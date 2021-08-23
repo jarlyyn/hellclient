@@ -65,6 +65,10 @@ handlers.createSuccess=function(data){
 handlers.updateSuccess=function(){
     vm.worldsettingsUpdateFormVisible=false
 }
+handlers.updateScriptSuccess=function(){
+    vm.scriptsettingsUpdateFormVisible=false
+}
+
 handlers.triggers=function(data){
     vm.triggers=data
 }
