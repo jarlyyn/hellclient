@@ -246,4 +246,57 @@ onButton.createVariable=function(){
 onButton.all=function(){
     vm.allgameVisible=true
 }
+onButton.worldSettings=function(){
+    vm.worldSettings=null;
+    app.send("worldSettings",vm.current)
+}
+onButton.scriptSettings=function(){
+    vm.scriptSettings=null;
+    app.send("scriptSettings",vm.current)
+}
+onButton.requiredParams=function(){
+    vm.requiredParams=null;
+    app.send("requiredParams",vm.current)
+}
+onButton.createRequireParam=function(){
+    vm.createFail=[]
+    vm.requiredParamCreateForm={
+        Name:"",
+        Desc:"",
+        Intro:"",
+    };
+    vm.requiredParamCreateFormVisible=true
+}
+onButton.requiredParamCreateSubmit=function(){
+    vm.createFail=[]
+    if (vm.requiredParamCreateForm.Name){
+        vm.requiredParamCreateForm.Name=vm.requiredParamCreateForm.Name.trim()
+    }
+    if (!vm.requiredParamCreateForm.Name){
+        vm.createFail.push({Field: "Name", Label: "变量名", Msg: "变量名必填"})
+        return
+    }
+    for (var key in vm.requiredParams){
+        if (vm.requiredParams[key].Name==vm.requiredParamCreateForm.Name){
+            vm.createFail.push({Field: "Name", Label: "变量名", Msg: "变量名重复"})
+            return    
+        }
+    }
+    vm.requiredParams.push(vm.requiredParamCreateForm)
+    vm.requiredParamCreateFormVisible=false
+    vm.updateRequiredParams()
+}
+onButton.requiredParamUpdateSubmit=function(){
+    for (var key in vm.requiredParams){
+        if (vm.requiredParams[key].Name==vm.requiredParamUpdateForm.Name){
+            vm.requiredParams[key].Desc=vm.requiredParamUpdateForm.Desc
+            vm.requiredParams[key].Intro=vm.requiredParamUpdateForm.Intro
+            vm.requiredParamUpdateFormVisible=false
+            vm.updateRequiredParams()
+            return
+        }
+    }
+    vm.requiredParamUpdateFormVisible=false
+}
+
 })

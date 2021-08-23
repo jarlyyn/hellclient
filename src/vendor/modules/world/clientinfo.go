@@ -50,6 +50,31 @@ type WorldData struct {
 	Aliases               []*Alias
 }
 
+func (d *WorldData) ConvertSettings(id string) *WorldSettings {
+	settings := &WorldSettings{
+		ID: id,
+	}
+	if d != nil {
+		settings.Host = d.Host
+		settings.Port = d.Port
+		settings.Charset = d.Charset
+		settings.Name = d.Name
+		settings.CommandStackCharacter = d.CommandStackCharacter
+		settings.ScriptPrefix = d.ScriptPrefix
+	}
+	return settings
+}
+
+type WorldSettings struct {
+	ID                    string
+	Host                  string
+	Port                  string
+	Charset               string
+	Name                  string
+	CommandStackCharacter string
+	ScriptPrefix          string
+}
+
 func NewWorldData() *WorldData {
 	return &WorldData{
 		Params:                map[string]string{},

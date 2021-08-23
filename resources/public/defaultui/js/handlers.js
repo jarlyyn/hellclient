@@ -59,6 +59,7 @@ handlers.createFail=function(data){
 }
 handlers.createSuccess=function(data){
     vm.gameCreateFormVisible=false;
+    vm.allgameVisible=false;
     send("change",data)
 }
 handlers.triggers=function(data){
@@ -174,5 +175,17 @@ handlers.scriptMessage=function(data){
 handlers.version=function(data){
     vm.version=data
     vm.aboutVisible=true
+}
+handlers.worldSettings=function(data){
+    vm.worldSettingsVisible=true;
+    vm.worldSettings=data
+}
+handlers.scriptSettings=function(data){
+    vm.scriptSettingsVisible=true;
+    vm.scriptSettings=data
+}
+handlers.requiredParams=function(data){
+    vm.requiredParamsVisible=true;
+    vm.requiredParams=data||[]
 }
 })

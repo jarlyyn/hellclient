@@ -68,6 +68,16 @@ var data={
     userinputListSearch:"",
     switchstatus:0,
     statusVisible:false,
+    worldSettings:null,
+    worldSettingsVisible:false,
+    scriptSettings:null,
+    scriptSettingsVisible:false,
+    requiredParams:[],
+    requiredParamsVisible:false,
+    requiredParamCreateForm:null,
+    requiredParamCreateFormVisible:false,
+    requiredParamUpdateForm:null,
+    requiredParamUpdateFormVisible:false,
     sendto:{
         0:"游戏",
         1:"命令",
@@ -278,6 +288,39 @@ var vm = new Vue({
         },
         assist:function(){
             app.send("assist",this.current)
+        },
+        updateRequiredParams:function(){
+            app.send("updateRequiredParams",{Current:vm.current,RequiredParams:this.requiredParams})
+        },
+        onUpdateRequiredParam:function(data){
+            this.requiredParam=data
+            this.createFail=[]
+            this.requiredParamUpdateForm={
+                Name:data.Name,
+                Desc:data.Desc,
+                Intro:data.Intro,
+            };
+            this.requiredParamUpdateFormVisible=true
+        
+        },
+        RequiredParamUp:function(index){
+            if (index<=0){
+                return
+            }
+            this.requiredParams.splice(index,0,vm.requiredParams.splice(index-1,1)[0])
+            this.updateRequiredParams()
+
+        },
+        RequiredParamDown:function(index){
+            if (index>=this.requiredParams.length-1){
+                return
+            }
+            this.requiredParams.splice(index,0,vm.requiredParams.splice(index+1,1)[0])
+            this.updateRequiredParams()
+        },
+        RequiredParamRemove:function(index){
+            this.requiredParams=vm.requiredParams.splice(index,1)
+            this.updateRequiredParams()
         }
     }
 })

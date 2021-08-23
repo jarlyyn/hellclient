@@ -374,15 +374,39 @@ func (p *Prophet) onCmdAbout(conn connections.OutputConnection, cmd command.Comm
 	return nil
 }
 
-// func (p *Prophet) onCmdSaveTrigger(conn connections.OutputConnection, cmd command.Command) error {
-// 	forms.SaveTrigger(CurrentGameID(), cmd.Data())
-// 	return nil
-// }
-// func (p *Prophet) onCmdTriggers(conn connections.OutputConnection, cmd command.Command) error {
-// 	id := p.Current.Load().(string)
-// 	client.DefaultManager.ExecTriggers(id)
-// 	return nil
-// }
+func (p *Prophet) onCmdWorldSettings(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdWorldSettings(msg)
+	return nil
+}
+
+func (p *Prophet) onCmdScriptSettings(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdScriptSettings(msg)
+	return nil
+}
+func (p *Prophet) onCmdRequiredParams(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdRequiredParams(msg)
+	return nil
+}
+func (p *Prophet) onCmdUpdateRequiredParams(conn connections.OutputConnection, cmd command.Command) error {
+	var msg = forms.RequiredParamsForm{}
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdUpdateRequiredParams(msg.Current, msg.RequiredParams)
+	return nil
+}
 
 func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("change", p.onCmdChange)
@@ -427,7 +451,9 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("assist", p.onCmdAssist)
 	handlers.Register("about", p.onCmdAbout)
 
-	// handlers.Register("saveTrigger", p.onCmdSaveTrigger)
-	// handlers.Register("triggers", p.onCmdTriggers)
+	handlers.Register("worldSettings", p.onCmdWorldSettings)
+	handlers.Register("scriptSettings", p.onCmdScriptSettings)
+	handlers.Register("requiredParams", p.onCmdRequiredParams)
+	handlers.Register("updateRequiredParams", p.onCmdUpdateRequiredParams)
 
 }

@@ -23,6 +23,11 @@ requirejs.config({
         "html-variablelist":"/public/defaultui/block/variablelist.html",
         "html-script":"/public/defaultui/block/script.html",
         "html-gamelist":"/public/defaultui/block/gamelist.html",
+        "html-worldsettings":"/public/defaultui/block/worldsettings.html",
+        "html-scriptsettings":"/public/defaultui/block/scriptsettings.html",
+        "html-requiredparams":"/public/defaultui/block/requiredparams.html",
+        "html-createrequiredparamform":"/public/defaultui/block/createrequiredparamform.html",
+        "html-updaterequiredparamform":"/public/defaultui/block/updaterequiredparamform.html",
         "main":"/public/defaultui/js/main"
     },
 });
@@ -67,6 +72,18 @@ define(function (require) {
     var htmluserinputlist=require("text!html-userinputlist");
     document.getElementById("userinputlist").innerHTML=htmluserinputlist;
 
+    var htmlworldsettings=require("text!html-worldsettings");
+    document.getElementById("worldsettings").innerHTML=htmlworldsettings;
+    var htmlscriptsettings=require("text!html-scriptsettings");
+    document.getElementById("scriptsettings").innerHTML=htmlscriptsettings;
+    var htmlrequiredparams=require("text!html-requiredparams");
+    document.getElementById("requiredparams").innerHTML=htmlrequiredparams;
+    var htmlcreaterequiredparamform=require("text!html-createrequiredparamform");
+    document.getElementById("createrequiredparamform").innerHTML=htmlcreaterequiredparamform;
+    var htmlupdaterequiredparamform=require("text!html-updaterequiredparamform");
+    document.getElementById("updaterequiredparamform").innerHTML=htmlupdaterequiredparamform;
+    
+    
     var htmlalllines=require("text!html-alllines");
 
     require(["main"],function(main){

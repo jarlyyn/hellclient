@@ -692,7 +692,50 @@ func (t *Titan) HandleCmdUpdateParamComment(id string, name string, value string
 	go t.HandleCmdParams(id)
 
 }
-
+func (t *Titan) HandleCmdWorldSettings(id string) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	if t.Worlds[id] == nil {
+		return
+	}
+	s := t.Worlds[id].GetWorldData().ConvertSettings(id)
+	msg.PublishWorldSettingsMessage(t, id, s)
+}
+func (t *Titan) HandleCmdScriptSettings(id string) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	if t.Worlds[id] == nil {
+		return
+	}
+	w := t.Worlds[id]
+	s := w.GetScriptData().ConvertSettings(w.GetScriptID())
+	msg.PublishScriptSettingsMessage(t, id, s)
+}
+func (t *Titan) HandleCmdRequiredParams(id string) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	if t.Worlds[id] == nil {
+		return
+	}
+	var p []*world.RequiredParam
+	s := t.Worlds[id].GetScriptData()
+	if s != nil {
+		p = s.RequiredParams
+	}
+	msg.PublishRequiredParamsMessage(t, id, p)
+}
+func (t *Titan) HandleCmdUpdateRequiredParams(id string, p []*world.RequiredParam) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	if t.Worlds[id] == nil {
+		return
+	}
+	data := t.Worlds[id].GetScriptData()
+	if data != nil {
+		data.SetRequiredParams(p)
+	}
+	msg.PublishRequiredParamsMessage(t, id, data.RequiredParams)
+}
 func (t *Titan) NewScript(id string, scripttype string) error {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()

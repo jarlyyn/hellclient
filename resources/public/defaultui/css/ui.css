@@ -30,6 +30,10 @@ ul#lines{padding-bottom: 40px;margin-bottom:-32px;padding-top: 110px;padding-lef
 #script-intro{
     white-space: pre-wrap;
 }
+.script-introe{
+    white-space: pre-wrap;
+    color:#333333;
+}
 .update-comment textarea{
     height:8em;
 }

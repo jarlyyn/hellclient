@@ -6,10 +6,11 @@ import (
 
 const ScriptTypeNone = ""
 const ScriptTypeLua = "lua"
+const ScriptTypeJavascript = "jscript"
 
 var AvailableScriptTypes = map[string]bool{
-	ScriptTypeNone: true,
-	ScriptTypeLua:  true,
+	ScriptTypeJavascript: true,
+	ScriptTypeLua:        true,
 }
 
 var ScriptTomlTemplates = map[string]string{}
@@ -20,6 +21,23 @@ func initTemplates() {
 	ScriptTomlTemplates[ScriptTypeLua] = util.System("template", "script", "lua.toml")
 	ScriptTemplates[ScriptTypeLua] = util.System("template", "script", "main.lua")
 	ScriptTargets[ScriptTypeLua] = "main.lua"
+	ScriptTomlTemplates[ScriptTypeJavascript] = util.System("template", "script", "jscript.toml")
+	ScriptTemplates[ScriptTypeJavascript] = util.System("template", "script", "main.js")
+	ScriptTargets[ScriptTypeJavascript] = "main.js"
+}
+
+type ScriptSettings struct {
+	Name         string
+	Type         string
+	Intro        string
+	Desc         string
+	OnOpen       string
+	OnClose      string
+	OnConnect    string
+	OnDisconnect string
+	OnBroadcast  string
+	OnAssist     string
+	Channel      string
 }
 
 type ScriptData struct {
@@ -39,6 +57,35 @@ type ScriptData struct {
 	RequiredParams []*RequiredParam
 }
 
+func (d *ScriptData) SetRequiredParams(p []*RequiredParam) {
+	d.RequiredParams = make([]*RequiredParam, 0, len(p))
+	for _, v := range p {
+	LOOP:
+		for _, param := range d.RequiredParams {
+			if v.Name == param.Name {
+				continue LOOP
+			}
+		}
+		d.RequiredParams = append(d.RequiredParams, v)
+	}
+}
+func (d *ScriptData) ConvertSettings(name string) *ScriptSettings {
+	settings := &ScriptSettings{}
+	if d != nil {
+		settings.Name = name
+		settings.Type = d.Type
+		settings.Intro = d.Intro
+		settings.Desc = d.Desc
+		settings.OnOpen = d.OnOpen
+		settings.OnClose = d.OnClose
+		settings.OnConnect = d.OnConnect
+		settings.OnDisconnect = d.OnDisconnect
+		settings.OnBroadcast = d.OnBroadcast
+		settings.OnAssist = d.OnAssist
+		settings.Channel = d.Channel
+	}
+	return settings
+}
 func (d *ScriptData) ConvertInfo(id string) *ScriptInfo {
 	info := &ScriptInfo{
 		ID: id,

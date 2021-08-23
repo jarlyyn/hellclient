@@ -46,7 +46,7 @@
     </el-button-group>
     <el-button-group>
         <el-tooltip id="dootpions" class="item" effect="light" content="设置"  placement="bottom">
-            <el-button  @click="onButton('options')" size="mini" icon="el-icon-set-up"></el-button>
+            <el-button  @click="onButton('worldSettings')" size="mini" icon="el-icon-set-up"></el-button>
             </el-tooltip>
             <el-tooltip id="doscript" class="item" effect="light" content="脚本"  placement="bottom">
                 <el-button  @click="onButton('script')" size="mini" icon="el-icon-cpu"></el-button>
@@ -85,8 +85,12 @@
 </el-button-group>
 <el-button-group id="advancebuttons" v-if="info[current] && info[current].ScriptID && advancemode ">
 <el-tooltip class="item" effect="light" content="脚本基本设置"  placement="bottom">
-<el-button  @click="onButton('triggers')" size="mini" plain type="warning" icon="el-icon-set-up"></el-button>
+<el-button  @click="onButton('scriptSettings')" size="mini" plain type="warning" icon="el-icon-set-up"></el-button>
 </el-tooltip>
+<el-tooltip class="item" effect="light" content="脚本变量"  placement="bottom">
+    <el-button  @click="onButton('requiredParams')" size="mini" plain type="warning" icon="el-icon-s-data"></el-button>
+    </el-tooltip>
+
 <el-tooltip class="item" effect="light" content="脚本触发器"  placement="bottom">
 <el-button  @click="onButton('scripttriggers')" size="mini" plain type="warning" icon="el-icon-s-tools"></el-button>
 </el-tooltip>

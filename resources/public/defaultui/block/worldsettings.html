@@ -1,0 +1,12 @@
+<el-dialog size="80%"  :fullscreen="true" size="80%"  direction="btt"  title="游戏设置" :visible.sync="worldSettingsVisible">
+        <div v-if="worldSettings" style="width:90%;margin:auto">
+            <el-descriptions :title="worldSettings.ID" border>
+                <el-descriptions-item label="服务器地址">{{worldSettings.Host}}</el-descriptions-item>
+                <el-descriptions-item label="服务器端口">{{worldSettings.Port}}</el-descriptions-item>
+                <el-descriptions-item label="字符集">{{worldSettings.Charset}}</el-descriptions-item>
+                <el-descriptions-item label="名称">{{worldSettings.Name}}</el-descriptions-item>
+                <el-descriptions-item label="脚本前缀">{{worldSettings.ScriptPrefix}}</el-descriptions-item>
+                <el-descriptions-item label="命令分割符">{{worldSettings.CommandStackCharacter}}</el-descriptions-item>
+            </el-descriptions>
+        </div>
+</el-dialog>

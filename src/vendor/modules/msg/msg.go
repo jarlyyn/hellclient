@@ -55,6 +55,12 @@ const MsgTypeSwitchStatusMessage = "switchStatus"
 
 const MsgTypeVersionMessage = "version"
 
+const MsgTypeWorldSettingsMessage = "worldSettings"
+
+const MsgTypeScriptSettingsMessage = "scriptSettings"
+
+const MsgTypeRequiredParamsMessage = "requiredParams"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -193,4 +199,16 @@ func PublishSwitchStatusMessage(p Publisher, status int) {
 
 func PublishVersionMessage(p Publisher, version string) {
 	p.Publish(New(MsgTypeVersionMessage, "", version))
+}
+
+func PublishWorldSettingsMessage(p Publisher, world string, settings *world.WorldSettings) {
+	p.Publish(New(MsgTypeWorldSettingsMessage, world, settings))
+}
+
+func PublishScriptSettingsMessage(p Publisher, world string, settings *world.ScriptSettings) {
+	p.Publish(New(MsgTypeScriptSettingsMessage, world, settings))
+}
+
+func PublishRequiredParamsMessage(p Publisher, world string, rp []*world.RequiredParam) {
+	p.Publish(New(MsgTypeRequiredParamsMessage, world, rp))
 }

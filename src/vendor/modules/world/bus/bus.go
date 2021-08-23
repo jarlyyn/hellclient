@@ -42,6 +42,7 @@ type Bus struct {
 	GetCurrentLines          func() []*world.Line
 	GetPrompt                func() *world.Line
 	GetClientInfo            func() *world.ClientInfo
+	GetWorldData             func() *world.WorldData
 	GetScriptData            func() *world.ScriptData
 	SetPermissions           func([]string)
 	GetPermissions           func() []string

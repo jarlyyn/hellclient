@@ -1,0 +1,21 @@
+<el-dialog v-if="requiredParamCreateForm" width="80%"  :fullscreen="true" title="创建脚本变量" :visible.sync="requiredParamCreateFormVisible">
+    <div v-if="createFail">
+            <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
+        
+    </div> 
+        <el-form :model="requiredParamCreateForm" label-width="120px">
+        <el-form-item label="变量名" >
+        <el-input v-model="requiredParamCreateForm.Name"></el-input>
+        </el-form-item>
+        <el-form-item label="变量描述" >
+        <el-input v-model="requiredParamCreateForm.Desc"></el-input>
+        </el-form-item>
+        <el-form-item label="变量介绍" >
+        <el-input v-model="requiredParamCreateForm.Intro" type="textarea"></el-input>
+        </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="requiredParamCreateFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="onButton('requiredParamCreateSubmit')">确 定</el-button>
+        </div>
+      </el-dialog>              

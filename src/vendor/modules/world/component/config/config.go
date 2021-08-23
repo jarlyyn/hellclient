@@ -19,6 +19,11 @@ type Config struct {
 	ReadyAt int64
 }
 
+func (c *Config) GetWorldData() *world.WorldData {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data
+}
 func (c *Config) GetReadyAt() int64 {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
@@ -216,6 +221,7 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetCharset = b.WrapHandleString(c.SetCharset)
 	b.GetQueueDelay = b.WrapGetInt(c.GetQueueDelay)
 	b.SetQueueDelay = b.WrapHandleInt(c.SetQueueDelay)
+	b.GetWorldData = c.GetWorldData
 	b.DoEncode = b.WrapDoEncode(c.Encode)
 	b.DoDecode = b.WrapDoDecode(c.Decode)
 	b.SetParam = c.SetParam

@@ -1,0 +1,17 @@
+<el-dialog size="80%"  :fullscreen="true"  title="脚本设置" :visible.sync="scriptSettingsVisible">
+        <div v-if="scriptSettings" style="width:90%;margin:auto">
+            <el-descriptions :title="scriptSettings.Name" border>
+                <el-descriptions-item label="类型">{{scriptSettings.Type}}</el-descriptions-item>
+                <el-descriptions-item label="描述">{{scriptSettings.Desc}}</el-descriptions-item>
+                <el-descriptions-item label="广播频道">{{scriptSettings.Channel}}</el-descriptions-item>
+                <el-descriptions-item label="助理触发函数">{{scriptSettings.OnAssist}}</el-descriptions-item>
+                <el-descriptions-item label="广播触发函数">{{scriptSettings.OnBroadcast}}</el-descriptions-item>
+                <el-descriptions-item label="加载触发函数">{{scriptSettings.OnOpen}}</el-descriptions-item>
+                <el-descriptions-item label="关闭触发函数">{{scriptSettings.OnClose}}</el-descriptions-item>
+                <el-descriptions-item label="连线触发函数">{{scriptSettings.OnConnect}}</el-descriptions-item>
+                <el-descriptions-item label="掉线触发函数">{{scriptSettings.OnDisconnect}}</el-descriptions-item>
+            </el-descriptions>
+            <p class="script-introe">{{scriptSettings.Intro}}</p>
+        </div>
+</el-dialog>
+
