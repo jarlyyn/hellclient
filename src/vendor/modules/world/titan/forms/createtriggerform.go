@@ -60,7 +60,7 @@ func (f *CreateTriggerForm) ComponentID() string {
 
 //Validate Validate form and return any error if raised.
 func (f *CreateTriggerForm) Validate() error {
-	f.ValidateFieldf(f.SendTo >= world.SendToMin && f.SendTo <= world.SendToMin, "SendTo", "发送到无效")
+	f.ValidateFieldf(f.SendTo >= world.SendToMin && f.SendTo <= world.SendToMax, "SendTo", "发送到无效")
 	f.ValidateFieldf(f.Match != "", "Match", "别名无效")
 	if !f.HasError() {
 		f.ValidateFieldf(f.Name == "" || world.IDRegexp.MatchString(f.Name) || titan.Pangu.IsTriggerNameAvaliable(f.World, f.Name, f.ByUser), "Name", "名称不可用")

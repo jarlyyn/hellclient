@@ -53,7 +53,7 @@ func (f *UpdateTimerForm) ComponentID() string {
 //Validate Validate form and return any error if raised.
 func (f *UpdateTimerForm) Validate() error {
 	f.ValidateFieldf(f.ID != "", "ID", "无效的ID")
-	f.ValidateFieldf(f.SendTo >= world.SendToMin && f.SendTo <= world.SendToMin, "SendTo", "发送到无效")
+	f.ValidateFieldf(f.SendTo >= world.SendToMin && f.SendTo <= world.SendToMax, "SendTo", "发送到无效")
 	f.ValidateFieldf((f.Hour != 0 || f.Minute != 0 || f.Second != 0) || f.AtTime, "Second", "时间无效")
 	if !f.HasError() {
 		f.ValidateFieldf(f.Name == "" || world.IDRegexp.MatchString(f.Name), "Name", "名称不可用")
