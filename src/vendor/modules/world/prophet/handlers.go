@@ -157,6 +157,7 @@ func (p *Prophet) onCmdUseScript(conn connections.OutputConnection, cmd command.
 	}
 	p.Titan.HandleCmdUseScript(msg[0], msg[1])
 	p.Titan.HandleCmdScriptInfo(msg[0])
+	p.Titan.ExecClients()
 	return nil
 }
 

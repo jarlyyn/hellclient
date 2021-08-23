@@ -76,10 +76,10 @@
     <el-tooltip  class="item" effect="light" content="重新加载"  placement="bottom">
         <el-button  @click="onButton('reload')" size="mini"  icon="el-icon-refresh-left" ></el-button>
         </el-tooltip>
-        <el-tooltip  id="dolock" v-if="advancemode" class="item" effect="light" content="关闭脚本编辑模式"  placement="bottom">
+        <el-tooltip  id="dolock" v-if="info[current] && info[current].ScriptID && advancemode" class="item" effect="light" content="关闭脚本编辑模式"  placement="bottom">
             <el-button  @click="onButton('lock')" size="mini" type="info" icon="el-icon-unlock" type=""></el-button>
             </el-tooltip>
-            <el-tooltip  id="dounlock" v-if="!advancemode" class="item" effect="light" content="开启脚本编辑模式"  placement="bottom">
+            <el-tooltip  id="dounlock" v-if="!(info[current] && info[current].ScriptID && advancemode)" class="item" effect="light" content="开启脚本编辑模式"  placement="bottom">
                 <el-button  @click="onButton('unlock')" size="mini" type="warning" icon="el-icon-lock" ></el-button>
                 </el-tooltip>
 </el-button-group>
