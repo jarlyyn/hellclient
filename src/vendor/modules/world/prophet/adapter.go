@@ -14,6 +14,7 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("disconnected", p.newUserAdapter("disconnected"))
 	adapter.Register("createFail", p.newUserAdapter("createFail"))
 	adapter.Register("createSuccess", p.newUserAdapter("createSuccess"))
+	adapter.Register("updateSuccess", p.newUserAdapter("updateSuccess"))
 	adapter.Register("triggerFail", p.newRoomAdapter("triggerFail"))
 	adapter.Register("triggerSuccess", p.newRoomAdapter("triggerSuccess"))
 	adapter.Register("allLines", p.newRoomAdapter("allLines"))

@@ -28,6 +28,8 @@ requirejs.config({
         "html-requiredparams":"/public/defaultui/block/requiredparams.html",
         "html-createrequiredparamform":"/public/defaultui/block/createrequiredparamform.html",
         "html-updaterequiredparamform":"/public/defaultui/block/updaterequiredparamform.html",
+        "html-updateworldsettingsform":"/public/defaultui/block/updateworldsettingsform.html",
+
         "main":"/public/defaultui/js/main"
     },
 });
@@ -82,7 +84,9 @@ define(function (require) {
     document.getElementById("createrequiredparamform").innerHTML=htmlcreaterequiredparamform;
     var htmlupdaterequiredparamform=require("text!html-updaterequiredparamform");
     document.getElementById("updaterequiredparamform").innerHTML=htmlupdaterequiredparamform;
-    
+    var htmlupdateworldsettingsform=require("text!html-updateworldsettingsform");
+    document.getElementById("updateworldsettingsform").innerHTML=htmlupdateworldsettingsform;
+
     
     var htmlalllines=require("text!html-alllines");
 

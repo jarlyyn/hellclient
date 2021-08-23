@@ -1,5 +1,11 @@
 <el-dialog size="80%"  :fullscreen="true" size="80%"  direction="btt"  title="游戏设置" :visible.sync="worldSettingsVisible">
         <div v-if="worldSettings" style="width:90%;margin:auto">
+            <el-button-group >
+                <el-tooltip class="item" effect="light" content="编辑" placement="bottom">
+                <el-button @click="onButton('updateWorldSettings')" size="mini" type="primary" icon="el-icon-edit"></el-button>
+                </el-tooltip>
+            </el-button-group >        
+
             <el-descriptions :title="worldSettings.ID" border>
                 <el-descriptions-item label="服务器地址">{{worldSettings.Host}}</el-descriptions-item>
                 <el-descriptions-item label="服务器端口">{{worldSettings.Port}}</el-descriptions-item>

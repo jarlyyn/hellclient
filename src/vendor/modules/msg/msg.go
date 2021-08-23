@@ -12,6 +12,8 @@ const MsgTypeConnected = "connected"
 const MsgTypeDisconnected = "disconnected"
 const MsgTypeCreateFail = "createFail"
 const MsgTypeCreateSuccess = "createSuccess"
+const MsgTypeUpdateSuccess = "updateSuccess"
+
 const MsgTypeCreateScriptFail = "createScriptFail"
 const MsgTypeCreateScriptSuccess = "createScriptSuccess"
 
@@ -87,7 +89,9 @@ func PublishCreateFail(p Publisher, errors []*validator.FieldError) {
 func PublishCreateSuccess(p Publisher, id string) {
 	p.Publish(New(MsgTypeCreateSuccess, "", id))
 }
-
+func PublishUpdateSuccess(p Publisher, id string) {
+	p.Publish(New(MsgTypeUpdateSuccess, "", id))
+}
 func PublishCreateScriptFail(p Publisher, errors []*validator.FieldError) {
 	p.Publish(New(MsgTypeCreateScriptFail, "", errors))
 }

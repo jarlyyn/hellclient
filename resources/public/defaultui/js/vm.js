@@ -78,6 +78,8 @@ var data={
     requiredParamCreateFormVisible:false,
     requiredParamUpdateForm:null,
     requiredParamUpdateFormVisible:false,
+    worldsettingsUpdateForm:null,
+    worldsettingsUpdateFormVisible:false,
     sendto:{
         0:"游戏",
         1:"命令",

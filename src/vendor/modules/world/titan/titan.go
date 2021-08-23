@@ -149,7 +149,9 @@ func (t *Titan) OnCreateSuccess(id string) {
 		w.HandleCmdError(w.DoConnectServer())
 	}
 }
-
+func (t *Titan) OnUpdateSuccess(id string) {
+	msg.PublishUpdateSuccess(t, id)
+}
 func (t *Titan) OnCreateScriptFail(errors []*validator.FieldError) {
 	msg.PublishCreateScriptFail(t, errors)
 }

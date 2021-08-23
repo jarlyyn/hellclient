@@ -62,6 +62,9 @@ handlers.createSuccess=function(data){
     vm.allgameVisible=false;
     send("change",data)
 }
+handlers.updateSuccess=function(){
+    vm.worldsettingsUpdateFormVisible=false
+}
 handlers.triggers=function(data){
     vm.triggers=data
 }

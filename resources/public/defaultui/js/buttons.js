@@ -250,6 +250,23 @@ onButton.worldSettings=function(){
     vm.worldSettings=null;
     app.send("worldSettings",vm.current)
 }
+onButton.updateWorldSettings=function(){
+    vm.createFail=[]
+    vm.worldsettingsUpdateForm={
+        Charset: vm.worldSettings.Charset,
+        CommandStackCharacter: vm.worldSettings.CommandStackCharacter,
+        Host: vm.worldSettings.Host,
+        Name: vm.worldSettings.Name,
+        Port: vm.worldSettings.Port,
+        ID:vm.current,
+        ScriptPrefix:vm.worldSettings.ScriptPrefix,
+    }
+    vm.worldsettingsUpdateFormVisible=true
+}
+onButton.worldsettingsUpdateSubmit=function(){
+    vm.worldsettingsUpdateForm.ID=vm.current
+    send("updateWorldSettings",vm.worldsettingsUpdateForm);
+}
 onButton.scriptSettings=function(){
     vm.scriptSettings=null;
     app.send("scriptSettings",vm.current)

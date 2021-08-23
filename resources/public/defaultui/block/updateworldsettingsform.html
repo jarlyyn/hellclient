@@ -1,0 +1,37 @@
+<el-dialog v-if="worldsettingsUpdateForm" width="80%" :fullscreen="true" title="编辑游戏设置"
+  :visible.sync="worldsettingsUpdateFormVisible">
+  <div v-if="createFail">
+    <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
+
+  </div>
+  <el-form :model="worldsettingsUpdateForm" label-width="120px">
+    <el-form-item label="ID">
+      <span>{{worldsettingsUpdateForm.ID}}</span>
+    </el-form-item>
+    <el-form-item label="服务器地址">
+      <el-input v-model="worldsettingsUpdateForm.Host"></el-input>
+    </el-form-item>
+    <el-form-item label="服务器端口">
+      <el-input v-model="worldsettingsUpdateForm.Port"></el-input>
+    </el-form-item>
+    <el-form-item label="字符集">
+      <el-select v-model="worldsettingsUpdateForm.Charset" placeholder="请选字符编码">
+        <el-option label="GBK" value="gbk"></el-option>
+        <el-option label="UTF8" value="utf8"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="名称">
+      <el-input v-model="worldsettingsUpdateForm.Name"></el-input>
+    </el-form-item>
+    <el-form-item label="脚本前缀">
+      <el-input v-model="worldsettingsUpdateForm.ScriptPrefix"></el-input>
+    </el-form-item>
+    <el-form-item label="命令分割符">
+      <el-input v-model="worldsettingsUpdateForm.CommandStackCharacter"></el-input>
+    </el-form-item>        
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="worldsettingsUpdateFormVisible = false">取 消</el-button>
+    <el-button type="primary" @click="onButton('worldsettingsUpdateSubmit')">确 定</el-button>
+  </div>
+</el-dialog>
