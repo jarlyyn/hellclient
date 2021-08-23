@@ -61,7 +61,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
         aboutVisible: false,
         version: "",
         uiversion: "21.08.21",
-        showRequiredParams: false,
+        showRequiredParams: true,
         allgameVisible: false,
         userinputList: null,
         userinputListVisible: false,
@@ -296,7 +296,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
             updateRequiredParams: function () {
                 app.send("updateRequiredParams", { Current: vm.current, RequiredParams: this.requiredParams })
             },
-            onUpdateRequiredParam: function (data) {
+            onUpdateScriptRequiredParam: function (data) {
                 this.requiredParam = data
                 this.createFail = []
                 this.requiredParamUpdateForm = {
