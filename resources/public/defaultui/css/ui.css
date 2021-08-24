@@ -84,3 +84,7 @@ html body .el-table .game-list-not-running{
     line-height: 28px;
     text-align: center;
 }
+.userinput-list-mutli-footer{
+    margin-top: 0.5em;
+    text-align: right;
+}

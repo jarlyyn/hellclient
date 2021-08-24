@@ -23,10 +23,25 @@ func (l *List) Append(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	l.List.Append(call.Argument(0).String(), call.Argument(1).String())
 	return nil
 }
+func (l *List) SetValues(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	v := []string{}
+	err := r.ExportTo(call.Argument(0), &v)
+	if err != nil {
+		panic(err)
+	}
+	l.List.SetValues(v)
+	return nil
+}
+func (l *List) SetMutli(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	l.List.SetMutli(call.Argument(0).ToBoolean())
+	return nil
+}
 func (l *List) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("append", l.Append)
 	obj.Set("send", l.Send)
+	obj.Set("setmutli", l.SetMutli)
+	obj.Set("setvalues", l.SetValues)
 	return obj
 }
 

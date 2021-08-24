@@ -1,36 +1,50 @@
-<el-drawer v-if="userinputList"
-  :title="userinputList.Data.Title"
-  :visible.sync="userinputListVisible"
-  size="80%"
-  direction="btt"
-  :close="onUserinputListClose"
-  >
-  <div id="userinput-list-body">
-  <span>{{userinputList.Data.Intro}}</span>
-  <el-table
-  :data="userinputList.Data.Items.filter(data => !userinputListSearch || data.Value.toLowerCase().includes(userinputListSearch.toLowerCase()))"
-  style="width: 100%">
-  <el-table-column width="80px">
-  <template slot-scope="scope">
-    <el-button
-      size="mini" type="success"
-      @click="handleSelectUserinputList(scope.$index, scope.row)">选择</el-button>
-  </template>
-</el-table-column>
+<el-drawer v-if="userinputList" :title="userinputList.Data.Title" :visible.sync="userinputListVisible" size="80%"
+  direction="btt" :close="onUserinputListClose">
 
-  <el-table-column
-    label=""
-    prop="Value">
-    <template slot="header" slot-scope="scope">
-      <el-input
-        v-if="userinputList.Data.WithFilter"
-        v-model="userinputListSearch"
-        size="mini"
-        placeholder="输入关键字搜索"/>
+  <div id="userinput-list-body">
+    <span>{{userinputList.Data.Intro}}</span>
+    <div v-show="!userinputList.Data.Mutli">
+      <el-table
+        :data="userinputList.Data.Items.filter(data => !userinputListSearch || data.Value.toLowerCase().includes(userinputListSearch.toLowerCase()))"
+        style="width: 100%">
+        <el-table-column width="80px">
+          <template slot-scope="scope">
+            <el-button size="mini" type="success" @click="handleSelectUserinputList(scope.$index, scope.row)">选择
+            </el-button>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="" prop="Value">
+          <template slot="header" slot-scope="scope">
+            <el-input v-if="userinputList.Data.WithFilter" v-model="userinputListSearch" size="mini"
+              placeholder="输入关键字搜索" />
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <div v-show="userinputList.Data.Mutli">
+      <el-table ref="userinputListTable"
+        :data="userinputList.Data.Items"
+        @selection-change="onUserinputListMutliChange">
+        style="width: 100%">
+        <el-table-column type="selection" width="55">
+        </el-table-column>
+
+        <el-table-column label="" prop="Value">
+          <template slot="header" slot-scope="scope">
+            <el-input v-if="userinputList.Data.WithFilter" v-model="userinputListSearch" size="mini"
+              placeholder="输入关键字搜索" />
+          </template>
+        </el-table-column>
+      </el-table>
+      <div slot="footer" class="userinput-list-mutli-footer">
+        <el-button @click="userinputListVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onButton('userinputsubmit')">确 定</el-button>
+      </div>
+
+    </div>
     </template>
-  </el-table-column>
-</el-table>
-</template>
 
 
   </div>

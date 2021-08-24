@@ -1,107 +1,109 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=600" />
-        <title>Hellclient</title>
-        <link rel="stylesheet" href="/public/defaultui/theme-chalk/index.css">
-        <link rel="stylesheet" href="/public/defaultui/css/ansicolor.css">
-        <link rel="stylesheet" href="/public/defaultui/css/ui.css">
-        <link rel="shortcut icon" href="/public/defaultui/image/favicon.png">
-        <style>
-        </style>
-        <script data-main="/public/defaultui/js/init.js" src="/public/defaultui/js/require.min.js"></script>
-    </head>
-    <body>
-        <div id="app">
-            <div id="top">
-      
-            </div>
-        <ul id="lines" @mousedown="onButton('allLines')">
-            <li v-bind:class="'words '+ typeclass[line.Type]" v-bind:key="line.ID" v-for="line in lines">
-                <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')" v-for="word in line.Words" >{{word.Text}}</span>
-            </li>
-            <li class="prompt words">
-                <div v-if="prompt &&  prompt.Words &&  prompt.Words.length">
-                <span v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')" v-for="word in prompt.Words" >{{word.Text}}</span>
-            </div>
-            </li>
-        </ul>
-<div id="triggerlist"></div>
-<div id="creategameform"></div>
-<div id="createscriptform"></div>
-<div id="createtimerform"></div>
-<div id="updatetimerform"></div>
-<div id="timerlist"></div>
-<div id="createaliasform"></div>
-<div id="updatealiasform"></div>
-<div id="createtriggerform"></div>
-<div id="updatetriggerform"></div>
-<div id="aliaslist"></div>
-<div id="variablelist"></div>
-<div id="userinputlist"></div>
-<div id="worldsettings"></div>
-<div id="scriptsettings"></div>
-<div id="requiredparams"></div>
-<div id="notopened"></div>
-<div id="gamelist"></div>
-<div id="script"></div>
-<div id="scriptlist"></div>
-<div id="createrequiredparamform"></div>
-<div id="updaterequiredparamform"></div>
-<div id="updateworldsettingsform"></div>
-<div id="updatescriptsettingsform"></div>
+
+<head>
+  <meta name="viewport" content="width=600" />
+  <title>Hellclient</title>
+  <link rel="stylesheet" href="/public/defaultui/theme-chalk/index.css">
+  <link rel="stylesheet" href="/public/defaultui/css/ansicolor.css">
+  <link rel="stylesheet" href="/public/defaultui/css/ui.css">
+  <link rel="shortcut icon" href="/public/defaultui/image/favicon.png">
+  <style>
+  </style>
+  <script data-main="/public/defaultui/js/init.js" src="/public/defaultui/js/require.min.js"></script>
+</head>
+
+<body>
+
+  <div id="app">
+    <div id="userinputlist"></div>
+
+    <div id="top"></div>
+    <ul id="lines" @mousedown="onButton('allLines')">
+      <li v-bind:class="'words '+ typeclass[line.Type]" v-bind:key="line.ID" v-for="line in lines">
+        <span
+          v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')"
+          v-for="word in line.Words">{{word.Text}}</span>
+      </li>
+      <li class="prompt words">
+        <div v-if="prompt &&  prompt.Words &&  prompt.Words.length">
+          <span
+            v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')"
+            v-for="word in prompt.Words">{{word.Text}}</span>
+        </div>
+      </li>
+    </ul>
+    <div id="triggerlist"></div>
+    <div id="creategameform"></div>
+    <div id="createscriptform"></div>
+    <div id="createtimerform"></div>
+    <div id="updatetimerform"></div>
+    <div id="timerlist"></div>
+    <div id="createaliasform"></div>
+    <div id="updatealiasform"></div>
+    <div id="createtriggerform"></div>
+    <div id="updatetriggerform"></div>
+    <div id="aliaslist"></div>
+    <div id="variablelist"></div>
+    <div id="worldsettings"></div>
+    <div id="scriptsettings"></div>
+    <div id="requiredparams"></div>
+    <div id="notopened"></div>
+    <div id="gamelist"></div>
+    <div id="script"></div>
+    <div id="scriptlist"></div>
+    <div id="createrequiredparamform"></div>
+    <div id="updaterequiredparamform"></div>
+    <div id="updateworldsettingsform"></div>
+    <div id="updatescriptsettingsform"></div>
 
 
-<el-dialog v-if="clients.length && current && info[current]" 
-  :title="'游戏'+current+ '@' +info[current].HostPort+'状态'"
-  :visible.sync="statusVisible"
-  width="80%">
-  <div >
-  <span v-if="status" id="pop-status">{{status}}</span>
-</div>
-  <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="statusVisible = false">确 定</el-button>
-  </span>
-</el-dialog>
-<el-dialog
-  title="关于"
-  :visible.sync="aboutVisible"
-  width="80%">
-  <div >
-      <h2>hellclient</h2>
-      <p><a href="https://github.com/jarlyyn/hellclient">Homepage</a></p>
-      <p>服务版本:{{version}}</p>
-      <p>界面版本:{{uiversion}}</p>
-</div>
-  <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="aboutVisible = false">关闭</el-button>
-  </span>
-</el-dialog>
-<div id="alllines"></div>
-        <div id="footer">
-                <div id="current">
-                    {{current}}
-                </div>
-        <div  id="user-input" v-on:keyup.13="send">
-        <el-input size="small" placeholder="请输入命令" v-model="cmd" >
-   <el-tooltip slot="prepend"  effect="light" content="助理" placement="top">
-                <el-button icon="el-icon-user" @click="assist"></el-button>
-            </el-tooltip>
+    <el-dialog v-if="clients.length && current && info[current]" :title="'游戏'+current+ '@' +info[current].HostPort+'状态'"
+      :visible.sync="statusVisible" width="80%">
+      <div>
+        <span v-if="status" id="pop-status">{{status}}</span>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="statusVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog title="关于" :visible.sync="aboutVisible" width="80%">
+      <div>
+        <h2>hellclient</h2>
+        <p><a href="https://github.com/jarlyyn/hellclient">Homepage</a></p>
+        <p>服务版本:{{version}}</p>
+        <p>界面版本:{{uiversion}}</p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="aboutVisible = false">关闭</el-button>
+      </span>
+    </el-dialog>
+    <div id="alllines"></div>
+    <div id="footer">
+      <div id="current">
+        {{current}}
+      </div>
+      <div id="user-input" v-on:keyup.13="send">
+        <el-input size="small" placeholder="请输入命令" v-model="cmd">
+          <el-tooltip slot="prepend" effect="light" content="助理" placement="top">
+            <el-button icon="el-icon-user" @click="assist"></el-button>
+          </el-tooltip>
 
-                    <el-dropdown slot="append" size="mini" @command="onHistory">
-                    <span class="el-dropdown-link"><i class="el-icon-more"></i></span>
-                    <el-dropdown-menu slot="dropdown" >
-                      <el-dropdown-item v-for="h in history" :command="h">{{h}}</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-              </el-input>            
-            </div>
+          <el-dropdown slot="append" size="mini" @command="onHistory">
+            <span class="el-dropdown-link"><i class="el-icon-more"></i></span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item v-for="h in history" :command="h">{{h}}</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-input>
+      </div>
     </div>
-</div>
+  </div>
 
+  <script>
+    var body = document.getElementsByTagName("html")[0]
+  </script>
+  
+</body>
 
-    </body>
-    <script>
-      var   body=document.getElementsByTagName("html")[0]
-     </script>
 </html>

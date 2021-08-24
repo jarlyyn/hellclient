@@ -1,6 +1,7 @@
 define(function (require) {
     var app=require("/public/defaultui/js/app.js")
     var vm=require("/public/defaultui/js/vm.js")
+    var Vue=require("vue")
     var _=require("lodash")
     var handlers=app.onScriptMessage;
     var send=app.send;
@@ -57,7 +58,17 @@ define(function (require) {
         vm.userinputList=data
         vm.userinputListVisible=true
         vm.userinputListSearch=""
-    
+        Vue.nextTick(function(){
+            if (data.Data.Mutli){
+                data.Data.Values.forEach(function(value){
+                    data.Data.Items.forEach(function(item){
+                        if (item.Key==value){
+                            vm.$refs.userinputListTable.toggleRowSelection(item,true)
+                        }
+                    })
+                })
+            }
+        })
     }
     
 })

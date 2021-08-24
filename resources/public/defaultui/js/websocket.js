@@ -33,7 +33,7 @@ ws.onclose=function(){
 });
 }
 ws.onmessage = function(event) {
-    data=convertmsg(event.data);
+    var data=convertmsg(event.data);
     var f=handlers[data.type];
     if (f){
         f(data.data)

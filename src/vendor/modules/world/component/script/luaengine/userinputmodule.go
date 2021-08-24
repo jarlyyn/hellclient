@@ -24,10 +24,28 @@ func (l *List) Append(L *lua.LState) int {
 	l.List.Append(L.ToString(1), L.ToString(2))
 	return 0
 }
+func (l *List) SetValues(L *lua.LState) int {
+	v := []string{}
+	t := L.ToTable(1)
+	m := t.MaxN()
+	for i := 1; i <= m; i++ {
+		v = append(v, t.RawGetInt(i).String())
+	}
+	l.List.SetValues(v)
+	return 0
+}
+func (l *List) SetMutli(L *lua.LState) int {
+	l.List.SetMutli(L.ToBool(1))
+	return 0
+}
+
 func (l *List) Convert(L *lua.LState) lua.LValue {
 	t := L.NewTable()
 	t.RawSetString("append", L.NewFunction(l.Append))
 	t.RawSetString("send", L.NewFunction(l.Send))
+	t.RawSetString("setvalues", L.NewFunction(l.SetValues))
+	t.RawSetString("setmutli", L.NewFunction(l.SetMutli))
+
 	return t
 }
 

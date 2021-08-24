@@ -338,5 +338,11 @@ onButton.requiredParamUpdateSubmit=function(){
     }
     vm.requiredParamUpdateFormVisible=false
 }
+onButton.userinputsubmit=function(){
+    vm.callback(vm.userinputList, 0, JSON.stringify(vm.userinputList.Data.Values||[]))
+    vm.userinputList = null
+    vm.userinputListVisible = false
+    vm.userinputListSearch = ""
 
+}
 })

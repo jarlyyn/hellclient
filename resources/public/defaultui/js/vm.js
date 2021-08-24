@@ -325,6 +325,13 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
             RequiredParamRemove: function (index) {
                 this.requiredParams = vm.requiredParams.splice(index, 1)
                 this.updateRequiredParams()
+            },
+            onUserinputListMutliChange:function(val){
+                this.userinputList.Data.Values=[]
+                var self=this
+                val.forEach(function(data){
+                    self.userinputList.Data.Values.push(data.Key)
+                })
             }
         }
     })
