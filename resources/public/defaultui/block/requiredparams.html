@@ -1,6 +1,7 @@
-<el-dialog size="80%"  :fullscreen="true"  title="脚本变量" :visible.sync="requiredParamsVisible">
+<el-dialog size="80%"  :fullscreen="true"  title="变量说明" :visible.sync="requiredParamsVisible">
     
         <div  style="width:90%;margin:auto">
+          <div>编辑脚本中使用的变量的说明文字</div>
             <el-button-group >
                 <el-tooltip class="item" effect="light" content="添加" placement="bottom">
                 <el-button @click="onButton('createRequireParam')" size="mini" type="primary" icon="el-icon-plus"></el-button>
