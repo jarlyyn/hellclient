@@ -36,7 +36,11 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				return r.ToValue(b.GetMetronomeQueue())
 			})
 			m.Set("discard", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-				b.DoDiscardMetronome()
+				b.DoDiscardMetronome(call.Argument(0).ToBoolean())
+				return nil
+			})
+			m.Set("lockqueue", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				b.DoLockMetronomeQueue()
 				return nil
 			})
 			m.Set("full", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {

@@ -18,7 +18,8 @@ type Queue struct {
 func (c *Queue) InstallTo(b *bus.Bus) {
 	b.BindCloseEvent(c, c.close)
 	b.DoSendToQueue = b.WrapHandleSend(c.Append)
-	b.DoDiscardQueue = c.Flush
+	b.DoDiscardQueue = b.WrapDiscard(c.Flush)
+	b.DoLockQueue = c.LockQueue
 	b.GetQueue = c.ListQueue
 	b.BindQueueDelayUpdatedEvent(c, c.onDelayUpdate)
 }
@@ -33,20 +34,47 @@ func (c *Queue) ListQueue() []*world.Command {
 	return result
 }
 func (c *Queue) close(b *bus.Bus) {
-	c.Flush()
+	c.Flush(b, true)
 }
-func (c *Queue) Flush() int {
+func (c *Queue) Flush(b *bus.Bus, force bool) int {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
-	timer := c.Timer
-	if timer != nil {
-		timer.Stop()
+	var l int
+	if force {
+		l = c.List.Len()
+		c.List.Init()
+	} else {
+		var result = list.New()
+		for i := c.List.Front(); i != nil; i = i.Next() {
+			c := i.Value.(*world.Command)
+			if c.Locked {
+				result.PushBack(c)
+			} else {
+				l++
+			}
+		}
+		c.List = result
 	}
-	l := c.List.Len()
-	c.List.Init()
-	c.Pending = false
+	timer := c.Timer
+	if c.List.Len() == 0 {
+		if timer != nil {
+			timer.Stop()
+		}
+		c.Pending = false
+	} else {
+		c.Append(b, nil)
+	}
 	return l
 }
+func (c *Queue) LockQueue() {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	for i := c.List.Front(); i != nil; i = i.Next() {
+		c := i.Value.(*world.Command)
+		c.Locked = true
+	}
+}
+
 func (c *Queue) Append(b *bus.Bus, cmd *world.Command) {
 	c.Locker.Lock()
 	cmds := cmd.Split("\n")

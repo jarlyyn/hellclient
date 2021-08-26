@@ -68,12 +68,12 @@ type Bus struct {
 	DoRunScript              func(string)
 	DoPrint                  func(msg string)
 	DoPrintSystem            func(msg string)
-	DoDiscardQueue           func() int
-
-	DoOmitOutput            func()
-	DoDeleteLines           func(int)
-	GetLineCount            func() int
-	DoSendBroadcastToScript func(*world.Broadcast)
+	DoDiscardQueue           func(force bool) int
+	DoLockQueue              func()
+	DoOmitOutput             func()
+	DoDeleteLines            func(int)
+	GetLineCount             func() int
+	DoSendBroadcastToScript  func(*world.Broadcast)
 
 	DoSendTimerToScript     func(*world.Timer)
 	DoDeleteTimer           func(string) bool
@@ -164,7 +164,8 @@ type Bus struct {
 	DoResetMetronome       func()
 	GetMetronomeSpace      func() int
 	GetMetronomeQueue      func() []string
-	DoDiscardMetronome     func() bool
+	DoDiscardMetronome     func(force bool) bool
+	DoLockMetronomeQueue   func()
 	DoFullMetronome        func()
 	DoFullTickMetronome    func()
 	SetMetronomeInterval   func(time.Duration)
@@ -173,6 +174,7 @@ type Bus struct {
 	GetMetronomeTick       func() time.Duration
 	DoPushMetronome        func(cmds []*world.Command, grouped bool)
 	DoMetronomeSend        func(cmds *world.Command)
+	DoMetronomeLock        func()
 	BroadcastEvent         busevent.Event
 	LineEvent              busevent.Event
 	PromptEvent            busevent.Event
@@ -198,6 +200,11 @@ func (b *Bus) Wrap(f func(bus *Bus)) func() {
 func (b *Bus) WrapDo(f func(bus *Bus) error) func() error {
 	return func() error {
 		return f(b)
+	}
+}
+func (b *Bus) WrapDiscard(f func(bus *Bus, force bool) int) func(bool) int {
+	return func(force bool) int {
+		return f(b, force)
 	}
 }
 func (b *Bus) WrapDoCmd(f func(bus *Bus, cmd []byte) error) func(cmd []byte) error {

@@ -223,8 +223,11 @@ func (a *API) Queue(message string, echo bool) int {
 	a.Bus.DoSendToQueue(cmd)
 	return EOK
 }
-func (a *API) DiscardQueue() int {
-	return a.Bus.DoDiscardQueue()
+func (a *API) DiscardQueue(force bool) int {
+	return a.Bus.DoDiscardQueue(force)
+}
+func (a *API) LockQueue() {
+	a.Bus.DoLockQueue()
 }
 func (a *API) SpeedWalkDelay() int {
 	return a.Bus.GetQueueDelay()

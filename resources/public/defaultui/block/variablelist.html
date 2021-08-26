@@ -5,7 +5,7 @@
   v-model="showRequiredParams"
   active-color="#13ce66"
   inactive-color="#ff4949"
-  active-text="脚本变量"
+  active-text="可设置变量"
   inactive-text="全部变量"
   :disabled="paramsinfo.RequiredParams?false:true"
   >
@@ -14,7 +14,7 @@
 
 
     <div id="variablelist-required" v-if="showRequiredParams">
-    <h2>脚本变量列表</h2>
+    <h2>可设置变量列表</h2>
         <el-table
         :data="paramsinfo.RequiredParams"
         style="width: 100%">

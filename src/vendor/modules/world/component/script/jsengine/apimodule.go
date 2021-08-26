@@ -136,6 +136,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "Execute", a.Execute)
 	AppendToWorld(jp.Runtime, world, "DeleteCommandHistory", a.DeleteCommandHistory)
 	AppendToWorld(jp.Runtime, world, "DiscardQueue", a.DiscardQueue)
+	AppendToWorld(jp.Runtime, world, "LockQueue", a.LockQueue)
 	AppendToWorld(jp.Runtime, world, "GetQueue", a.GetQueue)
 	AppendToWorld(jp.Runtime, world, "Queue", a.Queue)
 
@@ -371,7 +372,10 @@ func (a *jsapi) DeleteCommandHistory(call goja.FunctionCall, r *goja.Runtime) go
 	return goja.Null()
 }
 func (a *jsapi) DiscardQueue(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	return r.ToValue(a.API.DiscardQueue())
+	return r.ToValue(a.API.DiscardQueue(call.Argument(0).ToBoolean()))
+}
+func (a *jsapi) LockQueue(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.LockQueue)
 }
 func (a *jsapi) GetQueue(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	cmds := a.API.GetQueue()

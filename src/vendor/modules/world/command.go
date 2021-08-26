@@ -10,6 +10,7 @@ type Command struct {
 	Queue       bool
 	Log         bool
 	History     bool
+	Locked      bool
 	Creator     string
 	CreatorType string
 }
@@ -21,6 +22,9 @@ func (c *Command) Clone() *Command {
 
 func (c *Command) Split(sep string) []*Command {
 	var reuslt = []*Command{}
+	if c == nil || c.Mesasge == "" {
+		return reuslt
+	}
 	msgs := strings.Split(c.Mesasge, sep)
 	for _, v := range msgs {
 		cmd := c.Clone()

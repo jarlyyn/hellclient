@@ -79,16 +79,40 @@ func (m *Metronome) Queue() []string {
 	}
 	return result
 }
-func (m *Metronome) Discard() bool {
+func (m *Metronome) Discard(force bool) bool {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	return m.discard()
+	return m.discard(force)
 }
-func (m *Metronome) discard() bool {
+func (m *Metronome) discard(force bool) bool {
 	var result = m.queue.Len()
-	m.queue = list.New()
-	return result != 0
-
+	q := list.New()
+	if !force {
+		for e := m.queue.Front(); e != nil; e = e.Next() {
+			cmds := e.Value.([]*world.Command)
+			c := []*world.Command{}
+			for _, v := range cmds {
+				if v.Locked {
+					c = append(c, v)
+				}
+			}
+			if len(c) > 0 {
+				q.PushBack(c)
+			}
+		}
+	}
+	m.queue = q
+	return result != m.queue.Len()
+}
+func (m *Metronome) LockQueue() {
+	m.Locker.Lock()
+	defer m.Locker.Unlock()
+	for e := m.queue.Front(); e != nil; e = e.Next() {
+		cmds := e.Value.([]*world.Command)
+		for _, v := range cmds {
+			v.Locked = true
+		}
+	}
 }
 func (m *Metronome) Full() {
 	m.Locker.Lock()
@@ -228,6 +252,7 @@ func (m *Metronome) InstallTo(b *bus.Bus) {
 	b.GetMetronomeSpace = m.Space
 	b.GetMetronomeQueue = m.Queue
 	b.DoDiscardMetronome = m.Discard
+	b.DoLockQueue = m.LockQueue
 	b.DoFullMetronome = m.Full
 	b.DoFullTickMetronome = m.FullTick
 	b.SetMetronomeInterval = b.WrapSetDuration(m.SetInterval)

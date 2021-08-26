@@ -66,6 +66,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("Execute", l.NewFunction(a.Execute))
 	l.SetGlobal("DeleteCommandHistory", l.NewFunction(a.DeleteCommandHistory))
 	l.SetGlobal("DiscardQueue", l.NewFunction(a.DiscardQueue))
+	l.SetGlobal("LockQueue", l.NewFunction(a.LockQueue))
 	l.SetGlobal("GetQueue", l.NewFunction(a.GetQueue))
 	l.SetGlobal("Queue", l.NewFunction(a.Queue))
 
@@ -339,8 +340,12 @@ func (a *luaapi) DeleteCommandHistory(L *lua.LState) int {
 	return 0
 }
 func (a *luaapi) DiscardQueue(L *lua.LState) int {
-	L.Push(lua.LNumber(a.API.DiscardQueue()))
+	L.Push(lua.LNumber(a.API.DiscardQueue(L.ToBool(1))))
 	return 1
+}
+func (a *luaapi) LockQueue(L *lua.LState) int {
+	a.API.LockQueue()
+	return 0
 }
 func (a *luaapi) GetQueue(L *lua.LState) int {
 	cmds := a.API.GetQueue()

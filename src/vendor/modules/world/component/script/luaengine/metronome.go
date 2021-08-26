@@ -44,7 +44,11 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				return 1
 			}))
 			m.RawSetString("discard", l.NewFunction(func(L *lua.LState) int {
-				b.DoDiscardMetronome()
+				b.DoDiscardMetronome(L.ToBool(1))
+				return 0
+			}))
+			m.RawSetString("lockqueue", l.NewFunction(func(L *lua.LState) int {
+				b.DoLockMetronomeQueue()
 				return 0
 			}))
 			m.RawSetString("full", l.NewFunction(func(L *lua.LState) int {
