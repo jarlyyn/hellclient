@@ -21,7 +21,7 @@ func (info ClientInfos) Len() int {
 
 // Less reports whether the element with index i
 func (info ClientInfos) Less(i, j int) bool {
-	return info[i].ReadyAt > info[j].ReadyAt
+	return info[i].ReadyAt < info[j].ReadyAt
 }
 
 // Swap swaps the elements with indexes i and j.

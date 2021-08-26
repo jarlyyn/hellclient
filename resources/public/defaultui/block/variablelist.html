@@ -23,6 +23,9 @@
         label="变量名"
         width="200"
         >
+        <template slot-scope="scope">
+          <el-button @click="onUpdateRequiredParam(scope.row)" type="text">{{scope.row.Name}}</el-button>
+        </template>        
       </el-table-column>
         <el-table-column
         label="变量值"

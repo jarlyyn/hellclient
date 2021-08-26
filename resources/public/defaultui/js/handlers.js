@@ -13,6 +13,7 @@ handlers.current=function(data){
     vm.current=data
     vm.currenttab=data
     vm.lines=[]
+    document.getElementById("mud-input").focus()
 }
 handlers.line=function(data){
     var lines=app.linesbuffer
