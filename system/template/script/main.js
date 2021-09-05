@@ -14,7 +14,7 @@ onDisconnected=function (){
 
 }
 
-onAsssist=function(){
+onAssist=function(){
 
 }
 

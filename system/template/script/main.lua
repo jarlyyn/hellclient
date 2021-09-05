@@ -10,7 +10,7 @@ end
 onDisconnected=function ()
 end
 
-onAsssist=function()
+onAssist=function()
 end
 
 onBroadcast=function(msg,global,channel,global)
