@@ -65,6 +65,8 @@ func FromUTF8(to string, s []byte) ([]byte, error) {
 		encoder = japanese.ShiftJIS.NewEncoder()
 	case "iso-2022-jp", "cp932", "windows-31j":
 		encoder = japanese.ISO2022JP.NewEncoder()
+	case "utf8":
+		return s, nil
 	default:
 		return s, errors.New("Unsupported encoding " + to)
 	}
