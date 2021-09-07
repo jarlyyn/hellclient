@@ -66,11 +66,12 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 		return err
 	}
 	if data.OnOpen != "" {
-		open, ok := goja.AssertFunction(e.Plugin.Runtime.Get(data.OnOpen))
-		if ok {
-			open(goja.Undefined())
-		}
-		b.HandleScriptError(err)
+		b.HandleScriptError(util.Catch(func() {
+			open, ok := goja.AssertFunction(e.Plugin.Runtime.Get(data.OnOpen))
+			if ok {
+				open(goja.Undefined())
+			}
+		}))
 	}
 	return nil
 }
