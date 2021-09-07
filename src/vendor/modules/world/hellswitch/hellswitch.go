@@ -53,6 +53,8 @@ func (h *Hellswitch) Broadcast(msg []byte) {
 }
 func (h *Hellswitch) listen(conn *websocket.Conn) {
 	go func() {
+		h.locker.Lock()
+		defer h.locker.Unlock()
 		conn.WriteMessage(websocket.TextMessage, CmdHello)
 	}()
 	for {
