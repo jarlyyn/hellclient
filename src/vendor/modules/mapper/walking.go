@@ -9,7 +9,7 @@ type Step struct {
 	From    string
 	Command string
 	Delay   int
-	// Length  int
+	remain  int
 }
 
 var EmptyStep = &Step{}
@@ -39,7 +39,7 @@ func (w *Walking) step(p *Path) *Step {
 		From:    p.From,
 		Command: p.Command,
 		Delay:   length,
-		// Length:  length,
+		remain:  length,
 	}
 }
 func ValidateTags(tags map[string]bool, p *Path) bool {
@@ -100,8 +100,8 @@ Matching:
 			}
 			step := v.Value.(*Step)
 			if w.walked[step.To] == nil {
-				if step.Delay > 0 {
-					step.Delay--
+				if step.remain > 0 {
+					step.remain--
 				} else {
 					w.walked[step.To] = step
 					if tolist[step.To] {
