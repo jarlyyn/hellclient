@@ -94,6 +94,7 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.DoListTriggerNames = a.DoListTriggerNames
 	b.AddTrigger = a.AddTrigger
 	b.DoUpdateTrigger = a.DoUpdateTrigger
+	b.DoGetTriggerWildcard = a.GetTriggerWildcard
 
 	b.DoMultiLinesAppend = a.DoMultiLinesAppend
 	b.DoMultiLinesFlush = a.DoMultiLinesFlush
@@ -133,6 +134,15 @@ func (a *Automation) ReadyForLine() {
 	defer a.Locker.Unlock()
 	a.evaluatingTriggersStop = false
 }
+func (a *Automation) GetTriggerWildcard(name string) *world.MatchResult {
+	a.Triggers.Locker.Lock()
+	t := a.Triggers.Named[name]
+	a.Triggers.Locker.Unlock()
+	if t == nil {
+		return nil
+	}
+	return t.Wildcards()
+}
 func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 	if line == nil || line.Type != world.LineTypeReal {
 		return
@@ -153,7 +163,16 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 		if r == nil {
 			continue
 		}
-
+		a.Locker.Lock()
+		a.Locker.Unlock()
+		a.Triggers.Locker.Lock()
+		rawtrigger := a.Triggers.All[v.Data.ID]
+		if rawtrigger != nil {
+			rawtrigger.Locker.Lock()
+			rawtrigger.wildcards = r
+			rawtrigger.Locker.Unlock()
+		}
+		a.Triggers.Locker.Unlock()
 		var send string
 		var data world.Trigger
 		v.Locker.Lock()

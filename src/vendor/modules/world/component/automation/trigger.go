@@ -16,14 +16,20 @@ type Context struct {
 }
 
 type Trigger struct {
-	Locker   sync.RWMutex
-	Deleted  bool
-	Data     *world.Trigger
-	Matcher  world.Matcher
-	ByUser   bool
-	RawMatch string
+	Locker    sync.RWMutex
+	Deleted   bool
+	Data      *world.Trigger
+	Matcher   world.Matcher
+	ByUser    bool
+	RawMatch  string
+	wildcards *world.MatchResult
 }
 
+func (t *Trigger) Wildcards() *world.MatchResult {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	return t.wildcards
+}
 func (t *Trigger) Option(name string) (string, bool) {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
@@ -134,6 +140,11 @@ func (t *Trigger) Info(infotype int) (string, bool) {
 		return t.Data.Variable, true
 	case 28:
 		return strconv.Itoa(0), true
+	case 31:
+		if t.wildcards == nil {
+			return "0", true
+		}
+		return strconv.Itoa(len(t.wildcards.List)), true
 	case 36:
 		return world.ToStringBool(t.Data.OneShot), true
 	}

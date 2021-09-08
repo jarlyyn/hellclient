@@ -587,7 +587,24 @@ func (a *API) SetTriggerOption(name string, option string, value string) int {
 func (a *API) StopEvaluatingTriggers() {
 	a.Bus.DoStopEvaluatingTriggers()
 }
+func (a *API) GetTriggerWildcard(triggername string, wildcard string) *string {
+	triggername = world.PrefixedName(triggername, false)
+	w := a.Bus.DoGetTriggerWildcard(triggername)
+	if w == nil {
+		return nil
+	}
+	var result, ok = w.Named[wildcard]
+	if ok {
+		return &result
+	}
+	var index, err = strconv.Atoi(wildcard)
+	if err != nil || index < 0 || index >= len(w.List) {
+		return nil
 
+	}
+	result = w.List[index]
+	return &result
+}
 func (a *API) ColourNameToRGB(v string) int {
 	return world.Colours[v]
 }

@@ -109,6 +109,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("GetTriggerOption", l.NewFunction(a.GetTriggerOption))
 	l.SetGlobal("SetTriggerOption", l.NewFunction(a.SetTriggerOption))
 	l.SetGlobal("StopEvaluatingTriggers", l.NewFunction(a.StopEvaluatingTriggers))
+	l.SetGlobal("GetTriggerWildcard", l.NewFunction(a.GetTriggerWildcard))
 
 	l.SetGlobal("ColourNameToRGB", l.NewFunction(a.ColourNameToRGB))
 	l.SetGlobal("SetSpeedWalkDelay", l.NewFunction(a.SetSpeedWalkDelay))
@@ -702,6 +703,15 @@ func (a *luaapi) StopEvaluatingTriggers(L *lua.LState) int {
 	a.API.StopEvaluatingTriggers()
 	return 0
 }
+func (a *luaapi) GetTriggerWildcard(L *lua.LState) int {
+	v := a.API.GetTriggerWildcard(L.ToString(1), L.ToString(2))
+	if v == nil {
+		L.Push(lua.LNil)
+	} else {
+		L.Push(lua.LString(*v))
+	}
+	return 1
+}
 func (a *luaapi) ColourNameToRGB(L *lua.LState) int {
 	v := a.API.ColourNameToRGB(L.ToString(1))
 	L.Push(lua.LNumber(v))
@@ -1060,6 +1070,8 @@ func (a *luaapi) GetTriggerInfo(L *lua.LState) int {
 	case 27:
 		L.Push(lua.LString(v))
 	case 28:
+		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 31:
 		L.Push(lua.LNumber(world.FromStringInt(v)))
 	case 36:
 		L.Push(lua.LBool(world.FromStringBool(v)))

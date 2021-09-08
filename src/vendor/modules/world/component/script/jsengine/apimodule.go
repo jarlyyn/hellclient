@@ -179,6 +179,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "GetTriggerOption", a.GetTriggerOption)
 	AppendToWorld(jp.Runtime, world, "SetTriggerOption", a.SetTriggerOption)
 	AppendToWorld(jp.Runtime, world, "StopEvaluatingTriggers", a.StopEvaluatingTriggers)
+	AppendToWorld(jp.Runtime, world, "GetTriggerWildcard", a.GetTriggerWildcard)
 
 	AppendToWorld(jp.Runtime, world, "ColourNameToRGB", a.ColourNameToRGB)
 	AppendToWorld(jp.Runtime, world, "SetSpeedWalkDelay", a.SetSpeedWalkDelay)
@@ -692,6 +693,10 @@ func (a *jsapi) StopEvaluatingTriggers(call goja.FunctionCall, r *goja.Runtime) 
 	a.API.StopEvaluatingTriggers()
 	return goja.Null()
 }
+func (a *jsapi) GetTriggerWildcard(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.GetTriggerWildcard(call.Argument(0).String(), call.Argument(1).String()))
+}
+
 func (a *jsapi) ColourNameToRGB(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	v := a.API.ColourNameToRGB(call.Argument(0).String())
 	return r.ToValue(v)
@@ -942,6 +947,8 @@ func (a *jsapi) GetTriggerInfo(call goja.FunctionCall, r *goja.Runtime) goja.Val
 	case 27:
 		return r.ToValue(v)
 	case 28:
+		return r.ToValue(world.FromStringInt(v))
+	case 31:
 		return r.ToValue(world.FromStringInt(v))
 	case 36:
 		return r.ToValue(world.FromStringBool(v))

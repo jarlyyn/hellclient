@@ -133,16 +133,16 @@ type Bus struct {
 	AddTrigger                func(*world.Trigger, bool) bool
 	DoUpdateTrigger           func(*world.Trigger) int
 	DoSendTriggerToScript     func(line *world.Line, trigger *world.Trigger, result *world.MatchResult)
-
-	DoSendCallbackToScript func(cb *world.Callback)
-	DoAssist               func()
-	DoMultiLinesAppend     func(string)
-	DoMultiLinesFlush      func()
-	DoMultiLinesLast       func(int) []string
-	GetLinesInBufferCount  func() int
-	GetRecentLines         func(count int) []*world.Line
-	GetLine                func(idx int) *world.Line
-	GetMapper              func() *mapper.Mapper
+	DoGetTriggerWildcard      func(name string) *world.MatchResult
+	DoSendCallbackToScript    func(cb *world.Callback)
+	DoAssist                  func()
+	DoMultiLinesAppend        func(string)
+	DoMultiLinesFlush         func()
+	DoMultiLinesLast          func(int) []string
+	GetLinesInBufferCount     func() int
+	GetRecentLines            func(count int) []*world.Line
+	GetLine                   func(idx int) *world.Line
+	GetMapper                 func() *mapper.Mapper
 
 	AddHistory               func(string)
 	GetHistories             func() []string
