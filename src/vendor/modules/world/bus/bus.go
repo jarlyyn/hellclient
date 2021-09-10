@@ -74,28 +74,28 @@ type Bus struct {
 	DoDeleteLines            func(int)
 	GetLineCount             func() int
 	DoSendBroadcastToScript  func(*world.Broadcast)
-
-	DoSendTimerToScript     func(*world.Timer)
-	DoDeleteTimer           func(string) bool
-	DoDeleteTimerByName     func(string) bool
-	DoDeleteTemporaryTimers func() int
-	DoDeleteTimerGroup      func(string) int
-	DoEnableTimerByName     func(string, bool) bool
-	DoEnableTimerGroup      func(string, bool) int
-	DoResetNamedTimer       func(string) bool
-	GetTimer                func(string) *world.Timer
-	GetTimersByType         func(bool) []*world.Timer
-	DoDeleteTimerByType     func(bool)
-	AddTimers               func(ts []*world.Timer)
-	DoResetTimers           func()
-	GetTimerOption          func(name string, option string) (string, bool, bool)
-	GetTimerInfo            func(name string, infotype int) (string, bool, bool)
-	SetTimerOption          func(name string, option string, value string) (bool, bool, bool)
-	HasNamedTimer           func(string) bool
-	DoListTimerNames        func() []string
-	AddTimer                func(*world.Timer, bool) bool
-	DoUpdateTimer           func(*world.Timer) int
-	DoSendAliasToScript     func(message string, alias *world.Alias, result *world.MatchResult)
+	HandleBuffer             func([]byte) bool
+	DoSendTimerToScript      func(*world.Timer)
+	DoDeleteTimer            func(string) bool
+	DoDeleteTimerByName      func(string) bool
+	DoDeleteTemporaryTimers  func() int
+	DoDeleteTimerGroup       func(string) int
+	DoEnableTimerByName      func(string, bool) bool
+	DoEnableTimerGroup       func(string, bool) int
+	DoResetNamedTimer        func(string) bool
+	GetTimer                 func(string) *world.Timer
+	GetTimersByType          func(bool) []*world.Timer
+	DoDeleteTimerByType      func(bool)
+	AddTimers                func(ts []*world.Timer)
+	DoResetTimers            func()
+	GetTimerOption           func(name string, option string) (string, bool, bool)
+	GetTimerInfo             func(name string, infotype int) (string, bool, bool)
+	SetTimerOption           func(name string, option string, value string) (bool, bool, bool)
+	HasNamedTimer            func(string) bool
+	DoListTimerNames         func() []string
+	AddTimer                 func(*world.Timer, bool) bool
+	DoUpdateTimer            func(*world.Timer) int
+	DoSendAliasToScript      func(message string, alias *world.Alias, result *world.MatchResult)
 
 	DoDeleteAlias            func(string) bool
 	DoDeleteAliasByName      func(string) bool
@@ -330,6 +330,11 @@ func (b *Bus) WrapHandleCallback(f func(b *Bus, bc *world.Callback)) func(bc *wo
 func (b *Bus) WrapHandleStringForBool(f func(bus *Bus, str string) bool) func(str string) bool {
 	return func(str string) bool {
 		return f(b, str)
+	}
+}
+func (b *Bus) WrapHandleBytesForBool(f func(bus *Bus, data []byte) bool) func(data []byte) bool {
+	return func(data []byte) bool {
+		return f(b, data)
 	}
 }
 func (b *Bus) WrapHandlePushGroupedCommands(f func(b *Bus, cmds []*world.Command, grouped bool)) func(cmds []*world.Command, grouped bool) {

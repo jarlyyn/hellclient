@@ -70,7 +70,7 @@
 .words .underlined{text-decoration: underline;}
 .words.echo{color: cyan;font-style:italic}
 .words.echo::before{content:"↣";color:teal}
-.words.system{color: red;}
+.words.system{color: red;white-space: pre-wrap}
 .words.system::before{content:"⯳";color:purple}
 .words.print{color:mediumspringgreen;    white-space: pre-wrap}
 .words.print::before{content:"↢";color:green;padding-left: 0.5em}

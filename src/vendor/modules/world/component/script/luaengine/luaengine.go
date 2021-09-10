@@ -37,6 +37,9 @@ type LuaEngine struct {
 	onDisconnect string
 	onConnect    string
 	onBroadCast  string
+	onBuffer     string
+	onBufferMin  int
+	onBufferMax  int
 }
 
 func NewLuaEngine() *LuaEngine {
@@ -52,6 +55,9 @@ func (e *LuaEngine) Open(b *bus.Bus) error {
 	e.onConnect = data.OnConnect
 	e.onDisconnect = data.OnDisconnect
 	e.onBroadCast = data.OnBroadcast
+	e.onBuffer = data.OnBuffer
+	e.onBufferMin = data.OnBufferMin
+	e.onBufferMax = data.OnBufferMax
 	err := util.Catch(func() {
 		newLuaInitializer(b).MustApplyInitializer(e.Plugin)
 	})
@@ -175,6 +181,22 @@ func (e *LuaEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Unlock()
 	go e.Call(b, fn, lua.LString(bc.Message), lua.LBool(bc.Global), lua.LString(bc.Channel), lua.LString(bc.ID))
 }
+func (e *LuaEngine) OnBuffer(b *bus.Bus, data []byte) bool {
+	e.Locker.Lock()
+	if e.Plugin.LState == nil {
+		e.Locker.Unlock()
+		return false
+	}
+	l := len(data)
+	if l < e.onBufferMin || (e.onBufferMax > 0 && l > e.onBufferMax) {
+		e.Locker.Unlock()
+		return false
+	}
+	fn := e.Plugin.LState.GetGlobal(e.onBuffer)
+	e.Locker.Unlock()
+	v := e.Call(b, fn, lua.LString(data))
+	return lua.LVAsBool(v)
+}
 func (e *LuaEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
 	e.Locker.Lock()
 	if e.Plugin.LState == nil {
@@ -202,12 +224,12 @@ func (e *LuaEngine) Run(b *bus.Bus, cmd string) {
 	b.HandleScriptError(e.Plugin.LState.DoString(cmd))
 }
 
-func (e *LuaEngine) Call(b *bus.Bus, fn lua.LValue, args ...lua.LValue) {
+func (e *LuaEngine) Call(b *bus.Bus, fn lua.LValue, args ...lua.LValue) lua.LValue {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()
 	L := e.Plugin.LState
 	if L == nil {
-		return
+		return nil
 	}
 	if err := L.CallByParam(lua.P{
 		Fn:      fn,
@@ -216,4 +238,5 @@ func (e *LuaEngine) Call(b *bus.Bus, fn lua.LValue, args ...lua.LValue) {
 	}, args...); err != nil {
 		b.HandleScriptError(err)
 	}
+	return L.Get(-1)
 }

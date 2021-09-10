@@ -103,6 +103,13 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 
 	return err
 }
+func (conn *Conn) flushBuffer(bus *bus.Bus) {
+	buf := conn.buffer
+	conn.Debounce.Reset()
+	conn.buffer = []byte{}
+	conn.Lock.Unlock()
+	bus.HandleConnReceive(buf)
+}
 func (conn *Conn) Receiver(bus *bus.Bus) {
 	del := byte(10)
 	del2 := byte(13)
@@ -136,14 +143,15 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 				bus.HandleConnError(err)
 				return
 			}
-			buf := conn.buffer
-			conn.Debounce.Reset()
-			conn.buffer = []byte{}
-			conn.Lock.Unlock()
-			bus.HandleConnReceive(buf)
+			conn.flushBuffer(bus)
 			continue
 		}
 		conn.buffer = append(conn.buffer, s)
+
+		if bus.HandleBuffer(conn.buffer) {
+			conn.flushBuffer(bus)
+			continue
+		}
 		conn.Lock.Unlock()
 		conn.Debounce.Exec()
 	}

@@ -237,6 +237,7 @@ func (s *Script) SetStatus(b *bus.Bus, val string) {
 		b.RaiseStatusEvent(val)
 	}()
 }
+
 func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
 	e := s.getEngine()
 	if e != nil {
@@ -326,6 +327,14 @@ func (s *Script) SendBroadcast(b *bus.Bus, bc *world.Broadcast) {
 		e.OnBroadCast(b, bc)
 	}
 }
+func (s *Script) HandleBuffer(b *bus.Bus, data []byte) bool {
+	e := s.getEngine()
+	if e == nil {
+		return false
+	}
+	s.SetCreator("prompt", "")
+	return e.OnBuffer(b, data)
+}
 func (s *Script) Run(b *bus.Bus, cmd string) {
 	e := s.getEngine()
 	if e != nil {
@@ -373,6 +382,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptType = s.GetScriptType
 	b.GetScriptCaller = s.CreatorAndType
 	b.DoAssist = b.Wrap(s.Assist)
+	b.HandleBuffer = b.WrapHandleBytesForBool(s.HandleBuffer)
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)

@@ -11,6 +11,10 @@ winpcredll="./lib/pcre/libpcre.dll"
 
 winmclconvertorname="mclconvertor.exe"
 
+macbinname="hellclient-mac"
+macbuildername="build-mac.sh"
+macmclconvertorname="mclconvertor-mac"
+
 
 if [ -z "$1" ]
 then 
@@ -30,6 +34,7 @@ echo "Publish to $1."
 echo "Building"
 bash ./$buildername
 bash ./$winbuildername
+bash ./$macbuildername
 echo "Creating folder $1."
 mkdir $1
 mkdir $1/appdata
@@ -38,8 +43,10 @@ echo "Copying bin file."
 mkdir $1/bin
 cp -rpf ../../bin/$binname $1/bin/$binname
 cp -rpf ../../bin/$winbinname $1/bin/$winbinname
+cp -rpf ../../bin/$macbinname $1/bin/$macbinname
 cp -rpf ../../bin/$mclconvertorname $1/bin/$mclconvertorname
 cp -rpf ../../bin/$winmclconvertorname $1/bin/$winmclconvertorname
+cp -rpf ../../bin/$macmclconvertorname $1/bin/$macmclconvertorname
 cp -rpf ../../$winpcredll $1/bin/libpcre-1.dll
 echo "Copying system files."
 cp -rpf ../../system $1/system

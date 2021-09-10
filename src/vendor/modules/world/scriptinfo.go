@@ -37,6 +37,9 @@ type ScriptSettings struct {
 	OnDisconnect string
 	OnBroadcast  string
 	OnAssist     string
+	OnBuffer     string
+	OnBufferMin  int
+	OnBufferMax  int
 	Channel      string
 }
 
@@ -50,6 +53,9 @@ type ScriptData struct {
 	OnDisconnect   string
 	OnBroadcast    string
 	OnAssist       string
+	OnBuffer       string
+	OnBufferMin    int
+	OnBufferMax    int
 	Channel        string
 	Triggers       []*Trigger
 	Timers         []*Timer

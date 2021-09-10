@@ -38,6 +38,9 @@ type JsEngine struct {
 	onDisconnect string
 	onConnect    string
 	onBroadCast  string
+	onBuffer     string
+	onBufferMin  int
+	onBufferMax  int
 }
 
 func NewJsEngine() *JsEngine {
@@ -53,6 +56,9 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 	e.onConnect = data.OnConnect
 	e.onDisconnect = data.OnDisconnect
 	e.onBroadCast = data.OnBroadcast
+	e.onBuffer = data.OnBuffer
+	e.onBufferMax = data.OnBufferMax
+	e.onBufferMin = data.OnBufferMin
 	err := util.Catch(func() {
 		newJsInitializer(b).MustApplyInitializer(e.Plugin)
 	})
@@ -169,6 +175,20 @@ func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Unlock()
 	go e.Call(b, e.onBroadCast, bc.Message, bc.Global, bc.Channel, bc.ID)
 }
+func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil {
+		e.Locker.Unlock()
+		return false
+	}
+	l := len(data)
+	if l < e.onBufferMin || (e.onBufferMax > 0 && l > e.onBufferMax) {
+		e.Locker.Unlock()
+		return false
+	}
+	e.Locker.Unlock()
+	return e.Call(b, e.onBuffer, string(data)).ToBoolean()
+}
 
 func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
 	e.Locker.Lock()
@@ -196,29 +216,31 @@ func (e *JsEngine) Run(b *bus.Bus, cmd string) {
 	b.HandleScriptError(err)
 }
 
-func (e *JsEngine) Call(b *bus.Bus, source string, args ...interface{}) {
+func (e *JsEngine) Call(b *bus.Bus, source string, args ...interface{}) goja.Value {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()
 	r := e.Plugin.Runtime
 	if r == nil {
-		return
+		return nil
 	}
 	s, err := r.RunString(source)
 	if err != nil {
 		b.HandleScriptError(err)
-		return
+		return nil
 	}
 	fn, ok := goja.AssertFunction(s)
 	if !ok {
 		b.HandleScriptError(errors.New(fmt.Sprintf("js function %s not found", source)))
-		return
+		return nil
 	}
 	jargs := []goja.Value{}
 	for _, v := range args {
 		jargs = append(jargs, r.ToValue(v))
 	}
+	var result goja.Value
 	b.HandleScriptError(util.Catch(func() {
-		_, err := fn(goja.Undefined(), jargs...)
+		result, err = fn(goja.Undefined(), jargs...)
 		b.HandleScriptError(err)
 	}))
+	return result
 }
