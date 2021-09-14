@@ -76,8 +76,10 @@ func (m *Mapper) Tags() []string {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
 	var result = make([]string, 0, len(m.tags))
-	for k := range m.tags {
-		result = append(result, k)
+	for k, v := range m.tags {
+		if v {
+			result = append(result, k)
+		}
 	}
 	return result
 }
