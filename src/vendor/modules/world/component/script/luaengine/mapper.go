@@ -198,7 +198,7 @@ func (m *LuaMapper) AddPath(L *lua.LState) int {
 }
 func (m *LuaMapper) NewPath(L *lua.LState) int {
 	p := &LuaPath{
-		path: &mapper.Path{},
+		path: mapper.NewPath(),
 	}
 	L.Push(p.Convert(L))
 	return 1

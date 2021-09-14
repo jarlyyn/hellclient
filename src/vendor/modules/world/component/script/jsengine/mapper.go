@@ -176,7 +176,7 @@ func (m *JsMapper) AddPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 }
 func (m *JsMapper) NewPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	p := &JsPath{
-		path: &mapper.Path{},
+		path: mapper.NewPath(),
 	}
 	return r.ToValue(p.Convert(r))
 }
