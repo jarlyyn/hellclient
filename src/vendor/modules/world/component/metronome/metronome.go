@@ -55,7 +55,7 @@ func (m *Metronome) Reset(b *bus.Bus) {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
 	m.sent = list.New()
-	m.play(b)
+	go m.play(b)
 }
 func (m *Metronome) Space() int {
 	m.Locker.Lock()
@@ -170,14 +170,14 @@ func (m *Metronome) clean() {
 	}
 }
 func (m *Metronome) Play(bus *bus.Bus) {
-	m.Locker.Lock()
-	defer m.Locker.Unlock()
-	m.play(bus)
+	go m.play(bus)
 }
 func (m *Metronome) play(bus *bus.Bus) {
 	if !bus.GetConnConnected() {
 		return
 	}
+	m.Locker.Lock()
+	defer m.Locker.Unlock()
 	m.clean()
 	b := m.getBeats()
 	for m.queue.Len() != 0 && m.sent.Len() < b {
@@ -233,7 +233,7 @@ func (m *Metronome) startTicker(b *bus.Bus) {
 			case <-m.tickerC:
 				return
 			case <-t.C:
-				m.Play(b)
+				go m.Play(b)
 			}
 		}
 	}()
@@ -267,7 +267,7 @@ func (m *Metronome) Push(b *bus.Bus, cmds []*world.Command, grouped bool) {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
 	m.append(cmds, grouped)
-	m.play(b)
+	go m.play(b)
 }
 func New() *Metronome {
 	return &Metronome{
