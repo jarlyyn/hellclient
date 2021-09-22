@@ -187,6 +187,10 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 
 	AppendToWorld(jp.Runtime, world, "ReadFile", a.NewReadFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadLines", a.NewReadLinesAPI(p))
+	AppendToWorld(jp.Runtime, world, "HasHomeFile", a.NewHasHomeFileAPI(p))
+	AppendToWorld(jp.Runtime, world, "ReadHomeFile", a.NewReadHomeFileAPI(p))
+	AppendToWorld(jp.Runtime, world, "WriteHomeFile", a.NewWriteHomeFileAPI(p))
+	AppendToWorld(jp.Runtime, world, "ReadHomeLines", a.NewReadHomeLinesAPI(p))
 	AppendToWorld(jp.Runtime, world, "SplitN", a.SplitNfunc)
 	AppendToWorld(jp.Runtime, world, "UTF8Len", a.UTF8Len)
 	AppendToWorld(jp.Runtime, world, "UTF8Sub", a.UTF8Sub)
@@ -714,6 +718,22 @@ func (a *jsapi) NewReadFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall,
 		return r.ToValue(a.API.ReadFile(p, call.Argument(0).String()))
 	}
 }
+func (a *jsapi) NewHasHomeFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.HasHomeFile(p, call.Argument(0).String()))
+	}
+}
+func (a *jsapi) NewWriteHomeFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		a.API.WriteHomeFile(p, call.Argument(0).String(), []byte(call.Argument(1).String()))
+		return nil
+	}
+}
+func (a *jsapi) NewReadHomeFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.ReadHomeFile(p, call.Argument(0).String()))
+	}
+}
 func (a *jsapi) NewReadLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		lines := a.API.ReadLines(p, call.Argument(0).String())
@@ -725,7 +745,17 @@ func (a *jsapi) NewReadLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall
 
 	}
 }
+func (a *jsapi) NewReadHomeLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		lines := a.API.ReadHomeLines(p, call.Argument(0).String())
+		t := []interface{}{}
+		for _, v := range lines {
+			t = append(t, v)
+		}
+		return r.NewArray(t...)
 
+	}
+}
 func (a *jsapi) SplitNfunc(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	text := call.Argument(0).String()
 	sep := call.Argument(1).String()

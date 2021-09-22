@@ -5,16 +5,20 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"fmt"
+	"io/fs"
+	"io/ioutil"
 	"modules/notifier"
 	"modules/version"
 	"modules/world"
 	"modules/world/bus"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync/atomic"
 
 	"github.com/herb-go/herbplugin"
+	"github.com/herb-go/util"
 
 	uuid "github.com/satori/go.uuid"
 
@@ -607,6 +611,111 @@ func (a *API) GetTriggerWildcard(triggername string, wildcard string) *string {
 }
 func (a *API) ColourNameToRGB(v string) int {
 	return world.Colours[v]
+}
+func (a *API) MustCheckHome() {
+	home := a.Bus.GetScriptHome()
+	if home == "" {
+		return
+	}
+	_, err := os.Stat(home)
+	if err != nil {
+		id := a.Bus.GetScriptID()
+		if id == "" {
+			return
+		}
+		skel := filepath.Join(a.Bus.GetSkeletonPath(), id)
+		if os.IsNotExist(err) {
+			os.MkdirAll(home, util.DefaultFolderMode)
+			_, err = os.Stat(skel)
+			if err != nil {
+				if os.IsNotExist(err) {
+					return
+				}
+				panic(err)
+			}
+			err := filepath.Walk(skel, func(path string, info fs.FileInfo, err error) error {
+				if err != nil {
+					panic(err)
+				}
+				if info.IsDir() {
+					return os.MkdirAll(path, util.DefaultFolderMode)
+				}
+				folder, _ := filepath.Split(path)
+				err = os.MkdirAll(folder, util.DefaultFolderMode)
+				if err != nil {
+					panic(err)
+				}
+				data, err := ioutil.ReadFile(filepath.Join(skel, path))
+				if err != nil {
+					panic(err)
+				}
+				err = ioutil.WriteFile(filepath.Join(home, path), data, util.DefaultFileMode)
+				if err != nil {
+					panic(err)
+				}
+				return nil
+			})
+			if err != nil {
+				panic(err)
+			}
+			return
+		}
+		panic(err)
+	}
+}
+func (a *API) MustCleahHomeFileInsidePath(name string) string {
+	home := a.Bus.GetScriptHome()
+	name = herbplugin.MustCleanPath(home, name)
+	if name == "" {
+		return name
+	}
+	if !strings.HasPrefix(name, home) {
+		return ""
+	}
+	return name
+}
+func (a *API) HasHomeFile(p herbplugin.Plugin, name string) bool {
+	a.MustCheckHome()
+	filename := a.MustCleahHomeFileInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("read %s not allowed", name))
+	}
+	_, err := os.Stat(filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+		panic(err)
+	}
+	return true
+}
+func (a *API) ReadHomeFile(p herbplugin.Plugin, name string) string {
+	a.MustCheckHome()
+	filename := a.MustCleahHomeFileInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("read %s not allowed", name))
+	}
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+func (a *API) WriteHomeFile(p herbplugin.Plugin, name string, body []byte) {
+	a.MustCheckHome()
+	filename := a.MustCleahHomeFileInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("write %s not allowed", name))
+	}
+	err := os.WriteFile(filename, body, util.DefaultFileMode)
+	if err != nil {
+		panic(err)
+	}
+	return
+}
+func (a *API) ReadHomeLines(p herbplugin.Plugin, name string) []string {
+	data := a.ReadHomeFile(p, name)
+	return strings.Split(lineReplacer.Replace(data), "\n")
 }
 
 func (a *API) ReadFile(p herbplugin.Plugin, name string) string {

@@ -38,13 +38,14 @@ import (
 )
 
 type Titan struct {
-	Locker     sync.RWMutex
-	Worlds     map[string]*bus.Bus
-	Path       string
-	hellswitch *hellswitch.Hellswitch
-	Scriptpath string
-	Logpath    string
-	msgEvent   *busevent.Event
+	Locker       sync.RWMutex
+	Worlds       map[string]*bus.Bus
+	Path         string
+	hellswitch   *hellswitch.Hellswitch
+	Scriptpath   string
+	Skeletonpath string
+	Logpath      string
+	msgEvent     *busevent.Event
 }
 
 func (t *Titan) CreateBus() *bus.Bus {
@@ -311,6 +312,8 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindScriptMessageEvent(t, t.onScriptMessage)
 	b.GetScriptPath = t.GetScriptPath
 	b.GetLogsPath = t.GetLogsPath
+	b.GetSkeletonPath = t.GetSkeletonPath
+	b.GetScriptHome = b.WrapGetString(t.GetScriptHome)
 }
 
 func (t *Titan) RaiseMsgEvent(msg *message.Message) {
@@ -513,7 +516,9 @@ func (t *Titan) HandleCmdSend(id string, msg string) {
 		w.DoExecute(msg)
 	}
 }
-
+func (t *Titan) GetSkeletonPath() string {
+	return t.Skeletonpath
+}
 func (t *Titan) GetScriptPath() string {
 	return t.Scriptpath
 }
@@ -775,6 +780,13 @@ func (t *Titan) NewScript(id string, scripttype string) error {
 	return nil
 
 }
+func (t *Titan) GetScriptHome(b *bus.Bus) string {
+	sid := b.GetScriptID()
+	if sid == "" {
+		return ""
+	}
+	return filepath.Join(t.Path, b.ID, sid)
+}
 
 var GlobalMessageSep = []byte(" ")
 
@@ -793,6 +805,7 @@ func (t *Titan) OnGlobalMessage(msg []byte) {
 	}
 
 }
+
 func (t *Titan) OnSwitchStatusChange(status int) {
 
 	go func() {

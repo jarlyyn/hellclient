@@ -19,11 +19,14 @@ const LogsFolder = "/game/logs"
 const GamePrefix = "/game/"
 const GameFolder = "game"
 
+const SkeletonsFolder = "/game/skeletons"
+
 func CreatePangu() {
 	Pangu = New()
 	Pangu.Path = util.AppData(WorldsFolder)
 	Pangu.Scriptpath = util.AppData(ScriptsFolder)
 	Pangu.Logpath = util.AppData(LogsFolder)
+	Pangu.Skeletonpath = util.AppData(SkeletonsFolder)
 	os.MkdirAll(Pangu.Path, util.DefaultFolderMode)
 	os.MkdirAll(Pangu.Scriptpath, util.DefaultFolderMode)
 	os.MkdirAll(Pangu.Logpath, util.DefaultFolderMode)

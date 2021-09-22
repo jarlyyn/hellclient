@@ -11,6 +11,7 @@ import (
 	"path"
 	"path/filepath"
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/BurntSushi/toml"
@@ -28,6 +29,18 @@ type Script struct {
 	Data          *world.ScriptData
 	Mapper        *mapper.Mapper
 	engine        Engine
+}
+type ScriptOptions struct {
+	Home string
+	*herbplugin.PlainOptions
+}
+
+func (o *ScriptOptions) MustAuthorizePath(path string) bool {
+	path = filepath.Clean(path)
+	if strings.HasPrefix(path, o.Home) {
+		return true
+	}
+	return o.PlainOptions.MustAuthorizePath(path)
 }
 
 func (s *Script) GetMapper() *mapper.Mapper {
@@ -52,14 +65,20 @@ func (s *Script) decodeScript(data []byte) error {
 }
 
 func (s *Script) PluginOptions(b *bus.Bus) herbplugin.Options {
+	home := b.GetScriptHome()
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
 	opt := herbplugin.NewOptions()
 	opt.Location.Path = path.Join(b.GetScriptPath(), b.GetScriptID(), "script")
 	opt.Trusted = b.GetTrusted()
 	opt.Permissions = b.GetPermissions()
-	return opt
+	so := &ScriptOptions{
+		PlainOptions: opt,
+		Home:         home,
+	}
+	return so
 }
+
 func (s *Script) ScriptData(b *bus.Bus) *world.ScriptData {
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
@@ -361,6 +380,7 @@ func (s *Script) GetScriptType() string {
 	}
 	return s.Data.Type
 }
+
 func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptData = b.WrapGetScriptData(s.ScriptData)
 	b.DoReloadScript = b.WrapDo(s.Reload)
