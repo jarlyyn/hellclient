@@ -62,5 +62,6 @@ func CreateDatagrid(title string, intro string) *Datagrid {
 	return &Datagrid{
 		Title: title,
 		Intro: intro,
+		Page:  1,
 	}
 }
