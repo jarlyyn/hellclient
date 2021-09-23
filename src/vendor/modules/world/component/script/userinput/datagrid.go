@@ -47,6 +47,9 @@ func (g *Datagrid) SetOnView(onview string) {
 func (g *Datagrid) SetOnCreate(oncreate string) {
 	g.OnCreate = oncreate
 }
+func (g *Datagrid) SetOnUpdate(onupdate string) {
+	g.OnUpdate = onupdate
+}
 func (g *Datagrid) ResetItems() {
 	g.Items = []*Item{}
 }

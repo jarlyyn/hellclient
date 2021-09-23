@@ -53,6 +53,10 @@ func (g *Datagrid) SetOnCreate(call goja.FunctionCall, r *goja.Runtime) goja.Val
 	g.Datagrid.SetOnCreate(call.Argument(0).String())
 	return nil
 }
+func (g *Datagrid) SetOnUpdate(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.SetOnUpdate(call.Argument(0).String())
+	return nil
+}
 func (g *Datagrid) ResetItems(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	g.Datagrid.ResetItems()
 	return nil
@@ -71,6 +75,7 @@ func (g *Datagrid) Convert(r *goja.Runtime) goja.Value {
 	obj.Set("publish", g.Publish)
 	obj.Set("resetitems", g.ResetItems)
 	obj.Set("setoncreate", g.SetOnCreate)
+	obj.Set("setonupdate", g.SetOnUpdate)
 	obj.Set("setonview", g.SetOnView)
 	obj.Set("setondelete", g.SetOnDelete)
 	obj.Set("setonfilter", g.SetOnFilter)

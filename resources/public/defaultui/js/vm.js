@@ -377,7 +377,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
                         Name:this.userinputDatagrid.Name,
                         Script:this.userinputDatagrid.Data.OnDelete,
                     }
-                    vm.$confirm('是否要删除该计时器?', '删除', {
+                        vm.callback(data,0,row.Key)
+                    vm.$confirm('是否要删除该数据?', row.Value, {
                         confirmButtonText: '删除',
                         cancelButtonText: '取消',
                         type: 'warning'

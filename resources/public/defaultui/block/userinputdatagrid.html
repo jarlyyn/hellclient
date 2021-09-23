@@ -19,8 +19,8 @@
           <template slot-scope="scope">
             <el-button-group>
             <el-button :disabled="!userinputDatagrid.Data.OnView" size="mini" type="success" icon="el-icon-view" @click="handleUserinputDatagridView(scope.$index, scope.row)"></el-button>
-            <el-button :disabled="!userinputDatagrid.Data.OnUpdate" size="mini" type="warning" class="el-icon-edit" @click="handleUserinputDatagridView(scope.$index, scope.row)"></el-button>
-            <el-button :disabled="!userinputDatagrid.Data.OnDelete" size="mini" type="danger" icon="el-icon-delete" @click="handleUserinputDatagridView(scope.$index, scope.row)"></el-button>
+            <el-button :disabled="!userinputDatagrid.Data.OnUpdate" size="mini" type="warning" class="el-icon-edit" @click="handleUserinputDatagridUpdate(scope.$index, scope.row)"></el-button>
+            <el-button :disabled="!userinputDatagrid.Data.OnDelete" size="mini" type="danger" icon="el-icon-delete" @click="handleUserinputDatagridDelete(scope.$index, scope.row)"></el-button>
           </el-button-group>
           </template>
         </el-table-column>
