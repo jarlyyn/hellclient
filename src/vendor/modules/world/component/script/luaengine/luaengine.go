@@ -183,7 +183,7 @@ func (e *LuaEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 }
 func (e *LuaEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 	e.Locker.Lock()
-	if e.Plugin.LState == nil {
+	if e.Plugin.LState == nil || e.onBuffer == "" {
 		e.Locker.Unlock()
 		return false
 	}

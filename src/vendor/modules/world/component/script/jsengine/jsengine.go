@@ -177,7 +177,7 @@ func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 }
 func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 	e.Locker.Lock()
-	if e.Plugin.Runtime == nil {
+	if e.Plugin.Runtime == nil || e.onBuffer == "" {
 		e.Locker.Unlock()
 		return false
 	}

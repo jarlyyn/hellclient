@@ -10,6 +10,79 @@ import (
 	"github.com/herb-go/herbplugin/jsplugin"
 )
 
+type Datagrid struct {
+	Datagrid *userinput.Datagrid
+	bus      *bus.Bus
+}
+
+func (g *Datagrid) SetPage(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.SetPage(int(call.Argument(0).ToInteger()))
+	return nil
+}
+func (g *Datagrid) GetPage(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(g.Datagrid.GetPage())
+}
+func (g *Datagrid) SetMaxPage(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.SetMaxPage(int(call.Argument(0).ToInteger()))
+	return nil
+}
+func (g *Datagrid) SetFilter(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.SetFilter(call.Argument(0).String())
+	return nil
+}
+func (g *Datagrid) GetFilter(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(g.Datagrid.GetFilter())
+}
+func (g *Datagrid) SetOnPage(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.SetOnPage(call.Argument(0).String())
+	return nil
+}
+func (g *Datagrid) SetOnFilter(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.SetOnFilter(call.Argument(0).String())
+	return nil
+}
+func (g *Datagrid) SetOnDelete(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.SetOnDelete(call.Argument(0).String())
+	return nil
+}
+func (g *Datagrid) SetOnView(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.SetOnView(call.Argument(0).String())
+	return nil
+}
+func (g *Datagrid) SetOnCreate(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.SetOnCreate(call.Argument(0).String())
+	return nil
+}
+func (g *Datagrid) ResetItems(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.ResetItems()
+	return nil
+}
+func (g *Datagrid) Append(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.Append(call.Argument(0).String(), call.Argument(1).String())
+	return nil
+}
+func (g *Datagrid) Publish(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	ui := g.Datagrid.Publish(g.bus, call.Argument(0).String())
+	return r.ToValue(ui.ID)
+}
+func (g *Datagrid) Convert(r *goja.Runtime) goja.Value {
+	obj := r.NewObject()
+	obj.Set("append", g.Append)
+	obj.Set("publish", g.Publish)
+	obj.Set("resetitems", g.ResetItems)
+	obj.Set("setoncreate", g.SetOnCreate)
+	obj.Set("setonview", g.SetOnView)
+	obj.Set("setondelete", g.SetOnDelete)
+	obj.Set("setonfilter", g.SetOnFilter)
+	obj.Set("setonpage", g.SetOnPage)
+	obj.Set("setfilter", g.SetFilter)
+	obj.Set("getfilter", g.GetFilter)
+	obj.Set("setmaxpage", g.SetMaxPage)
+	obj.Set("setpage", g.SetPage)
+	obj.Set("getpage", g.GetPage)
+	return obj
+}
+
 type List struct {
 	List *userinput.List
 	bus  *bus.Bus
@@ -49,6 +122,13 @@ type Userinput struct {
 	bus *bus.Bus
 }
 
+func (u *Userinput) NewDatagrid(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	datagrid := &Datagrid{
+		Datagrid: userinput.CreateDatagrid(call.Argument(0).String(), call.Argument(1).String()),
+		bus:      u.bus,
+	}
+	return datagrid.Convert(r)
+}
 func (u *Userinput) NewList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	list := &List{
 		List: userinput.CreateList(call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).ToBoolean()),
@@ -75,6 +155,7 @@ func (u *Userinput) Convert(r *goja.Runtime) goja.Value {
 	obj.Set("confirm", u.Confirm)
 	obj.Set("alert", u.Alert)
 	obj.Set("newlist", u.NewList)
+	obj.Set("newdatagrid", u.NewDatagrid)
 	return obj
 }
 func NewUserinputModule(b *bus.Bus) *herbplugin.Module {
