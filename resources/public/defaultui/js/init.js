@@ -14,6 +14,7 @@ requirejs.config({
         "html-createtriggerform":"/public/defaultui/block/createtriggerform.html",
         "html-updatetriggerform":"/public/defaultui/block/updatetriggerform.html",
         "html-userinputlist":"/public/defaultui/block/userinputlist.html",
+        "html-userinputdatagrid":"/public/defaultui/block/userinputdatagrid.html",
         "html-alllines":"/public/defaultui/block/alllines.html",
         "html-notopened":"/public/defaultui/block/notopened.html",
         "html-scriptlist":"/public/defaultui/block/scriptlist.html",
@@ -73,7 +74,8 @@ define(function (require) {
     document.getElementById("gamelist").innerHTML=htmlgamelist;
     var htmluserinputlist=require("text!html-userinputlist");
     document.getElementById("userinputlist").innerHTML=htmluserinputlist;
-
+    var htmluserinputdatagrid=require("text!html-userinputdatagrid");
+    document.getElementById("userinputdatagrid").innerHTML=htmluserinputdatagrid;
     var htmlworldsettings=require("text!html-worldsettings");
     document.getElementById("worldsettings").innerHTML=htmlworldsettings;
     var htmlscriptsettings=require("text!html-scriptsettings");

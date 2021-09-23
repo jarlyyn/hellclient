@@ -1,0 +1,28 @@
+<el-drawer v-if="userinputDatagrid" :title="userinputDatagrid.Data.Title" :visible.sync="userinputDatagridVisible" size="80%"
+  direction="btt" :close="onUserinputDatagridClose">
+
+  <div id="userinput-datagrid-body">
+    <span>{{userinputDatagrid.Data.Intro}}</span>
+      <el-table
+        :data="userinputDatagrid.Data.Items"
+        style="width: 100%">
+
+
+        <el-table-column label="" prop="Value">
+        </el-table-column>
+        <el-table-column width="80px">
+          <template slot-scope="scope">
+            <el-button v-if="userinputDatagrid.Data.OnView" size="mini" type="success" class="el-icon-view" @click="handleUserinputDatagridView(scope.$index, scope.row)"></el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+      v-if="userinputDatagrid.Data.OnPage && userinputDatagrid.Data.MaxPage>1"
+      layout="prev, pager, next"
+      @current-change="onUserinputDatagridPage"
+      :current-page="userinputDatagrid.Data.Page"
+      :page-count="userinputDatagrid.Data.MaxPage">
+    </el-pagination>  
+    </div>
+
+</el-drawer>

@@ -70,5 +70,9 @@ define(function (require) {
             }
         })
     }
+    handlers["userinput.datagrid"]=function(data){
+        vm.userinputDatagrid=data
+        vm.userinputDatagridVisible=true
+    }
     
 })

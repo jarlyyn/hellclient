@@ -60,12 +60,14 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
         paramsinfo: null,
         aboutVisible: false,
         version: "",
-        uiversion: "21.08.21",
+        uiversion: "21.09.23",
         showRequiredParams: true,
         allgameVisible: false,
         userinputList: null,
         userinputListVisible: false,
         userinputListSearch: "",
+        userinputDatagrid:null,
+        userinputDatagridVisible:false,
         switchstatus: 0,
         statusVisible: false,
         worldSettings: null,
@@ -290,6 +292,11 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
                 vm.userinputListVisible = false
                 vm.userinputListSearch = ""
             },
+            onUserinputDatagridClose: function () {
+                this.callback(this.userinputDatagrid, -1, "")
+                vm.userinputDatagrid = null
+                vm.userinputDatagridVisible = false
+                },
             assist: function () {
                 app.send("assist", this.current)
             },
@@ -332,6 +339,26 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
                 val.forEach(function(data){
                     self.userinputList.Data.Values.push(data.Key)
                 })
+            },
+            onUserinputDatagridPage:function(page){
+                if (this.userinputDatagrid.Data.OnPage){
+                    var data={
+                        ID:this.userinputDatagrid.ID,
+                        Name:this.userinputDatagrid.Name,
+                        Script:this.userinputDatagrid.Data.OnPage,
+                    }
+                    vm.callback(data,0,page+"")
+                }
+            },
+            handleUserinputDatagridView:function(index, row){
+                if (this.userinputDatagrid.Data.OnView){
+                    var data={
+                        ID:this.userinputDatagrid.ID,
+                        Name:this.userinputDatagrid.Name,
+                        Script:this.userinputDatagrid.Data.OnView,
+                    }
+                    vm.callback(data,0,row.Key)
+                }
             }
         }
     })
