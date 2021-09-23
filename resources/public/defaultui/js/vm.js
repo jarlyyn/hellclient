@@ -359,6 +359,65 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
                     }
                     vm.callback(data,0,row.Key)
                 }
+            },
+            handleUserinputDatagridUpdate:function(index, row){
+                if (this.userinputDatagrid.Data.OnUpdate){
+                    var data={
+                        ID:this.userinputDatagrid.ID,
+                        Name:this.userinputDatagrid.Name,
+                        Script:this.userinputDatagrid.Data.OnUpdate,
+                    }
+                    vm.callback(data,0,row.Key)
+                }
+            },
+            handleUserinputDatagridDelete:function(index, row){
+                if (this.userinputDatagrid.Data.OnDelete){
+                    var data={
+                        ID:this.userinputDatagrid.ID,
+                        Name:this.userinputDatagrid.Name,
+                        Script:this.userinputDatagrid.Data.OnDelete,
+                    }
+                    vm.$confirm('是否要删除该计时器?', '删除', {
+                        confirmButtonText: '删除',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        vm.callback(data,0,row.Key)
+                    }).catch(() => {
+                    })                    
+                }
+            },
+            onUserinputDatagridFilter:function(){
+                var vm=this
+                if (vm.userinputDatagrid.Data.OnFilter){
+                    var data={
+                        ID:this.userinputDatagrid.ID,
+                        Name:this.userinputDatagrid.Name,
+                        Script:this.userinputDatagrid.Data.OnFilter,
+                    }
+                vm.$prompt("设置搜索关键字", {
+                    confirmButtonText: '提交',
+                    cancelButtonText: '取消',
+                    inputValue:vm.userinputDatagrid.Data.Filter,
+                    onClose:function(){
+                        vm.callback(data,-1,"")
+                    }
+                  }).then(({ value }) => {
+                    vm.callback(data,0,value)
+                  }).catch(() => {
+                  });
+                }
+            },
+            onUserinputDatagridCreate:function(){
+                var vm=this
+                if (vm.userinputDatagrid.Data.OnCreate){
+                    var data={
+                        ID:this.userinputDatagrid.ID,
+                        Name:this.userinputDatagrid.Name,
+                        Script:this.userinputDatagrid.Data.OnCreate,
+                    }
+                    vm.callback(data,0,"")
+                }
             }
         }
     })

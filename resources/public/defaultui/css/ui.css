@@ -24,6 +24,9 @@ ul#lines{padding-bottom: 60px;margin-bottom:-32px;padding-top: 110px;padding-lef
 .el-form .el-switch{height:40px;line-height: 40px}
 #world{color:#303133}
 #userinput-list-body{color:#303133;padding:0 2em}
+#userinput-datagrid-body{color:#303133;padding:0 2em}
+#userinput-datagrid-body .toolbar{padding-top:1em}
+#userinput-datagrid-body .el-table__row .cell{white-space: nowrap;}
 .el-message-box.update-required .el-message-box__content{
     white-space: pre-line;
 }
