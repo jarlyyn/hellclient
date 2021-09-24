@@ -63,6 +63,8 @@ const MsgTypeScriptSettingsMessage = "scriptSettings"
 
 const MsgTypeRequiredParamsMessage = "requiredParams"
 
+const MsgTypeDefaultServer = "defaultServer"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -219,4 +221,8 @@ func PublishScriptSettingsMessage(p Publisher, world string, settings *world.Scr
 
 func PublishRequiredParamsMessage(p Publisher, world string, rp []*world.RequiredParam) {
 	p.Publish(New(MsgTypeRequiredParamsMessage, world, rp))
+}
+
+func PublishDefaultServerMessage(p Publisher, server string) {
+	p.Publish(New(MsgTypeDefaultServer, "", server))
 }

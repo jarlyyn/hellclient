@@ -196,4 +196,15 @@ handlers.requiredParams=function(data){
     vm.requiredParamsVisible=true;
     vm.requiredParams=data||[]
 }
+handlers.defaultServer=function(data){
+    var server=data.split(":")
+    var host=server[0]
+    var port=server[1]
+    vm.createFail=[];
+    vm.gameCreateForm={
+        Host:host,
+        Port:port,
+    };
+    vm.gameCreateFormVisible=true;
+}
 })

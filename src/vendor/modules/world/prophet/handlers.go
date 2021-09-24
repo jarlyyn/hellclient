@@ -416,7 +416,10 @@ func (p *Prophet) onCmdUpdateRequiredParams(conn connections.OutputConnection, c
 	p.Titan.HandleCmdUpdateRequiredParams(msg.Current, msg.RequiredParams)
 	return nil
 }
-
+func (p *Prophet) onCmdDefaultServer(conn connections.OutputConnection, cmd command.Command) error {
+	p.Titan.HandleCmdDefaultServer()
+	return nil
+}
 func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("change", p.onCmdChange)
 	handlers.Register("connect", p.onCmdConnect)
@@ -466,5 +469,6 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("updateRequiredParams", p.onCmdUpdateRequiredParams)
 	handlers.Register("updateWorldSettings", p.onCmdUpdateWorldSettings)
 	handlers.Register("updateScriptSettings", p.onCmdUpdateScriptSettings)
+	handlers.Register("defaultServer", p.onCmdDefaultServer)
 
 }

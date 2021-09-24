@@ -287,6 +287,10 @@ func (t *Titan) HandleCmdAssist(id string) {
 func (t *Titan) HandleCmdAbout() {
 	go msg.PublishVersionMessage(t, version.Version)
 }
+func (t *Titan) HandleCmdDefaultServer() {
+	go msg.PublishDefaultServerMessage(t, app.System.DefaultServer)
+}
+
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()

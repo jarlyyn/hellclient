@@ -88,9 +88,7 @@ onButton.reload=function(){
 
 
 onButton.createGame=function(){
-    vm.createFail=[];
-    vm.gameCreateForm={};
-    vm.gameCreateFormVisible=true;
+    send("defaultServer","")
 }
 onButton.createGameSubmit=function(){
     send("createGame",vm.gameCreateForm)

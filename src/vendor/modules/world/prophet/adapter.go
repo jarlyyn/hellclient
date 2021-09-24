@@ -52,4 +52,5 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("worldSettings", p.newRoomAdapter("worldSettings"))
 	adapter.Register("scriptSettings", p.newRoomAdapter("scriptSettings"))
 	adapter.Register("requiredParams", p.newRoomAdapter("requiredParams"))
+	adapter.Register("defaultServer", p.newUserAdapter("defaultServer"))
 }
