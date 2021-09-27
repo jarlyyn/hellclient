@@ -226,6 +226,11 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 
 	AppendToWorld(jp.Runtime, world, "GetGlobalOption", a.GetGlobalOption)
 
+	AppendToWorld(jp.Runtime, world, "CheckPermissions", a.CheckPermissions)
+	AppendToWorld(jp.Runtime, world, "RequestPermissions", a.RequestPermissions)
+	AppendToWorld(jp.Runtime, world, "CheckTrustedDomains", a.CheckTrustedDomains)
+	AppendToWorld(jp.Runtime, world, "RequestTrustDomains", a.RequestTrustDomains)
+
 }
 
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1052,6 +1057,43 @@ func (a *jsapi) GetGlobalOption(call goja.FunctionCall, r *goja.Runtime) goja.Va
 		}
 	}
 }
+
+func (a *jsapi) CheckPermissions(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	items := []string{}
+	err := r.ExportTo(call.Argument(0), &items)
+	if err != nil {
+		panic(err)
+	}
+	return r.ToValue(a.API.CheckPermissions(items))
+}
+func (a *jsapi) RequestPermissions(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	items := []string{}
+	err := r.ExportTo(call.Argument(1), &items)
+	if err != nil {
+		panic(err)
+	}
+	a.API.RequestPermissions(call.Argument(0).String(), items, call.Argument(2).String())
+	return nil
+}
+func (a *jsapi) CheckTrustedDomains(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	items := []string{}
+	err := r.ExportTo(call.Argument(0), &items)
+	if err != nil {
+		panic(err)
+	}
+	return r.ToValue(a.API.CheckTrustedDomains(items))
+}
+
+func (a *jsapi) RequestTrustDomains(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	items := []string{}
+	err := r.ExportTo(call.Argument(1), &items)
+	if err != nil {
+		panic(err)
+	}
+	a.API.RequestTrustDomains(call.Argument(0).String(), items, call.Argument(2).String())
+	return nil
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

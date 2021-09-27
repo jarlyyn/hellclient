@@ -24,6 +24,7 @@ func newJsInitializer(b *bus.Bus) *jsplugin.Initializer {
 		NewAPIModule(b),
 		ModuleEval,
 		ModuleJScript,
+		ModuleHTTP,
 		NewFileSystemObjectModule(b),
 		NewMetronomeModule(b),
 		NewUserinputModule(b),
@@ -50,7 +51,7 @@ func NewJsEngine() *JsEngine {
 }
 
 func (e *JsEngine) Open(b *bus.Bus) error {
-	opt := b.GetScriptPluginOptions()
+	opt := b.GetPluginOptions()
 	data := b.GetScriptData()
 	e.onClose = data.OnClose
 	e.onConnect = data.OnConnect
@@ -212,8 +213,10 @@ func (e *JsEngine) OnAssist(b *bus.Bus, script string) {
 func (e *JsEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()
-	_, err := e.Plugin.Runtime.RunString(cmd)
-	b.HandleScriptError(err)
+	b.HandleScriptError(util.Catch(func() {
+		_, err := e.Plugin.Runtime.RunString(cmd)
+		b.HandleScriptError(err)
+	}))
 }
 
 func (e *JsEngine) Call(b *bus.Bus, source string, args ...interface{}) goja.Value {

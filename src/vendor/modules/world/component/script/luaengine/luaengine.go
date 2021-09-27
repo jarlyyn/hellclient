@@ -49,7 +49,7 @@ func NewLuaEngine() *LuaEngine {
 }
 
 func (e *LuaEngine) Open(b *bus.Bus) error {
-	opt := b.GetScriptPluginOptions()
+	opt := b.GetPluginOptions()
 	data := b.GetScriptData()
 	e.onClose = data.OnClose
 	e.onConnect = data.OnConnect

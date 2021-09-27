@@ -65,6 +65,10 @@ const MsgTypeRequiredParamsMessage = "requiredParams"
 
 const MsgTypeDefaultServer = "defaultServer"
 
+const MsgTypeRequestPermissions = "requestPermissions"
+
+const MsgTypeRequestTrustDomains = "requestTrustDomains"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -225,4 +229,12 @@ func PublishRequiredParamsMessage(p Publisher, world string, rp []*world.Require
 
 func PublishDefaultServerMessage(p Publisher, server string) {
 	p.Publish(New(MsgTypeDefaultServer, "", server))
+}
+
+func PublishRequestPermissions(p Publisher, world string, a *world.Authorization) {
+	p.Publish(New(MsgTypeRequestPermissions, world, a))
+}
+
+func PublishRequestTrustDomains(p Publisher, world string, a *world.Authorization) {
+	p.Publish(New(MsgTypeRequestTrustDomains, world, a))
 }

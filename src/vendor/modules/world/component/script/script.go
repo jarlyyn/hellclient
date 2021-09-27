@@ -386,7 +386,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.DoReloadScript = b.WrapDo(s.Reload)
 	b.DoSaveScript = b.WrapDo(s.SaveScript)
 	b.DoUseScript = b.WrapHandleString(s.UseScript)
-	b.GetScriptPluginOptions = b.WrapGetScriptPluginOptions(s.PluginOptions)
+	b.GetPluginOptions = b.WrapGetPluginOptions(s.PluginOptions)
 	b.DoSendTimerToScript = b.WrapHandleTimer(s.SendTimer)
 	b.DoSendAliasToScript = b.WrapHandleAlias(s.SendAlias)
 	b.DoSendTriggerToScript = b.WrapHandleTrigger(s.SendTrigger)

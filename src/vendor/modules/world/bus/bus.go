@@ -46,6 +46,7 @@ type Bus struct {
 	GetScriptData            func() *world.ScriptData
 	SetPermissions           func([]string)
 	GetPermissions           func() []string
+	RequestPermissions       func(*world.Authorization)
 	GetScriptID              func() string
 	SetScriptID              func(string)
 	GetScriptType            func() string
@@ -56,7 +57,8 @@ type Bus struct {
 	DoLog                    func(string)
 	SetTrusted               func(*herbplugin.Trusted)
 	GetTrusted               func() *herbplugin.Trusted
-	GetScriptPluginOptions   func() herbplugin.Options
+	RequestTrustDomains      func(*world.Authorization)
+	GetPluginOptions         func() herbplugin.Options
 	DoSendToConn             func(cmd []byte)
 	DoSend                   func(*world.Command)
 	DoSendToQueue            func(*world.Command)
@@ -259,7 +261,7 @@ func (b *Bus) WrapGetScriptData(f func(bus *Bus) *world.ScriptData) func() *worl
 		return f(b)
 	}
 }
-func (b *Bus) WrapGetScriptPluginOptions(f func(bus *Bus) herbplugin.Options) func() herbplugin.Options {
+func (b *Bus) WrapGetPluginOptions(f func(bus *Bus) herbplugin.Options) func() herbplugin.Options {
 	return func() herbplugin.Options {
 		return f(b)
 	}
@@ -344,6 +346,12 @@ func (b *Bus) WrapHandlePushGroupedCommands(f func(b *Bus, cmds []*world.Command
 		f(b, cmds, grouped)
 	}
 }
+func (b *Bus) WrapHandleAuthorization(f func(b *Bus, a *world.Authorization)) func(a *world.Authorization) {
+	return func(a *world.Authorization) {
+		f(b, a)
+	}
+}
+
 func (b *Bus) RaiseLineEvent(line *world.Line) {
 	b.LineEvent.Raise(line)
 }

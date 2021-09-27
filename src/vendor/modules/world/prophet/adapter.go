@@ -53,4 +53,6 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("scriptSettings", p.newRoomAdapter("scriptSettings"))
 	adapter.Register("requiredParams", p.newRoomAdapter("requiredParams"))
 	adapter.Register("defaultServer", p.newUserAdapter("defaultServer"))
+	adapter.Register("requestPermissions", p.newRoomAdapter("requestPermissions"))
+	adapter.Register("requestTrustDomains", p.newRoomAdapter("requestTrustDomains"))
 }

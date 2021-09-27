@@ -318,8 +318,21 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.GetLogsPath = t.GetLogsPath
 	b.GetSkeletonPath = t.GetSkeletonPath
 	b.GetScriptHome = b.WrapGetString(t.GetScriptHome)
+	b.RequestPermissions = b.WrapHandleAuthorization(t.RequestPermissions)
+	b.RequestTrustDomains = b.WrapHandleAuthorization(t.RequestPermissions)
 }
-
+func (t *Titan) RequestPermissions(b *bus.Bus, a *world.Authorization) {
+	w := t.World(b.ID)
+	if w != nil {
+		msg.PublishRequestPermissions(t, b.ID, a)
+	}
+}
+func (t *Titan) RequestTrustDomains(b *bus.Bus, a *world.Authorization) {
+	w := t.World(b.ID)
+	if w != nil {
+		msg.PublishRequestTrustDomains(t, b.ID, a)
+	}
+}
 func (t *Titan) RaiseMsgEvent(msg *message.Message) {
 	t.msgEvent.Raise(msg)
 }

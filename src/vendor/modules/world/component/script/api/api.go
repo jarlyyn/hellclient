@@ -1074,3 +1074,37 @@ func (a *API) Broadcast(msg string, gloabl bool) {
 func (a *API) Notify(title string, body string) {
 	notifier.DefaultNotifier.WorldNotify(a.Bus.ID, title, body)
 }
+
+func (a *API) CheckPermissions(p []string) bool {
+	permissions := a.Bus.GetPermissions()
+	for _, need := range p {
+	NEED:
+		for _, own := range permissions {
+			if own == need {
+				continue NEED
+			}
+		}
+		return false
+	}
+	return true
+}
+func (a *API) RequestPermissions(callback string, permissions []string, reason string) {
+	a.Bus.RequestPermissions(world.CreateAuthorization(callback, permissions, reason))
+}
+func (a *API) CheckTrustedDomains(d []string) bool {
+	domains := a.Bus.GetTrusted().Domains
+	for _, need := range d {
+	NEED:
+		for _, own := range domains {
+			if own == need {
+				continue NEED
+			}
+		}
+		return false
+	}
+	return true
+}
+
+func (a *API) RequestTrustDomains(callback string, domains []string, reason string) {
+	a.Bus.RequestTrustDomains(world.CreateAuthorization(callback, domains, reason))
+}
