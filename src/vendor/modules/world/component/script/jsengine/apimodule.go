@@ -1073,11 +1073,11 @@ func (a *jsapi) RequestPermissions(call goja.FunctionCall, r *goja.Runtime) goja
 		panic(err)
 	}
 	var reason = ""
-	if !call.Argument(1).ToBoolean() {
+	if !goja.IsUndefined(call.Argument(1)) {
 		reason = call.Argument(1).String()
 	}
 	var script = ""
-	if !call.Argument(2).ToBoolean() {
+	if !goja.IsUndefined(call.Argument(2)) {
 		script = call.Argument(2).String()
 	}
 	a.API.RequestPermissions(items, reason, script)
@@ -1099,11 +1099,11 @@ func (a *jsapi) RequestTrustDomains(call goja.FunctionCall, r *goja.Runtime) goj
 		panic(err)
 	}
 	var reason = ""
-	if !call.Argument(1).ToBoolean() {
+	if !goja.IsUndefined(call.Argument(1)) {
 		reason = call.Argument(1).String()
 	}
 	var script = ""
-	if !call.Argument(2).ToBoolean() {
+	if !goja.IsUndefined(call.Argument(2)) {
 		script = call.Argument(2).String()
 	}
 	a.API.RequestTrustDomains(items, reason, script)
