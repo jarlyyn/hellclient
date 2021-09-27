@@ -319,7 +319,7 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.GetSkeletonPath = t.GetSkeletonPath
 	b.GetScriptHome = b.WrapGetString(t.GetScriptHome)
 	b.RequestPermissions = b.WrapHandleAuthorization(t.RequestPermissions)
-	b.RequestTrustDomains = b.WrapHandleAuthorization(t.RequestPermissions)
+	b.RequestTrustDomains = b.WrapHandleAuthorization(t.RequestTrustDomains)
 }
 func (t *Titan) RequestPermissions(b *bus.Bus, a *world.Authorization) {
 	w := t.World(b.ID)
@@ -752,6 +752,47 @@ func (t *Titan) HandleCmdRequiredParams(id string) {
 	}
 	msg.PublishRequiredParamsMessage(t, id, p)
 }
+
+func (t *Titan) HandleCmdRequestPermissions(a *world.Authorization) {
+	w := t.World(a.World)
+	if w != nil {
+		items := w.GetPermissions()
+	Next:
+		for _, authed := range a.Items {
+			for _, owned := range items {
+				if owned == authed {
+					continue Next
+				}
+			}
+			items = append(items, authed)
+		}
+		w.SetPermissions(items)
+		if a.Script != "" {
+			go w.DoRunScript(a.Script)
+		}
+	}
+}
+
+func (t *Titan) HandleCmdRequestTrustDomains(a *world.Authorization) {
+	w := t.World(a.World)
+	if w != nil {
+		trusted := w.GetTrusted()
+	Next:
+		for _, authed := range a.Items {
+			for _, owned := range trusted.Domains {
+				if owned == authed {
+					continue Next
+				}
+			}
+			trusted.Domains = append(trusted.Domains, authed)
+		}
+		w.SetTrusted(trusted)
+		if a.Script != "" {
+			go w.DoRunScript(a.Script)
+		}
+	}
+}
+
 func (t *Titan) HandleCmdUpdateRequiredParams(id string, p []*world.RequiredParam) {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()

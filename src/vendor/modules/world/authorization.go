@@ -1,15 +1,17 @@
 package world
 
 type Authorization struct {
-	Callback string
-	Items    []string
-	Reason   string
+	World  string
+	Script string
+	Items  []string
+	Reason string
 }
 
-func CreateAuthorization(callback string, items []string, reason string) *Authorization {
+func CreateAuthorization(world string, items []string, reason string, script string) *Authorization {
 	return &Authorization{
-		Callback: callback,
-		Items:    append([]string{}, items...),
-		Reason:   reason,
+		World:  world,
+		Script: script,
+		Items:  append([]string{}, items...),
+		Reason: reason,
 	}
 }

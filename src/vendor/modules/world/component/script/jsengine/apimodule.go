@@ -1068,11 +1068,19 @@ func (a *jsapi) CheckPermissions(call goja.FunctionCall, r *goja.Runtime) goja.V
 }
 func (a *jsapi) RequestPermissions(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	items := []string{}
-	err := r.ExportTo(call.Argument(1), &items)
+	err := r.ExportTo(call.Argument(0), &items)
 	if err != nil {
 		panic(err)
 	}
-	a.API.RequestPermissions(call.Argument(0).String(), items, call.Argument(2).String())
+	var reason = ""
+	if !call.Argument(1).ToBoolean() {
+		reason = call.Argument(1).String()
+	}
+	var script = ""
+	if !call.Argument(2).ToBoolean() {
+		script = call.Argument(2).String()
+	}
+	a.API.RequestPermissions(items, reason, script)
 	return nil
 }
 func (a *jsapi) CheckTrustedDomains(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1086,11 +1094,19 @@ func (a *jsapi) CheckTrustedDomains(call goja.FunctionCall, r *goja.Runtime) goj
 
 func (a *jsapi) RequestTrustDomains(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	items := []string{}
-	err := r.ExportTo(call.Argument(1), &items)
+	err := r.ExportTo(call.Argument(0), &items)
 	if err != nil {
 		panic(err)
 	}
-	a.API.RequestTrustDomains(call.Argument(0).String(), items, call.Argument(2).String())
+	var reason = ""
+	if !call.Argument(1).ToBoolean() {
+		reason = call.Argument(1).String()
+	}
+	var script = ""
+	if !call.Argument(2).ToBoolean() {
+		script = call.Argument(2).String()
+	}
+	a.API.RequestTrustDomains(items, reason, script)
 	return nil
 }
 

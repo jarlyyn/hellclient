@@ -343,4 +343,17 @@ onButton.userinputsubmit=function(){
     vm.userinputListSearch = ""
 
 }
+onButton.requestpermissions=function(){
+    data=vm.RequestPermissions
+    vm.RequestPermissions=null
+    vm.RequestPermissionsVisible=false
+    app.send("requestPermissions",data)
+}
+onButton.requesttrustdomains=function(){
+    data=vm.RequestTrustDomains
+    vm.RequestTrustDomains=null
+    vm.RequestTrustDomainsVisible=false
+    app.send("requestTrustDomains",data)
+}
+
 })

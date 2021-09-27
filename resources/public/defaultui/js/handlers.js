@@ -207,4 +207,13 @@ handlers.defaultServer=function(data){
     };
     vm.gameCreateFormVisible=true;
 }
+handlers.requestPermissions=function(data){
+    vm.RequestPermissions=data
+    vm.RequestPermissionsVisible=true
+}
+handlers.requestTrustDomains=function(data){
+    vm.RequestTrustDomains=data
+    vm.RequestTrustDomainsVisible=true
+}
+
 })

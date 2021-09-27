@@ -1,0 +1,31 @@
+
+
+<el-drawer v-if="RequestPermissions" title="请求授权" :visible.sync="RequestPermissionsVisible" size="80%"
+  direction="btt">
+  <div id="userinput-list-body">
+    <div class="world">
+        <h3>游戏ID</h3>
+    </div>
+    <div class="world-id">
+        {{RequestPermissions.World}}
+    </div>
+    <div class="request">
+        <h3>脚本请求以下权限</h3>   
+    </div>
+    <div class="items">
+        <el-tag type="danger" v-for="item in RequestPermissions.Items">{{item}}</el-tag>
+    </div>
+    <div class="reason">
+        <h3>脚本申请权限的理由为</h3>
+    </div>
+    <div class="reason-content">{{RequestPermissions.Reason}}</div>
+
+      <div slot="footer" class="userinput-list-mutli-footer">
+        <el-button @click="RequestPermissionsVisible = false">取 消</el-button>
+        <el-button type="danger" @click="onButton('requestpermissions')">授权</el-button>
+      </div>
+
+    </div>
+    </template>
+  </div>
+</el-drawer>

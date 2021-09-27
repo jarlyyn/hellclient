@@ -420,6 +420,23 @@ func (p *Prophet) onCmdDefaultServer(conn connections.OutputConnection, cmd comm
 	p.Titan.HandleCmdDefaultServer()
 	return nil
 }
+func (p *Prophet) onCmdRequestPermissions(conn connections.OutputConnection, cmd command.Command) error {
+	var msg = &world.Authorization{}
+	if json.Unmarshal(cmd.Data(), msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdRequestPermissions(msg)
+	return nil
+}
+func (p *Prophet) onCmdRequestTrustDomains(conn connections.OutputConnection, cmd command.Command) error {
+	var msg = &world.Authorization{}
+	if json.Unmarshal(cmd.Data(), msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdRequestTrustDomains(msg)
+	return nil
+}
+
 func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("change", p.onCmdChange)
 	handlers.Register("connect", p.onCmdConnect)
@@ -470,5 +487,7 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("updateWorldSettings", p.onCmdUpdateWorldSettings)
 	handlers.Register("updateScriptSettings", p.onCmdUpdateScriptSettings)
 	handlers.Register("defaultServer", p.onCmdDefaultServer)
+	handlers.Register("requestPermissions", p.onCmdRequestPermissions)
+	handlers.Register("requestTrustDomains", p.onCmdRequestTrustDomains)
 
 }

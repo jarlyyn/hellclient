@@ -1077,8 +1077,8 @@ func (a *API) Notify(title string, body string) {
 
 func (a *API) CheckPermissions(p []string) bool {
 	permissions := a.Bus.GetPermissions()
+NEED:
 	for _, need := range p {
-	NEED:
 		for _, own := range permissions {
 			if own == need {
 				continue NEED
@@ -1088,13 +1088,13 @@ func (a *API) CheckPermissions(p []string) bool {
 	}
 	return true
 }
-func (a *API) RequestPermissions(callback string, permissions []string, reason string) {
-	a.Bus.RequestPermissions(world.CreateAuthorization(callback, permissions, reason))
+func (a *API) RequestPermissions(permissions []string, reason string, script string) {
+	a.Bus.RequestPermissions(world.CreateAuthorization(a.Bus.ID, permissions, reason, script))
 }
 func (a *API) CheckTrustedDomains(d []string) bool {
 	domains := a.Bus.GetTrusted().Domains
+NEED:
 	for _, need := range d {
-	NEED:
 		for _, own := range domains {
 			if own == need {
 				continue NEED
@@ -1105,6 +1105,6 @@ func (a *API) CheckTrustedDomains(d []string) bool {
 	return true
 }
 
-func (a *API) RequestTrustDomains(callback string, domains []string, reason string) {
-	a.Bus.RequestTrustDomains(world.CreateAuthorization(callback, domains, reason))
+func (a *API) RequestTrustDomains(domains []string, reason string, script string) {
+	a.Bus.RequestTrustDomains(world.CreateAuthorization(a.Bus.ID, domains, reason, script))
 }

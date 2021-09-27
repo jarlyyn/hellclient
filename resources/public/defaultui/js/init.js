@@ -31,6 +31,8 @@ requirejs.config({
         "html-updaterequiredparamform":"/public/defaultui/block/updaterequiredparamform.html",
         "html-updateworldsettingsform":"/public/defaultui/block/updateworldsettingsform.html",
         "html-updatescriptsettingsform":"/public/defaultui/block/updatescriptsettingsform.html",
+        "html-requestpermissions":"/public/defaultui/block/requestpermissions.html",
+        "html-requesttrustdomains":"/public/defaultui/block/requesttrustdomains.html",
         "main":"/public/defaultui/js/main"
     },
 });
@@ -91,6 +93,11 @@ define(function (require) {
     var htmlupdatescriptsettingsform=require("text!html-updatescriptsettingsform");
     document.getElementById("updatescriptsettingsform").innerHTML=htmlupdatescriptsettingsform;
 
+    var htmlrequestpermissions=require("text!html-requestpermissions");
+    document.getElementById("requestpermissions").innerHTML=htmlrequestpermissions;
+
+    var htmlrequesttrustdomains=require("text!html-requesttrustdomains");
+    document.getElementById("requesttrustdomains").innerHTML=htmlrequesttrustdomains;
     
     var htmlalllines=require("text!html-alllines");
 

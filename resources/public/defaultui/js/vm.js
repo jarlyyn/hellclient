@@ -84,6 +84,10 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
         worldsettingsUpdateFormVisible: false,
         scriptsettingsUpdateForm: null,
         scriptsettingsUpdateFormVisible: false,
+        RequestPermissions:null,
+        RequestPermissionsVisible:false,
+        RequestTrustDomains:null,
+        RequestTrustDomainsVisible:false,
         sendto: {
             0: "游戏",
             1: "命令",
