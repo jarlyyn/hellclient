@@ -6,5 +6,5 @@ const (
 	NameConfirm      = "userinput.confirm"
 	NamePrompt       = "userinput.prompt"
 	NameDatagrid     = "userinput.datagrid"
-	NameVisualPrompt = "userinput.viscaulprompt"
+	NameVisualPrompt = "userinput.visualprompt"
 )

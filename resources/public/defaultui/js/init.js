@@ -34,6 +34,7 @@ requirejs.config({
         "html-requestpermissions":"/public/defaultui/block/requestpermissions.html",
         "html-requesttrustdomains":"/public/defaultui/block/requesttrustdomains.html",
         "html-authorized":"/public/defaultui/block/authorized.html",
+        "html-visualprompt":"/public/defaultui/block/visualprompt.html",
         "main":"/public/defaultui/js/main"
     },
 });
@@ -102,6 +103,10 @@ define(function (require) {
 
     var htmlauthorized=require("text!html-authorized");
     document.getElementById("authorized").innerHTML=htmlauthorized;    
+    
+    var htmlvisualprompt=require("text!html-visualprompt");
+    document.getElementById("visualprompt").innerHTML=htmlvisualprompt;    
+
     
     var htmlalllines=require("text!html-alllines");
 

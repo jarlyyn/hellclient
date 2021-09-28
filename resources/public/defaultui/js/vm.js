@@ -90,6 +90,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
         RequestTrustDomainsVisible:false,
         Authorized:null,
         AuthorizedVisible:false,
+        visualPrompt:null,
+        visualPromptVisible:false,
         sendto: {
             0: "游戏",
             1: "命令",

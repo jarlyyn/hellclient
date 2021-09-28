@@ -74,5 +74,8 @@ define(function (require) {
         vm.userinputDatagrid=data
         vm.userinputDatagridVisible=true
     }
-    
+    handlers["userinput.visualprompt"]=function(data){
+        vm.visualPrompt=data
+        vm.visualPromptVisible=true    
+    }  
 })

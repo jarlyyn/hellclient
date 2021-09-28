@@ -10,6 +10,38 @@ import (
 	"github.com/herb-go/herbplugin/jsplugin"
 )
 
+type VisualPrompt struct {
+	VisualPrompt *userinput.VisualPrompt
+	bus          *bus.Bus
+}
+
+func (p *VisualPrompt) SetMediaType(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	p.VisualPrompt.SetMediaType(call.Argument(0).String())
+	return nil
+}
+func (p *VisualPrompt) SetPortrait(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	p.VisualPrompt.SetPortrait(call.Argument(0).ToBoolean())
+	return nil
+
+}
+func (p *VisualPrompt) SetRefreshCallback(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	p.VisualPrompt.SetRefreshCallback(call.Argument(0).String())
+	return nil
+}
+func (p *VisualPrompt) Publish(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	ui := p.VisualPrompt.Publish(p.bus, call.Argument(0).String())
+	return r.ToValue(ui.ID)
+
+}
+func (p *VisualPrompt) Convert(r *goja.Runtime) goja.Value {
+	obj := r.NewObject()
+	obj.Set("setmediatype", p.SetMediaType)
+	obj.Set("setportrait", p.SetPortrait)
+	obj.Set("setrefreshcallback", p.SetRefreshCallback)
+	obj.Set("publish", p.Publish)
+	return obj
+}
+
 type Datagrid struct {
 	Datagrid *userinput.Datagrid
 	bus      *bus.Bus
@@ -127,6 +159,13 @@ type Userinput struct {
 	bus *bus.Bus
 }
 
+func (u *Userinput) NewVisualPrompt(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	datagrid := &VisualPrompt{
+		VisualPrompt: userinput.CreateVisualPrompt(call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String()),
+		bus:          u.bus,
+	}
+	return datagrid.Convert(r)
+}
 func (u *Userinput) NewDatagrid(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	datagrid := &Datagrid{
 		Datagrid: userinput.CreateDatagrid(call.Argument(0).String(), call.Argument(1).String()),
@@ -161,6 +200,7 @@ func (u *Userinput) Convert(r *goja.Runtime) goja.Value {
 	obj.Set("alert", u.Alert)
 	obj.Set("newlist", u.NewList)
 	obj.Set("newdatagrid", u.NewDatagrid)
+	obj.Set("newvisualprompt", u.NewVisualPrompt)
 	return obj
 }
 func NewUserinputModule(b *bus.Bus) *herbplugin.Module {

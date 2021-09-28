@@ -91,3 +91,24 @@ html body .el-table .game-list-not-running{
     margin-top: 0.5em;
     text-align: right;
 }
+
+#visualPrompt .media.landscape .image img{
+    width: 90%;
+    display: block;
+    margin:auto;
+    height: auto;
+    max-height: 400px;
+}
+#visualPrompt .media.portrait .image img{
+    width: auto;
+    display: block;
+    margin:auto;
+    height: 500px;
+    max-width: 90%;
+}
+#visualPrompt .intro{
+line-height: 1.5em;
+    padding: 0.5em;
+    color: #333333;
+    font-size: 16px;
+}

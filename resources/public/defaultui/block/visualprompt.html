@@ -1,0 +1,19 @@
+<el-dialog id="visualPrompt" v-if="visualPrompt" :visible.sync="visualPromptVisible">
+  <div slot="title">
+    <span class="el-dialog__title">{{visualPrompt.Data.Title}}</span>
+    <el-tooltip v-if="visualPrompt.Data.RefreshCallback" class="item" effect="light" content="刷新"  placement="bottom">
+    <el-button  @click="onButton('visualPromptRefresh')" type="text" icon="el-icon-refresh" type="success" size="mini" circle></el-button>
+    </el-tooltip>
+  </div>
+        <div :class="'media '+ (visualPrompt.Data.Portrait?'portrait':'landscape')">
+          <div class="image" v-if="visualPrompt.Data.MediaType=='image'">
+            <img :src="visualPrompt.Data.Source"/>
+          </div>
+        </div>
+        <div class="intro">{{visualPrompt.Data.Intro}}</div>
+        <el-input v-model="visualPrompt.Data.Value"></el-input>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="visualPromptVisible = false">取 消</el-button>
+          <el-button type="primary" @click="onButton('visualPromptSubmit')">确 定</el-button>
+        </div>
+      </el-dialog>              

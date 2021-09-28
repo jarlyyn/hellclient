@@ -368,4 +368,27 @@ onButton.revokeauthorized=function(){
     }).catch(() => {
     })
 }
+onButton.visualPromptRefresh=function(){
+    if (vm.visualPrompt.Data.RefreshCallback){
+        var data={
+            ID:vm.visualPrompt.ID,
+            Name:vm.visualPrompt.Name,
+            Script:vm.visualPrompt.Data.RefreshCallback,
+        }
+        vm.callback(data,0,"")
+    }
+}
+onButton.visualPromptSubmit=function(){
+    if (vm.visualPrompt){
+        var data={
+            ID:vm.visualPrompt.ID,
+            Name:vm.visualPrompt.Name,
+            Script:vm.visualPrompt.Script,
+        }
+        var val=vm.visualPrompt.Data.Value 
+        vm.visualPrompt=null
+        vm.visualPromptVisible=false
+        vm.callback(data,0,val)
+    }
+}
 })
