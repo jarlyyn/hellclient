@@ -24,7 +24,7 @@ func newJsInitializer(b *bus.Bus) *jsplugin.Initializer {
 		NewAPIModule(b),
 		ModuleEval,
 		ModuleJScript,
-		ModuleHTTP,
+		NewHTTPModule(b),
 		NewFileSystemObjectModule(b),
 		NewMetronomeModule(b),
 		NewUserinputModule(b),
