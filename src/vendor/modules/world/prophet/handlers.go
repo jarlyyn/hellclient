@@ -436,6 +436,22 @@ func (p *Prophet) onCmdRequestTrustDomains(conn connections.OutputConnection, cm
 	p.Titan.HandleCmdRequestTrustDomains(msg)
 	return nil
 }
+func (p *Prophet) onCmdAuthorized(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdAuthorized(msg)
+	return nil
+}
+func (p *Prophet) onCmdRevokeAuthorized(conn connections.OutputConnection, cmd command.Command) error {
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdRevokeAuthorized(msg)
+	return nil
+}
 
 func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("change", p.onCmdChange)
@@ -489,5 +505,6 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("defaultServer", p.onCmdDefaultServer)
 	handlers.Register("requestPermissions", p.onCmdRequestPermissions)
 	handlers.Register("requestTrustDomains", p.onCmdRequestTrustDomains)
-
+	handlers.Register("authorized", p.onCmdAuthorized)
+	handlers.Register("revokeAuthorized", p.onCmdRevokeAuthorized)
 }

@@ -15,3 +15,15 @@ func CreateAuthorization(world string, items []string, reason string, script str
 		Reason: reason,
 	}
 }
+
+type Authorized struct {
+	Permissions []string
+	Domains     []string
+}
+
+func NewAuthorized() *Authorized {
+	return &Authorized{
+		Permissions: []string{},
+		Domains:     []string{},
+	}
+}

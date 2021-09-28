@@ -355,5 +355,17 @@ onButton.requesttrustdomains=function(){
     vm.RequestTrustDomainsVisible=false
     app.send("requestTrustDomains",data)
 }
-
+onButton.authorized=function(){
+    app.send("authorized",vm.current)
+}
+onButton.revokeauthorized=function(){
+    vm.$confirm('是否要注销所有权限?', '注销权限', {
+        confirmButtonText: '注销',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        app.send("revokeAuthorized",vm.current)
+    }).catch(() => {
+    })
+}
 })

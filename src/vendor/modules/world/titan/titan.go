@@ -792,6 +792,27 @@ func (t *Titan) HandleCmdRequestTrustDomains(a *world.Authorization) {
 		}
 	}
 }
+func (t *Titan) HandleCmdAuthorized(id string) {
+	w := t.World(id)
+	if w != nil {
+		a := world.NewAuthorized()
+		p := w.GetPermissions()
+		trusted := w.GetTrusted()
+		a.Permissions = append([]string{}, p...)
+		a.Domains = append([]string{}, trusted.Domains...)
+		msg.PublishAuthorized(t, id, a)
+	}
+}
+func (t *Titan) HandleCmdRevokeAuthorized(id string) {
+	w := t.World(id)
+	if w != nil {
+		w.SetPermissions([]string{})
+		trusted := w.GetTrusted()
+		trusted.Domains = []string{}
+		w.SetTrusted(trusted)
+		msg.PublishAuthorized(t, id, world.NewAuthorized())
+	}
+}
 
 func (t *Titan) HandleCmdUpdateRequiredParams(id string, p []*world.RequiredParam) {
 	t.Locker.Lock()

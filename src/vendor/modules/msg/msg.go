@@ -69,6 +69,8 @@ const MsgTypeRequestPermissions = "requestPermissions"
 
 const MsgTypeRequestTrustDomains = "requestTrustDomains"
 
+const MsgTypeAuthorized = "authorized"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -237,4 +239,8 @@ func PublishRequestPermissions(p Publisher, world string, a *world.Authorization
 
 func PublishRequestTrustDomains(p Publisher, world string, a *world.Authorization) {
 	p.Publish(New(MsgTypeRequestTrustDomains, world, a))
+}
+
+func PublishAuthorized(p Publisher, world string, a *world.Authorized) {
+	p.Publish(New(MsgTypeAuthorized, world, a))
 }

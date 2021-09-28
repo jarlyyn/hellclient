@@ -1,0 +1,31 @@
+
+
+<el-drawer v-if="Authorized" title="授权" :visible.sync="AuthorizedVisible" size="60%"
+direction="btt">
+<div id="userinput-list-body">
+  <div class="world">
+      <h3>游戏ID</h3>
+  </div>
+  <div class="world-id">
+      {{current}}
+  </div>
+  <div class="request">
+      <h3>已授权权限</h3>   
+  </div>
+  <div class="items">
+      <el-tag type="danger" v-for="item in Authorized.Permissions">{{item}}</el-tag>
+  </div>
+  <div class="request">
+    <h3>已信任域名</h3>   
+</div>
+<div class="items">
+    <el-tag type="danger" v-for="item in Authorized.Domains">{{item}}</el-tag>
+</div>
+
+    <div slot="footer" class="userinput-list-mutli-footer">
+      <el-button type="warning" @click="onButton('revokeauthorized')">注销所有授权</el-button>
+    </div>
+  </div>
+  </template>
+</div>
+</el-drawer>

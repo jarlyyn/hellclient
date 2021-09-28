@@ -215,5 +215,9 @@ handlers.requestTrustDomains=function(data){
     vm.RequestTrustDomains=data
     vm.RequestTrustDomainsVisible=true
 }
+handlers.authorized=function(data){
+    vm.Authorized=data
+    vm.AuthorizedVisible=true
+}
 
 })
