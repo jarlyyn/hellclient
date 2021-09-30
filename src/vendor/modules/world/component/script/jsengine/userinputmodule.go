@@ -4,6 +4,7 @@ import (
 	"context"
 	"modules/world/bus"
 	"modules/world/component/script/userinput"
+	"net/url"
 
 	"github.com/dop251/goja"
 	"github.com/herb-go/herbplugin"
@@ -29,6 +30,13 @@ func (p *VisualPrompt) SetRefreshCallback(call goja.FunctionCall, r *goja.Runtim
 	return nil
 }
 func (p *VisualPrompt) Publish(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	u, err := url.Parse(p.VisualPrompt.Source)
+	if err != nil {
+		panic(err)
+	}
+	if !p.bus.GetPluginOptions().MustAuthorizeDomain(u.Host) {
+		panic(herbplugin.NewUnauthorizeDomainError(u.Host))
+	}
 	ui := p.VisualPrompt.Publish(p.bus, call.Argument(0).String())
 	return r.ToValue(ui.ID)
 
