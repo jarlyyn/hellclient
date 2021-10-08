@@ -92,35 +92,32 @@ func (w *Walking) Walk() []*Step {
 	var matchedRoom = ""
 Matching:
 	for {
-		v := w.forwading.Front()
 		newExits := list.New()
 		for {
+			v := w.forwading.Front()
 			if v == nil {
 				break
 			}
 			step := v.Value.(*Step)
-			if w.walked[step.To] == nil {
-				if step.remain > 0 {
-					step.remain--
-				} else {
-					w.walked[step.To] = step
-					if tolist[step.To] {
-						matchedRoom = step.To
-						break Matching
-					}
-					if rooms[step.To] == nil {
-						break
-					}
-					for _, v := range rooms[step.To].Exits {
-						if w.walked[v.To] == nil && w.validateTags(v) {
-							newExits.PushBack(w.step(v))
-						}
-					}
-				}
-			} else {
-				w.forwading.Remove(v)
+			w.forwading.Remove(v)
+			if w.walked[step.To] != nil || rooms[step.To] == nil {
+				continue
 			}
-			v = v.Next()
+			step.remain--
+			if step.remain > 0 {
+				newExits.PushBack(step)
+				continue
+			}
+			w.walked[step.To] = step
+			if tolist[step.To] {
+				matchedRoom = step.To
+				break Matching
+			}
+			for _, exit := range rooms[step.To].Exits {
+				if w.walked[exit.To] == nil && w.validateTags(exit) {
+					newExits.PushBack(w.step(exit))
+				}
+			}
 		}
 		w.forwading.PushBackList(newExits)
 		if w.forwading.Len() == 0 {

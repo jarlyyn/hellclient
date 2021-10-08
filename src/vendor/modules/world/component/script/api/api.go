@@ -844,7 +844,8 @@ func (a *API) GetLineInfo(linenumber int, infotype int) (string, bool) {
 	return "", false
 }
 func (a *API) BoldColour(WhichColour int) int {
-	return world.GetBoldColour(WhichColour)
+	//bold colour should equal to normalcolour
+	return world.GetNormalColour(WhichColour)
 }
 func (a *API) NormalColour(WhichColour int) int {
 	return world.GetNormalColour(WhichColour)
