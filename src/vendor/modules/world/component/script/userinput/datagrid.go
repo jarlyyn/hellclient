@@ -17,6 +17,9 @@ type Datagrid struct {
 	OnCreate string
 }
 
+func (g *Datagrid) Hide(b *bus.Bus) {
+	b.RaiseScriptMessageEvent(CreateUserInput(NameHideDatagrid, "", nil))
+}
 func (g *Datagrid) SetPage(page int) {
 	g.Page = page
 }

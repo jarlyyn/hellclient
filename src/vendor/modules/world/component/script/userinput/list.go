@@ -13,6 +13,9 @@ type List struct {
 	WithFilter bool
 }
 
+func (l *List) Hide(b *bus.Bus) {
+	b.RaiseScriptMessageEvent(CreateUserInput(NameHideList, "", nil))
+}
 func (l *List) SetValues(v []string) {
 	l.Values = v
 }
