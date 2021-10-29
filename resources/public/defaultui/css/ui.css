@@ -37,9 +37,7 @@ ul#lines{padding-bottom: 60px;margin-bottom:-32px;padding-top: 110px;padding-lef
     white-space: pre-wrap;
     color:#333333;
 }
-.update-comment textarea{
-    height:8em;
-}
+
 .param-comment{
     color:rgb(19, 206, 102)
 }
@@ -111,4 +109,7 @@ line-height: 1.5em;
     padding: 0.5em;
     color: #333333;
     font-size: 16px;
+}
+.update-comment textarea,.update-required textarea,.update-variable textarea{
+    height: 16em;
 }

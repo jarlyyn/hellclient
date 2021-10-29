@@ -242,6 +242,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
                     confirmButtonText: '编辑',
                     cancelButtonText: '取消',
                     inputValue: current,
+                    inputType:"textarea",
+                    customClass: "update-variable",
                 }).then(({ value }) => {
                     app.send("updateParam", [vm.current, name, value])
                 }).catch(() => {
@@ -252,6 +254,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
                 vm.$prompt(row.Intro, '设置变量' + row.Name + "[" + row.Desc + "]", {
                     confirmButtonText: '设置',
                     cancelButtonText: '取消',
+                    inputType:"textarea",
                     customClass: "update-required",
                     inputValue: vm.paramsinfo.Params[row.Name],
                 }).then(({ value }) => {
