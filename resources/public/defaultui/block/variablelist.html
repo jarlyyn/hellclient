@@ -31,7 +31,7 @@
         label="变量值"
         >
         <template slot-scope="scope">
-          <span>{{paramsinfo.Params[scope.row.Name] ? paramsinfo.Params[scope.row.Name]:""}}</span>
+          <span class="variable-value">{{paramsinfo.Params[scope.row.Name] ? paramsinfo.Params[scope.row.Name]:""}}</span>
      </template>
       </el-table-column>
        <el-table-column
@@ -76,7 +76,7 @@
           label="变量值"
           >
           <template slot-scope="scope">
-            <span>{{paramsinfo.Params[scope.row.Name] ? paramsinfo.Params[scope.row.Name]:""}}</span>
+            <span class="variable-value">{{paramsinfo.Params[scope.row.Name] ? paramsinfo.Params[scope.row.Name]:""}}</span>
        </template>
         </el-table-column>  
       <el-table-column

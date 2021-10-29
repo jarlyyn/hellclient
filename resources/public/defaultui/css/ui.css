@@ -113,3 +113,6 @@ line-height: 1.5em;
 .update-comment textarea,.update-required textarea,.update-variable textarea{
     height: 16em;
 }
+#variablelist .variable-value{
+    white-space: pre-wrap;
+}
