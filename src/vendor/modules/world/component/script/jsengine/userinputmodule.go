@@ -109,6 +109,10 @@ func (g *Datagrid) Publish(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	ui := g.Datagrid.Publish(g.bus, call.Argument(0).String())
 	return r.ToValue(ui.ID)
 }
+func (g *Datagrid) Hide(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	g.Datagrid.Hide(g.bus)
+	return nil
+}
 func (g *Datagrid) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("append", g.Append)
@@ -125,6 +129,7 @@ func (g *Datagrid) Convert(r *goja.Runtime) goja.Value {
 	obj.Set("setmaxpage", g.SetMaxPage)
 	obj.Set("setpage", g.SetPage)
 	obj.Set("getpage", g.GetPage)
+	obj.Set("hide", g.Hide)
 	return obj
 }
 

@@ -74,8 +74,13 @@ define(function (require) {
         vm.userinputDatagrid=data
         vm.userinputDatagridVisible=true
     }
+    handlers["userinput.hidedatagrid"]=function(data){
+        vm.userinputDatagrid=null
+        vm.userinputDatagridVisible=false
+    }
     handlers["userinput.visualprompt"]=function(data){
         vm.visualPrompt=data
         vm.visualPromptVisible=true    
     }  
+    
 })
