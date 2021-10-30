@@ -252,7 +252,7 @@ func (m *Metronome) InstallTo(b *bus.Bus) {
 	b.GetMetronomeSpace = m.Space
 	b.GetMetronomeQueue = m.Queue
 	b.DoDiscardMetronome = m.Discard
-	b.DoLockQueue = m.LockQueue
+	b.DoLockMetronomeQueue = m.LockQueue
 	b.DoFullMetronome = m.Full
 	b.DoFullTickMetronome = m.FullTick
 	b.SetMetronomeInterval = b.WrapSetDuration(m.SetInterval)
