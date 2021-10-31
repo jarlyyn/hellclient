@@ -223,7 +223,7 @@ handlers.authorized=function(data){
 handlers.foundhistory=function(data){
     vm.historypos=data.Position
     vm.cmd=data.Command
-    setInterval(function(){
+    setTimeout(function(){
         var input=document.getElementById("mud-input")
         input.selectionStart=0
         input.selectionEnd=vm.cmd.length        
