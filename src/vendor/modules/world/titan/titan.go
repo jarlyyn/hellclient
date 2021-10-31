@@ -541,6 +541,19 @@ func (t *Titan) HandleCmdMasssend(id string, msg string) {
 		w.DoSend(m)
 	}
 }
+func (t *Titan) HandleCmdFindHistory(id string, position int) {
+	if position < 0 {
+		return
+	}
+	w := t.World(id)
+	if w != nil {
+		h := w.GetHistories()
+		if position >= len(h) {
+			return
+		}
+		msg.PublishFoundHistory(t, id, world.CreateFoundHistory(position, h[len(h)-1-position]))
+	}
+}
 
 func (t *Titan) GetSkeletonPath() string {
 	return t.Skeletonpath

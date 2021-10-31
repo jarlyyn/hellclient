@@ -13,6 +13,7 @@ handlers.current=function(data){
     vm.current=data
     vm.currenttab=data
     vm.lines=[]
+    vm.historypos=-1
     document.getElementById("mud-input").focus()
 }
 handlers.line=function(data){
@@ -219,5 +220,14 @@ handlers.authorized=function(data){
     vm.Authorized=data
     vm.AuthorizedVisible=true
 }
+handlers.foundhistory=function(data){
+    vm.historypos=data.Position
+    vm.cmd=data.Command
+    setInterval(function(){
+        var input=document.getElementById("mud-input")
+        input.selectionStart=0
+        input.selectionEnd=vm.cmd.length        
+        },1)
+    }
 
 })

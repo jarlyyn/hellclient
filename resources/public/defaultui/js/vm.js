@@ -94,6 +94,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
         AuthorizedVisible:false,
         visualPrompt:null,
         visualPromptVisible:false,
+        historypos:-1,
         sendto: {
             0: "游戏",
             1: "命令",
@@ -122,6 +123,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
         methods: {
             send: function () {
                 app.send("send", this.cmd)
+                vm.historypos=0
                 document.getElementById("user-input").getElementsByTagName("input")[0].select()
             },
             domasssend:function(){
@@ -443,7 +445,18 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
                     }
                     vm.callback(data,0,"")
                 }
-            }
+            },
+            onUp:function(){
+                app.send("findhistory",vm.historypos+1)
+            },
+            onDown:function(){
+                if (vm.historypos<=0){
+                    vm.historypos=-1
+                    vm.cmd=""
+                    return
+                }
+                app.send("findhistory",vm.historypos-1)
+            },
         }
     })
     return vm

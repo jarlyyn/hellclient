@@ -88,7 +88,7 @@
       <div id="current">
         {{current}}
       </div>
-      <div id="user-input" v-on:keyup.13="send">
+      <div id="user-input" v-on:keyup.down="onDown" v-on:keyup.up="onUp" v-on:keyup.13="send">
         <el-input id="mud-input" size="small" placeholder="请输入命令" v-model="cmd">
           <el-tooltip slot="prepend" effect="light" content="助理" placement="top">
             <el-button icon="el-icon-user" @click="assist"></el-button>

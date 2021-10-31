@@ -48,7 +48,6 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("scriptMessage", p.newRoomAdapter("scriptMessage"))
 	adapter.Register("switchStatus", p.newUserAdapter("switchStatus"))
 	adapter.Register("version", p.newUserAdapter("version"))
-	adapter.Register("version", p.newUserAdapter("version"))
 	adapter.Register("worldSettings", p.newRoomAdapter("worldSettings"))
 	adapter.Register("scriptSettings", p.newRoomAdapter("scriptSettings"))
 	adapter.Register("requiredParams", p.newRoomAdapter("requiredParams"))
@@ -56,4 +55,6 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("requestPermissions", p.newRoomAdapter("requestPermissions"))
 	adapter.Register("requestTrustDomains", p.newRoomAdapter("requestTrustDomains"))
 	adapter.Register("authorized", p.newRoomAdapter("authorized"))
+	adapter.Register("foundhistory", p.newRoomAdapter("foundhistory"))
+
 }

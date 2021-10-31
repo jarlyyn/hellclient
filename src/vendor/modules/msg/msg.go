@@ -71,6 +71,8 @@ const MsgTypeRequestTrustDomains = "requestTrustDomains"
 
 const MsgTypeAuthorized = "authorized"
 
+const MsgTypeFoundHistory = "foundhistory"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -243,4 +245,8 @@ func PublishRequestTrustDomains(p Publisher, world string, a *world.Authorizatio
 
 func PublishAuthorized(p Publisher, world string, a *world.Authorized) {
 	p.Publish(New(MsgTypeAuthorized, world, a))
+}
+
+func PublishFoundHistory(p Publisher, world string, h *world.FoundHistory) {
+	p.Publish(New(MsgTypeFoundHistory, world, h))
 }

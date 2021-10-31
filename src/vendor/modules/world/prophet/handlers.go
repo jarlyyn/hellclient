@@ -461,6 +461,15 @@ func (p *Prophet) onCmdMasssend(conn connections.OutputConnection, cmd command.C
 	p.Titan.HandleCmdMasssend(id, msg)
 	return nil
 }
+func (p *Prophet) onCmdFindHistory(conn connections.OutputConnection, cmd command.Command) error {
+	id := p.Current.Load().(string)
+	var msg int
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdFindHistory(id, msg)
+	return nil
+}
 
 func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("change", p.onCmdChange)
@@ -517,5 +526,6 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("authorized", p.onCmdAuthorized)
 	handlers.Register("revokeAuthorized", p.onCmdRevokeAuthorized)
 	handlers.Register("masssend", p.onCmdMasssend)
+	handlers.Register("findhistory", p.onCmdFindHistory)
 
 }
