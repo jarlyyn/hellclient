@@ -378,6 +378,9 @@ onButton.visualPromptRefresh=function(){
         vm.callback(data,0,"")
     }
 }
+onButton.masssend=function(){
+    vm.domasssend()
+}
 onButton.visualPromptSubmit=function(){
     if (vm.visualPrompt){
         var data={

@@ -119,3 +119,22 @@ line-height: 1.5em;
 #variablelist .variable-value{
     white-space: pre-wrap;
 }
+#masssend{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    color:#333333;
+    max-width: 90%;
+    margin:auto;
+
+}
+#masssend .data{
+    flex-grow: 1;
+    margin-bottom: 0.5em;
+}
+#masssend textarea{
+    width: 100%;
+    min-height: 100%;
+    background: black;
+    color: white;
+}

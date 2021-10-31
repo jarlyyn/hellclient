@@ -35,6 +35,8 @@ requirejs.config({
         "html-requesttrustdomains":"/public/defaultui/block/requesttrustdomains.html",
         "html-authorized":"/public/defaultui/block/authorized.html",
         "html-visualprompt":"/public/defaultui/block/visualprompt.html",
+        "html-masssendform":"/public/defaultui/block/masssendform.html",
+    
         "main":"/public/defaultui/js/main"
     },
 });
@@ -106,6 +108,9 @@ define(function (require) {
     
     var htmlvisualprompt=require("text!html-visualprompt");
     document.getElementById("visualprompt").innerHTML=htmlvisualprompt;    
+    
+    var htmlmasssendform=require("text!html-masssendform");
+    document.getElementById("masssendform").innerHTML=htmlmasssendform;    
 
     
     var htmlalllines=require("text!html-alllines");

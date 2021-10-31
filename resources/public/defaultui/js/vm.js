@@ -88,6 +88,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
         RequestPermissionsVisible:false,
         RequestTrustDomains:null,
         RequestTrustDomainsVisible:false,
+        MassSendForm: null,
+        MassSendFormVisible: false,
         Authorized:null,
         AuthorizedVisible:false,
         visualPrompt:null,
@@ -121,6 +123,13 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
             send: function () {
                 app.send("send", this.cmd)
                 document.getElementById("user-input").getElementsByTagName("input")[0].select()
+            },
+            domasssend:function(){
+                if (vm.MassSendForm){
+                    app.send("masssend",vm.MassSendForm.Value)
+                }
+                vm.MassSendForm=null
+                vm.MassSendFormVisible=false
             },
             onChange: function (current) {
                 if (vm.clients.length) {
@@ -310,6 +319,10 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
                 },
             assist: function () {
                 app.send("assist", this.current)
+            },
+            masssend:function(){
+                vm.MassSendForm={},
+                vm.MassSendFormVisible=true
             },
             updateRequiredParams: function () {
                 app.send("updateRequiredParams", { Current: vm.current, RequiredParams: this.requiredParams })

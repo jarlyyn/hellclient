@@ -1,0 +1,21 @@
+
+
+<el-drawer v-if="MassSendForm" title="批量输入" :visible.sync="MassSendFormVisible" size="80%"
+direction="btt">
+<div id="masssend">
+  <div class="desc">
+    <p>批量输入数据，会将数据直接发送给MUD,不出发任何别名和解析，不会记录在发送历史内</p>
+  </div>
+  <div class="data">
+    <textarea
+    placeholder="请输入你需要批量发送的数据"
+    v-model="MassSendForm.Value">
+    </textarea>
+  </div>
+    <div slot="footer" class="userinput-list-mutli-footer">
+      <el-button type="primary" @click="onButton('masssend')">发送</el-button>
+    </div>
+  </div>
+  </template>
+</div>
+</el-drawer>

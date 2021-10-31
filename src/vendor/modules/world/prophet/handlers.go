@@ -452,6 +452,15 @@ func (p *Prophet) onCmdRevokeAuthorized(conn connections.OutputConnection, cmd c
 	p.Titan.HandleCmdRevokeAuthorized(msg)
 	return nil
 }
+func (p *Prophet) onCmdMasssend(conn connections.OutputConnection, cmd command.Command) error {
+	id := p.Current.Load().(string)
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdMasssend(id, msg)
+	return nil
+}
 
 func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("change", p.onCmdChange)
@@ -507,4 +516,6 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("requestTrustDomains", p.onCmdRequestTrustDomains)
 	handlers.Register("authorized", p.onCmdAuthorized)
 	handlers.Register("revokeAuthorized", p.onCmdRevokeAuthorized)
+	handlers.Register("masssend", p.onCmdMasssend)
+
 }

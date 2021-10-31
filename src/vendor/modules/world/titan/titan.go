@@ -533,6 +533,15 @@ func (t *Titan) HandleCmdSend(id string, msg string) {
 		w.DoExecute(msg)
 	}
 }
+func (t *Titan) HandleCmdMasssend(id string, msg string) {
+	w := t.World(id)
+	if w != nil {
+		m := world.CreateCommand(msg)
+		m.History = false
+		w.DoSend(m)
+	}
+}
+
 func (t *Titan) GetSkeletonPath() string {
 	return t.Skeletonpath
 }
