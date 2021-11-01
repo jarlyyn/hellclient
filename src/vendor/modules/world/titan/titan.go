@@ -529,7 +529,8 @@ func (t *Titan) HandleCmdLoadTimer(world string, id string) {
 
 func (t *Titan) HandleCmdSend(id string, msg string) {
 	w := t.World(id)
-	if w != nil {
+	if w != nil && msg != "" {
+		w.AddHistory(msg)
 		w.DoExecute(msg)
 	}
 }

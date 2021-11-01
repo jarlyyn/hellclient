@@ -274,7 +274,6 @@ func (a *Automation) executecmd(b *bus.Bus, cmd string) {
 	}
 	if !a.MatchAlias(b, cmd) {
 		cmd := world.CreateCommand(cmd)
-		cmd.History = true
 		b.DoSend(cmd)
 	}
 
