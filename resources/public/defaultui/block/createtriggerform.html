@@ -1,4 +1,4 @@
-<el-dialog width="80%"  :fullscreen="true" :title="'创建'+(byuser?'用户':'脚本')+'触发器'" :visible.sync="triggerCreateFormVisible">
+<el-dialog v-if="triggerCreateForm" width="80%"  :fullscreen="true" :title="'创建'+(byuser?'用户':'脚本')+'触发器'" :visible.sync="triggerCreateFormVisible">
     <div v-if="createFail">
             <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
         

@@ -152,6 +152,7 @@ handlers.scripttriggers=function(data){
     vm.scripttriggerlist=data
 }
 handlers.createTriggerSuccess=function(data){
+    vm.triggerCreateForm=null
     vm.triggerCreateFormVisible=false
 }
 handlers.updateTriggerSuccess=function(data){

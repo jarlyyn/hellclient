@@ -1,4 +1,4 @@
-<el-dialog title="创建游戏" :visible.sync="gameCreateFormVisible">
+<el-dialog v-if="gameCreateForm" title="创建游戏" :visible.sync="gameCreateFormVisible">
     <div v-if="createFail">
             <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
         

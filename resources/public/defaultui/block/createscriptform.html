@@ -1,4 +1,4 @@
-<el-dialog title="创建脚本" :visible.sync="scriptCreateFormVisible">
+<el-dialog v-if="scriptCreateForm" title="创建脚本" :visible.sync="scriptCreateFormVisible">
     <div v-if="createScriptFail">
             <el-alert v-for="err in createScriptFail" :title="err.Msg" type="error" show-icon> </el-alert>
         

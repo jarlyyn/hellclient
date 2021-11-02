@@ -94,16 +94,16 @@ onButton.createGameSubmit=function(){
     send("createGame",vm.gameCreateForm)
 }
 
-onButton.createTrigger=function(){
-    vm.triggerSaveFormVisible=true
-    vm.triggerName="";
-    vm.triggerSaveForm={};
-}
-onButton.saveTriggerSubmit=function(){
-    vm.triggerSaveForm.Name=vm.triggerName
-    vm.triggerSaveForm.Priority=vm.triggerSaveForm.Priority*1;
-    send("saveTrigger",vm.triggerSaveForm);
-}
+// onButton.createTrigger=function(){
+//     vm.triggerSaveFormVisible=true
+//     vm.triggerName="";
+//     vm.triggerSaveForm={};
+// }
+// onButton.saveTriggerSubmit=function(){
+//     vm.triggerSaveForm.Name=vm.triggerName
+//     vm.triggerSaveForm.Priority=vm.triggerSaveForm.Priority*1;
+//     send("saveTrigger",vm.triggerSaveForm);
+// }
 onButton.allLines=function(){
     vm.allLines=null
     vm.allLinesVisible=true;
