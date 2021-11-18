@@ -3,7 +3,6 @@ package automation
 import (
 	"modules/world"
 	"modules/world/bus"
-	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -260,12 +259,7 @@ func (t *Trigger) Match(ctx *Context) (*world.MatchResult, error) {
 	}
 	if t.Data.ExpandVariables {
 		if ctx.Expanded == nil {
-			params := ctx.Bus.GetParams()
-			r := make([]string, 0, len(params)*4)
-			for k := range params {
-				r = append(r, "@"+k, params[k], "@!"+k, regexp.QuoteMeta(params[k]))
-			}
-			ctx.Expanded = strings.NewReplacer(r...)
+			ctx.Expanded = strings.NewReplacer(BuildParamsTriggerReplacer(ctx.Bus)...)
 		}
 		match := ctx.Expanded.Replace(t.Data.Match)
 		if t.RawMatch == "" || t.RawMatch != match {

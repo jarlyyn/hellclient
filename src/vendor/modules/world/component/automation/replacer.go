@@ -2,6 +2,7 @@ package automation
 
 import (
 	"modules/world/bus"
+	"regexp"
 	"sort"
 )
 
@@ -47,6 +48,20 @@ func BuildParamsReplacer(b *bus.Bus) []string {
 	sort.Sort(sort.Reverse(keys))
 	for _, key := range keys {
 		result = append(result, "@"+key, params[key])
+	}
+	return result
+}
+func BuildParamsTriggerReplacer(b *bus.Bus) []string {
+	params := b.GetParams()
+	var result = make([]string, 0, len(params)+4)
+	result = append(result, "\\\\", "\\", "\\@", "@")
+	keys := make(Paramkeys, 0, len(params))
+	for k := range params {
+		keys = append(keys, k)
+	}
+	sort.Sort(sort.Reverse(keys))
+	for _, key := range keys {
+		result = append(result, "@"+key, params[key], "@!"+key, regexp.QuoteMeta(params[key]))
 	}
 	return result
 }
