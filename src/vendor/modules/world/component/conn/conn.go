@@ -3,6 +3,7 @@ package conn
 import (
 	"container/list"
 	"io"
+	"modules/app"
 	"modules/world/bus"
 	"net"
 	"sync"
@@ -72,7 +73,11 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	if conn.running == true {
 		return nil
 	}
-	t, err := telnet.Dial("tcp", bus.GetHost()+":"+bus.GetPort())
+	timeout := app.System.ConnectTimeout
+	if timeout <= 0 {
+		timeout = 1
+	}
+	t, err := telnet.DialTimeout("tcp", bus.GetHost()+":"+bus.GetPort(), time.Duration(timeout)*time.Second)
 	if err != nil {
 		return err
 	}

@@ -176,6 +176,7 @@ func (c *Config) Decode(bus *bus.Bus, data []byte) error {
 	c.Data = configdata
 	bus.AddTimers(c.Data.Timers)
 	bus.AddAliases(c.Data.Aliases)
+	bus.AddTriggers(c.Data.Triggers)
 	return nil
 }
 func (c *Config) GetName() string {

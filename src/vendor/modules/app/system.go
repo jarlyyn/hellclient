@@ -14,13 +14,14 @@ import (
 //Struct must  unmarshaleable by Toml lib.
 //You should comment this struct if you use third party config struct.
 type SystemConfig struct {
-	Addr          string
-	Username      string
-	Password      string
-	Switch        string
-	DefaultServer string
-	URL           string
-	SMTP          *emaildelivery.SMTP
+	Addr           string
+	Username       string
+	Password       string
+	Switch         string
+	DefaultServer  string
+	URL            string
+	ConnectTimeout int64
+	SMTP           *emaildelivery.SMTP
 }
 
 //System config instance of system.
