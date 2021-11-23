@@ -13,3 +13,34 @@
 * [GetAliasOption 获取别名选项](apialias.md#GetAliasOption)
 * [IsAlias 判断别名是否存在](apialias.md#IsAlias)
 * [SetAliasOption 设置别名选项](apialias.md#SetAliasOption)
+
+## 计时器接口
+
+* [AddTimer 添加计时器](apitimer.md#AddTimer)
+* [DeleteTimer 删除计时器](apitimer.md#DeleteTimer)
+* [DeleteTimerGroup 删除计时器组](apitimer.md#DeleteTimerGroup)
+* [EnableTimer 激活计时器](apitimer.md#EnableTimer)
+* [EnableTimerGroup 激活计时器组](apitimer.md#EnableTimerGroup)
+* [GetTimerInfo 获取计时器信息](apitimer.md#GetTimerInfo)
+* [GetTimerList 获取脚本计时器列表](apitimer.md#GetTimerList)
+* [GetTimerOption 获取计时器选项](apitimer.md#GetTimerOption)
+* [IsTimer 判断计时器是否存在](apitimer.md#IsTimer)
+* [ResetTimer 重置计时器](apitimer.md#ResetTimer)
+* [ResetTimers 重置全部计时器](apitimer.md#ResetTimers)
+* [SetTimerOption 设置计时器选项](apitimer.md#SetTimerOption)
+
+## 触发器接口
+
+* [AddTrigger 添加触发器](apitrigger.md#AddTrigger)
+* [AddTriggerEx 高阶添加触发器](apitrigger.md#AddTriggerEx)
+* [DeleteTrigger 删除触发器](apitrigger.md#DeleteTrigger)
+* [DeleteTriggerGroup 删除触发器组](apitrigger.md#DeleteTriggerGroup)
+* [EnableTrigger 激活触发器](apitrigger.md#EnableTrigger)
+* [EnableTriggerGroup 激活触发器组](apitrigger.md#EnableTriggerGroup)
+* [GetTriggerInfo 获取触发器信息](apitrigger.md#GetTriggerInfo)
+* [GetTriggerList 获取脚本触发器列表](apitrigger.md#GetTriggerList)
+* [GetTriggerOption 获取触发器选项](apitrigger.md#GetTriggerOption)
+* [GetTriggerWildcard 获取触发器匹配值](apitrigger.md#GetTriggerWildcard)
+* [IsTrigger 判断触发器是否存在](apitrigger.md#IsTrigger)
+* [SetTriggerOption 设置触发器选项](apitrigger.md#SetTriggerOption)
+* [StopEvaluatingTriggers 停止执行触发器](apitrigger.md#StopEvaluatingTriggers)
