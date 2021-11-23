@@ -2,7 +2,9 @@
 
 [返回](api.md)
 
-## AddAlias 添加别名
+## AddAlias 
+
+添加别名
 
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=AddAlias
 
@@ -66,7 +68,9 @@ eAliasCannotBeEmpty 匹配内容为空
 eAliasAlreadyExists 同名别名已经存在
 eOK 添加成功
 
-## DeleteAlias 删除别名
+## DeleteAlias
+
+删除别名
 
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DeleteAlias
 
@@ -96,7 +100,9 @@ DeleteAlias("my_alias")
 * eAliasNotFound 别名无法找到
 * eOK 删除成功
 
-## DeleteAliasGroup 删除别名组
+## DeleteAliasGroup
+
+删除别名组
 
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DeleteAliasGroup
 
@@ -127,7 +133,9 @@ DeleteAliasGroup ("groupname")
 
 删除的别名数量
 
-## DeleteTemporaryAliases 删除临时别名
+## DeleteTemporaryAliases
+
+删除临时别名
 
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DeleteTemporaryAliases
 
@@ -192,7 +200,9 @@ enabled为空时，值为True
 * eAliasNotFound 别名未找到
 * eOK 操作成功
 
-## EnableAliasGroup 激活别名组
+## EnableAliasGroup
+
+激活别名组
 
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=EnableAliasGroup
 
@@ -231,7 +241,9 @@ enabled为空时，值为True
 
 组内别名数量
 
-## GetAliasInfo 获取别名信息
+## GetAliasInfo
+
+获取别名信息
 
 不完全兼容Mushclient
 
@@ -300,7 +312,9 @@ Note (GetAliasInfo("my_alias", 2))
 * 别名没找到返回空
 * Infotype无效返回空
 
-## GetAliasList 获取脚本别名名称列表
+## GetAliasList
+
+获取脚本别名名称列表
 
 注意，与Mushclient同名函数不完全兼容，返回值类型不同
 
@@ -335,7 +349,9 @@ end -- if we have any aliases
 
 存有脚本别名列表的字符串列表
 
-## GetAliasOption 获取别名选项
+## GetAliasOption
+
+获取别名选项
 
 不完全兼容Mushclient
 
@@ -389,7 +405,9 @@ Note (GetAliasOption ("myalias", "match"))
 ### 返回值
 如描述所列
 
-## IsAlias 判断别名是否存在
+## IsAlias
+
+判断别名是否存在
 
 对应Mushclient API:https://www.gammon.com.au/scripts/doc.php?function=GetAliasInfo
 
@@ -421,7 +439,9 @@ Note(IsAlias("myalias"))
 * eAliasNotFound 别名不存在
 * eOK 别名存在
 
-## SetAliasOption 设置别名选项
+## SetAliasOption
+
+设置别名选项
 
 不完全兼容Mushclient
 
