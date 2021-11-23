@@ -146,7 +146,7 @@
 * GenerateName <不兼容>
 * GetAlias <待定>
 * GetAliasInfo <部分兼容>
-* GetAliasList <待定>
+* GetAliasList <部分兼容>
 * GetAliasOption <部分兼容>
 * GetAliasWildcard <待定>
 * GetAlphaOption <部分兼容>

@@ -416,14 +416,17 @@ func (a *API) AddAlias(aliasName string, match string, responseText string, flag
 
 func (a *API) DeleteAlias(name string) int {
 	world.PrefixedName(name, false)
-	ok := a.Bus.DoDeleteAlias(name)
+	ok := a.Bus.DoDeleteAliasByName(name)
 	if !ok {
 		return EAliasNotFound
 	}
 	return EOK
 }
 func (a *API) DeleteAliasGroup(group string) int {
-	return a.Bus.DoDeleteAliasGroup(group)
+	return a.Bus.DoDeleteAliasGroup(group, false)
+}
+func (a *API) DeleteTemporaryAliases() int {
+	return a.Bus.DoDeleteTemporaryAliases()
 }
 func (a *API) EnableAlias(name string, enabled bool) int {
 	world.PrefixedName(name, false)
@@ -439,7 +442,7 @@ func (a *API) EnableAliasGroup(group string, enabled bool) int {
 }
 
 func (a *API) GetAliasList() []string {
-	return a.Bus.DoListAliasNames()
+	return a.Bus.DoListAliasNames(false)
 }
 
 func (a *API) GetAliasOption(name string, option string) (string, int) {
@@ -456,6 +459,7 @@ func (a *API) GetAliasOption(name string, option string) (string, int) {
 }
 
 func (a *API) IsAlias(name string) int {
+	name = world.PrefixedName(name, false)
 	if !a.Bus.HasNamedAlias(name) {
 		return EAliasNotFound
 	}

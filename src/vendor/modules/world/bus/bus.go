@@ -104,7 +104,7 @@ type Bus struct {
 	DoDeleteAlias            func(string) bool
 	DoDeleteAliasByName      func(string) bool
 	DoDeleteTemporaryAliases func() int
-	DoDeleteAliasGroup       func(string) int
+	DoDeleteAliasGroup       func(string, bool) int
 	DoEnableAliasByName      func(string, bool) bool
 	DoEnableAliasGroup       func(string, bool) int
 	GetAlias                 func(string) *world.Alias
@@ -115,7 +115,7 @@ type Bus struct {
 	GetAliasInfo             func(name string, infotype int) (string, bool, bool)
 	SetAliasOption           func(name string, option string, value string) (bool, bool, bool)
 	HasNamedAlias            func(string) bool
-	DoListAliasNames         func() []string
+	DoListAliasNames         func(bool) []string
 	AddAlias                 func(*world.Alias, bool) bool
 	DoUpdateAlias            func(*world.Alias) int
 

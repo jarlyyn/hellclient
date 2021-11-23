@@ -238,12 +238,15 @@ func (a *Aliases) DoDeleteTemporaryAliases() int {
 	return count
 
 }
-func (a *Aliases) DoDeleteAliasGroup(group string) int {
+func (a *Aliases) DoDeleteAliasGroup(group string, byUser bool) int {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
-	count := len(a.Grouped[group])
+	count := 0
 	for _, v := range a.Grouped[group] {
-		a.removeAlias(v.Data.ID)
+		if v.ByUser == byUser {
+			count++
+			a.removeAlias(v.Data.ID)
+		}
 	}
 	return count
 }
@@ -335,12 +338,14 @@ func (a *Aliases) HasNamedAlias(name string) bool {
 	return ok
 
 }
-func (a *Aliases) DoListAliasNames() []string {
+func (a *Aliases) DoListAliasNames(byUser bool) []string {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
 	result := make([]string, 0, len(a.Named))
 	for _, v := range a.Named {
-		result = append(result, v.Data.Name)
+		if v.ByUser == byUser {
+			result = append(result, v.Data.Name)
+		}
 	}
 	return result
 }

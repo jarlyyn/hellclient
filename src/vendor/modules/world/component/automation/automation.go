@@ -356,8 +356,8 @@ func (a *Automation) DoDeleteAliasByName(name string) bool {
 func (a *Automation) DoDeleteTemporaryAliases() int {
 	return a.Aliases.DoDeleteTemporaryAliases()
 }
-func (a *Automation) DoDeleteAliasGroup(group string) int {
-	return a.Aliases.DoDeleteAliasGroup(group)
+func (a *Automation) DoDeleteAliasGroup(group string, byUser bool) int {
+	return a.Aliases.DoDeleteAliasGroup(group, byUser)
 }
 func (a *Automation) DoEnableAliasByName(name string, enabled bool) bool {
 	return a.Aliases.DoEnableAliasByName(name, enabled)
@@ -389,8 +389,8 @@ func (a *Automation) SetAliasOption(name string, option string, value string) (b
 func (a *Automation) HasNamedAlias(name string) bool {
 	return a.Aliases.HasNamedAlias(name)
 }
-func (a *Automation) DoListAliasNames() []string {
-	return a.Aliases.DoListAliasNames()
+func (a *Automation) DoListAliasNames(byUser bool) []string {
+	return a.Aliases.DoListAliasNames(byUser)
 }
 func (a *Automation) AddAlias(al *world.Alias, replace bool) bool {
 	return a.Aliases.AddAlias(al, replace)

@@ -121,6 +121,8 @@ func (a *Alias) Info(infotype int) (string, bool) {
 		return world.ToStringBool(a.Data.OmitFromCommandHistory), true
 	case 23:
 		return strconv.Itoa(0), true
+	case 29:
+		return world.ToStringBool(a.Data.OneShot), true
 	}
 	return "", false
 }

@@ -529,7 +529,7 @@ func (a *jsapi) DeleteAlias(call goja.FunctionCall, r *goja.Runtime) goja.Value 
 	return r.ToValue(a.API.DeleteAlias(name))
 }
 func (a *jsapi) DeleteTemporaryAliases(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	return r.ToValue(a.API.DeleteTemporaryTimers())
+	return r.ToValue(a.API.DeleteTemporaryAliases())
 
 }
 func (a *jsapi) DeleteAliasGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1031,6 +1031,9 @@ func (a *jsapi) GetAliasInfo(call goja.FunctionCall, r *goja.Runtime) goja.Value
 		return r.ToValue(world.FromStringBool(v))
 	case 23:
 		return r.ToValue(world.FromStringInt(v))
+	case 29:
+		return r.ToValue(world.FromStringBool(v))
+
 	}
 	return nil
 }

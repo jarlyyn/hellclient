@@ -514,7 +514,7 @@ func (a *luaapi) DeleteAlias(L *lua.LState) int {
 	return 1
 }
 func (a *luaapi) DeleteTemporaryAliases(L *lua.LState) int {
-	L.Push(lua.LNumber(a.API.DeleteTemporaryTimers()))
+	L.Push(lua.LNumber(a.API.DeleteTemporaryAliases()))
 	return 1
 
 }
@@ -526,13 +526,19 @@ func (a *luaapi) DeleteAliasGroup(L *lua.LState) int {
 
 func (a *luaapi) EnableAlias(L *lua.LState) int {
 	name := L.ToString(1)
-	enabled := L.ToBool(2)
+	var enabled bool
+	if L.Get(2).Type() != lua.LTNil {
+		enabled = L.ToBool(2)
+	}
 	L.Push(lua.LNumber(a.API.EnableAlias(name, enabled)))
 	return 1
 }
 func (a *luaapi) EnableAliasGroup(L *lua.LState) int {
 	group := L.ToString(1)
-	enabled := L.ToBool(2)
+	var enabled bool
+	if L.Get(2).Type() != lua.LTNil {
+		enabled = L.ToBool(2)
+	}
 	L.Push(lua.LNumber(a.API.EnableAliasGroup(group, enabled)))
 	return 1
 }
@@ -1156,6 +1162,9 @@ func (a *luaapi) GetAliasInfo(L *lua.LState) int {
 		L.Push(lua.LBool(world.FromStringBool(v)))
 	case 23:
 		L.Push(lua.LNumber(world.FromStringInt(v)))
+	case 29:
+		L.Push(lua.LBool(world.FromStringBool(v)))
+
 	}
 	return 1
 }
