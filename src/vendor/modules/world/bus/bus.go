@@ -96,7 +96,7 @@ type Bus struct {
 	GetTimerInfo             func(name string, infotype int) (string, bool, bool)
 	SetTimerOption           func(name string, option string, value string) (bool, bool, bool)
 	HasNamedTimer            func(string) bool
-	DoListTimerNames         func() []string
+	DoListTimerNames         func(byUser bool) []string
 	AddTimer                 func(*world.Timer, bool) bool
 	DoUpdateTimer            func(*world.Timer) int
 	DoSendAliasToScript      func(message string, alias *world.Alias, result *world.MatchResult)
@@ -133,7 +133,7 @@ type Bus struct {
 	GetTriggerInfo            func(name string, infotype int) (string, bool, bool)
 	SetTriggerOption          func(name string, option string, value string) (bool, bool, bool)
 	HasNamedTrigger           func(string) bool
-	DoListTriggerNames        func() []string
+	DoListTriggerNames        func(byUser bool) []string
 	AddTrigger                func(*world.Trigger, bool) bool
 	DoUpdateTrigger           func(*world.Trigger) int
 	DoSendTriggerToScript     func(line *world.Line, trigger *world.Trigger, result *world.MatchResult)

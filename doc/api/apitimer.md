@@ -242,3 +242,173 @@ EnableTimerGroup ("groupname", false)  -- disable the group
 ### 返回值
 
 组内计时器的数量
+
+## GetTimerInfo
+
+获取计时器信息
+
+部分兼容mushclient
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=GetTimerInfo
+
+### 原型
+```
+GetTimerInfo(name string, infotype int) (string, int)
+```
+
+### 描述
+
+获取指定的脚本计时器的信息
+
+* name 计时器名称
+* infotype 信息类型
+
+可用的infotype值
+
+1: 小时值 (short)
+2: 分钟值 (short)
+3: 秒值 (short)
+4: 发送内容 (string)
+5: 脚本名 (string)
+6: 是否激活 (boolean)
+7: 是否是一次性计时器 (boolean)
+8: 是否是指定时间点模式计时器，为False则为固定间隔(Every)模式 (boolean)
+9: 废弃
+10: 废弃
+11: 废弃
+12: 废弃
+13: 废弃
+14: 是否是临时计时器 (boolean)
+15: 废弃
+16: 废弃
+17: 断线后是否激活 (boolean)
+18: 废弃 (boolean)
+19: 计时器组名 (string)
+20: 发送到位置 (long)
+21: 废弃
+22: 名称 (string)
+23: 屏蔽输出标识 (boolean)
+24: 废弃
+25: 废弃
+26: 废弃
+
+### 代码范例
+
+Javascript:
+```
+world.note(world.GetTimerInfo ("my_timer", 2));
+```
+
+Lua:
+```
+Note(GetTimerInfo ("my_timer", 2))
+```
+
+### 返回值
+
+* 成功获取的返回值
+* 别名没找到返回空
+* Infotype无效返回空
+
+## GetTimerList
+
+获取脚本计时器列表
+
+不兼容mushclient
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=GetTimerList
+
+### 原型
+```
+GetTimerList() []string
+```
+### 描述
+
+返回脚本计时器名称列表
+
+### 代码范例
+
+Javascript:
+```
+timerlist = new VBArray(world.GetTimerList()).toArray();
+
+if (timerlist)  // if not empty
+ for (i = 0; i < timerlist.length; i++)
+   world.note(timerlist [i]);
+```
+
+Lua:
+```
+tl = GetTimerList ()
+if tl then
+  for k, v in ipairs (tl) do 
+    Note (v) 
+  end  -- for
+end -- if we have any timers
+```
+
+### 返回值
+
+存有脚本计时器名的字符串列表
+
+## GetTimerOption
+
+获取计时器选项
+
+部分兼容mushclisnt
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=GetTimerOption
+
+
+### 原型
+```
+GetTimerOption(name string, option string) (string, int)
+```
+
+### 描述
+
+返回给定名称的计时器的指定选项
+
+* name 计时器名
+* option 选项名
+
+可用的option值
+
+* "active_closed": y/n - 关闭时计时器是否有效
+* "at_time": y/n - 固定时间点模式
+* "enabled": y/n - 计时器是否有效
+* "group": (string - 计时器分组)
+* "hour": 小时数
+* "minute": 分钟数
+* "name": (string - name/label of alias)
+* "offset_hour": 废弃
+* "offset_minute": 废弃
+* "offset_second": 废弃
+* "omit_from_log": y/n - 废弃
+* "omit_from_output": y/n - 是否屏蔽输出
+* "one_shot": y/n - 是否是一次性计时器
+* "script": (string - 调用的脚本名)
+* "second": 秒数
+* "send": (multi-line string - 发送内容)
+* "send_to": 0 - 13 - 发送位置
+* "user": 废弃
+* "variable": (string - 发送到变量值)
+
+布尔值会返回 0\(false\) 或 1\(true\)
+
+### 代码范例
+
+Javascript:
+```
+Note (world.GetTimerOption ("mytimer", "group"));
+```
+
+Lua:
+```
+Note (GetTimerOption ("mytimer", "group"))
+```
+
+### 返回值
+
+如描述所列
+

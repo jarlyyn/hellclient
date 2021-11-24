@@ -306,12 +306,14 @@ func (a *Triggers) HasNamedTrigger(name string) bool {
 	return ok
 
 }
-func (a *Triggers) DoListTriggerNames() []string {
+func (a *Triggers) DoListTriggerNames(byUser bool) []string {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
 	result := make([]string, 0, len(a.Named))
 	for _, v := range a.Named {
-		result = append(result, v.Data.Name)
+		if v.Data.ByUser() == byUser {
+			result = append(result, v.Data.Name)
+		}
 	}
 	return result
 }

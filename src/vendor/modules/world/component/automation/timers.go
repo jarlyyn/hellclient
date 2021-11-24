@@ -193,12 +193,14 @@ func (t *Timers) EnableTimerGroup(group string, enabled bool) int {
 	}
 	return count
 }
-func (t *Timers) ListTimerNames() []string {
+func (t *Timers) ListTimerNames(byUser bool) []string {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
 	result := make([]string, 0, len(t.Named))
 	for _, v := range t.Named {
-		result = append(result, v.Data.Name)
+		if v.Data.ByUser() == byUser {
+			result = append(result, v.Data.Name)
+		}
 	}
 	return result
 }

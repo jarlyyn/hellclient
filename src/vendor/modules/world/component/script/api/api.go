@@ -336,7 +336,7 @@ func (a *API) EnableTimerGroup(group string, enabled bool) int {
 	return a.Bus.DoEnableTimerGroup(group, enabled)
 }
 func (a *API) GetTimerList() []string {
-	return a.Bus.DoListTimerNames()
+	return a.Bus.DoListTimerNames(false)
 }
 
 func (a *API) IsTimer(name string) int {
@@ -557,7 +557,7 @@ func (a *API) EnableTriggerGroup(group string, enabled bool) int {
 }
 
 func (a *API) GetTriggerList() []string {
-	return a.Bus.DoListTriggerNames()
+	return a.Bus.DoListTriggerNames(false)
 }
 
 func (a *API) GetTriggerOption(name string, option string) (string, int) {

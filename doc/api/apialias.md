@@ -347,7 +347,7 @@ end -- if we have any aliases
 ```
 ### 返回值
 
-存有脚本别名列表的字符串列表
+存有脚本别名名的字符串列表
 
 ## GetAliasOption
 
@@ -391,6 +391,7 @@ GetAliasOption(name string, option string) (string, int)
 * "user": 废弃
 * "variable": (string - sendto变量名)
 
+布尔值会返回 0\(false\) 或 1\(true\)
 ### 代码范例
 
 Javascript:

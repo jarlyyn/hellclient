@@ -302,8 +302,8 @@ func (a *Automation) EnableTimerByName(name string, enabled bool) bool {
 func (a *Automation) EnableTimerGroup(group string, enabled bool) int {
 	return a.Timers.EnableTimerGroup(group, enabled)
 }
-func (a *Automation) ListTimerNames() []string {
-	return a.Timers.ListTimerNames()
+func (a *Automation) ListTimerNames(byUser bool) []string {
+	return a.Timers.ListTimerNames(byUser)
 }
 func (a *Automation) HasNamedTimer(name string) bool {
 	return a.Timers.HasNamedTimer(name)
@@ -441,8 +441,8 @@ func (a *Automation) SetTriggerOption(name string, option string, value string) 
 func (a *Automation) HasNamedTrigger(name string) bool {
 	return a.Triggers.HasNamedTrigger(name)
 }
-func (a *Automation) DoListTriggerNames() []string {
-	return a.Triggers.DoListTriggerNames()
+func (a *Automation) DoListTriggerNames(byUser bool) []string {
+	return a.Triggers.DoListTriggerNames(byUser)
 }
 func (a *Automation) AddTrigger(al *world.Trigger, replace bool) bool {
 	return a.Triggers.AddTrigger(al, replace)
