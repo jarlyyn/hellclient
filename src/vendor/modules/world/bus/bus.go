@@ -83,7 +83,7 @@ type Bus struct {
 	DoDeleteTimer            func(string) bool
 	DoDeleteTimerByName      func(string) bool
 	DoDeleteTemporaryTimers  func() int
-	DoDeleteTimerGroup       func(string) int
+	DoDeleteTimerGroup       func(string, bool) int
 	DoEnableTimerByName      func(string, bool) bool
 	DoEnableTimerGroup       func(string, bool) int
 	DoResetNamedTimer        func(string) bool

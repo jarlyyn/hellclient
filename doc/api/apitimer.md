@@ -64,3 +64,182 @@ AddTimer ("my_timer", 0, 0, 1.5, "go north",
 
 * eTimerAlreadyExists Timer已经存在
 * eOK 添加成功
+
+## DeleteTimer
+
+删除计时器
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DeleteTimer
+
+### 原型
+```
+DeleteTimer(name string) int
+```
+### 描述
+
+删除指定名称的脚本计时器
+
+* name 计时器名
+
+### 代码范例
+
+Javascript:
+
+```
+world.DeleteTimer("mytimer");
+```
+
+Lua范例
+
+```
+DeleteTimer("mytimer")
+```
+
+### 返回值
+
+* eTimerNotFound 计时器未找到
+* eOK 执行成功
+
+## DeleteTimerGroup
+
+删除计时器组
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DeleteTimerGroup
+
+
+### 原型
+```
+DeleteTimerGroup(group string) int
+```
+
+### 描述
+
+按给到的分组删除计时器
+
+只删除分组内的脚本计时器
+
+### 代码范例
+
+Javascript:
+```
+world.DeleteTimerGroup ("groupname");
+```
+Lua:
+```
+DeleteTimerGroup ("groupname")
+```
+
+### 返回值
+
+删除的计时器的数量
+
+## DeleteTemporaryTimers
+
+删除临时计时器
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DeleteTemporaryTimers
+
+### 原型
+
+```
+DeleteTemporaryTimers() int
+```
+### 描述
+
+删除所有临时计数器
+
+### 代码范例
+
+Javascript:
+```
+world.DeleteTemporaryTimers();
+```
+
+Lua:
+```
+DeleteTemporaryTimers()
+```
+### 返回值
+
+删除的计时器数量
+
+## EnableTimer
+
+激活计时器
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=EnableTimer
+
+### 原型
+```
+EnableTimer(name string, enabled bool) int
+```
+
+### 描述
+
+激活脚本计时器
+
+* name 计时器名
+* enabled 是否激活计时器
+
+### Lua注意事项
+
+enabled为空时，值为True
+
+### 代码范例
+
+Javascript:
+```
+world.EnableTimer("heartbeat", true);
+```
+
+Lua:
+```
+EnableTimer("heartbeat", true)
+```
+
+### 返回值
+
+* eTimerNotFound 计时器未找到
+* eOK 执行成功
+
+## EnableTimerGroup
+
+激活计时器组
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=EnableTimerGroup
+
+### 原型
+
+```
+EnableTimerGroup(group string, enabled bool) int
+```
+
+### 描述
+
+按组激活计时器
+
+* group 组名
+* enabled 激活状态
+
+### Lua注意事项
+
+enabled为空时，值为True
+
+### 代码范例
+
+Javascript:
+
+```
+world.EnableTimerGroup ("groupname", 1);  // enable the group
+world.EnableTimerGroup ("groupname", 0);  // disable the group
+```
+
+Lua:
+
+```
+EnableTimerGroup ("groupname", true)  -- enable the group
+EnableTimerGroup ("groupname", false)  -- disable the group
+```
+### 返回值
+
+组内计时器的数量

@@ -19,6 +19,7 @@
 * [AddTimer 添加计时器](apitimer.md#AddTimer)
 * [DeleteTimer 删除计时器](apitimer.md#DeleteTimer)
 * [DeleteTimerGroup 删除计时器组](apitimer.md#DeleteTimerGroup)
+* [DeleteTemporaryTimers 删除临时计时器](apitimer.md#DeleteTemporaryTimers)
 * [EnableTimer 激活计时器](apitimer.md#EnableTimer)
 * [EnableTimerGroup 激活计时器组](apitimer.md#EnableTimerGroup)
 * [GetTimerInfo 获取计时器信息](apitimer.md#GetTimerInfo)

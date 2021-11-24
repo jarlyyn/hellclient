@@ -321,7 +321,7 @@ func (a *API) DeleteTimer(name string) int {
 }
 
 func (a *API) DeleteTimerGroup(group string) int {
-	return a.Bus.DoDeleteTimerGroup(group)
+	return a.Bus.DoDeleteTimerGroup(group, false)
 }
 
 func (a *API) EnableTimer(name string, enabled bool) int {

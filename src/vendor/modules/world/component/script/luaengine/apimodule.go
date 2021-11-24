@@ -417,13 +417,19 @@ func (a *luaapi) DeleteTimerGroup(L *lua.LState) int {
 
 func (a *luaapi) EnableTimer(L *lua.LState) int {
 	name := L.ToString(1)
-	enabled := L.ToBool(2)
+	var enabled bool
+	if L.Get(2).Type() != lua.LTNil {
+		enabled = L.ToBool(2)
+	}
 	L.Push(lua.LNumber(a.API.EnableTimer(name, enabled)))
 	return 1
 }
 func (a *luaapi) EnableTimerGroup(L *lua.LState) int {
 	group := L.ToString(1)
-	enabled := L.ToBool(2)
+	var enabled bool
+	if L.Get(2).Type() != lua.LTNil {
+		enabled = L.ToBool(2)
+	}
 	L.Push(lua.LNumber(a.API.EnableTimerGroup(group, enabled)))
 	return 1
 }
@@ -643,13 +649,19 @@ func (a *luaapi) DeleteTriggerGroup(L *lua.LState) int {
 
 func (a *luaapi) EnableTrigger(L *lua.LState) int {
 	name := L.ToString(1)
-	enabled := L.ToBool(2)
+	var enabled bool
+	if L.Get(2).Type() != lua.LTNil {
+		enabled = L.ToBool(2)
+	}
 	L.Push(lua.LNumber(a.API.EnableTrigger(name, enabled)))
 	return 1
 }
 func (a *luaapi) EnableTriggerGroup(L *lua.LState) int {
 	group := L.ToString(1)
-	enabled := L.ToBool(2)
+	var enabled bool
+	if L.Get(2).Type() != lua.LTNil {
+		enabled = L.ToBool(2)
+	}
 	L.Push(lua.LNumber(a.API.EnableTriggerGroup(group, enabled)))
 	return 1
 }

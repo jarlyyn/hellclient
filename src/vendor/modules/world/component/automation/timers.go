@@ -148,12 +148,15 @@ func (t *Timers) DeleteTemporaryTimers() int {
 	}
 	return count
 }
-func (t *Timers) DeleteTimerGroup(group string) int {
+func (t *Timers) DeleteTimerGroup(group string, byUser bool) int {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
-	count := len(t.Grouped[group])
+	count := 0
 	for _, v := range t.Grouped[group] {
-		t.removeTimer(v.Data.ID)
+		if v.Data.ByUser() == byUser {
+			count++
+			t.removeTimer(v.Data.ID)
+		}
 	}
 	return count
 }

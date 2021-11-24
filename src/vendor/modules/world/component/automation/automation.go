@@ -293,8 +293,8 @@ func (a *Automation) RemoveTimerByName(name string) bool {
 func (a *Automation) DeleteTemporaryTimers() int {
 	return a.Timers.DeleteTemporaryTimers()
 }
-func (a *Automation) DeleteTimerGroup(group string) int {
-	return a.Timers.DeleteTimerGroup(group)
+func (a *Automation) DeleteTimerGroup(group string, byUser bool) int {
+	return a.Timers.DeleteTimerGroup(group, byUser)
 }
 func (a *Automation) EnableTimerByName(name string, enabled bool) bool {
 	return a.Timers.EnableTimerByName(name, enabled)
