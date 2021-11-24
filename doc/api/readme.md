@@ -1,5 +1,6 @@
 # Hellclient API列表
 
+[与Mushclient借口兼容情况](mush.md)
 ## 别名接口
 
 * [AddAlias 添加别名](apialias.md#AddAlias)

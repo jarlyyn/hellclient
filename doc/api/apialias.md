@@ -1,6 +1,6 @@
 # 别名接口
 
-[返回](api.md)
+[返回](readme.md)
 
 ## AddAlias 
 

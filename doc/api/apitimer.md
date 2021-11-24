@@ -1,7 +1,6 @@
 # 计时器接口
 
-[返回](api.md)
-
+[返回](readme.md)
 ## AddTimer
 
 添加计时器
