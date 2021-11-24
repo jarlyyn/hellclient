@@ -218,6 +218,9 @@ func (t *Timers) ResetNamedTimer(name string) bool {
 	if ti == nil {
 		return false
 	}
+	if !ti.Data.Enabled {
+		return false
+	}
 	ti.Reset()
 	return true
 }
@@ -225,7 +228,9 @@ func (t *Timers) ResetTimers() {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
 	for _, v := range t.All {
-		v.Reset()
+		if v.Data.Enabled {
+			v.Reset()
+		}
 	}
 }
 func (t *Timers) GetTimerOption(name string, option string) (string, bool, bool) {

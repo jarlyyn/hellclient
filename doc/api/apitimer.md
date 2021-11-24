@@ -412,3 +412,170 @@ Note (GetTimerOption ("mytimer", "group"))
 
 如描述所列
 
+## IsTimer
+
+判断计时器是否存在
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=IsTimer
+
+### 原型
+```
+IsTimer(name string) int
+```
+
+### 描述
+
+检查指定的脚本计时器是否存在
+
+### 代码范例
+
+Javascript:
+```
+world.note(world.IsTimer("mytimer"));
+```
+
+Lua:
+```
+Note(IsTimer("mytimer"))
+```
+
+### 返回值
+
+* eTimerNotFound 脚本计时器未找到
+* eOK 脚本计时器存在
+
+## ResetTimer
+
+重置计时器
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=ResetTimer
+
+### 原型
+```
+ResetTimer(name string) int
+```
+
+### 描述
+
+重置指定的计时器
+
+未激活的计时器不会被重置
+
+* name 计时器名
+
+### 代码范例
+
+Javascript:
+```
+world.ResetTimer("mytimer");
+```
+
+Lua:
+```
+ResetTimer("mytimer")
+```
+
+### 返回值
+
+* eTimerNotFound 计时器未找到
+* eOK 重置成功
+
+## ResetTimers
+
+重置全部计时器
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=ResetTimers
+
+### 原型
+```
+ResetTimers() {
+```
+
+### 描述
+
+重置所有用户和脚本计时器
+
+未激活的计时器不会被重置
+
+
+### 代码范例
+
+Javascript:
+```
+world.ResetTimers();
+```
+
+Lua:
+```
+ResetTimers()
+```
+
+### 返回值
+
+无
+
+## SetTimerOption
+
+设置计时器选项
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=SetTimerOption
+
+
+### 原型
+
+```
+SetTimerOption(name string, option string, value string) int
+```
+
+### 描述
+
+设置指定的脚本计时器值
+
+* name 计时器名称
+* option 选项名称
+* value 选项值
+
+可用的option值：
+
+* "active_closed": y/n - 关闭时计时器是否有效
+* "at_time": y/n - 固定时间点模式
+* "enabled": y/n - 计时器是否有效
+* "group": (string - 计时器分组)
+* "hour": 小时数
+* "minute": 分钟数
+* "name": (string - name/label of alias)
+* "offset_hour": 废弃
+* "offset_minute": 废弃
+* "offset_second": 废弃
+* "omit_from_log": y/n - 废弃
+* "omit_from_output": y/n - 是否屏蔽输出
+* "one_shot": y/n - 是否是一次性计时器
+* "script": (string - 调用的脚本名)
+* "second": 秒数
+* "send": (multi-line string - 发送内容)
+* "send_to": 0 - 13 - 发送位置
+* "user": 废弃
+* "variable": (string - 发送到变量值)
+
+对于数字型的值，传入的字符串应该能转换为数字
+
+对于布尔型的值，传入的值必须是
+* "y", "Y", or "1" 为真值
+* "n", "N", or "0" 为假值
+
+### 代码范例
+
+Javascript:
+```
+world.SetTimerOption ("mytimer", "minute", "5");
+```
+
+Lua:
+```
+SetTimerOption ("mytimer", "minute", "5")
+```
+### 返回值
+
+* eTimerNotFound 计时器未找到
+* eTimeInvalid 时间无效
+* eOK 设置成功

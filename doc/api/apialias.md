@@ -455,7 +455,7 @@ SetAliasOption(name string, option string, value string) int
 
 ### 描述
 
-设置别名的选项值
+设置脚本别名的选项值
 
 * name 别名名称
 * option 选项名称
