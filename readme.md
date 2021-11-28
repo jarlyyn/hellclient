@@ -23,5 +23,5 @@ mushclient是mud活跃时代的一款非常接触，优秀的客户端。
 
 * [Helllua](https://github.com/hellclient-scripts/helllua) 原Mushclient机器人移植
 * [zsz-self.jvs](https://github.com/hellclient-scripts/zsz-self.jvs) 原Mushclient机器人移植
-* [helljs][https://github.com/hellclient-scripts/helljs] 针对 终极地狱 mud 全新制作的机器人
-* [pkpxkx.noob][https://github.com/hellclient-scripts/pkuxkx.noob] 针对 北大侠客行 mud 全新制作的机器人
+* [helljs](https://github.com/hellclient-scripts/helljs) 针对 终极地狱 mud 全新制作的机器人
+* [pkpxkx.noob](https://github.com/hellclient-scripts/pkuxkx.noob) 针对 北大侠客行 mud 全新制作的机器人
