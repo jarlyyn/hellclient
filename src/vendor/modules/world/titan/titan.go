@@ -285,7 +285,7 @@ func (t *Titan) HandleCmdAssist(id string) {
 	}
 }
 func (t *Titan) HandleCmdAbout() {
-	go msg.PublishVersionMessage(t, version.Version)
+	go msg.PublishVersionMessage(t, version.Version.FullVersionCode())
 }
 func (t *Titan) HandleCmdDefaultServer() {
 	go msg.PublishDefaultServerMessage(t, app.System.DefaultServer)

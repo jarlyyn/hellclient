@@ -32,7 +32,7 @@ type API struct {
 }
 
 func (a *API) Version() string {
-	return version.Version
+	return version.Version.FullVersionCode()
 }
 func (a *API) Note(cmd string) {
 	a.Bus.DoPrint(cmd)
