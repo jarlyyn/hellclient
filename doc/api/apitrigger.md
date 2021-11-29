@@ -70,3 +70,72 @@ AddTrigger("monster", "* attacks", "flee", trigger_flag.Enabled , 0, 0, "", "")
 * eTriggerAlreadyExists 触发已存在
 * eTriggerCannotBeEmpty 匹配文字为空
 * eOK 成功
+
+## AddTriggerEx
+
+高阶添加触发器
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=AddTriggerEx
+
+### 原型
+```
+AddTriggerEx(triggerName string, match string, responseText string, flags int, colour int, wildcard int, soundFileName string, scriptName string, sendTo int, sequence int) int
+```
+
+### 描述
+
+添加触发器
+
+* triggerName 触发器名
+* match 匹配文字
+* responseText 响应文字
+* flags 标识
+* colour 废弃
+* wildcard 废弃
+* soundFileName 废弃
+* scriptName 脚本名
+* sendTo 发送到
+* sequence 优先级
+
+可用的flags值
+
+* var eEnabled = 1; // 是否激活
+* var eOmitFromLog = 2; // 废弃
+* var eOmitFromOutput = 4; // 屏蔽输出
+* var eKeepEvaluating = 8; // 继续执行
+* var eIgnoreCase = 16; // 忽视大小写
+* var eTriggerRegularExpression = 32; // 正则表达式
+* var eExpandVariables = 512; // 展开变量
+* var eReplace = 1024; // 替换同名触发器
+* var eTemporary = 16384; // 临时触发器
+
+lua可以使用trigger_flag表
+
+* trigger_flag.Enabled = 1
+* trigger_flag.OmitFromLog = 2
+* trigger_flag.OmitFromOutput = 4
+* trigger_flag.KeepEvaluating = 8
+* trigger_flag.IgnoreCase = 16
+* trigger_flag.RegularExpression = 32
+* trigger_flag.ExpandVariables = 512
+* trigger_flag.Replace = 1024
+* trigger_flag.Temporary = 16384
+* trigger_flag.LowercaseWildcard = 2048
+
+### 代码范例
+
+Javascript:
+```
+world.AddTriggerEx ("", "* attacks", "You are under attack!", 1, 0, 0, "", "", 2, 50);
+```
+
+Lua:
+```
+AddTriggerEx ("", "* attacks", "You are under attack!", trigger_flag.Enabled, 0, 0, "", "", 2, 50)
+```
+
+### 返回值
+
+* eTriggerAlreadyExists 触发器已存在
+* eTriggerCannotBeEmpty 匹配文字不能为空
+* eOK 添加成功
