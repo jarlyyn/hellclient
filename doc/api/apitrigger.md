@@ -139,3 +139,36 @@ AddTriggerEx ("", "* attacks", "You are under attack!", trigger_flag.Enabled, 0,
 * eTriggerAlreadyExists 触发器已存在
 * eTriggerCannotBeEmpty 匹配文字不能为空
 * eOK 添加成功
+
+## DeleteTrigger
+
+删除触发器
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DeleteTrigger
+
+### 原型
+
+```
+DeleteTrigger(name string) int
+```
+
+### 描述
+
+删除指定的用户触发器
+
+### 代码范例
+
+Javascript
+```
+world.DeleteTrigger("my_trigger");
+```
+
+Lua
+```
+DeleteTrigger("my_trigger")
+```
+
+### 返回值
+* eTriggerNotFound: The named trigger does not exist
+* eOK: deleted OK
+
