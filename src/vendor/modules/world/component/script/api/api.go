@@ -541,7 +541,7 @@ func (a *API) DeleteTrigger(name string) int {
 	return EOK
 }
 func (a *API) DeleteTriggerGroup(group string) int {
-	return a.Bus.DoDeleteTriggerGroup(group)
+	return a.Bus.DoDeleteTriggerGroup(group, false)
 }
 func (a *API) EnableTrigger(name string, enabled bool) int {
 	name = world.PrefixedName(name, false)

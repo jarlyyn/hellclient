@@ -60,23 +60,6 @@ func (a *Automation) InstallTo(b *bus.Bus) {
 	b.AddAlias = a.AddAlias
 	b.DoUpdateAlias = a.DoUpdateAlias
 
-	b.DoDeleteAlias = a.DoDeleteAlias
-	b.DoDeleteAliasByName = a.DoDeleteAliasByName
-	b.DoDeleteTemporaryAliases = a.DoDeleteTemporaryAliases
-	b.DoDeleteAliasGroup = a.DoDeleteAliasGroup
-	b.DoEnableAliasByName = a.DoEnableAliasByName
-	b.DoEnableAliasGroup = a.DoEnableAliasGroup
-	b.GetAlias = a.GetAlias
-	b.GetAliasesByType = a.GetAliasesByType
-	b.DoDeleteAliasByType = a.DoDeleteAliasByType
-	b.AddAliases = a.AddAliases
-	b.GetAliasOption = a.GetAliasOption
-	b.SetAliasOption = a.SetAliasOption
-	b.HasNamedAlias = a.HasNamedAlias
-	b.DoListAliasNames = a.DoListAliasNames
-	b.AddAlias = a.AddAlias
-	b.DoUpdateAlias = a.DoUpdateAlias
-
 	b.DoDeleteTrigger = a.DoDeleteTrigger
 	b.DoDeleteTriggerByName = a.DoDeleteTriggerByName
 	b.DoDeleteTemporaryTriggers = a.DoDeleteTemporaryTriggers
@@ -408,8 +391,8 @@ func (a *Automation) DoDeleteTriggerByName(name string) bool {
 func (a *Automation) DoDeleteTemporaryTriggers() int {
 	return a.Triggers.DoDeleteTemporaryTriggers()
 }
-func (a *Automation) DoDeleteTriggerGroup(group string) int {
-	return a.Triggers.DoDeleteTriggerGroup(group)
+func (a *Automation) DoDeleteTriggerGroup(group string, byUser bool) int {
+	return a.Triggers.DoDeleteTriggerGroup(group, byUser)
 }
 func (a *Automation) DoEnableTriggerByName(name string, enabled bool) bool {
 	return a.Triggers.DoEnableTriggerByName(name, enabled)

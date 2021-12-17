@@ -122,7 +122,7 @@ type Bus struct {
 	DoDeleteTrigger           func(string) bool
 	DoDeleteTriggerByName     func(string) bool
 	DoDeleteTemporaryTriggers func() int
-	DoDeleteTriggerGroup      func(string) int
+	DoDeleteTriggerGroup      func(string, bool) int
 	DoEnableTriggerByName     func(string, bool) bool
 	DoEnableTriggerGroup      func(string, bool) int
 	GetTrigger                func(string) *world.Trigger

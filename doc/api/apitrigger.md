@@ -156,6 +156,8 @@ DeleteTrigger(name string) int
 
 删除指定的用户触发器
 
+* name 用户组名
+
 ### 代码范例
 
 Javascript
@@ -169,6 +171,37 @@ DeleteTrigger("my_trigger")
 ```
 
 ### 返回值
-* eTriggerNotFound: The named trigger does not exist
-* eOK: deleted OK
+* eTriggerNotFound: 触发器未找到
+* eOK: 删除成功
 
+## DeleteTriggerGroup
+
+删除触发器组
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DeleteTriggerGroup
+
+### 原型
+
+```
+DeleteTriggerGroup(group string) int
+```
+
+### 描述
+
+删除指定的用户触发器组
+
+* group 用户组名
+
+### 代码范例
+
+Javscript
+```
+world.DeleteTriggerGroup ("groupname");
+```
+lua
+```
+DeleteTriggerGroup ("groupname")
+```
+### 返回值
+
+涮出的触发器数量

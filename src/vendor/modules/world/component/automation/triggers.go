@@ -210,12 +210,15 @@ func (a *Triggers) DoDeleteTemporaryTriggers() int {
 	return count
 
 }
-func (a *Triggers) DoDeleteTriggerGroup(group string) int {
+func (a *Triggers) DoDeleteTriggerGroup(group string, byUser bool) int {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
-	count := len(a.Grouped[group])
+	count := 0
 	for _, v := range a.Grouped[group] {
-		a.removeTrigger(v.Data.ID)
+		if v.Data.ByUser() == byUser {
+			count++
+			a.removeTrigger(v.Data.ID)
+		}
 	}
 	return count
 }
