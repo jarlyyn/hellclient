@@ -245,3 +245,42 @@ EnableTrigger("monster", false)  -- disable trigger
 ### 返回值
 * eTriggerNotFound 触发器未找到
 * eOK 执行成功
+
+## EnableTriggerGroup
+
+激活触发器组
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=EnableTriggerGroup
+
+### 原型
+
+```
+EnableTriggerGroup(group string, enabled bool) int
+```
+
+### 描述
+
+激活触发器组
+* group 触发器组名
+* enabeld 激活状态
+
+### Lua注意事项
+
+enabled为空时，值为True
+
+
+### 代码范例
+
+Javascript
+```
+world.DeleteTriggerGroup ("groupname");
+```
+
+Lua
+```
+DeleteTriggerGroup ("groupname")
+```
+
+### 返回值
+
+组内触发器数量
