@@ -518,6 +518,8 @@ ResetTimers()
 
 设置计时器选项
 
+部分兼容
+
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=SetTimerOption
 
 

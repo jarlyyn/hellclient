@@ -465,11 +465,8 @@ GetTriggerOption(name string, option string) (string, int)
 * "user": 废弃
 * "variable": (string - 发送到的变量名)
 
-对于数字型的值，传入的字符串应该能转换为数字
+布尔值会返回 0\(false\) 或 1\(true\)
 
-对于布尔型的值，传入的值必须是
-* "y", "Y", or "1" 为真值
-* "n", "N", or "0" 为假值
 
 ### 代码范例
 
@@ -567,3 +564,111 @@ Note(IsTrigger("myTrigger"))
 * eTriggerNotFound: 触发不存在
 * eOK: 触发存在
 
+## SetTriggerOption
+
+设置触发器选项
+
+部分兼容
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=SetTriggerOption
+
+### 原型
+
+```
+SetTriggerOption(name string, option string, value string) int
+```
+
+### 描述
+
+设置指定的脚本触发器值
+
+* name 触发器名称
+* option 选项名称
+* value 选项值
+
+可用的option值：
+
+* "clipboard_arg": 废弃
+* "colour_change_type": 废弃
+* "custom_colour": 废弃
+* "enabled": y/n - trigger is enabled
+* "expand_variables": y/n - 是否展开变量
+* "group": (string - 触发器组名)
+* "ignore_case": y/n - 是否无视大小写
+* "inverse":废弃
+* "italic": 废弃
+* "keep_evaluating": y/n - 是否继续执行
+* "lines_to_match": 0 - 200 - 多行模式下的匹配行数
+* "lowercase_wildcard": y/n - 是否将匹配转换为小写
+* "match": (string - 匹配内容)
+* "match_style":废弃
+* "multi_line": y/n - 是否是多行匹配
+* "name": (string - 触发器名)
+* "new_style":废弃
+* "omit_from_log": 废弃
+* "omit_from_output": y/n - 是否屏蔽输出
+* "one_shot": y/n - 是否是一次性触发
+* "other_back_colour": 废弃
+* "other_text_colour": 废弃
+* "regexp": y/n - 是否是正则表达式
+* "repeat": y/n - 是否重复触发
+* "script": (string - 脚本名)
+* "send": (string - 发送内容)
+* "send_to": 0 - 14 - 发送到的位置
+* "sequence": 0 - 10000 - 优先级
+* "sound": 废弃
+* "sound_if_inactive": 废弃
+* "user": 废弃
+* "variable": (string - 发送到的变量名)
+
+对于数字型的值，传入的字符串应该能转换为数字
+
+对于布尔型的值，传入的值必须是
+* "y", "Y", or "1" 为真值
+* "n", "N", or "0" 为假值
+
+### 代码范例
+
+Javascript:
+```
+world.SetTriggerOption ("mytrigger", "match", "north");
+```
+
+Lua:
+```
+SetTriggerOption ("mytrigger", "match", "north")
+```
+
+### 返回结果
+
+* eTriggerNotFound 触发器未找到
+* eOK 设置成功
+
+## StopEvaluatingTriggers
+
+停止执行触发器
+
+不兼容mush
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=StopEvaluatingTriggers
+
+### 原型
+
+```
+StopEvaluatingTriggers()
+```
+### 代码范例
+
+Javascript:
+```
+StopEvaluatingTriggers()
+```
+
+Lua:
+```
+StopEvaluatingTriggers()
+```
+
+### 返回值
+
+无
