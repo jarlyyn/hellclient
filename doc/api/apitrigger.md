@@ -284,3 +284,83 @@ DeleteTriggerGroup ("groupname")
 ### 返回值
 
 组内触发器数量
+
+## GetTriggerInfo
+
+获取触发器信息
+
+部分兼容mushclient
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=GetTriggerInfo
+
+### 原型
+
+```
+GetTriggerInfo(name string, infotype int) (string, int)
+```
+
+### 描述
+
+获取指定的脚本触发器的信息
+
+* name 触发器名称
+* infotype 信息类型
+
+可用的infotype值
+
+* 1: 匹配内容 (string)
+* 2: 发送内容 (string)
+* 3: 废弃
+* 4: 脚本名 (string)
+* 5: 废弃
+* 6: 是否屏蔽输出 (boolean)
+* 7: 是否继续执行 (boolean)
+* 8: 是否激活 (boolean)
+* 9: 是否是正则表达式 (boolean)
+* 10: 是否无视大小写 (boolean)
+* 11: 是否在同一行重复 (boolean)
+* 12: 废弃
+* 13: 是否展开变量 (boolean)
+* 14: 废弃
+* 15: 发送到的位置 (int)
+* 16: 优先级 (short)
+* 17: 废弃
+* 18: 废弃
+* 19: 废弃
+* 20: 废弃
+* 21: 废弃
+* 22: 废弃
+* 23: 是否是临时触发 (boolean)
+* 24: 废弃
+* 25: 是否将匹配关键字转为小写 (boolean)
+* 26: 组名 (string)
+* 27: 发送到的变量名 (string)
+* 28: 废弃
+* 29: 废弃
+* 30: 废弃
+* 31: 最后一次匹配的正则表达式变量数量 (long)
+* 32: 废弃
+* 33: 废弃
+* 34: 废弃
+* 35: 废弃
+* 36: 是否是一次性触发 (boolean)
+* 37: 废弃
+* 38: 废弃
+
+### 范例代码
+
+Javascript
+```
+world.note(world.gettriggerinfo ("monster", 2));
+```
+
+Lua
+```
+Note (GetTriggerInfo ("monster", 2))
+```
+
+### 返回值
+
+* 成功获取的返回值
+* 触发器没找到返回空
+* Infotype无效返回空
