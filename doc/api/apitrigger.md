@@ -205,3 +205,43 @@ DeleteTriggerGroup ("groupname")
 ### 返回值
 
 涮出的触发器数量
+
+## EnableTrigger
+
+激活触发器
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=EnableTrigger
+
+### 原型
+
+```
+EnableTrigger(name string, enabled bool) int
+```
+
+### 描述
+
+激活脚本触发器
+
+* name 触发器名
+* enabled 是否激活
+### Lua注意事项
+
+enabled为空时，值为True
+
+### 范例代码
+
+Javascript
+```
+world.EnableTrigger("monster", true);  # enable trigger
+world.EnableTrigger("monster", false);  # disable trigger
+```
+
+Lua
+```
+EnableTrigger("monster", true)  -- enable trigger
+EnableTrigger("monster", false)  -- disable trigger
+```
+
+### 返回值
+* eTriggerNotFound 触发器未找到
+* eOK 执行成功
