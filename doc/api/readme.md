@@ -46,3 +46,104 @@
 * [IsTrigger 判断触发器是否存在](apitrigger.md#IsTrigger)
 * [SetTriggerOption 设置触发器选项](apitrigger.md#SetTriggerOption)
 * [StopEvaluatingTriggers 停止执行触发器](apitrigger.md#StopEvaluatingTriggers)
+
+## 游戏管理接口
+* GetWorldById
+* GetWorld
+* GetWorldID
+* GetWorldIdList
+* GetWorldList
+* WorldName
+* WorldAddress
+* WorldPort
+## 发送接口
+* print
+* Note
+* SendImmediate
+* Send
+* SendNoEcho
+* GetVariable
+* Execute
+* DiscardQueue
+* LockQueue
+* GetQueue
+* Queue
+* DoAfter
+* DoAfterNote
+* DoAfterSpeedWalk
+* DoAfterSpecial
+* SetSpeedWalkDelay
+* GetSpeedWalkDelay
+
+## 变量接口
+
+* SetVariable
+* DeleteVariable
+* GetVariableList
+* GetVariableComment
+* SetVariableComment
+
+## 杂项
+* Version
+* Hash
+* Base64Encode
+* Base64Decode
+* Trim
+* GetUniqueNumber
+* GetUniqueID
+* CreateGUID
+* SplitN
+* UTF8Len
+* UTF8Sub
+## 连接管理
+
+* Connect
+* IsConnected
+* Disconnect
+
+## 界面
+* FlashIcon
+* SetStatus
+* DeleteCommandHistory
+* Info
+* InfoClear
+* GetAlphaOption
+* SetAlphaOption
+* GetInfo
+* GetGlobalOption
+## 色彩接口
+* ColourNameToRGB
+* BoldColour
+* NormalColour
+
+## 文件处理
+* ReadFile
+* ReadLines
+* HasHomeFile
+* ReadHomeFile
+* WriteHomeFile
+* ReadHomeLines
+* WriteLog
+* CloseLog
+* OpenLog
+* FlushLog
+
+## 输出内容接口
+* GetLinesInBufferCount
+* DeleteOutput
+* DeleteLines
+* GetLineCount
+* GetRecentLines
+* GetLineInfo
+* GetStyleInfo
+
+## 通讯接口
+
+* Broadcast
+* Notify
+
+## 授权接口
+* CheckPermissions
+* RequestPermissions
+* CheckTrustedDomains
+* RequestTrustDomains
