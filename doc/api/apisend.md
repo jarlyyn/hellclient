@@ -356,3 +356,181 @@ end
 ### 返回值
 
 字符串列表
+
+## DoAfter
+
+延迟执行
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DoAfter
+
+### 原型
+
+```
+DoAfter(seconds float64, sendtext string) int
+```
+
+### 描述
+
+创建临时计时器延迟执行命令
+* seconds 延迟时间
+* sendtext 发送内容
+
+### 范例代码
+
+Javascript
+```
+world.DoAfter (10, "eat food");
+world.DoAfter (20.5, "get bottle bag");
+world.DoAfter (21, "drink water");
+```
+
+Lua
+```
+DoAfter (10, "eat food")
+DoAfter (20.5, "get bottle bag")
+DoAfter (21, "drink water")
+```
+
+### 返回值
+
+eOK
+
+## DoAfterNote
+
+延迟显示
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DoAfterNote
+
+### 原型
+
+```
+DoAfterNote(seconds float64, sendtext string) int
+```
+
+### 描述
+
+创建临时计时器延迟显示
+* seconds 延迟时间
+* sendtext 发送内容
+
+### 范例代码
+
+Javascript
+```
+world.DoAfterNote (60, "Spell has worn off!");
+```
+
+Lua
+```
+DoAfterNote (60, "Spell has worn off!")
+```
+
+### 返回值
+
+eOK
+
+## DoAfterSpeedWalk
+延迟加入队列
+
+不完全兼容
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DoAfterSpeedWalk
+
+### 原型
+
+```
+DoAfterSpeedWalk(seconds float64, sendtext string) int
+```
+
+### 描述
+
+创建临时计时器延迟执行，注意，与mushclient不同，没有speedwalk效果
+* seconds 延迟时间
+* sendtext 发送内容
+
+### 范例代码
+
+Javascript
+```
+world.DoAfterSpeedWalk (60, "eat food");
+```
+
+Lua
+```
+DoAfterSpeedWalk (60, "eat food")
+```
+
+### 返回值
+
+eOK
+
+## DoAfterSpecial
+
+高级延迟执行
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DoAfterSpecial
+
+### 原型
+```
+DoAfterSpecial(seconds float64, sendtext string, sendto int) int
+```
+
+### 描述
+
+根据给定的秒数，内容和发送到位置，创建临时计时器进行延迟执行
+
+* seconds 妙数
+* sendtext 发送内容
+* sendto 发送到位置
+
+### 范例代码
+Javascript
+```
+world.DoAfterSpecial (5, "EnableTriggerGroup ("mygroup", 1);", 12);
+```
+
+Lua
+```
+DoAfterSpecial (5, 'EnableTriggerGroup ("mygroup", 1)', sendto.script)
+```
+
+### 返回值
+
+eOK
+
+## SetSpeedWalkDelay/GetSpeedWalkDelay
+
+设置队列延迟
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=SpeedWalkDelay
+
+### 原型
+```
+SetSpeedWalkDelay(delay int)
+SpeedWalkDelay() int
+```
+
+### 描述
+
+设置和获取队列延迟
+
+* delay 毫秒(1/1000秒)为单位的的延迟
+
+注意，当delay设为0时，队列里所有的命令将立刻全部发送
+
+### 代码范例
+
+Javascript
+```
+world.note(world.SpeedWalkDelay); // display delay
+world.SpeedWalkDelay = 5000; // make delay 5 seconds
+```
+
+Lua
+```
+GetSpeedWalkDelay - gets the speedwalk delay
+SetSpeedWalkDelay - sets the speedwalk delay
+```
+
+### 返回值
+毫秒(1/1000秒)为单位的的延迟

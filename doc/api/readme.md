@@ -68,12 +68,12 @@
 * [DiscardQueue 取消队列](apisend.md#DiscardQueue)
 * [LockQueue 锁定队列](apisend.md#LockQueue)
 * [GetQueue 获取队列内容](apisend.md#GetQueue)
-* [DoAfter](apisend.md#DoAfter)
-* [DoAfterNote](apisend.md#DoAfterNote)
-* [DoAfterSpeedWalk](apisend.md#DoAfterSpeedWalk)
-* [DoAfterSpecial](apisend.md#DoAfterSpecial)
-* [SetSpeedWalkDelay](apisend.md#SetSpeedWalkDelay)
-* [GetSpeedWalkDelay](apisend.md#GetSpeedWalkDelay)
+* [DoAfter 延迟发送](apisend.md#DoAfter)
+* [DoAfterNote 延迟显示](apisend.md#DoAfterNote)
+* [DoAfterSpeedWalk 延迟加入队列](apisend.md#DoAfterSpeedWalk)
+* [DoAfterSpecial 高级延迟执行](apisend.md#DoAfterSpecial)
+* [SetSpeedWalkDelay 设置队列延迟](apisend.md#SetSpeedWalkDelay/GetSpeedWalkDelay)
+* [GetSpeedWalkDelay 获取队列延迟](apisend.md#SetSpeedWalkDelay/GetSpeedWalkDelay)
 
 ## 变量接口
 
