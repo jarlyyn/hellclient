@@ -27,11 +27,26 @@ type luaapi struct {
 	API *api.API
 }
 
+func (a *luaapi) optional(L *lua.LState, idx int) bool {
+	var enabled bool
+	if L.Get(idx).Type() != lua.LTNil {
+		enabled = L.ToBool(idx)
+	}
+	return enabled
+}
+func (a *luaapi) combine(L *lua.LState) string {
+	t := L.GetTop()
+	msg := make([]string, 0, t-1)
+	for i := 0; i < t; i++ {
+		msg = append(msg, L.Get(i+1).String())
+	}
+	return strings.Join(msg, " ")
+}
 func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("print", l.NewFunction(a.Print))
 	l.SetGlobal("Milliseconds", l.NewFunction(a.Milliseconds))
 
-	l.SetGlobal("Note", l.NewFunction(a.Note))
+	l.SetGlobal("Note", l.NewFunction(a.Print))
 
 	l.SetGlobal("SendImmediate", l.NewFunction(a.SendImmediate))
 	l.SetGlobal("Send", l.NewFunction(a.Send))
@@ -164,27 +179,16 @@ func (a *luaapi) Milliseconds(L *lua.LState) int {
 	return 1
 }
 func (a *luaapi) Print(L *lua.LState) int {
-	t := L.GetTop()
-	msg := make([]string, 0, t-1)
-	for i := 0; i < t; i++ {
-		msg = append(msg, L.Get(i+1).String())
-	}
-	a.API.Note(strings.Join(msg, " "))
+	a.API.Note(a.combine(L))
 	return 0
 }
-func (a *luaapi) Note(L *lua.LState) int {
-	info := L.ToString(1)
-	a.API.Note(info)
-	return 0
-}
+
 func (a *luaapi) SendImmediate(L *lua.LState) int {
-	info := L.ToString(1)
-	L.Push(lua.LNumber(a.API.SendImmediate(info)))
+	L.Push(lua.LNumber(a.API.SendImmediate(a.combine(L))))
 	return 1
 }
 func (a *luaapi) Send(L *lua.LState) int {
-	info := L.ToString(1)
-	L.Push(lua.LNumber(a.API.Send(info)))
+	L.Push(lua.LNumber(a.API.Send(a.combine(L))))
 	return 1
 }
 func (a *luaapi) Execute(L *lua.LState) int {
@@ -193,8 +197,7 @@ func (a *luaapi) Execute(L *lua.LState) int {
 	return 1
 }
 func (a *luaapi) SendNoEcho(L *lua.LState) int {
-	info := L.ToString(1)
-	L.Push(lua.LNumber(a.API.SendNoEcho(info)))
+	L.Push(lua.LNumber(a.API.SendNoEcho(a.combine(L))))
 	return 1
 }
 func (a *luaapi) GetVariable(L *lua.LState) int {
@@ -418,18 +421,14 @@ func (a *luaapi) DeleteTimerGroup(L *lua.LState) int {
 func (a *luaapi) EnableTimer(L *lua.LState) int {
 	name := L.ToString(1)
 	var enabled bool
-	if L.Get(2).Type() != lua.LTNil {
-		enabled = L.ToBool(2)
-	}
+	enabled = a.optional(L, 2)
 	L.Push(lua.LNumber(a.API.EnableTimer(name, enabled)))
 	return 1
 }
 func (a *luaapi) EnableTimerGroup(L *lua.LState) int {
 	group := L.ToString(1)
 	var enabled bool
-	if L.Get(2).Type() != lua.LTNil {
-		enabled = L.ToBool(2)
-	}
+	enabled = a.optional(L, 2)
 	L.Push(lua.LNumber(a.API.EnableTimerGroup(group, enabled)))
 	return 1
 }
@@ -533,18 +532,14 @@ func (a *luaapi) DeleteAliasGroup(L *lua.LState) int {
 func (a *luaapi) EnableAlias(L *lua.LState) int {
 	name := L.ToString(1)
 	var enabled bool
-	if L.Get(2).Type() != lua.LTNil {
-		enabled = L.ToBool(2)
-	}
+	enabled = a.optional(L, 2)
 	L.Push(lua.LNumber(a.API.EnableAlias(name, enabled)))
 	return 1
 }
 func (a *luaapi) EnableAliasGroup(L *lua.LState) int {
 	group := L.ToString(1)
 	var enabled bool
-	if L.Get(2).Type() != lua.LTNil {
-		enabled = L.ToBool(2)
-	}
+	enabled = a.optional(L, 2)
 	L.Push(lua.LNumber(a.API.EnableAliasGroup(group, enabled)))
 	return 1
 }
@@ -650,18 +645,14 @@ func (a *luaapi) DeleteTriggerGroup(L *lua.LState) int {
 func (a *luaapi) EnableTrigger(L *lua.LState) int {
 	name := L.ToString(1)
 	var enabled bool
-	if L.Get(2).Type() != lua.LTNil {
-		enabled = L.ToBool(2)
-	}
+	enabled = a.optional(L, 2)
 	L.Push(lua.LNumber(a.API.EnableTrigger(name, enabled)))
 	return 1
 }
 func (a *luaapi) EnableTriggerGroup(L *lua.LState) int {
 	group := L.ToString(1)
 	var enabled bool
-	if L.Get(2).Type() != lua.LTNil {
-		enabled = L.ToBool(2)
-	}
+	enabled = a.optional(L, 2)
 	L.Push(lua.LNumber(a.API.EnableTriggerGroup(group, enabled)))
 	return 1
 }
@@ -749,7 +740,7 @@ func (a *luaapi) GetSpeedWalkDelay(L *lua.LState) int {
 	return 1
 }
 func (a *luaapi) Queue(L *lua.LState) int {
-	L.Push(lua.LNumber(a.API.Queue(L.ToString(1), L.ToBool(2))))
+	L.Push(lua.LNumber(a.API.Queue(L.ToString(1), a.optional(L, 2))))
 	return 1
 }
 func (a *luaapi) NewReadFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
