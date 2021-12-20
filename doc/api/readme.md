@@ -77,12 +77,12 @@
 
 ## 变量接口
 
-* [GetVariable](apivariable.md#)
-* [SetVariable](apivariable.md#)
-* [DeleteVariable](apivariable.md#)
-* [GetVariableList](apivariable.md#)
-* [GetVariableComment](apivariable.md#)
-* [SetVariableComment](apivariable.md#)
+* [GetVariable 获取变量值](apivariable.md#GetVariable)
+* [SetVariable 设置变量](apivariable.md#SetVariable)
+* [DeleteVariable 删除变量](apivariable.md#DeleteVariable)
+* [GetVariableList 获取变量列表](apivariable.md#GetVariableList)
+* [GetVariableComment 获取变量备注](apivariable.md#GetVariableComment)
+* [SetVariableComment 设置变量备注](apivariable.md#SetVariableComment)
 
 ## 杂项
 * [Version](apimisc.md#)

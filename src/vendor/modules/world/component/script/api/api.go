@@ -127,9 +127,13 @@ func (a *API) Base64Decode(text string) *string {
 	result := string(decoded)
 	return &result
 }
-func (a *API) GetVariable(text string) string {
+func (a *API) GetVariable(text string) *string {
 	allvar := a.Bus.GetParams()
-	return allvar[text]
+	val, ok := allvar[text]
+	if !ok {
+		return nil
+	}
+	return &val
 }
 func (a *API) SetVariable(name string, content string) int {
 	a.Bus.SetParam(name, content)
