@@ -283,7 +283,11 @@ func (a *jsapi) SetVariable(call goja.FunctionCall, r *goja.Runtime) goja.Value 
 }
 func (a *jsapi) GetVariableList(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	list := a.API.GetVariableList()
-	return r.ToValue(list)
+	result := make([]string, len(list))
+	for k := range list {
+		result = append(result, k)
+	}
+	return r.ToValue(result)
 }
 func (a *jsapi) GetVariableComment(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	val := a.API.GetVariableComment(call.Argument(0).String())
