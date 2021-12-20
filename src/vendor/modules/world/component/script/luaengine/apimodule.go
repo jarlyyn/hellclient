@@ -203,11 +203,7 @@ func (a *luaapi) SendNoEcho(L *lua.LState) int {
 func (a *luaapi) GetVariable(L *lua.LState) int {
 	name := L.ToString(1)
 	val := a.API.GetVariable(name)
-	if val == nil {
-		L.Push(lua.LNil)
-	} else {
-		L.Push(lua.LString(*val))
-	}
+	L.Push(lua.LString(val))
 	return 1
 }
 func (a *luaapi) DeleteVariable(L *lua.LState) int {
