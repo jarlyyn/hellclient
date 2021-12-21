@@ -19,7 +19,7 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *worl
 		msg, s, err = ansi.Decode(msg)
 		if s != nil {
 			if s.Type == "" {
-				b, err = ToUTF8(charset, []byte(s.Code))
+				b, err = world.ToUTF8(charset, []byte(s.Code))
 				if err != nil {
 					errhandler(err)
 					continue

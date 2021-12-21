@@ -759,7 +759,22 @@ func (a *API) UTF8Sub(text string, start int, end int) string {
 	}
 	return string(v[start:end])
 }
-
+func (a *API) ToUTF8(code string, text string) *string {
+	result, err := world.ToUTF8(code, []byte(text))
+	if err != nil {
+		return nil
+	}
+	output := string(result)
+	return &output
+}
+func (a *API) FromUTF8(code string, text string) *string {
+	result, err := world.FromUTF8(code, []byte(text))
+	if err != nil {
+		return nil
+	}
+	output := string(result)
+	return &output
+}
 func (a *API) Info(text string) {
 	a.Bus.SetStatus(a.Bus.GetStatus() + text)
 }

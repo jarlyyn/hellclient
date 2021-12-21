@@ -294,8 +294,14 @@ SplitN(text string, sep string, n int) []string
 
 Javascript
 ```
+text=world.SplitN("a=4=5","=",2)
 ```
 
 Lua
 ```
+text=SplitN("a=4=5","=",2)
+
 ```
+### 返回值
+
+字符串

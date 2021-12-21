@@ -146,6 +146,9 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("SplitN", l.NewFunction(a.SplitNfunc))
 	l.SetGlobal("UTF8Len", l.NewFunction(a.UTF8Len))
 	l.SetGlobal("UTF8Sub", l.NewFunction(a.UTF8Sub))
+	l.SetGlobal("FromUTF8", l.NewFunction(a.FromUTF8))
+	l.SetGlobal("ToUTF8", l.NewFunction(a.ToUTF8))
+
 	l.SetGlobal("Info", l.NewFunction(a.Info))
 	l.SetGlobal("InfoClear", l.NewFunction(a.InfoClear))
 	l.SetGlobal("GetAlphaOption", l.NewFunction(a.GetAlphaOption))
@@ -825,6 +828,28 @@ func (a *luaapi) UTF8Sub(L *lua.LState) int {
 	start := L.ToInt(2)
 	end := L.ToInt(3)
 	L.Push(lua.LString(a.API.UTF8Sub(text, start, end)))
+	return 1
+}
+func (a *luaapi) ToUTF8(L *lua.LState) int {
+	code := L.ToString(1)
+	text := L.ToString(2)
+	result := a.API.ToUTF8(code, text)
+	if result != nil {
+		L.Push(lua.LString(*result))
+	} else {
+		L.Push(lua.LNil)
+	}
+	return 1
+}
+func (a *luaapi) FromUTF8(L *lua.LState) int {
+	code := L.ToString(1)
+	text := L.ToString(2)
+	result := a.API.FromUTF8(code, text)
+	if result != nil {
+		L.Push(lua.LString(*result))
+	} else {
+		L.Push(lua.LNil)
+	}
 	return 1
 }
 func (a *luaapi) Info(L *lua.LState) int {

@@ -41,7 +41,7 @@ func (c *Converter) onError(bus *bus.Bus, err error) {
 func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
 	c.Lock.Lock()
 	defer c.Lock.Unlock()
-	b, err := FromUTF8(bus.GetCharset(), []byte(cmd.Mesasge))
+	b, err := world.FromUTF8(bus.GetCharset(), []byte(cmd.Mesasge))
 	if err != nil {
 		bus.HandleConverterError(err)
 		return
