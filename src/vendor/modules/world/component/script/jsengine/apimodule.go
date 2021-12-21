@@ -196,6 +196,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "ReadHomeLines", a.NewReadHomeLinesAPI(p))
 	AppendToWorld(jp.Runtime, world, "SplitN", a.SplitNfunc)
 	AppendToWorld(jp.Runtime, world, "UTF8Len", a.UTF8Len)
+	AppendToWorld(jp.Runtime, world, "UTF8Index", a.UTF8Index)
 	AppendToWorld(jp.Runtime, world, "UTF8Sub", a.UTF8Sub)
 	AppendToWorld(jp.Runtime, world, "ToUTF8", a.ToUTF8)
 	AppendToWorld(jp.Runtime, world, "FromUTF8", a.FromUTF8)
@@ -792,6 +793,11 @@ func (a *jsapi) SplitNfunc(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (a *jsapi) UTF8Len(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	text := call.Argument(0).String()
 	return r.ToValue(a.API.UTF8Len(text))
+}
+func (a *jsapi) UTF8Index(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	text := call.Argument(0).String()
+	sub := call.Argument(1).String()
+	return r.ToValue(a.API.UTF8Index(text, sub))
 }
 func (a *jsapi) ToUTF8(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	code := call.Argument(0).String()

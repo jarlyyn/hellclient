@@ -145,6 +145,8 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 
 	l.SetGlobal("SplitN", l.NewFunction(a.SplitNfunc))
 	l.SetGlobal("UTF8Len", l.NewFunction(a.UTF8Len))
+	l.SetGlobal("UTF8Index", l.NewFunction(a.UTF8Index))
+
 	l.SetGlobal("UTF8Sub", l.NewFunction(a.UTF8Sub))
 	l.SetGlobal("FromUTF8", l.NewFunction(a.FromUTF8))
 	l.SetGlobal("ToUTF8", l.NewFunction(a.ToUTF8))
@@ -821,6 +823,12 @@ func (a *luaapi) SplitNfunc(L *lua.LState) int {
 func (a *luaapi) UTF8Len(L *lua.LState) int {
 	text := L.ToString(1)
 	L.Push(lua.LNumber(a.API.UTF8Len(text)))
+	return 1
+}
+func (a *luaapi) UTF8Index(L *lua.LState) int {
+	text := L.ToString(1)
+	sub := L.ToString(2)
+	L.Push(lua.LNumber(a.API.UTF8Index(text, sub)))
 	return 1
 }
 func (a *luaapi) UTF8Sub(L *lua.LState) int {

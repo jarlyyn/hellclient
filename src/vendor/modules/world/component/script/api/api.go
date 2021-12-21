@@ -752,6 +752,13 @@ func (a *API) UTF8Len(text string) int {
 	v := []rune(text)
 	return len(v)
 }
+func (a *API) UTF8Index(text string, substring string) int {
+	idx := strings.Index(text, substring)
+	if idx <= 0 {
+		return idx
+	}
+	return len([]rune(text[:idx]))
+}
 func (a *API) UTF8Sub(text string, start int, end int) string {
 	v := []rune(text)
 	if end > len(v) || end <= 0 {
