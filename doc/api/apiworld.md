@@ -205,3 +205,35 @@ Note(WorldAddress())
 
 无
 
+## DeleteGroup
+
+按组删除元素
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=DeleteGroup
+
+
+### 原型
+```
+DeleteGroup(group string) int
+```
+
+### 描述
+
+按给到的分组删除触发器，计时器，别名
+
+只删除分组内的脚本触发器，计时器，别名
+
+### 代码范例
+
+Javascript:
+```
+world.DeleteGroup ("groupname");
+```
+Lua:
+```
+DeleteGroup ("groupname")
+```
+
+### 返回值
+
+删除的元素的数量

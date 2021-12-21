@@ -1,6 +1,10 @@
 package world
 
-import "github.com/herb-go/uniqueid"
+import (
+	"fmt"
+
+	"github.com/herb-go/uniqueid"
+)
 
 const TriggerFlagEnabled = 1
 const TriggerFlagOmitFromLog = 2
@@ -59,7 +63,12 @@ func (t *Trigger) PrefixedName() string {
 	}
 	return PrefixByScript + t.Name
 }
-
+func (t *Trigger) NewError(err error) *TriggerError {
+	return &TriggerError{
+		Err:     err,
+		Trigger: t,
+	}
+}
 func NewTrigger() *Trigger {
 	return &Trigger{}
 }
@@ -91,4 +100,13 @@ func (t Triggers) Less(i, j int) bool {
 // Swap swaps the elements with indexes i and j.
 func (t Triggers) Swap(i, j int) {
 	t[i], t[j] = t[j], t[i]
+}
+
+type TriggerError struct {
+	Trigger *Trigger
+	Err     error
+}
+
+func (e *TriggerError) Error() string {
+	return fmt.Sprintf("trigger error %s[%s]:%s", e.Trigger.ID, e.Trigger.Name, e.Err.Error())
 }

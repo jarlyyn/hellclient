@@ -56,6 +56,7 @@
 * [WorldName 获取游戏名](apiworld.md#WorldName)
 * [WorldAddress 获取游戏网络地址](apiworld.md#WorldAddress)
 * [WorldPort 获取游戏网络端口](apiworld.md#WorldPort)
+* [DeleteGroup 按组删除元素](apiworld.md#DeleteGroup)
 ## 发送接口
 * [print 打印](apisend.md#print)
 * [Note 显示](apisend.md#Note)
@@ -85,17 +86,19 @@
 * [SetVariableComment 设置变量备注](apivariable.md#SetVariableComment)
 
 ## 杂项
-* [Version](apimisc.md#)
-* [Hash](apimisc.md#)
-* [Base64Encode](apimisc.md#)
-* [Base64Decode](apimisc.md#)
-* [Trim](apimisc.md#)
-* [GetUniqueNumber](apimisc.md#)
-* [GetUniqueID](apimisc.md#)
-* [CreateGUID](apimisc.md#)
-* [SplitN](apimisc.md#)
-* [UTF8Len](apimisc.md#)
-* [UTF8Sub](apimisc.md#)
+* [Version 版本信息](apimisc.md#Version)
+* [Hash 摘要](apimisc.md#Hash)
+* [Base64Encode Base64编码](apimisc.md#Base64Encode)
+* [Base64Decode Base64解码](apimisc.md#Base64Decode)
+* [Trim 去空格](apimisc.md#Trim)
+* [GetUniqueNumber 获取唯一数值](apimisc.md#GetUniqueNumber)
+* [GetUniqueID 获取唯一ID](apimisc.md#GetUniqueID)
+* [CreateGUID 获取GUID](apimisc.md#CreateGUID)
+* [SplitN 分割字符串](apimisc.md#SplitN)
+* [UTF8Len 获取UTF8长度](apimisc.md#UTF8Len)
+* [UTF8Sub 获取UTF8子字符串](apimisc.md#UTF8Sub)
+* [ToUTF8 转换为UTF8字符串](apimisc.md#ToUTF8)
+* [FromUTF8 转换自UTF8字符串](apimisc.md#FromUTF8)
 ## 连接管理
 
 * [Connect](apiconnect.md#)

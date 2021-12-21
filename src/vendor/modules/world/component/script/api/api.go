@@ -169,7 +169,7 @@ func (a *API) CreateGUID() string {
 	if err != nil {
 		panic(err)
 	}
-	return id.String()
+	return strings.ToUpper(id.String())
 }
 
 func (a *API) SetStatus(text string) {
@@ -292,6 +292,9 @@ func (a *API) DoAfterSpecial(seconds float64, sendtext string, sendto int) int {
 	return EOK
 }
 
+func (a *API) DeleteGroup(group string) int {
+	return a.Bus.DoDeleteTriggerGroup(group, false) + a.Bus.DoDeleteTimerGroup(group, false) + a.Bus.DoDeleteAliasGroup(group, false)
+}
 func (a *API) AddTimer(timerName string, hour int, minute int, second float64, responseText string, flags int, scriptName string) int {
 	t := world.CreateTimer()
 	t.Name = timerName
@@ -415,7 +418,7 @@ func (a *API) AddAlias(aliasName string, match string, responseText string, flag
 }
 
 func (a *API) DeleteAlias(name string) int {
-	world.PrefixedName(name, false)
+	name = world.PrefixedName(name, false)
 	ok := a.Bus.DoDeleteAliasByName(name)
 	if !ok {
 		return EAliasNotFound
@@ -429,7 +432,7 @@ func (a *API) DeleteTemporaryAliases() int {
 	return a.Bus.DoDeleteTemporaryAliases()
 }
 func (a *API) EnableAlias(name string, enabled bool) int {
-	world.PrefixedName(name, false)
+	name = world.PrefixedName(name, false)
 	ok := a.Bus.DoEnableAliasByName(name, enabled)
 	if !ok {
 		return EAliasNotFound
@@ -715,7 +718,6 @@ func (a *API) WriteHomeFile(p herbplugin.Plugin, name string, body []byte) {
 	if err != nil {
 		panic(err)
 	}
-	return
 }
 func (a *API) ReadHomeLines(p herbplugin.Plugin, name string) []string {
 	data := a.ReadHomeFile(p, name)

@@ -29,8 +29,11 @@ type luaapi struct {
 
 func (a *luaapi) optional(L *lua.LState, idx int) bool {
 	var enabled bool
-	if L.Get(idx).Type() != lua.LTNil {
+	vt := L.Get(idx).Type()
+	if vt != lua.LTNil {
 		enabled = L.ToBool(idx)
+	} else {
+		enabled = true
 	}
 	return enabled
 }
@@ -89,6 +92,9 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("DoAfterNote", l.NewFunction(a.DoAfterNote))
 	l.SetGlobal("DoAfterSpeedWalk", l.NewFunction(a.DoAfterSpeedWalk))
 	l.SetGlobal("DoAfterSpecial", l.NewFunction(a.DoAfterSpecial))
+
+	l.SetGlobal("DeleteGroup", l.NewFunction(a.DeleteGroup))
+
 	l.SetGlobal("AddTimer", l.NewFunction(a.AddTimer))
 	l.SetGlobal("DeleteTimer", l.NewFunction(a.DeleteTimer))
 	l.SetGlobal("DeleteTemporaryTimers", l.NewFunction(a.DeleteTemporaryTimers))
@@ -391,6 +397,13 @@ func (a *luaapi) DoAfterSpecial(L *lua.LState) int {
 	L.Push(lua.LNumber(a.API.DoAfterSpecial(seconds, send, sendto)))
 	return 1
 }
+
+func (a *luaapi) DeleteGroup(L *lua.LState) int {
+	name := L.ToString(1)
+	L.Push(lua.LNumber(a.API.DeleteGroup(name)))
+	return 1
+}
+
 func (a *luaapi) AddTimer(L *lua.LState) int {
 	name := L.ToString(1)
 	hour := int(L.ToNumber(2))

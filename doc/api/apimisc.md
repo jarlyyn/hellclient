@@ -1,1 +1,301 @@
 # 杂项接口
+
+## Version
+
+版本信息
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=Version
+
+### 原型
+```
+Version() string
+```
+
+### 描述
+
+返回版本信息
+
+版本信息格式为
+
+大版本号.YYYY.MM.DD
+
+### 范例代码
+
+Javascript
+```
+world.Note(world.Version());
+```
+
+Lua
+```
+Note(Version())
+```
+
+### 返回值
+
+版本字符串
+
+
+## Hash
+
+摘要
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=Hash
+
+### 原型
+
+```
+Hash(text string) string
+```
+
+### 描述
+
+返回给定字符串的小写sha摘要
+
+
+### 代码范例
+
+JavaScript
+```
+world.note (world.hash ("This Mud is running on the Dawn Codebase"));
+```
+
+Lua
+```
+Note (Hash("This Mud is running on the Dawn Codebase"))
+```
+
+### 返回值
+
+字符串
+## Base64Encode
+
+Base64编码
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=Base64Encode
+
+### 原型
+
+```
+Base64Encode(text string, mutliline bool) string
+```
+
+### 描述
+
+将给到的字符串编码为md5编码
+
+* text 需要编码的内容
+* mutliline 是否每76个字符插入一个换行
+
+### 代码范例
+
+Javascript
+```
+world.note (world.base64encode ("swordfish", 0));
+```
+
+Lua
+```
+Note (Base64Encode ("swordfish", 0))
+```
+
+### 返回值
+字符串
+
+## Base64Decode
+
+Base64解码
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=Base64Decode
+
+### 原型
+
+```
+Base64Decode(text string) *string
+```
+
+### 描述
+
+将给到的md5码结码
+
+* text 需要解码的内容
+
+### 代码范例
+
+Javascript
+```
+world.note (world.Base64Decode ("TmljayBHYW1tb24="));
+```
+
+Lua
+```
+Note (Base64Decode ("TmljayBHYW1tb24="))
+```
+
+### 返回值
+* 成功解码则返回解码后的字符串
+* 解码失败返回空
+
+## Trim
+
+去空格
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=Trim
+
+### 原型
+
+```
+Trim(source string) string
+```
+
+### 描述
+
+去除字符串两端的空格
+* source 待处理的字符串
+
+### 代码范例
+
+Javascript
+```
+world.Note("*" + world.Trim("  mystring  ") + "*");
+```
+Lua
+```
+Note("*" .. Trim("  mystring  ") .. "*")
+```
+
+### 返回值
+
+去除两对岸空格后的字符串
+
+## GetUniqueNumber
+
+获取唯一数值
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=GetUniqueNumber
+
+### 原型
+```
+GetUniqueNumber() int
+```
+
+### 描述
+
+获取一个唯一数字。该数值每次从程序启动开始从0自赠
+
+### 代码范例
+
+Javascript
+```
+world.note (world.GetUniqueNumber());
+```
+
+Lua
+```
+Note (GetUniqueNumber())
+```
+
+### 返回值
+
+0到 2147483647 之间的整数
+
+### GetUniqueID
+
+获取唯一ID
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=GetUniqueID
+
+### 原型
+
+```
+GetUniqueID() string
+```
+
+### 描述
+
+返回一个唯一字符串，注意，和mush不同，返回的字符串是不定长的。
+
+### 范例代码
+
+Javascript
+```
+world.Note (world.GetUniqueID ());
+```
+
+Lua
+```
+Note (GetUniqueID ())
+```
+
+### 返回值
+
+字符串
+
+
+## CreateGUID
+
+获取GUID
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=CreateGUID
+
+### 原型
+```
+CreateGUID() string
+```
+### 描述
+
+生成一个uuid v1形式的guid
+
+格式为
+
+```
+6B29FC40-CA47-1067-B31D-00DD010662DA
+```
+
+### 范例代码
+
+Javascript
+```
+world.Note (world.CreateGUID ());
+```
+
+Lua
+```
+Note (CreateGUID ())
+```
+
+### 返回值
+
+36位uuid字符串
+
+## SplitN
+
+分割字符串
+
+### 代码原型
+```
+SplitN(text string, sep string, n int) []string
+```
+
+### 描述
+
+根据给到的信息分割字符串
+
+* text 待分割的字符串
+* sep 分割符
+* n 分割数量
+
+其中当n
+* 大于 0 时，返回最多 n组数据，最后一组包含所有剩下的文字
+* 等于0时，返回空
+* 小于0时，返回全部可分割的数据
+
+### 代码范例
+
+Javascript
+```
+```
+
+Lua
+```
+```

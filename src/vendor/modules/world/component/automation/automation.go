@@ -140,7 +140,7 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 	for _, v := range queue {
 		r, err := v.Match(ctx)
 		if err != nil {
-			b.HandleTriggerError(err)
+			b.HandleTriggerError(v.Data.NewError(err))
 			continue
 		}
 		if r == nil {

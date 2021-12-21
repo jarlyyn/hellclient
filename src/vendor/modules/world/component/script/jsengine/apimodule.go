@@ -144,6 +144,9 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "DoAfterNote", a.DoAfterNote)
 	AppendToWorld(jp.Runtime, world, "DoAfterSpeedWalk", a.DoAfterSpeedWalk)
 	AppendToWorld(jp.Runtime, world, "DoAfterSpecial", a.DoAfterSpecial)
+
+	AppendToWorld(jp.Runtime, world, "DeleteGroup", a.DeleteGroup)
+
 	AppendToWorld(jp.Runtime, world, "AddTimer", a.AddTimer)
 	AppendToWorld(jp.Runtime, world, "DeleteTimer", a.DeleteTimer)
 	AppendToWorld(jp.Runtime, world, "DeleteTemporaryTimers", a.DeleteTemporaryTimers)
@@ -421,6 +424,12 @@ func (a *jsapi) DoAfterSpecial(call goja.FunctionCall, r *goja.Runtime) goja.Val
 	return r.ToValue(a.API.DoAfterSpecial(seconds, send, sendto))
 
 }
+
+func (a *jsapi) DeleteGroup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	name := call.Argument(0).String()
+	return r.ToValue(a.API.DeleteGroup(name))
+}
+
 func (a *jsapi) AddTimer(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	name := call.Argument(0).String()
 	hour := int(call.Argument(1).ToInteger())
