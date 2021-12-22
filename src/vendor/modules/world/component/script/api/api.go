@@ -617,7 +617,11 @@ func (a *API) GetTriggerWildcard(triggername string, wildcard string) *string {
 	return &result
 }
 func (a *API) ColourNameToRGB(v string) int {
-	return world.Colours[v]
+	color, ok := world.NamedColor[v]
+	if !ok {
+		return -1
+	}
+	return color
 }
 func (a *API) MustCheckHome() {
 	home := a.Bus.GetScriptHome()
@@ -761,6 +765,12 @@ func (a *API) UTF8Index(text string, substring string) int {
 }
 func (a *API) UTF8Sub(text string, start int, end int) string {
 	v := []rune(text)
+	if start < 0 {
+		start = 0
+	}
+	if start >= len(v) {
+		return ""
+	}
 	if end > len(v) || end <= 0 {
 		end = len(v)
 	}

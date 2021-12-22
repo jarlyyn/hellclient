@@ -142,6 +142,16 @@ var Colours = map[string]int{
 	"BG-Bright-Cyan":    0x00ffff,
 	"BG-Bright-White":   0xffffff,
 }
+var NamedColor = map[string]int{
+	"black":   Colours["Black"],
+	"red":     Colours["Red"],
+	"green":   Colours["Green"],
+	"yellow":  Colours["Yellow"],
+	"blue":    Colours["Blue"],
+	"magenta": Colours["Magenta"],
+	"cyan":    Colours["Cyan"],
+	"white":   Colours["White"],
+}
 
 func GetNormalColour(code int) int {
 	switch code {
@@ -162,7 +172,7 @@ func GetNormalColour(code int) int {
 	case 8:
 		return Colours["White"]
 	}
-	return 0
+	return -1
 }
 
 func GetBoldColour(code int) int {

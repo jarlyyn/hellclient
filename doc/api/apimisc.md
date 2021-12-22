@@ -305,3 +305,138 @@ text=SplitN("a=4=5","=",2)
 ### 返回值
 
 字符串
+
+## UTF8Len
+
+获取UTF8长度
+
+### 原型
+
+```
+UTF8Len(text string)
+```
+
+### 描述
+
+返回utf8字符串的长度
+
+英文和中文的长度都计算为1
+
+比如 "a甲b乙" 的长度 为4
+
+### 代码范例
+
+Javascript
+```
+world.Note(world.UTF8LEN("a甲b乙"))
+```
+
+Lua
+```
+Note(world.UTF8LEN("a甲b乙"))
+```
+
+### 返回值
+
+给定的utf8字符串的长度
+
+## UTF8Sub
+
+获取UTF8子字符串
+
+### 原型
+
+```
+UTF8Sub(text string, start int, end int)
+```
+
+### 描述
+
+从给到的开始和结束位置截取字符串
+
+* text 需要截取的原字符串
+* start 开始截取的位置，小于0则当作0处理, 大于等于字符串长度则返回空字符串
+* end 结束截取的位置，小于等于0则截取到字符串结束
+
+英文和中文的长度都计算为1
+
+比如 UTF8Sub("a甲b乙",1,3)的值为"甲b"
+
+###  代码范例
+
+Javascript
+```
+world.Note(world.UTF8Sub("a甲b乙",2,3))
+```
+
+Lua
+```
+Note(UTF8Sub("a甲b乙",2,3))
+```
+### 返回值
+
+返回截取出的字符串
+
+## ToUTF8
+
+转换为UTF8字符串
+
+### 原型
+```
+ToUTF8(code string, text string) *string
+```
+
+### 描述
+
+将给定编码的字符串转码为utf8字符串
+
+* code 编码，可选范围为 utf8,gbk,big5
+* text 需要转换的字符串
+
+### 范例代码
+
+Javascript
+```
+world.Note(world.ToUTF8("gbk",rawtext))
+```
+
+Lua
+```
+Note(ToUTF8("gbk",rawtext))
+```
+
+### 返回值
+* 转换成功返回对应字符串
+* 返回失败(如数据问题或编码不支持)返回空
+
+## FromUTF8
+
+转换自UTF8字符串
+
+### 原型
+```
+ToUTF8(code string, text string) *string
+```
+
+### 描述
+
+将utf8字符串转码为给定编码的字符串
+
+* code 编码，可选范围为 utf8,gbk,big5
+* text 需要转换的字符串
+
+### 范例代码
+
+Javascript
+```
+data=world.FromUTF8("gbk","你好"))
+```
+
+Lua
+```
+data=FromUTF8("gbk","你好"))
+```
+
+### 返回值
+* 转换成功返回对应字符串
+* 返回失败(如数据问题或编码不支持)返回空

@@ -101,24 +101,26 @@
 * [FromUTF8 转换自UTF8字符串](apimisc.md#FromUTF8)
 ## 连接管理
 
-* [Connect](apiconnect.md#)
-* [IsConnected](apiconnect.md#)
-* [Disconnect](apiconnect.md#)
+* [Connect 连接](apiconnect.md#Connect)
+* [IsConnected 判断接连状态](apiconnect.md#IsConnected)
+* [Disconnect 断开连接](apiconnect.md#Disconnect)
 
 ## 界面
-* [FlashIcon](apiui.md#)
-* [SetStatus](apiui.md#)
-* [DeleteCommandHistory](apiui.md#)
-* [Info](apiui.md#)
-* [InfoClear](apiui.md#)
-* [GetAlphaOption](apiui.md#)
-* [SetAlphaOption](apiui.md#)
-* [GetInfo](apiui.md#)
-* [GetGlobalOption](apiui.md#)
+* [FlashIcon 废弃](apiui.md#FlashIcon)
+* [SetStatus 设置状态文本](apiui.md#SetStatus)
+* [DeleteCommandHistory 删除命令记录](apiui.md#DeleteCommandHistory)
+* [Info 追加信息文本](apiui.md#Info)
+* [InfoClear 清除信息文本](apiui.md#InfoClear)
+* [GetAlphaOption 获取选项](apiui.md#GetAlphaOption)
+* [SetAlphaOption 设置选项](apiui.md#SetAlphaOption)
+* [GetInfo 获取信息](apiui.md#GetInfo)
+* [GetGlobalOption 获取全局选项](apiui.md#GetGlobalOption)
+ 
+
 ## 色彩接口
-* [ColourNameToRGB](apicolor.md#)
-* [BoldColour](apicolor.md#)
-* [NormalColour](apicolor.md#)
+* [ColourNameToRGB 色彩名转rgb](apicolor.md#)
+* [BoldColour 获取高亮色彩rgb](apicolor.md#)
+* [NormalColour 获取普通色彩rgb](apicolor.md#)
 
 ## 文件处理
 * [ReadFile](apifile.md#)

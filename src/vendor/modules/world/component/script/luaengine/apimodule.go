@@ -351,8 +351,7 @@ func (a *luaapi) FlashIcon(L *lua.LState) int {
 	return 0
 }
 func (a *luaapi) SetStatus(L *lua.LState) int {
-	text := L.ToString(1)
-	a.API.SetStatus(text)
+	a.API.SetStatus(a.combine(L))
 	return 0
 }
 func (a *luaapi) DeleteCommandHistory(L *lua.LState) int {
