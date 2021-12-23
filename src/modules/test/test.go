@@ -1,14 +1,15 @@
-package main
+package test
 
 import (
-	_ "hellclient/modules"
+	_ "hellclient/modules" //modules init
 	"hellclient/modules/app"
-	_ "hellclient/modules/drivers"
+	_ "hellclient/modules/drivers" //drivers
 	"hellclient/modules/overseers"
-	"hellclient/modules/world/genesis"
+	"path/filepath"
 
 	"github.com/herb-go/util"
 	"github.com/herb-go/util/config"
+	"github.com/herb-go/util/testingtools"
 )
 
 func loadConfigs() {
@@ -24,28 +25,19 @@ func initModules() {
 	//Put Your own init code here.
 }
 
-//Main app run func.
-var run = func() {
-	genesis.Start()
-	util.OnQuit(genesis.Stop)
-	//Put your run code here
-	util.WaitingQuit()
-	//Delay util.QuitDelayDuration for modules quit.
-	util.DelayAndQuit()
-
-}
-
-//Init init app
+//Init init app config and modules
 func Init() {
-	defer util.RecoverAndExit()
 	util.ApplieationLock.Lock()
 	defer util.ApplieationLock.Unlock()
+	testingtools.SetRootPathRelativeToModules("../")
 	util.UpdatePaths()
+	util.ConfigPath = filepath.Join(util.RootPath, "test", "testconfig")
+	util.AppDataPath = filepath.Join(util.RootPath, "test", "testappdata")
 	util.MustChRoot()
 	loadConfigs()
 	overseers.MustInitOverseers()
 	initModules()
-	app.Development.NotTestingOrPanic()
+	app.Development.TestingOrPanic()
 	//Auto created appdata folder if not exists
 	util.RegisterDataFolder()
 	util.MustLoadRegisteredFolders()
@@ -53,11 +45,11 @@ func Init() {
 	overseers.MustTrainWorkers()
 }
 
-func main() {
-	// Set app root path.
-	//Default rootpah is "src/../"
-	//You can set os env  "HerbRoot" to overwrite this setting while starting app.
-	// util.RootPath = ""
-	Init()
-	run()
+//Run run app
+func Run() {
+	//Put your run code here
+	util.WaitingQuit()
+	//Delay util.QuitDelayDuration for modules quit.
+	util.DelayAndQuit()
+
 }

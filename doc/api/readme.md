@@ -119,20 +119,20 @@
 
 ## 色彩接口
 * [ColourNameToRGB 色彩名转rgb](apicolor.md#)
-* [BoldColour 获取高亮色彩rgb](apicolor.md#)
 * [NormalColour 获取普通色彩rgb](apicolor.md#)
+* [BoldColour 获取高亮色彩rgb](apicolor.md#)
 
 ## 文件处理
-* [ReadFile](apifile.md#)
-* [ReadLines](apifile.md#)
-* [HasHomeFile](apifile.md#)
-* [ReadHomeFile](apifile.md#)
-* [WriteHomeFile](apifile.md#)
-* [ReadHomeLines](apifile.md#)
-* [WriteLog](apifile.md#)
-* [CloseLog](apifile.md#)
-* [OpenLog](apifile.md#)
-* [FlushLog](apifile.md#)
+* [ReadFile 读取脚本文件](apifile.md#ReadFile)
+* [ReadLines 读取脚本文件并分行](apifile.md#ReadLines)
+* [HasHomeFile 检查用户文件](apifile.md#HasHomeFile)
+* [ReadHomeFile 读取用户文件](apifile.md#ReadHomeFile)
+* [WriteHomeFile 写入用户文件](apifile.md#WriteHomeFile)
+* [ReadHomeLines 读取用户文件并分行](apifile.md#ReadHomeLines)
+* [WriteLog](apifile.md#WriteLog)
+* [CloseLog](apifile.md#CloseLog)
+* [OpenLog](apifile.md#OpenLog)
+* [FlushLog](apifile.md#FlushLog)
 
 ## 输出内容接口
 * [GetLinesInBufferCount](apioutput.md#)
