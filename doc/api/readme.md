@@ -140,7 +140,7 @@
 * [DeleteLines 删除历史内容](apioutput.md#DeleteLines)
 * [GetLineCount 获取接受总行数](apioutput.md#GetLineCount)
 * [GetRecentLines 获取近期内容](apioutput.md#GetRecentLines)
-* [GetLineInfo](apioutput.md#GetLineInfo)
+* [GetLineInfo 获取指定行信息](apioutput.md#GetLineInfo)
 * [GetStyleInfo](apioutput.md#GetStyleInfo)
 
 ## 通讯接口

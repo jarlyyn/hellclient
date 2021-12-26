@@ -173,7 +173,7 @@
 * GetInfo <部分兼容>
 * GetInternalCommandsList <不兼容>
 * GetLineCount <不兼容>
-* GetLineInfo <兼容>
+* GetLineInfo <部分兼容>
 * GetLinesInBufferCount <部分>
 * GetLoadedValue <不兼容>
 * GetMainWindowPosition <不兼容>
