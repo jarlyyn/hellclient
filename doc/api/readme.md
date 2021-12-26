@@ -145,8 +145,8 @@
 
 ## 通讯接口
 
-* [Broadcast](apicommunication.md#)
-* [Notify](apicommunication.md#)
+* [Broadcast 广播](apicommunication.md#)
+* [Notify 通知](apicommunication.md#)
 
 ## 授权接口
 * [CheckPermissions](apiauth.md#)
