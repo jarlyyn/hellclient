@@ -10,6 +10,7 @@ import (
 type Info struct {
 	Lines     *ring.Ring
 	History   *ring.Ring
+	Recent    *ring.Ring
 	Prompt    *world.Line
 	Lock      sync.RWMutex
 	LineCount int
@@ -17,6 +18,7 @@ type Info struct {
 
 const MaxHistory = 20
 const MaxLines = 1000
+const MaxRecent = 100
 
 func (i *Info) OmitOutput(b *bus.Bus) {
 	i.Lock.RLock()
@@ -35,6 +37,9 @@ func (i *Info) DeleteLines(b *bus.Bus, count int) {
 	if count > l {
 		count = l
 	}
+	if count <= 0 {
+		return
+	}
 	var removed = 0
 	for removed < count {
 		i.Lines.Value = nil
@@ -46,6 +51,7 @@ func (i *Info) DeleteLines(b *bus.Bus, count int) {
 func (i *Info) Init(b *bus.Bus) {
 	i.Lines = ring.New(MaxLines)
 	i.History = ring.New(MaxHistory)
+	i.Recent = ring.New(MaxRecent)
 }
 func (i *Info) ClientInfo(b *bus.Bus) *world.ClientInfo {
 	info := &world.ClientInfo{}
@@ -91,6 +97,10 @@ func (i *Info) onNewLine(b *bus.Bus, line *world.Line) {
 	defer i.Lock.Unlock()
 	i.Lines = i.Lines.Next()
 	i.Lines.Value = line
+	if line.Type == world.LineTypeReal {
+		i.Recent = i.Recent.Next()
+		i.Recent.Value = line
+	}
 	i.LineCount++
 }
 func (i *Info) GetLineCount() int {
@@ -111,12 +121,12 @@ func (i *Info) GetRecentLines(count int) []*world.Line {
 	if count < 0 {
 		count = 0
 	}
-	if count > i.Lines.Len() {
-		count = i.Lines.Len()
+	if count > i.Recent.Len() {
+		count = i.Recent.Len()
 	}
 	result := make([]*world.Line, 0, count)
 
-	r := i.Lines.Move(1 - count)
+	r := i.Recent.Move(1 - count)
 	var current = 0
 	for current < count {
 		current = current + 1

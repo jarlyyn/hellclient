@@ -135,13 +135,13 @@
 * [FlushLog 废弃](apifile.md#FlushLog)
 
 ## 输出内容接口
-* [GetLinesInBufferCount](apioutput.md#)
-* [DeleteOutput](apioutput.md#)
-* [DeleteLines](apioutput.md#)
-* [GetLineCount](apioutput.md#)
-* [GetRecentLines](apioutput.md#)
-* [GetLineInfo](apioutput.md#)
-* [GetStyleInfo](apioutput.md#)
+* [GetLinesInBufferCount 获取历史行数](apioutput.md#GetLinesInBufferCount)
+* [DeleteOutput 废弃](apioutput.md#DeleteOutput)
+* [DeleteLines 删除历史内容](apioutput.md#DeleteLines)
+* [GetLineCount 获取接受总行数](apioutput.md#GetLineCount)
+* [GetRecentLines 获取近期内容](apioutput.md#GetRecentLines)
+* [GetLineInfo](apioutput.md#GetLineInfo)
+* [GetStyleInfo](apioutput.md#GetStyleInfo)
 
 ## 通讯接口
 

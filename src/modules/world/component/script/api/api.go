@@ -9,6 +9,7 @@ import (
 	"hellclient/modules/version"
 	"hellclient/modules/world"
 	"hellclient/modules/world/bus"
+	"hellclient/modules/world/component/info"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -824,7 +825,7 @@ func (a *API) GetLinesInBufferCount() int {
 	return a.Bus.GetLinesInBufferCount()
 }
 func (a *API) DeleteOutput() {
-	a.Bus.FlushHistories()
+
 }
 
 func (a *API) DeleteLines(count int) {
@@ -836,8 +837,8 @@ func (a *API) GetLineCount() int {
 }
 
 func (a *API) GetRecentLines(count int) string {
-	if count > 100 {
-		count = 100
+	if count > info.MaxRecent {
+		count = info.MaxRecent
 	}
 	lines := a.Bus.GetRecentLines(count)
 	var result = make([]string, 0, len(lines))
