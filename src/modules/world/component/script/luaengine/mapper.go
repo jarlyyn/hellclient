@@ -172,7 +172,7 @@ func (m *LuaMapper) GetPath(L *lua.LState) int {
 	for i := 3; i < count; i++ {
 		to = append(to, L.ToString(i+1))
 	}
-	steps := m.mapper.GetPath(from, fly == 1, to)
+	steps := m.mapper.GetPath(from, fly != 0, to)
 	if steps == nil {
 		L.Push(lua.LNil)
 		return 1

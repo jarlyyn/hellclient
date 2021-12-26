@@ -151,7 +151,7 @@ func (m *JsMapper) GetPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	if err != nil {
 		return nil
 	}
-	steps := m.mapper.GetPath(from, fly == 1, to)
+	steps := m.mapper.GetPath(from, fly != 0, to)
 	if steps == nil {
 		return nil
 	}
