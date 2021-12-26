@@ -141,7 +141,7 @@
 * [GetLineCount 获取接受总行数](apioutput.md#GetLineCount)
 * [GetRecentLines 获取近期内容](apioutput.md#GetRecentLines)
 * [GetLineInfo 获取指定行信息](apioutput.md#GetLineInfo)
-* [GetStyleInfo](apioutput.md#GetStyleInfo)
+* [GetStyleInfo 获取样式信息](apioutput.md#GetStyleInfo)
 
 ## 通讯接口
 

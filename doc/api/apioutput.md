@@ -184,6 +184,8 @@ GetLineInfo(linenumber int, infotype int)
 * 10: 实际行id(字符串)
 * 11: 行内样式数量
 
+如果行号或者infotype无效，返回空
+
 ### Lua注意事项
 
 infotype为空时，将会传回一个Table,包含以下值
@@ -220,6 +222,72 @@ for line = total_lines - 10, total_lines do
   Tell ("Received ", GetLineInfo (line, 9))
   Note (" - Style runs = ", GetLineInfo (line, 11))
   end
+
+```
+
+### 返回值
+
+见描述
+
+## GetStyleInfo
+
+获取样式信息
+
+部分兼容mushclient
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=GetStyleInfo
+
+### 原型
+```
+GetStyleInfo(linenumber int, style int, infotype int) (string, bool)
+```
+
+### 描述
+
+获取指定行样式的信息
+
+* linenumber 行号，从1开始
+* style 样式编号 从1开始
+* infotype 信息类型
+
+可选的信息类型包括
+
+* 1: 文字
+* 2: 样式长度
+* 3: 开始信息
+* 4: 废弃
+* 5: 废弃
+* 6: 废弃
+* 7: 废弃
+* 8: 是否加粗
+* 9: 似乎否有下划线
+* 10: 是否闪烁
+* 11: 是否反转
+* 12: 废弃
+* 13: 废弃
+* 14: 前景色的RGB
+* 15: 背景色的RGB
+
+如果行号，样式编号，信息类型任何一个无效，返回空
+
+### Lua注意事项
+
+如果infotype为0,以table形式返回所有信息
+
+如果样式编号为0,以table形式返回所有样式信息
+
+为保持兼容性的设定，不是很建议这样使用
+
+### 范例代码
+
+Javascript
+```
+world.note (world.GetStyleInfo (100, 2, 14));
+```
+
+Lua
+```
+Note (GetStyleInfo (100, 2, 14))
 
 ```
 
