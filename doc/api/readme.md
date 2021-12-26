@@ -129,10 +129,10 @@
 * [ReadHomeFile 读取用户文件](apifile.md#ReadHomeFile)
 * [WriteHomeFile 写入用户文件](apifile.md#WriteHomeFile)
 * [ReadHomeLines 读取用户文件并分行](apifile.md#ReadHomeLines)
-* [WriteLog](apifile.md#WriteLog)
-* [CloseLog](apifile.md#CloseLog)
-* [OpenLog](apifile.md#OpenLog)
-* [FlushLog](apifile.md#FlushLog)
+* [WriteLog 写入日志](apifile.md#WriteLog)
+* [CloseLog 废弃](apifile.md#CloseLog)
+* [OpenLog 废弃](apifile.md#OpenLog)
+* [FlushLog 废弃](apifile.md#FlushLog)
 
 ## 输出内容接口
 * [GetLinesInBufferCount](apioutput.md#)

@@ -178,3 +178,95 @@ WriteHomeFile("testfile","testdata")
 ### 返回值
 
 无
+
+## ReadHomeLines
+
+读取脚本文件并分行
+
+### 原型
+```
+ReadHomeLines(name string) []string
+```
+
+### 描述
+
+读取给定文件的文件内容，并以\n为分割符分割为字符串列表
+
+* name 以用户脚本根目录为基准的文件位置
+
+
+如果文件位置在授权范围外，将会报错
+
+其他的文件操作错误也会报错
+
+### 代码范例
+Javascript
+```
+var data=world.ReadHomeLines("mydata.txt")
+```
+
+Lua
+```
+local data=ReadHomeLines("mydata.txt")
+```
+
+### 返回值
+
+字符串列表
+
+## WriteLog
+
+写入日志
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=WriteLog
+### 原型
+
+```
+WriteLog(message string) int
+```
+
+### 描述
+
+将给定的信息写入日志
+
+* message 需要写入的信息
+
+信息将在追加分行\n后,写入 appdata\games\logs\游戏ID.log 内
+
+### 代码范例
+Javascript
+```
+world.WriteLog("--- Message for the log file ---");
+```
+
+Lua
+```
+WriteLog("--- Message for the log file ---")
+```
+### 返回值
+
+eOK
+
+## CloseLog
+
+废弃
+
+### 返回值
+
+eOK
+
+## OpenLog
+
+废弃
+
+### 返回值
+
+eOK
+
+## FlushLog
+
+废弃
+
+### 返回值
+
+eOK
