@@ -2,6 +2,7 @@ package luaengine
 
 import (
 	"context"
+	"errors"
 	"hellclient/modules/app"
 	"hellclient/modules/world"
 	"hellclient/modules/world/bus"
@@ -37,13 +38,31 @@ func (a *luaapi) optional(L *lua.LState, idx int) bool {
 	}
 	return enabled
 }
-func (a *luaapi) combine(L *lua.LState) string {
+func (a *luaapi) convertstrings(v lua.LValue) []string {
+	var result []string
+	switch v.Type() {
+	case lua.LTNil:
+	case lua.LTTable:
+		t := v.(*lua.LTable)
+		max := t.MaxN()
+		for i := 1; i <= max; i++ {
+			result = append(result, lua.LVAsString(t.RawGetInt(i)))
+		}
+	default:
+		panic(errors.New("value must be table"))
+	}
+	return result
+}
+func (a *luaapi) getstrings(L *lua.LState) []string {
 	t := L.GetTop()
 	msg := make([]string, 0, t-1)
 	for i := 0; i < t; i++ {
 		msg = append(msg, L.Get(i+1).String())
 	}
-	return strings.Join(msg, " ")
+	return msg
+}
+func (a *luaapi) combine(L *lua.LState) string {
+	return strings.Join(a.getstrings(L), " ")
 }
 func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("print", l.NewFunction(a.Print))
@@ -182,6 +201,12 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("Notify", l.NewFunction(a.Notify))
 
 	l.SetGlobal("GetGlobalOption", l.NewFunction(a.GetGlobalOption))
+
+	l.SetGlobal("CheckPermissions", l.NewFunction(a.CheckPermissions))
+	l.SetGlobal("RequestPermissions", l.NewFunction(a.RequestPermissions))
+	l.SetGlobal("CheckTrustedDomains", l.NewFunction(a.CheckTrustedDomains))
+	l.SetGlobal("RequestTrustDomains", l.NewFunction(a.RequestTrustDomains))
+
 }
 
 func (a *luaapi) Milliseconds(L *lua.LState) int {
@@ -1239,6 +1264,49 @@ func (a *luaapi) GetGlobalOption(L *lua.LState) int {
 		}
 	}
 	return 1
+}
+func (a *luaapi) CheckTrustedDomains(L *lua.LState) int {
+	items := a.convertstrings(L.Get((1)))
+	L.Push(lua.LBool(a.API.CheckTrustedDomains(items)))
+	return 1
+}
+
+func (a *luaapi) RequestPermissions(L *lua.LState) int {
+	items := a.convertstrings(L.Get((1)))
+	var reason string
+	vreason := L.Get(2)
+	if vreason.Type() != lua.LTNil {
+		reason = vreason.String()
+	}
+	var script string
+	vscript := L.Get(3)
+	if vscript.Type() != lua.LTNil {
+		script = vscript.String()
+	}
+	a.API.RequestPermissions(items, reason, script)
+	return 0
+}
+
+func (a *luaapi) CheckPermissions(L *lua.LState) int {
+	items := a.convertstrings(L.Get((1)))
+	L.Push(lua.LBool(a.API.CheckPermissions(items)))
+	return 1
+}
+
+func (a *luaapi) RequestTrustDomains(L *lua.LState) int {
+	items := a.convertstrings(L.Get((1)))
+	var reason string
+	vreason := L.Get(2)
+	if vreason.Type() != lua.LTNil {
+		reason = vreason.String()
+	}
+	var script string
+	vscript := L.Get(3)
+	if vscript.Type() != lua.LTNil {
+		script = vscript.String()
+	}
+	a.API.RequestTrustDomains(items, reason, script)
+	return 0
 }
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",

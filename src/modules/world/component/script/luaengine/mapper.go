@@ -34,7 +34,7 @@ func ConvertLuaPath(v lua.LValue) *LuaPath {
 			p.path.Tags[lua.LVAsString(t.RawGetInt(i))] = true
 		}
 	default:
-		panic("tags must be table")
+		panic(errors.New("tags must be table"))
 	}
 	etags := t.RawGetString("excludetags")
 	switch etags.Type() {
@@ -46,7 +46,7 @@ func ConvertLuaPath(v lua.LValue) *LuaPath {
 			p.path.ExcludeTags[lua.LVAsString(t.RawGetInt(i))] = true
 		}
 	default:
-		panic("excludetags must be table")
+		panic(errors.New("excludetags must be table"))
 	}
 	return p
 }
@@ -143,7 +143,7 @@ func (m *LuaMapper) SetTags(L *lua.LState) int {
 	_ = L.Get(1) //self
 	tags := L.Get(2)
 	if tags.Type() != lua.LTTable {
-		panic("tags must be table")
+		panic(errors.New("tags must be table"))
 	}
 	t := tags.(*lua.LTable)
 	result := []string{}

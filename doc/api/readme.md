@@ -145,11 +145,11 @@
 
 ## 通讯接口
 
-* [Broadcast 广播](apicommunication.md#)
-* [Notify 通知](apicommunication.md#)
+* [Broadcast 广播](apicommunication.md#Broadcast)
+* [Notify 通知](apicommunication.md#Notify)
 
 ## 授权接口
-* [CheckPermissions](apiauth.md#)
-* [RequestPermissions](apiauth.md#)
-* [CheckTrustedDomains](apiauth.md#)
-* [RequestTrustDomains](apiauth.md#)
+* [CheckPermissions 检查权限](apiauth.md#CheckPermissions)
+* [RequestPermissions 请求权限](apiauth.md#RequestPermissions)
+* [CheckTrustedDomains 检查信任域名](apiauth.md#CheckTrustedDomains)
+* [RequestTrustDomains 请求信任域名](apiauth.md#RequestTrustDomains)
