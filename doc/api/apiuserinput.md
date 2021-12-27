@@ -192,7 +192,7 @@ NewDatagrid(title string, intro string) *Datagrid
 
 创建一个数据表格
 
-列表需要发布(publish)后才会显示
+表格需要发布(publish)后才会显示
 * title 表格标题
 * intro 表格介绍
 ### 代码范例
@@ -210,3 +210,36 @@ local datagrid=Userinput:newdatagrid("test data grid","A test data grid")
 ### 返回值
 
 新数据表格对象
+
+## Userinput.newvisualprompt
+
+新建可视化输入
+
+### 原型
+```
+NewVisualPrompt(title string, intro string, source string) *VisualPrompt
+```
+
+### 描述
+
+创建一个可视化输入
+
+可视化输入需要发布(publish)后才会显示
+* title 表格标题
+* intro 表格介绍
+* source 媒体来源 媒体来源应该在可信域名下
+### 代码范例
+
+Javascript
+```
+var vp=Userinput.newvisualprompt("test data visualprompt","A test data grid","http://127.0.0.1/test.png")
+```
+
+Lua
+```
+local vp=Userinput:newvisualprompt("test data visualprompt","A test data grid","http://127.0.0.1/test.png)
+```
+
+### 返回值
+
+新可视化输入对象
