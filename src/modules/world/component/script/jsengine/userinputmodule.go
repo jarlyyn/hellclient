@@ -173,11 +173,11 @@ type Userinput struct {
 }
 
 func (u *Userinput) NewVisualPrompt(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	datagrid := &VisualPrompt{
+	vp := &VisualPrompt{
 		VisualPrompt: userinput.CreateVisualPrompt(call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String()),
 		bus:          u.bus,
 	}
-	return datagrid.Convert(r)
+	return vp.Convert(r)
 }
 func (u *Userinput) NewDatagrid(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	datagrid := &Datagrid{

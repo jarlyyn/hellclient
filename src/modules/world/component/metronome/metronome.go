@@ -28,7 +28,12 @@ func (m *Metronome) Tick() time.Duration {
 	defer m.Locker.Unlock()
 	return m.tick
 }
-
+func (m *Metronome) gettick() time.Duration {
+	if m.tick <= 0 {
+		return DefaultTick
+	}
+	return m.tick
+}
 func (m *Metronome) SetTick(t time.Duration) {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
@@ -164,7 +169,7 @@ func (m *Metronome) clean() {
 	t := time.Now()
 	for e := m.sent.Front(); e != nil; e = e.Next() {
 		sent := e.Value.(*time.Time)
-		if t.Sub(*sent) > m.tick {
+		if t.Sub(*sent) > m.gettick() {
 			m.sent.Remove(e)
 		}
 	}
@@ -221,22 +226,23 @@ func (m *Metronome) Interval() time.Duration {
 }
 func (m *Metronome) startTicker(b *bus.Bus) {
 	m.stopTicker()
-	go func() {
-		interval := m.interval
-		if interval <= 0 {
-			interval = DefaultCheckInterval
-		}
-		t := time.NewTicker(interval)
-		defer t.Stop()
-		for {
-			select {
-			case <-m.tickerC:
-				return
-			case <-t.C:
-				go m.Play(b)
-			}
-		}
-	}()
+	go m.nexttick(b)
+}
+func (m *Metronome) nexttick(b *bus.Bus) {
+	m.Locker.Lock()
+	interval := m.interval
+	if interval <= 0 {
+		interval = DefaultCheckInterval
+	}
+	t := time.NewTimer(interval)
+	m.Locker.Unlock()
+	select {
+	case <-m.tickerC:
+		t.Stop()
+	case <-t.C:
+		go m.Play(b)
+		go m.nexttick(b)
+	}
 }
 func (m *Metronome) stopTicker() {
 	if m.tickerC != nil {

@@ -4,11 +4,138 @@ import (
 	"context"
 	"hellclient/modules/world/bus"
 	"hellclient/modules/world/component/script/userinput"
+	"net/url"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/herbplugin/lua51plugin"
 	lua "github.com/yuin/gopher-lua"
 )
+
+type VisualPrompt struct {
+	VisualPrompt *userinput.VisualPrompt
+	bus          *bus.Bus
+}
+
+func (p *VisualPrompt) SetMediaType(L *lua.LState) int {
+	p.VisualPrompt.SetMediaType(L.ToString((1)))
+	return 0
+}
+func (p *VisualPrompt) SetPortrait(L *lua.LState) int {
+	p.VisualPrompt.SetPortrait(L.ToBool((1)))
+	return 0
+
+}
+func (p *VisualPrompt) SetRefreshCallback(L *lua.LState) int {
+	p.VisualPrompt.SetRefreshCallback(L.ToString((1)))
+	return 0
+}
+func (p *VisualPrompt) Publish(L *lua.LState) int {
+	u, err := url.Parse(p.VisualPrompt.Source)
+	if err != nil {
+		panic(err)
+	}
+	if !p.bus.GetPluginOptions().MustAuthorizeDomain(u.Host) {
+		panic(herbplugin.NewUnauthorizeDomainError(u.Host))
+	}
+	ui := p.VisualPrompt.Publish(p.bus, L.ToString((1)))
+	L.Push(lua.LString(ui.ID))
+	return 1
+
+}
+func (p *VisualPrompt) Convert(L *lua.LState) lua.LValue {
+	t := L.NewTable()
+	t.RawSetString("setmediatype", L.NewFunction(p.SetMediaType))
+	t.RawSetString("setportrait", L.NewFunction(p.SetPortrait))
+	t.RawSetString("setrefreshcallback", L.NewFunction(p.SetRefreshCallback))
+	t.RawSetString("publish", L.NewFunction(p.Publish))
+	return t
+}
+
+type Datagrid struct {
+	Datagrid *userinput.Datagrid
+	bus      *bus.Bus
+}
+
+func (g *Datagrid) SetPage(L *lua.LState) int {
+	g.Datagrid.SetPage(L.ToInt(1))
+	return 0
+}
+func (g *Datagrid) GetPage(L *lua.LState) int {
+	L.Push(lua.LNumber(g.Datagrid.GetPage()))
+	return 1
+}
+func (g *Datagrid) SetMaxPage(L *lua.LState) int {
+	g.Datagrid.SetMaxPage(L.ToInt(1))
+	return 0
+}
+func (g *Datagrid) SetFilter(L *lua.LState) int {
+	g.Datagrid.SetFilter(L.ToString(1))
+	return 0
+}
+func (g *Datagrid) GetFilter(L *lua.LState) int {
+	L.Push(lua.LString(g.Datagrid.GetFilter()))
+	return 1
+}
+func (g *Datagrid) SetOnPage(L *lua.LState) int {
+	g.Datagrid.SetOnPage(L.ToString(1))
+	return 0
+}
+func (g *Datagrid) SetOnFilter(L *lua.LState) int {
+	g.Datagrid.SetOnFilter(L.ToString(1))
+	return 0
+}
+func (g *Datagrid) SetOnDelete(L *lua.LState) int {
+	g.Datagrid.SetOnDelete(L.ToString(1))
+	return 0
+}
+func (g *Datagrid) SetOnView(L *lua.LState) int {
+	g.Datagrid.SetOnView(L.ToString(1))
+	return 0
+}
+func (g *Datagrid) SetOnCreate(L *lua.LState) int {
+	g.Datagrid.SetOnCreate(L.ToString(1))
+	return 0
+}
+func (g *Datagrid) SetOnUpdate(L *lua.LState) int {
+	g.Datagrid.SetOnUpdate(L.ToString(1))
+	return 0
+}
+func (g *Datagrid) ResetItems(L *lua.LState) int {
+	g.Datagrid.ResetItems()
+	return 0
+}
+func (g *Datagrid) Append(L *lua.LState) int {
+	g.Datagrid.Append(L.ToString(1), L.ToString(2))
+	return 0
+}
+func (g *Datagrid) Publish(L *lua.LState) int {
+	ui := g.Datagrid.Publish(g.bus, L.ToString(1))
+	L.Push(lua.LString(ui.ID))
+	return 1
+}
+func (g *Datagrid) Hide(L *lua.LState) int {
+	g.Datagrid.Hide(g.bus)
+	return 0
+}
+func (g *Datagrid) Convert(L *lua.LState) lua.LValue {
+	t := L.NewTable()
+	t.RawSetString("append", L.NewFunction(g.Append))
+	t.RawSetString("publish", L.NewFunction(g.Publish))
+	t.RawSetString("resetitems", L.NewFunction(g.ResetItems))
+	t.RawSetString("setoncreate", L.NewFunction(g.SetOnCreate))
+	t.RawSetString("setonupdate", L.NewFunction(g.SetOnUpdate))
+	t.RawSetString("setonview", L.NewFunction(g.SetOnView))
+	t.RawSetString("setondelete", L.NewFunction(g.SetOnDelete))
+	t.RawSetString("setonfilter", L.NewFunction(g.SetOnFilter))
+	t.RawSetString("setonpage", L.NewFunction(g.SetOnPage))
+	t.RawSetString("setfilter", L.NewFunction(g.SetFilter))
+	t.RawSetString("getfilter", L.NewFunction(g.GetFilter))
+	t.RawSetString("setmaxpage", L.NewFunction(g.SetMaxPage))
+	t.RawSetString("setpage", L.NewFunction(g.SetPage))
+	t.RawSetString("getpage", L.NewFunction(g.GetPage))
+	t.RawSetString("hide", L.NewFunction(g.Hide))
+	return t
+}
 
 type List struct {
 	List *userinput.List
@@ -45,12 +172,28 @@ func (l *List) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("send", L.NewFunction(l.Send))
 	t.RawSetString("setvalues", L.NewFunction(l.SetValues))
 	t.RawSetString("setmutli", L.NewFunction(l.SetMutli))
-
 	return t
 }
 
 type Userinput struct {
 	bus *bus.Bus
+}
+
+func (u *Userinput) NewVisualPrompt(L *lua.LState) int {
+	vp := &VisualPrompt{
+		VisualPrompt: userinput.CreateVisualPrompt(L.ToString(1), L.ToString(2), L.ToString(3)),
+		bus:          u.bus,
+	}
+	L.Push(vp.Convert(L))
+	return 1
+}
+func (u *Userinput) NewDatagrid(L *lua.LState) int {
+	datagrid := &Datagrid{
+		Datagrid: userinput.CreateDatagrid(L.ToString(1), L.ToString(2)),
+		bus:      u.bus,
+	}
+	L.Push(datagrid.Convert(L))
+	return 1
 }
 
 func (u *Userinput) NewList(L *lua.LState) int {
@@ -83,6 +226,8 @@ func (u *Userinput) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("confirm", L.NewFunction(u.Confirm))
 	t.RawSetString("alert", L.NewFunction(u.Alert))
 	t.RawSetString("newlist", L.NewFunction(u.NewList))
+	t.RawSetString("newdatagrid", L.NewFunction(u.NewDatagrid))
+	t.RawSetString("newvisualprompt", L.NewFunction(u.NewVisualPrompt))
 	return t
 }
 func NewUserinputModule(b *bus.Bus) *herbplugin.Module {
