@@ -243,3 +243,140 @@ local vp=Userinput:newvisualprompt("test data visualprompt","A test data grid","
 ### 返回值
 
 新可视化输入对象
+
+## List.append
+
+列表追加
+
+## 原型
+
+```
+Append(key string, value string)
+```
+
+### 描述
+
+向列表里加入一对键值
+
+* key 选择后返回给回调的key
+* value 显示的值
+
+### 范例代码
+
+Javascript
+```
+list.append("sword","长剑")
+```
+
+Lua
+```
+list.append("sword","长剑")
+```
+
+### 返回值
+
+无
+
+## List.setmutli
+
+列表设置多选
+
+### 原型
+
+```
+SetMutli(mutli bool)
+```
+
+### 描述
+
+设置列表是否为多选列表
+
+多选列表，选中的值将以字符串数组序列化后发给回调函数
+
+如
+```
+["key1","key2","key3"]
+```
+
+### 代码范例
+
+Javascript
+```
+List.setmutli(true)
+```
+
+Lua
+```
+List.setmutli(true)
+```
+
+### 返回值
+
+无
+
+## List.setvalue
+
+列表设置值
+
+### 原型
+```
+SetValues(values []string)
+```
+
+### 描述
+
+设置列表的初始值为给到的字符串列表
+
+只对多选列表有效
+
+### 代码范例
+
+Javascript
+```
+List.setvalue(["key1","key2","key3"])
+```
+
+Lua
+```
+List.setvalue({"key1","key2","key3"})
+```
+
+### 返回值
+
+无
+
+## List.publish
+
+列表发布
+
+### 代码原型
+```
+Publish(script string) string
+```
+
+### 代码描述
+
+发布列表
+
+* script 接受数据的回调
+
+### 回调函数
+
+* code 取消为0,确认非0
+* data 单选为用户选择的对象key,多选列表为JSON序列化后的用户选自的对象key的字符串列表
+
+### 范例
+
+Javascript
+```
+List.publish("handlelist")
+```
+
+Lua
+```
+List.publish("handlelist")
+```
+
+### 返回值
+
+唯一id

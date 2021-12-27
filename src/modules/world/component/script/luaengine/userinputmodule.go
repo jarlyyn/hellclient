@@ -169,7 +169,7 @@ func (l *List) SetMutli(L *lua.LState) int {
 func (l *List) Convert(L *lua.LState) lua.LValue {
 	t := L.NewTable()
 	t.RawSetString("append", L.NewFunction(l.Append))
-	t.RawSetString("ublish", L.NewFunction(l.Publish))
+	t.RawSetString("publish", L.NewFunction(l.Publish))
 	t.RawSetString("setvalues", L.NewFunction(l.SetValues))
 	t.RawSetString("setmutli", L.NewFunction(l.SetMutli))
 	return t
