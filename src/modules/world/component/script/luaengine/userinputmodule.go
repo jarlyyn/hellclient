@@ -180,16 +180,18 @@ type Userinput struct {
 }
 
 func (u *Userinput) NewVisualPrompt(L *lua.LState) int {
+	_ = L.Get(1) //this
 	vp := &VisualPrompt{
-		VisualPrompt: userinput.CreateVisualPrompt(L.ToString(1), L.ToString(2), L.ToString(3)),
+		VisualPrompt: userinput.CreateVisualPrompt(L.ToString(2), L.ToString(3), L.ToString(4)),
 		bus:          u.bus,
 	}
 	L.Push(vp.Convert(L))
 	return 1
 }
 func (u *Userinput) NewDatagrid(L *lua.LState) int {
+	_ = L.Get(1) //this
 	datagrid := &Datagrid{
-		Datagrid: userinput.CreateDatagrid(L.ToString(1), L.ToString(2)),
+		Datagrid: userinput.CreateDatagrid(L.ToString(2), L.ToString(3)),
 		bus:      u.bus,
 	}
 	L.Push(datagrid.Convert(L))
@@ -197,25 +199,29 @@ func (u *Userinput) NewDatagrid(L *lua.LState) int {
 }
 
 func (u *Userinput) NewList(L *lua.LState) int {
+	_ = L.Get(1) //this
 	list := &List{
-		List: userinput.CreateList(L.ToString(1), L.ToString(2), L.ToBool(3)),
+		List: userinput.CreateList(L.ToString(2), L.ToString(3), L.ToBool(4)),
 		bus:  u.bus,
 	}
 	L.Push(list.Convert(L))
 	return 1
 }
 func (u *Userinput) Prompt(L *lua.LState) int {
-	ui := userinput.SendPrompt(u.bus, L.ToString(1), L.ToString(2), L.ToString(3), L.ToString(4))
+	_ = L.Get(1) //this
+	ui := userinput.SendPrompt(u.bus, L.ToString(2), L.ToString(3), L.ToString(4), L.ToString(5))
 	L.Push(lua.LString(ui.ID))
 	return 1
 }
 func (u *Userinput) Confirm(L *lua.LState) int {
-	ui := userinput.SendConfirm(u.bus, L.ToString(1), L.ToString(2), L.ToString(3))
+	_ = L.Get(1) //this
+	ui := userinput.SendConfirm(u.bus, L.ToString(2), L.ToString(3), L.ToString(4))
 	L.Push(lua.LString(ui.ID))
 	return 1
 }
 func (u *Userinput) Alert(L *lua.LState) int {
-	ui := userinput.SendAlert(u.bus, L.ToString(1), L.ToString(2), L.ToString(3))
+	_ = L.Get(1) //this
+	ui := userinput.SendAlert(u.bus, L.ToString(2), L.ToString(3), L.ToString(4))
 	L.Push(lua.LString(ui.ID))
 	return 1
 }

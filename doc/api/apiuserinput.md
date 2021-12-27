@@ -33,3 +33,114 @@
 可视化输入
 
 可视化输入一般用于识别图片或验证码，并输入内容
+
+## Userinput.prompt
+
+用户输入框
+
+### 原型
+```
+Prompt (script string, title string, intro string, value string) string
+```
+
+### 描述
+
+弹窗请求用户输入
+
+* script 回调脚本
+* title 输入框标题
+* intro 输入框描述
+* value 默认值
+
+### 回调函数
+
+* code 取消为0,成功非0
+* data 用户输入数据
+
+### 代码范例
+
+Javascript
+```
+Userinput.prompt("handleprompt","Input","what's your name","")
+```
+
+Lua
+```
+Userinput:prompt("handleprompt","Input","what's your name","")
+```
+
+### 返回值
+
+唯一id
+
+## Userinput.confirm
+
+用户确认框
+
+### 原型
+```
+Confirm(script string, title string, intro string) string
+```
+### 回调函数
+
+* code 取消为0,确认非0
+
+### 描述
+
+弹窗请求用户输入是或否
+
+* script 回调脚本
+* title 输入框标题
+* intro 输入框描述
+
+### 代码范例
+
+Javascript
+```
+Userinput.confirm("handleprompt","Input","what's your name")
+```
+
+Lua
+```
+Userinput:confirm("handleprompt","Input","what's your name")
+```
+
+### 返回值
+
+唯一id
+
+## Userinput.alert
+
+用户提示框
+
+### 原型
+```
+Alert(script string, title string, intro string) string
+```
+### 回调函数
+
+* code 取消为0,确认非0
+
+### 描述
+
+弹窗请求用户输入是或否
+
+* script 回调脚本
+* title 输入框标题
+* intro 输入框描述
+
+### 代码范例
+
+Javascript
+```
+Userinput.alert("handleprompt","Input","what's your name")
+```
+
+Lua
+```
+Userinput:alert("handleprompt","Input","what's your name")
+```
+
+### 返回值
+
+唯一id
