@@ -138,8 +138,8 @@ type List struct {
 	bus  *bus.Bus
 }
 
-func (l *List) Send(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	ui := l.List.Send(l.bus, call.Argument(0).String())
+func (l *List) Publish(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	ui := l.List.Publish(l.bus, call.Argument(0).String())
 	return r.ToValue(ui.ID)
 }
 func (l *List) Append(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -162,7 +162,7 @@ func (l *List) SetMutli(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (l *List) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("append", l.Append)
-	obj.Set("send", l.Send)
+	obj.Set("publish", l.Publish)
 	obj.Set("setmutli", l.SetMutli)
 	obj.Set("setvalues", l.SetValues)
 	return obj

@@ -144,3 +144,69 @@ Userinput:alert("handleprompt","Input","what's your name")
 ### 返回值
 
 唯一id
+
+## Userinput.newlist
+
+新建列表
+
+### 原型
+
+```
+NewList(title string, intro string, withfilter bool)*List
+```
+
+### 描述
+
+创建一个列表
+
+列表需要发布(publish)后才会显示
+* title 列表标题
+* intro 列表介绍
+* withfilter 列表是否带过滤器
+### 代码范例
+
+Javascript
+```
+var list=Userinput.newlist("test list","A test list",true)
+```
+
+Lua
+```
+local list=Userinput:newlist("test list","A test list",true)
+```
+
+### 返回值
+
+新列表对象
+
+## Userinput.newdatagrid
+
+新建数据表格
+
+### 原型
+```
+NewDatagrid(title string, intro string) *Datagrid
+```
+
+### 描述
+
+创建一个数据表格
+
+列表需要发布(publish)后才会显示
+* title 表格标题
+* intro 表格介绍
+### 代码范例
+
+Javascript
+```
+var datagrid=Userinput.newdatagrid("test data grid","A test data grid")
+```
+
+Lua
+```
+local datagrid=Userinput:newdatagrid("test data grid","A test data grid")
+```
+
+### 返回值
+
+新数据表格对象

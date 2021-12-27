@@ -25,7 +25,7 @@ func (l *List) SetMutli(m bool) {
 func (l *List) Append(key string, value string) {
 	l.Items = append(l.Items, &Item{Key: key, Value: value})
 }
-func (l *List) Send(b *bus.Bus, script string) *Userinput {
+func (l *List) Publish(b *bus.Bus, script string) *Userinput {
 	ui := CreateUserInput(NameList, script, l)
 	b.RaiseScriptMessageEvent(ui)
 	return ui
