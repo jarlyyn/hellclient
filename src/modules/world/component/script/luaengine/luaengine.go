@@ -23,6 +23,7 @@ func newLuaInitializer(b *bus.Bus) *lua51plugin.Initializer {
 		ModuleConstsTriggersFlag,
 		ModuleRex,
 		NewAPIModule(b),
+		NewHTTPModule(b),
 		NewMapperModule(b),
 		NewMetronomeModule(b),
 		NewUserinputModule(b),
