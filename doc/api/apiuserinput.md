@@ -380,3 +380,469 @@ List.publish("handlelist")
 ### 返回值
 
 唯一id
+
+## Datagrid.append
+
+数据表格追加数据
+
+### 原型
+```
+Append(key string, value string)
+```
+
+### 描述
+
+向数据表格内追加一行数据
+
+### 范例代码
+Javascript
+```
+Datagrid.append("key","value")
+```
+
+Lua
+```
+Datagrid.append("key","value")
+```
+
+### 返回值
+
+无
+
+## Datagrid.resetitems
+
+数据表格重置元素
+
+### 原型
+```
+ResetItems() 
+```
+
+### 描述
+
+重置清空表单的所有元素
+
+### 代码范例
+
+Javascript
+```
+Datagrid.resetitems()
+```
+
+Lua
+```
+Datagrid.resetitems()
+```
+
+### 返回值
+
+空
+## Datagrid.setfilter
+
+数据表格设置过滤值
+
+### 原型
+```
+SetFilter(filter string) 
+```
+
+### 描述
+设置数据表格的初始过滤器信息
+
+### 代码范例
+
+Javascript
+```
+Datagrid.setfilter("filter)
+```
+
+Lua
+```
+Datagrid.setfilter("filter)
+```
+
+### 返回值
+
+无
+
+## Datagrid.getfilter
+
+数据表格获取过滤值
+
+## 原型
+```
+GetFilter() string
+```
+
+### 描述
+
+返回数据表格当前的过滤器设置
+
+### 代码范例
+
+Javascript
+```
+world.Note(Datagrid.getfilter())
+```
+
+Lua
+```
+Note(Datagrid.getfilter())
+```
+### 返回值
+
+字符串
+
+## Datagrid.setmaxpage
+
+数据表格设置最大页数
+
+### 原型
+```
+SetMaxPage(page int)
+```
+
+### 描述
+设置数据表格的最大分页数
+
+### 范例代码
+Javascript
+```
+Datagrid.setmaxpage(10)
+```
+
+Lua
+```
+Datagrid.setmaxpage(10)
+```
+
+### 返回值
+
+无
+
+## Datagrid.setpage
+
+数据表格设置当前页
+
+### 原型
+```
+SetPage(page int)
+```
+
+### 描述
+
+设置数据表格的当前页
+
+### 范例代码
+Javascript
+```
+Datagrid.setpage(3)
+```
+
+Lua
+```
+Datagrid.setpage(3)
+```
+
+### 返回值
+
+无
+
+## Datagrid.getpage
+
+数据表格获取当前页
+
+### 原型
+```
+GetPage() int
+```
+
+### 描述
+
+获取数据表格的当前页
+
+### 代码范例
+
+Javascript
+```
+world.Note(Datagrid.getpage)
+```
+
+Lua
+```
+Note(Datagrid.getpage)
+```
+### 返回值
+
+整数的当前页
+
+## Datagrid.setoncreate
+
+数据表格设置创建回调
+
+### 原型
+
+```
+SetOnCreate(oncreate string)
+```
+
+### 描述
+
+设置数据表格的创建按钮回调
+
+只有设置了回调，创建按钮才会出现
+
+### 代码范例
+
+Javascript
+```
+Datagrid.setonupdate("handleupdate")
+```
+
+Lua
+```
+Datagrid.setonupdate("handleupdate")
+```
+
+### 返回值
+
+无
+
+## Datagrid.setonupdate
+
+数据表格设置更新回调
+
+### 原型
+
+```
+SetOnUpdate(onupdate string)
+```
+
+### 描述
+
+设置数据表格的更新按钮回调
+
+只有设置了回调，更新按钮才会出现
+
+### 回调函数
+
+* data 需要操作的元素的key
+
+### 代码范例
+
+Javascript
+```
+Datagrid.setonupdate("handleupdate")
+```
+
+Lua
+```
+Datagrid.setonupdate("handleupdate")
+```
+
+### 返回值
+
+无
+
+## Datagrid.setonview
+
+数据表格设置查看回调
+
+### 原型
+
+```
+SetOnView(onview string)
+```
+
+### 描述
+
+设置数据表格的查看按钮回调
+
+只有设置了回调，查看按钮才会出现
+
+### 回调函数
+
+* data 需要操作的元素的key
+
+### 代码范例
+
+Javascript
+```
+Datagrid.setonview("handleview")
+```
+
+Lua
+```
+Datagrid.setonview("handleview")
+```
+
+### 返回值
+
+无
+
+## Datagrid.setondelete
+
+数据表格设置删除回调
+
+### 原型
+
+```
+SetOnDelete(ondelete string)
+```
+
+### 描述
+
+设置数据表格的删除按钮回调
+
+只有设置了回调，删除按钮才会出现
+
+### 回调函数
+
+* data 需要操作的元素的key
+
+### 代码范例
+
+Javascript
+```
+Datagrid.setondelete("handledelete")
+```
+
+Lua
+```
+Datagrid.setondelete("handledelete")
+```
+
+### 返回值
+
+无
+
+## Datagrid.setonfilter
+
+数据表格设置过滤回调
+
+### 原型
+
+```
+SetOnFilter(onfilter string)
+```
+
+### 描述
+
+设置数据表格的过滤回调
+
+只有设置了回调，过滤框才会出现
+
+### 回调函数
+
+* data 过滤值
+
+### 代码范例
+
+Javascript
+```
+Datagrid.setonfilter("handlefilter")
+```
+
+Lua
+```
+Datagrid.setonfilter("handlefilter")
+```
+
+### 返回值
+
+无
+
+## Datagrid.setonpage
+
+数据表格设置分页回调
+
+### 原型
+
+```
+SetOnPage(onpage string)
+```
+
+### 描述
+
+设置数据表格的分页回调
+
+只有设置了回调，分页按钮才会出现
+
+### 回调函数
+
+* data 分页值
+
+### 代码范例
+
+Javascript
+```
+Datagrid.setonpage("handlepage")
+```
+
+Lua
+```
+Datagrid.setonpage("handlepage")
+```
+
+### 返回值
+
+无
+
+## Datagrid.hide
+
+数据表格隐藏
+
+### 原型
+```
+Hide()
+```
+
+### 描述
+
+隐藏数据表格
+
+### 代码范例
+
+Javascript
+```
+Datagrid.hide()
+```
+
+Lua
+```
+Datagrid.hide()
+```
+
+### 返回值
+
+无
+
+## Datagrid.publish
+
+数据表格发布
+
+### 原型
+```
+Publish(script string) string
+```
+
+### 描述
+发布数据表格
+
+* script 为回调，一般用于处理关闭事件
+
+### 代码范例
+
+Javascript
+```
+Datagrid.publish("onclose")
+```
+
+Lua
+```
+Datagrid.publish("onclose")
+```
+
+### 返回值
+
+唯一id
