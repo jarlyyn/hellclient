@@ -846,3 +846,130 @@ Datagrid.publish("onclose")
 ### 返回值
 
 唯一id
+
+## VisualPrompt.setmediatype
+
+可视化输入设置媒体类型
+
+### 原型
+```
+SetMediaType(t string)
+```
+
+### 描述
+
+设置可视化输入的媒体类型，暂时只支持image
+
+### 代码范例
+
+Javascript
+```
+VisualPrompt.setmediatype("image")
+```
+
+Lua
+```
+VisualPrompt.setmediatype("image")
+```
+
+### 返回值
+
+无
+
+## VisualPrompt.setportrait
+
+可视化输入设置垂直模式
+
+### 原型
+```
+SetPortrait(v bool)
+```
+
+### 描述
+
+设置可视化输入是否应该以垂直模式显示媒体
+
+### 范例代码
+
+Javascript
+```
+VisualPrompt.setportrait(true)
+```
+
+Lua
+```
+VisualPrompt.setportrait(true)
+```
+
+### 返回值
+
+无
+
+### VisualPrompt.setrefreshcallback
+
+可视化输入设置刷新回调
+
+### 原型
+
+```
+SetRefreshCallback(callback string)
+```
+
+### 描述
+
+设置刷新回调
+
+只有设置了回调，才会出现刷新按钮
+
+### 代码范例
+
+Javascript
+```
+VisualPrompt.setrefreshcallback("handlerefresh")
+```
+
+Lua
+```
+VisualPrompt.setrefreshcallback("handlerefresh")
+```
+
+### 返回值
+
+无
+
+## VisualPrompt.publish
+
+可视化输入发布
+
+### 原型
+
+```
+Publish(script string) string
+```
+
+### 描述
+
+发布可视化输入
+
+script为接受用户提交的回调
+
+### 回调函数
+
+* code 取消为0,成功非0
+* data 用户输入数据
+
+### 代码范例
+
+Javascript
+```
+VisualPrompt.publish("onvisualprompt")
+```
+
+Lua
+```
+VisualPrompt.publish("onvisualprompt")
+```
+
+### 返回值
+
+唯一ID
