@@ -22,7 +22,7 @@ require (
 	github.com/herb-go/misc v0.0.0-20211126182020-07f86379a857
 	github.com/herb-go/notification v0.0.0-20210302124907-803885c438c3
 	github.com/herb-go/notification-drivers v0.0.0-20210822103310-c7c872299d2b
-	github.com/herb-go/plugins v0.0.0-20211229182139-4a260dde0a8e
+	github.com/herb-go/plugins v0.0.0-20211229184029-1022d1e57451
 	github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531
 	github.com/herb-go/util v0.0.0-20211222163651-885e0ee2aad0
 	github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73

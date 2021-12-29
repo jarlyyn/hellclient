@@ -226,7 +226,7 @@
 
 ## http请求
 * [术语](apihttp.md#术语)
-* [http.New](apihttp.md#)
+* [HTTP.New 创建新请求](apihttp.md#)
 * [Request.GetID](apihttp.md#)
 * [Request.GetURL](apihttp.md#)
 * [Request.SetURL](apihttp.md#)
