@@ -13,6 +13,7 @@ require (
 	github.com/herb-go/events v0.0.0-20201208131041-0345a1e2578a
 	github.com/herb-go/fetcher v0.0.0-20210413171416-cb61b9979614 // indirect
 	github.com/herb-go/herb v0.0.0-20211208162721-3915598f7a40
+	github.com/herb-go/herb-drivers v0.0.0-20210401170439-32eb00e8f0d5
 	github.com/herb-go/herbconfig v0.0.0-20210201131438-44d8e331b703
 	github.com/herb-go/herbdata v0.0.0-20211208163122-48f0cedda4b4 // indirect
 	github.com/herb-go/herbplugin v0.0.0-20210927153142-18e76e96c0cd

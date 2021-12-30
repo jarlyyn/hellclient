@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hellclient/modules/app"
 	"hellclient/modules/routers"
+	"hellclient/modules/userpassword"
 	"net/http"
 
 	"github.com/herb-go/herb/middleware"
@@ -17,11 +18,16 @@ const ModuleName = "900uiserver"
 const BasicauthRealm = ""
 
 func PasswordMiddleware(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	if app.System.Username != "" && app.System.Password != "" {
+	username, passowrd := userpassword.Load()
+	if username == "" || passowrd == "" {
+		username = app.System.Username
+		passowrd = app.System.Password
+	}
+	if username != "" && passowrd != "" {
 		u, p, ok := r.BasicAuth()
 		if !ok || app.System.Username != u || app.System.Password != p {
 			w.Header().Set("WWW-Authenticate", fmt.Sprintf("Basic realm=\"%s\", charset=\"UTF-8\"", BasicauthRealm))
-			http.Error(w, http.StatusText(401), 401)
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 	}
