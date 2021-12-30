@@ -471,6 +471,12 @@ func (p *Prophet) onCmdFindHistory(conn connections.OutputConnection, cmd comman
 	return nil
 }
 
+func (p *Prophet) onCmdUpdatePassword(conn connections.OutputConnection, cmd command.Command) error {
+	if forms.UpdatePassword(p.Titan, cmd.Data()) {
+		go conn.Close()
+	}
+	return nil
+}
 func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("change", p.onCmdChange)
 	handlers.Register("connect", p.onCmdConnect)
@@ -503,7 +509,9 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("createTrigger", p.onCmdCreateTrigger)
 	handlers.Register("deleteTrigger", p.onCmdDeleteTrigger)
 	handlers.Register("loadTrigger", p.onCmdLoadTrigger)
-	handlers.Register("updateTrigger", p.onCmdUpdateTrigger)
+	handlers.Register("updatepassword", p.onCmdUpdatePassword)
+
+	handlers.Register("findhistory", p.onCmdFindHistory)
 
 	handlers.Register("params", p.onCmdParams)
 	handlers.Register("updateParam", p.onCmdUpdateParam)

@@ -1,6 +1,11 @@
 package userpassword
 
-import "sync/atomic"
+import (
+	"hellclient/modules/persistdata"
+	"sync/atomic"
+
+	"github.com/herb-go/util"
+)
 
 type UserPassword struct {
 	Username string
@@ -18,8 +23,13 @@ func Load() (string, string) {
 }
 
 func Set(username string, password string) {
-	current.Store((&UserPassword{
+	u := &UserPassword{
 		Username: username,
 		Password: password,
-	}))
+	}
+	current.Store(u)
+	go func() {
+		defer util.Recover()
+		persistdata.Save("userpassword", u)
+	}()
 }

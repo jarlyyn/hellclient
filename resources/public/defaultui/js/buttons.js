@@ -394,4 +394,12 @@ onButton.visualPromptSubmit=function(){
         vm.callback(data,0,val)
     }
 }
+onButton.password=function(){
+    vm.usesrpasswordForm={}
+    vm.usesrpasswordFormVisible=true
+}
+onButton.userpasswordSubmit=function(){
+    app.send("updatepassword",vm.usesrpasswordForm)
+}
 })
+

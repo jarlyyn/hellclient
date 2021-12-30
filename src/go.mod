@@ -7,7 +7,7 @@ require (
 	github.com/dop251/goja v0.0.0-20211217115348-3f9136fa235d
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gorilla/websocket v1.4.2
-	github.com/herb-go/connections v0.0.0-20210822065952-e23fc21c3c23
+	github.com/herb-go/connections v0.0.0-20211230181350-552c818e1c06
 	github.com/herb-go/datasource v0.0.0-20211122123843-a3546acd0d8d // indirect
 	github.com/herb-go/datasource-drivers v0.0.0-20201011165914-7717acb90545
 	github.com/herb-go/events v0.0.0-20201208131041-0345a1e2578a

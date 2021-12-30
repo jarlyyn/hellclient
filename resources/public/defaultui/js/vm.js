@@ -95,6 +95,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
         visualPrompt:null,
         visualPromptVisible:false,
         historypos:-1,
+        usesrpasswordForm: null,
+        usesrpasswordFormVisible: false,
         sendto: {
             0: "游戏",
             1: "命令",

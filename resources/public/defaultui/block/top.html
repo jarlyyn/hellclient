@@ -7,12 +7,15 @@
         <el-tooltip class="item" effect="light" content="全部游戏" placement="bottom">
             <el-button @click="onButton('all')" size="mini" type="success" icon="el-icon-s-order"></el-button>
             </el-tooltip>
+            <el-tooltip id="password-button" class="item" effect="light" content="修改密码" placement="bottom">
+                <el-button @click="onButton('password')" size="mini"  icon="el-icon-lock"></el-button>
+                </el-tooltip>
+
             <el-tooltip id="about-button" class="item" effect="light" content="关于" placement="bottom">
                 <el-button @click="onButton('about')" size="mini"  icon="el-icon-info"></el-button>
                 </el-tooltip>
-            </el-button-group >    
-        </el-button-group >
-   
+        </el-button-group > 
+
     <span v-if="clients.length && current && info[current]" @click="statusVisible = true" id="world-intro">当前游戏:{{current}} @ {{info[current].HostPort}} </span> <span @click="statusVisible = true" v-if="status" id="top-status">[ {{status}} ]</span>
     <div id="switchstatus">
     <el-tooltip slot="append" v-if="switchstatus!=0" class="item" effect="light" :content="switchstatus==2?'已连接到Hellclient网络':'未连接到Hellclient网络'" placement="bottom">

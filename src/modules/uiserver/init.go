@@ -18,14 +18,14 @@ const ModuleName = "900uiserver"
 const BasicauthRealm = ""
 
 func PasswordMiddleware(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	username, passowrd := userpassword.Load()
-	if username == "" || passowrd == "" {
+	username, password := userpassword.Load()
+	if username == "" || password == "" {
 		username = app.System.Username
-		passowrd = app.System.Password
+		password = app.System.Password
 	}
-	if username != "" && passowrd != "" {
+	if username != "" && password != "" {
 		u, p, ok := r.BasicAuth()
-		if !ok || app.System.Username != u || app.System.Password != p {
+		if !ok || username != u || password != p {
 			w.Header().Set("WWW-Authenticate", fmt.Sprintf("Basic realm=\"%s\", charset=\"UTF-8\"", BasicauthRealm))
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return

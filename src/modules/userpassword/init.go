@@ -17,11 +17,10 @@ func init() {
 		util.InitOrderByName(ModuleName)
 		u := &UserPassword{}
 		err := persistdata.Load("userpassword", u)
-		if err != persist.ErrNotFound {
-			panic(err)
-		}
 		if err == nil {
 			current.Store(u)
+		} else if err != persist.ErrNotFound {
+			panic(err)
 		}
 
 	})

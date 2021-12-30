@@ -22,8 +22,8 @@ github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe/go.mod h1:8vg3r2V
 github.com/gomodule/redigo v2.0.0+incompatible/go.mod h1:B4C85qUVwatsJoIUNIfCRsp7qO0iAmpGFZ4EELWSbC4=
 github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
-github.com/herb-go/connections v0.0.0-20210822065952-e23fc21c3c23 h1:GKQ47PEixmmXv930P6WYhG62PcUz6bcPoRaVuofrj4c=
-github.com/herb-go/connections v0.0.0-20210822065952-e23fc21c3c23/go.mod h1:8imvfc+r4d0N+rDtm3RUmRJ10uJxgnkTrac6KQojc40=
+github.com/herb-go/connections v0.0.0-20211230181350-552c818e1c06 h1:9CJdrINIw7Ygjgfy30HdGiSu4P+AneSYbaY1iBNMtuI=
+github.com/herb-go/connections v0.0.0-20211230181350-552c818e1c06/go.mod h1:8imvfc+r4d0N+rDtm3RUmRJ10uJxgnkTrac6KQojc40=
 github.com/herb-go/datasource v0.0.0-20201124135106-df914dd955dd/go.mod h1:LwVuC9ian/wLoaNe9HSrqfGsK8Y6hc6lBg3AMhD8ozk=
 github.com/herb-go/datasource v0.0.0-20211122123843-a3546acd0d8d h1:FnyR7t0dmvpeZ24jldt2LwNlmqumTUNxEZlmO10Ka9M=
 github.com/herb-go/datasource v0.0.0-20211122123843-a3546acd0d8d/go.mod h1:VFDCNa6YNGvEy3YPg9cBdr2aYFEQagXVXbqfU8zwzb4=

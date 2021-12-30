@@ -36,7 +36,7 @@ requirejs.config({
         "html-authorized":"/public/defaultui/block/authorized.html",
         "html-visualprompt":"/public/defaultui/block/visualprompt.html",
         "html-masssendform":"/public/defaultui/block/masssendform.html",
-    
+        "html-userpasswordform":"/public/defaultui/block/userpasswordform.html",
         "main":"/public/defaultui/js/main"
     },
 });
@@ -112,7 +112,9 @@ define(function (require) {
     var htmlmasssendform=require("text!html-masssendform");
     document.getElementById("masssendform").innerHTML=htmlmasssendform;    
 
-    
+    var htmluserpasswordform=require("text!html-userpasswordform");
+    document.getElementById("userpasswordform").innerHTML=htmluserpasswordform;    
+
     var htmlalllines=require("text!html-alllines");
 
     require(["main"],function(main){
