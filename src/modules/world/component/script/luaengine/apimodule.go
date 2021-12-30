@@ -207,6 +207,9 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("CheckTrustedDomains", l.NewFunction(a.CheckTrustedDomains))
 	l.SetGlobal("RequestTrustDomains", l.NewFunction(a.RequestTrustDomains))
 
+	l.SetGlobal("Encrypt", l.NewFunction(a.Encrypt))
+	l.SetGlobal("Decrypt", l.NewFunction(a.Decrypt))
+
 }
 
 func (a *luaapi) Milliseconds(L *lua.LState) int {
@@ -1308,6 +1311,30 @@ func (a *luaapi) RequestTrustDomains(L *lua.LState) int {
 	a.API.RequestTrustDomains(items, reason, script)
 	return 0
 }
+
+func (a *luaapi) Encrypt(L *lua.LState) int {
+	data := L.ToString(1)
+	key := L.ToString(2)
+	result := a.API.Encrypt(data, key)
+	if result == nil {
+		L.Push(lua.LNil)
+	} else {
+		L.Push(lua.LString(*result))
+	}
+	return 1
+}
+func (a *luaapi) Decrypt(L *lua.LState) int {
+	data := L.ToString(1)
+	key := L.ToString(2)
+	result := a.API.Decrypt(data, key)
+	if result == nil {
+		L.Push(lua.LNil)
+	} else {
+		L.Push(lua.LString(*result))
+	}
+	return 1
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

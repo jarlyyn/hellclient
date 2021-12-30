@@ -238,6 +238,9 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "CheckTrustedDomains", a.CheckTrustedDomains)
 	AppendToWorld(jp.Runtime, world, "RequestTrustDomains", a.RequestTrustDomains)
 
+	AppendToWorld(jp.Runtime, world, "Encrypt", a.Encrypt)
+	AppendToWorld(jp.Runtime, world, "Decrypt", a.Decrypt)
+
 }
 
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1144,7 +1147,24 @@ func (a *jsapi) RequestTrustDomains(call goja.FunctionCall, r *goja.Runtime) goj
 	a.API.RequestTrustDomains(items, reason, script)
 	return nil
 }
-
+func (a *jsapi) Encrypt(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	data := call.Argument(0).String()
+	key := call.Argument(1).String()
+	result := a.API.Encrypt(data, key)
+	if result == nil {
+		return nil
+	}
+	return r.ToValue(*result)
+}
+func (a *jsapi) Decrypt(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	data := call.Argument(0).String()
+	key := call.Argument(1).String()
+	result := a.API.Decrypt(data, key)
+	if result == nil {
+		return nil
+	}
+	return r.ToValue(*result)
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

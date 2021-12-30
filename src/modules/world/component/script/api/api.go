@@ -19,6 +19,7 @@ import (
 	"sync/atomic"
 
 	"github.com/herb-go/herbplugin"
+	"github.com/herb-go/herbsecurity/secret/encrypt/aesencrypt"
 	"github.com/herb-go/util"
 
 	uuid "github.com/satori/go.uuid"
@@ -1144,4 +1145,21 @@ NEED:
 
 func (a *API) RequestTrustDomains(domains []string, reason string, script string) {
 	a.Bus.RequestTrustDomains(world.CreateAuthorization(a.Bus.ID, domains, reason, script))
+}
+
+func (a *API) Encrypt(data, key string) *string {
+	result, err := aesencrypt.AESNonceEncryptBase64([]byte(data), []byte(key))
+	if err != nil {
+		return nil
+	}
+	return &result
+}
+
+func (a *API) Decrypt(data string, key string) *string {
+	result, err := aesencrypt.AESNonceDecryptBase64(data, []byte(key))
+	if err != nil {
+		return nil
+	}
+	str := string(result)
+	return &str
 }

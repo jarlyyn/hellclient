@@ -99,6 +99,9 @@
 * [UTF8Sub 获取UTF8子字符串](apimisc.md#UTF8Sub)
 * [ToUTF8 转换为UTF8字符串](apimisc.md#ToUTF8)
 * [FromUTF8 转换自UTF8字符串](apimisc.md#FromUTF8)
+* [Encrypt 加密字符串](apimisc.md#Encrypt)
+* [Decrypt 解密字符串](apimisc.md#Decrypt)
+
 ## 连接管理
 
 * [Connect 连接](apiconnect.md#Connect)

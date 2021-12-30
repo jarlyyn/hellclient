@@ -440,3 +440,75 @@ data=FromUTF8("gbk","你好"))
 ### 返回值
 * 转换成功返回对应字符串
 * 返回失败(如数据问题或编码不支持)返回空
+
+## Encrypt
+
+加密字符串
+
+### 原型
+```
+Encrypt(data, key string) *string
+```
+
+### 描述
+
+用给到的数据和秘钥进行加密
+
+* data 需要加密的数据
+* key 密钥
+
+加密算法为
+
+生成随机16位IV,通过PKCS7补位的AES加密，将IV和加密数据拼接后通过base64编码
+
+### 范例代码
+
+Javascript
+```
+world.Note(world.Encrypt("hellclient","key"))
+```
+
+Lua
+```
+Note(Encrypt("hellclient","key"))
+```
+
+### 返回值
+* 加密成功返回字符串
+* 加密失败返回空
+
+## Decrypt
+
+解密字符串
+
+### 原型
+```
+Decrypt(data, key string) *string
+```
+
+### 描述
+
+用给到的数据和秘钥进行解密
+
+* data 需要加密的数据
+* key 密钥
+
+解密算法为
+
+通过base64解码，将数据前16位切出作为IV,剩余部分通过PKCS7补位的AES解密，
+
+### 范例代码
+
+Javascript
+```
+world.Note(world.Decrypt("ziLol5II2WEF4yAeQCf2HMrRDdWMu+Afp1u2ysVSgck=","key"))
+```
+
+Lua
+```
+Note(Decrypt("ziLol5II2WEF4yAeQCf2HMrRDdWMu+Afp1u2ysVSgck=","key"))
+```
+
+### 返回值
+* 解密成功返回字符串
+* 解密失败返回空
