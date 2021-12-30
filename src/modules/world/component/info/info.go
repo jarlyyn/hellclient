@@ -17,7 +17,7 @@ type Info struct {
 }
 
 const MaxHistory = 20
-const MaxLines = 1000
+const MaxLines = 2000
 const MaxRecent = 100
 
 func (i *Info) OmitOutput(b *bus.Bus) {
