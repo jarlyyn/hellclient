@@ -40,7 +40,10 @@ func NewWebdavServer() http.Handler {
 		LockSystem: webdav.NewMemLS(),
 		Logger: func(r *http.Request, err error) {
 			if err != nil {
-				panic(err)
+				if os.IsNotExist(err) {
+					return
+				}
+				util.LogError(err)
 			}
 		},
 	}
