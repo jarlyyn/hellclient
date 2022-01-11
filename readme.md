@@ -1,4 +1,4 @@
-# hellclient mud客户端
+# Hellclient mud客户端
 
 Hellclient是一款支持Lua脚本和Javascript脚本的，采用B/S(浏览器/服务器)架构的Mud客户端。
 
@@ -14,6 +14,18 @@ Hellclient是一款支持Lua脚本和Javascript脚本的，采用B/S(浏览器/�
 
 mushclient是mud活跃时代的一款非常接触，优秀的客户端。
 
+## 特性
+
+Hellclient拥有以下特性
+
+* [游戏/脚本分离](doc/features/features.md#游戏/脚本分离)
+* [Metronome限流器](doc/features/features.md#Metronome限流器)
+* [Mapper地图组件](doc/features/features.md#Mapper地图组件)
+* [Javascript脚本支持](doc/features/features.md#Javascript脚本支持)
+* [Lua支持](doc/features/features.md#Lua支持)
+* [用户授权](doc/features/features.md#用户授权)
+* [HTTP组件](doc/features/features.md#HTTP组件)
+* [广播消息](doc/features/features.md#广播消息)
 ## 文档
 
 * [快速开始](doc/quickstart/quickstart.md)
