@@ -63,3 +63,9 @@ mud机器人有一个常见需求是跨客户端交互。
 Switch服务器是一个Basic验证的Websocket广播服务器
 
 可以通过 HellclientSwitch进行自建 [github地址](https://github.com/hellclient-scripts/hellclientswitch) [coding镜像](https://jarlyyn.coding.net/public/hellclient/hellclientswitch/git/files)
+
+## 邮件通知
+
+在配置文件中进行设置后，可以通过API发送邮件进行通知
+
+借口详见[API文档](,,/api/apicommunication.md#Notify)
