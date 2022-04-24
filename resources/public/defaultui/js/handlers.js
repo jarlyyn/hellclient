@@ -82,9 +82,9 @@ handlers.triggerSuccess=function(data){
 }
 handlers.allLines=function(data){
     vm.allLines=data
-    var allliens=document.getElementById("alllines-wrapper").parentElement
+    var alllines=document.getElementById("alllines-wrapper").parentElement
     setTimeout(function(){
-        allliens.scrollTo(0,9999999)
+        alllines.scrollTo(0,9999999)
     },0)        
 
 }
