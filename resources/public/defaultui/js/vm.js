@@ -1,4 +1,4 @@
-define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) {
+define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/canvas.js"], function (Vue, app, _,canvas) {
     var onButton = app.onButton;
     var data = {
         typeclass: {
@@ -9,10 +9,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
         },
         current: "",
         currenttab: "",
-        lines: [],
         status: "",
         history: [],
-        prompt: {},
         createFail: [],
         cmd: "",
         info: {},
@@ -220,25 +218,6 @@ define(["vue", "/public/defaultui/js/app.js", "lodash"], function (Vue, app, _) 
                     Form: {},
                 }
                 vm.triggerUpdateFormVisible = true
-            },
-            RenderLines: function () {
-                var lines = app.linesbuffer
-                lines.sort(function (a, b) {
-                    return a.ID > b.ID ? 1 : -1;
-                });
-                if (lines.length > 60) {
-                    var result = []
-                    var remain = lines.slice(-60)
-                    remain.forEach(function (data) {
-                        result.push(data)
-                    });
-                    lines = result
-                }
-                app.linesbuffer = lines
-                vm.lines = _.clone(app.linesbuffer)
-                setTimeout(function () {
-                    body.scrollTo(body.offsetLeft, body.offsetHeight)
-                }, 0)
             },
             onDeleteVariable: function (name) {
                 vm.$confirm('是否要删除该变量?', '删除', {

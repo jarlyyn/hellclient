@@ -97,3 +97,6 @@
     animation: blinking 1200ms infinite;
 
 }
+
+#output{width:1120px;height:1200px}
+#prompt-output{width:1120px;height:20px}

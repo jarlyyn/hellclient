@@ -1,29 +1,23 @@
 define(function (require) {
     var app=require("/public/defaultui/js/app.js")
     var vm=require("/public/defaultui/js/vm.js")
+    var canvas=require("/public/defaultui/js/canvas.js")
     var _=require("lodash")
     var handlers=app.handlers;
     var send=app.send;
-   
-var render=_.debounce(vm.RenderLines,50,{
-    leading:true,
-    maxWait:200,
-})
+
 handlers.current=function(data){
     vm.current=data
     vm.currenttab=data
-    vm.lines=[]
+    canvas.Clean()
     vm.historypos=-1
     document.getElementById("mud-input").focus()
 }
 handlers.line=function(data){
-    var lines=app.linesbuffer
-    lines.push(data)
-    app.linesbuffer=lines
-    render()
+    canvas.Drawline(data)
 }
 handlers.prompt=function(data){
-    vm.prompt=data
+    canvas.DrawPrompt(data)
 }
 handlers.clients=function(data){
     vm.info=[]
@@ -36,15 +30,16 @@ handlers.switchStatus=function(data){
     vm.switchstatus=data
 }
 handlers.lines=function(data){
-    var lines=[]
+    // var lines=[]
     data.forEach(function(element) {
-        lines.push(element)
-    if (lines.length>50){
-        lines.shift()
-    }
+        // lines.push(element)
+        canvas.Drawline(element)
+    // if (lines.length>50){
+    //     lines.shift()
+    // }
     })
-    app.linesbuffer=lines
-    render()
+    // app.linesbuffer=lines
+    // render()
 }
 handlers.connected=function(data){
     if (vm.info[data]){

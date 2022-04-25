@@ -19,7 +19,11 @@
     <div id="userinputlist"></div>
 
     <div id="top"></div>
-    <ul id="lines" @mousedown="onButton('allLines')">
+    <div id="stage" @mousedown="onButton('allLines')">
+      <canvas id="output"></canvas>
+      <canvas id="prompt-output"></canvas>
+    </div>
+    <!-- <ul id="lines" @mousedown="onButton('allLines')">
       <li v-bind:class="'words '+ typeclass[line.Type]" v-bind:key="line.ID" v-for="line in lines">
         <span
           v-bind:class="word.Color + ' ' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')"
@@ -32,7 +36,7 @@
             v-for="word in prompt.Words">{{word.Text}}</span>
         </div>
       </li>
-    </ul>
+    </ul> -->
     <div id="triggerlist"></div>
     <div id="creategameform"></div>
     <div id="createscriptform"></div>
@@ -84,6 +88,7 @@
       </span>
     </el-dialog>
     <div id="alllines"></div>
+
     <div id="footer">
       <div id="current">
         {{current}}
