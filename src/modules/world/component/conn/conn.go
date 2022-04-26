@@ -2,9 +2,9 @@ package conn
 
 import (
 	"container/list"
-	"io"
 	"hellclient/modules/app"
 	"hellclient/modules/world/bus"
+	"io"
 	"net"
 	"sync"
 	"time"
@@ -83,7 +83,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	}
 	conn.running = true
 	conn.c = make(chan int)
-	conn.buffer = make([]byte, 1024)
+	conn.buffer = make([]byte, 0, 1024)
 	conn.telnet = t
 	go conn.Receiver(bus)
 	go bus.RaiseConnectedEvent()
@@ -118,6 +118,7 @@ func (conn *Conn) flushBuffer(bus *bus.Bus) {
 func (conn *Conn) Receiver(bus *bus.Bus) {
 	del := byte(10)
 	del2 := byte(13)
+	nop := byte(0)
 	for {
 		running := conn.Connected(bus)
 		if !running {
@@ -138,7 +139,7 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 			return
 		}
 		conn.Lock.Lock()
-		if s == del2 {
+		if s == del2 || s == nop {
 			conn.Lock.Unlock()
 			continue
 		}
@@ -152,7 +153,6 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 			continue
 		}
 		conn.buffer = append(conn.buffer, s)
-
 		if bus.HandleBuffer(conn.buffer) {
 			conn.flushBuffer(bus)
 			continue

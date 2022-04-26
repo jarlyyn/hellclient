@@ -51,6 +51,8 @@ define(function (require) {
                     icon = settings.echoicon
                     iconcolor = settings.echoiconcolor
                     break;
+                default:
+                    break;
             }
         }
         if (icon) {
@@ -91,7 +93,7 @@ define(function (require) {
         return result
     }
     var Drawline = function (line) {
-        var result = RenderLine(line)
+        var result = RenderLine(line,false,true)
         result.forEach(function (line) {
             Lines.push(line)
         })
