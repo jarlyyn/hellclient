@@ -1,6 +1,7 @@
 package titan
 
 import (
+	"hellclient/modules/app"
 	"net/http"
 	"os"
 
@@ -27,6 +28,22 @@ func CreatePangu() {
 	Pangu.Scriptpath = util.AppData(ScriptsFolder)
 	Pangu.Logpath = util.AppData(LogsFolder)
 	Pangu.Skeletonpath = util.AppData(SkeletonsFolder)
+	Pangu.MaxHistory = app.System.MaxHistory
+	if Pangu.MaxHistory <= 0 {
+		Pangu.MaxHistory = DefaultMaxHistory
+	}
+	Pangu.MaxLines = app.System.MaxLines
+	if Pangu.MaxLines <= 0 {
+		Pangu.MaxLines = DefaultMaxLines
+	}
+	Pangu.MaxRecent = app.System.MaxRecent
+	if Pangu.MaxRecent <= 0 {
+		Pangu.MaxRecent = DefaultMaxRecent
+	}
+	Pangu.LinesPerScreen = app.System.LinesPerScreen
+	if Pangu.LinesPerScreen <= 0 {
+		Pangu.LinesPerScreen = DefaultLinesPerScreen
+	}
 	os.MkdirAll(Pangu.Path, util.DefaultFolderMode)
 	os.MkdirAll(Pangu.Scriptpath, util.DefaultFolderMode)
 	os.MkdirAll(Pangu.Logpath, util.DefaultFolderMode)

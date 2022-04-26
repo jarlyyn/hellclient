@@ -20,6 +20,10 @@ type SystemConfig struct {
 	Switch         string
 	DefaultServer  string
 	URL            string
+	MaxHistory     int
+	MaxLines       int
+	MaxRecent      int
+	LinesPerScreen int
 	ConnectTimeout int64
 	SMTP           *emaildelivery.SMTP
 }

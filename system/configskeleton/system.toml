@@ -20,6 +20,14 @@ URL="http://127.0.0.1:4355"
 #DefaultServer 创建游戏时的默认主机地址
 #格式为 www.example.com:5555
 DefaultServer=""
+#最大命令记录数，小于等于0则为程序默认
+MaxHistory=0
+#最大历史记录数，小于等于0则为程序默认
+MaxLines=0
+#最大屏幕显示行数，小于等于0则为程序默认
+LinesPerScreen=0
+#最大多行匹配行数，小于等于0则为程序默认
+MaxRecent=0
 
 #邮件发送的设置。
 #出于推送的方便性，推荐可是使用QQ信箱，自己发送自己的模式

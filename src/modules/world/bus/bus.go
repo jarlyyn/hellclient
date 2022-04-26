@@ -12,6 +12,9 @@ import (
 
 type Bus struct {
 	ID                       string
+	GetMaxHistory            func() int
+	GetMaxLines              func() int
+	GetMaxRecent             func() int
 	GetConnBuffer            func() []byte
 	GetConnConnected         func() bool
 	GetHost                  func() string

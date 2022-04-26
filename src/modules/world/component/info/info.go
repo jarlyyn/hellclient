@@ -16,10 +16,6 @@ type Info struct {
 	LineCount int
 }
 
-const MaxHistory = 20
-const MaxLines = 2000
-const MaxRecent = 100
-
 func (i *Info) OmitOutput(b *bus.Bus) {
 	i.Lock.RLock()
 	defer i.Lock.RUnlock()
@@ -49,9 +45,9 @@ func (i *Info) DeleteLines(b *bus.Bus, count int) {
 	i.linesUpdated(b)
 }
 func (i *Info) Init(b *bus.Bus) {
-	i.Lines = ring.New(MaxLines)
-	i.History = ring.New(MaxHistory)
-	i.Recent = ring.New(MaxRecent)
+	i.Lines = ring.New(b.GetMaxLines())
+	i.History = ring.New(b.GetMaxHistory())
+	i.Recent = ring.New(b.GetMaxRecent())
 }
 func (i *Info) ClientInfo(b *bus.Bus) *world.ClientInfo {
 	info := &world.ClientInfo{}
@@ -158,7 +154,7 @@ func (i *Info) GetHistories(b *bus.Bus) []string {
 func (i *Info) FlushHistories(b *bus.Bus) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
-	i.History = ring.New(MaxHistory)
+	i.History = ring.New(b.GetMaxHistory())
 	i.CurrentHistories(b)
 }
 func (i *Info) CurrentHistories(b *bus.Bus) {

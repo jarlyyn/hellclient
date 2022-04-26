@@ -38,14 +38,18 @@ import (
 )
 
 type Titan struct {
-	Locker       sync.RWMutex
-	Worlds       map[string]*bus.Bus
-	Path         string
-	hellswitch   *hellswitch.Hellswitch
-	Scriptpath   string
-	Skeletonpath string
-	Logpath      string
-	msgEvent     *busevent.Event
+	Locker         sync.RWMutex
+	Worlds         map[string]*bus.Bus
+	Path           string
+	hellswitch     *hellswitch.Hellswitch
+	Scriptpath     string
+	Skeletonpath   string
+	Logpath        string
+	MaxHistory     int
+	MaxLines       int
+	MaxRecent      int
+	LinesPerScreen int
+	msgEvent       *busevent.Event
 }
 
 func (t *Titan) CreateBus() *bus.Bus {
@@ -195,7 +199,6 @@ func (t *Titan) HandleCmdHistory(id string) {
 		msg.PublishHistory(t, id, h)
 	}
 }
-
 func (t *Titan) HandleCmdAllLines(id string) {
 	w := t.World(id)
 	if w != nil {
@@ -207,7 +210,11 @@ func (t *Titan) HandleCmdLines(id string) {
 	w := t.World(id)
 	if w != nil {
 		alllines := w.GetCurrentLines()
-		msg.PublishLines(t, id, alllines)
+		start := len(alllines) - t.LinesPerScreen
+		if start < 0 {
+			start = 0
+		}
+		msg.PublishLines(t, id, alllines[start:])
 	}
 }
 func (t *Titan) HandleCmdPrompt(id string) {
@@ -303,6 +310,15 @@ func (t *Titan) ExecClients() {
 	sort.Sort(result)
 	msg.PublishClients(t, result)
 }
+func (t *Titan) GetMaxHistory() int {
+	return t.MaxHistory
+}
+func (t *Titan) GetMaxLines() int {
+	return t.MaxLines
+}
+func (t *Titan) GetMaxRecent() int {
+	return t.MaxRecent
+}
 
 func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindConnectedEvent(t, t.onConnected)
@@ -320,6 +336,9 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.GetScriptHome = b.WrapGetString(t.GetScriptHome)
 	b.RequestPermissions = b.WrapHandleAuthorization(t.RequestPermissions)
 	b.RequestTrustDomains = b.WrapHandleAuthorization(t.RequestTrustDomains)
+	b.GetMaxHistory = t.GetMaxHistory
+	b.GetMaxLines = t.GetMaxLines
+	b.GetMaxRecent = t.GetMaxRecent
 }
 func (t *Titan) RequestPermissions(b *bus.Bus, a *world.Authorization) {
 	w := t.World(b.ID)

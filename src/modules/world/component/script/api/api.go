@@ -9,7 +9,6 @@ import (
 	"hellclient/modules/version"
 	"hellclient/modules/world"
 	"hellclient/modules/world/bus"
-	"hellclient/modules/world/component/info"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -838,8 +837,9 @@ func (a *API) GetLineCount() int {
 }
 
 func (a *API) GetRecentLines(count int) string {
-	if count > info.MaxRecent {
-		count = info.MaxRecent
+	recent := a.Bus.GetMaxRecent()
+	if count > recent {
+		count = recent
 	}
 	lines := a.Bus.GetRecentLines(count)
 	var result = make([]string, 0, len(lines))

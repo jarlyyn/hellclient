@@ -21,48 +21,59 @@ define(function (require) {
         ctx.fillStyle = settings.background
         ctx.fillRect(0, 0, settings.linewidth, settings.lineheight)
         return {
-            ID: id + "." + index,
+            ID: id,
             Canvas: c,
             Position: 0,
+            Index: index,
         }
     }
-    var RenderLine = function (line,withouticon) {
+    var RenderLine = function (line, withouticon, nocr) {
+        result = []
         var index = 0
         var l = createLine(line.ID, index)
         var color = settings.color
         var icon = ""
         var iconcolor = ""
-        if (!withouticon){
-        switch (line.Type) {
-            case 0:
-                color=settings.echocolor
-                icon=settings.echoicon
-                iconcolor=settings.echoiconcolor
-                break;
-            case 1:
-                color=settings.systemcolor
-                icon=settings.systemicon
-                iconcolor=settings.systemiconcolor
-                break;
-            case 3:
-                color=settings.printcolor
-                icon=settings.printicon
-                iconcolor=settings.printiconcolor
-                break;
+        if (!withouticon) {
+            switch (line.Type) {
+                case 0:
+                    color = settings.printcolor
+                    icon = settings.printicon
+                    iconcolor = settings.printiconcolor
+                    break;
+                case 1:
+                    color = settings.systemcolor
+                    icon = settings.systemicon
+                    iconcolor = settings.systemiconcolor
+                    break;
+                case 3:
+                    color = settings.echocolor
+                    icon = settings.echoicon
+                    iconcolor = settings.echoiconcolor
+                    break;
+            }
         }
-        }
-        if (icon){
+        if (icon) {
             var ctx = l.Canvas.getContext('2d')
             var width = ctx.measureText(icon).width
-            ctx.fillStyle=iconcolor
+            ctx.fillStyle = iconcolor
             ctx.fillText(icon, l.Position, settings.middleline)
             l.Position += width
         }
         line.Words.forEach(function (word) {
             for (let i = 0; i < word.Text.length; i++) {
                 var char = word.Text[i]
+                if (char == "\n" && nocr) {
+                    continue
+                }
                 var ctx = l.Canvas.getContext('2d')
                 var width = ctx.measureText(char).width
+                if (char == "\n" || l.Position + width >= settings.linewidth) {
+                    result.push(l)
+                    index++
+                    l = createLine(line.ID, index)
+                    ctx = l.Canvas.getContext('2d')
+                }
                 if (word.Background) {
                     ctx.fillStyle = settings[word.Background] || settings.background
                     ctx.fillRect(l.Position, 0, width, settings.lineheight)
@@ -71,30 +82,38 @@ define(function (require) {
                 ctx.font = word.Bold ? settings.fontbold : settings.font
                 ctx.fillText(char, l.Position, settings.middleline)
                 l.Position += width
-                if (l.Position >= settings.linewidth) {
+                if (l.Position >= settings.linewidth && nocr) {
                     break
                 }
             }
         })
-        return l
+        result.push(l)
+        return result
     }
     var Drawline = function (line) {
-        Lines.push(RenderLine(line))
+        var result = RenderLine(line)
+        result.forEach(function (line) {
+            Lines.push(line)
+        })
         Render()
     }
-    var DrawPrompt=function(line){
-        var ctx=document.getElementById("prompt-output").getContext('2d');
-        if (line){
-            var promptline=RenderLine(line,true)
+    var DrawPrompt = function (line) {
+        var ctx = document.getElementById("prompt-output").getContext('2d');
+        if (line) {
+            var promptline = RenderLine(line, true, true)[0]
             ctx.drawImage(promptline.Canvas, 0, 0, settings.linewidth, settings.lineheight)
-        }else{
+        } else {
             ctx.fillStyle = settings.background
-            ctx.fillRect(0, 0, settings.linewidth, settings.lineheight)    
+            ctx.fillRect(0, 0, settings.linewidth, settings.lineheight)
         }
     }
     var Render = function () {
         Lines.sort(function (a, b) {
-            return a.ID > b.ID ? 1 : -1;
+            if (a.ID != b.ID) {
+                return a.ID > b.ID ? 1 : -1;
+            }
+            return a.Index > b.Index ? 1 : -1;
+
         });
         Lines = _.clone(Lines.slice(-settings.maxlines))
         Lines.forEach(function (line, index) {
@@ -110,6 +129,6 @@ define(function (require) {
         Drawline: Drawline,
         Render: Render,
         Clean: Clean,
-        DrawPrompt:DrawPrompt,
+        DrawPrompt: DrawPrompt,
     }
 })
