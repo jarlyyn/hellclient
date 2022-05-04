@@ -63,8 +63,9 @@ define(function (require) {
             l.Position += width
         }
         line.Words.forEach(function (word) {
-            for (let i = 0; i < word.Text.length; i++) {
-                var char = word.Text[i]
+            let texts=[...word.Text]
+            for (let i = 0; i < texts.length; i++) {
+                var char = texts[i]
                 if (char == "\n" && nocr) {
                     continue
                 }
