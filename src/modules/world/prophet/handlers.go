@@ -509,6 +509,7 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("createTrigger", p.onCmdCreateTrigger)
 	handlers.Register("deleteTrigger", p.onCmdDeleteTrigger)
 	handlers.Register("loadTrigger", p.onCmdLoadTrigger)
+	handlers.Register("updateTrigger", p.onCmdUpdateTrigger)
 	handlers.Register("updatepassword", p.onCmdUpdatePassword)
 
 	handlers.Register("findhistory", p.onCmdFindHistory)
