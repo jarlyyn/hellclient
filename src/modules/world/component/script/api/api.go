@@ -1107,6 +1107,13 @@ func (a *API) Broadcast(msg string, gloabl bool) {
 	}
 	bc := world.CreateBroadcast(channel, msg, gloabl)
 	a.Bus.RaiseBroadcastEvent(bc)
+	if a.Bus.GetShowBroadcast() {
+		if gloabl {
+			a.Bus.DoPrintGlobalBroadcastOut(msg)
+		} else {
+			a.Bus.DoPrintLocalBroadcastOut(msg)
+		}
+	}
 }
 
 func (a *API) Notify(title string, body string) {

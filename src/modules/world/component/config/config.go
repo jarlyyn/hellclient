@@ -209,7 +209,16 @@ func (c *Config) SetScriptPrefix(p string) {
 	defer c.Locker.Unlock()
 	c.Data.ScriptPrefix = p
 }
-
+func (c *Config) SetShowBroadcast(s bool) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.ShowBroadcast = s
+}
+func (c *Config) GetShowBroadcast() bool {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.ShowBroadcast
+}
 func (c *Config) OnReady(b *bus.Bus) {
 	c.ReadyAt = time.Now().Unix()
 }
@@ -246,7 +255,8 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetCommandStackCharacter = c.SetCommandStackCharacter
 	b.GetScriptPrefix = c.GetScriptPrefix
 	b.SetScriptPrefix = c.SetScriptPrefix
-
+	b.GetShowBroadcast = c.GetShowBroadcast
+	b.SetShowBroadcast = c.SetShowBroadcast
 	b.BindInitEvent(b, c.OnReady)
 }
 

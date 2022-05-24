@@ -11,98 +11,105 @@ import (
 )
 
 type Bus struct {
-	ID                       string
-	GetMaxHistory            func() int
-	GetMaxLines              func() int
-	GetMaxRecent             func() int
-	GetConnBuffer            func() []byte
-	GetConnConnected         func() bool
-	GetHost                  func() string
-	SetHost                  func(string)
-	GetPort                  func() string
-	SetPort                  func(string)
-	GetName                  func() string
-	SetName                  func(string)
-	GetCommandStackCharacter func() string
-	SetCommandStackCharacter func(string)
-	GetScriptPrefix          func() string
-	SetScriptPrefix          func(string)
-	GetStatus                func() string
-	SetStatus                func(string)
-	GetQueueDelay            func() int
-	SetQueueDelay            func(int)
-	GetQueue                 func() []*world.Command
-	GetParam                 func(string) string
-	GetParams                func() map[string]string
-	SetParam                 func(string, string)
-	DeleteParam              func(string)
-	GetParamComment          func(string) string
-	GetParamComments         func() map[string]string
-	SetParamComment          func(string, string)
-	GetCharset               func() string
-	SetCharset               func(string)
-	GetReadyAt               func() int64
-	GetCurrentLines          func() []*world.Line
-	GetPrompt                func() *world.Line
-	GetClientInfo            func() *world.ClientInfo
-	GetWorldData             func() *world.WorldData
-	GetScriptData            func() *world.ScriptData
-	SetPermissions           func([]string)
-	GetPermissions           func() []string
-	RequestPermissions       func(*world.Authorization)
-	GetScriptID              func() string
-	SetScriptID              func(string)
-	GetScriptType            func() string
-	GetScriptPath            func() string
-	GetLogsPath              func() string
-	GetSkeletonPath          func() string
-	GetScriptHome            func() string
-	DoLog                    func(string)
-	SetTrusted               func(*herbplugin.Trusted)
-	GetTrusted               func() *herbplugin.Trusted
-	RequestTrustDomains      func(*world.Authorization)
-	GetPluginOptions         func() herbplugin.Options
-	DoSendToConn             func(cmd []byte)
-	DoSend                   func(*world.Command)
-	DoSendToQueue            func(*world.Command)
-	DoExecute                func(message string)
-	DoEncode                 func() ([]byte, error)
-	DoDecode                 func([]byte) error
-	DoReloadScript           func() error
-	DoSaveScript             func() error
-	DoUseScript              func(string)
-	GetRequiredParams        func() []*world.RequiredParam
-	DoRunScript              func(string)
-	DoPrint                  func(msg string)
-	DoPrintSystem            func(msg string)
-	DoDiscardQueue           func(force bool) int
-	DoLockQueue              func()
-	DoOmitOutput             func()
-	DoDeleteLines            func(int)
-	GetLineCount             func() int
-	DoSendBroadcastToScript  func(*world.Broadcast)
-	HandleBuffer             func([]byte) bool
-	DoSendTimerToScript      func(*world.Timer)
-	DoDeleteTimer            func(string) bool
-	DoDeleteTimerByName      func(string) bool
-	DoDeleteTemporaryTimers  func() int
-	DoDeleteTimerGroup       func(string, bool) int
-	DoEnableTimerByName      func(string, bool) bool
-	DoEnableTimerGroup       func(string, bool) int
-	DoResetNamedTimer        func(string) bool
-	GetTimer                 func(string) *world.Timer
-	GetTimersByType          func(bool) []*world.Timer
-	DoDeleteTimerByType      func(bool)
-	AddTimers                func(ts []*world.Timer)
-	DoResetTimers            func()
-	GetTimerOption           func(name string, option string) (string, bool, bool)
-	GetTimerInfo             func(name string, infotype int) (string, bool, bool)
-	SetTimerOption           func(name string, option string, value string) (bool, bool, bool)
-	HasNamedTimer            func(string) bool
-	DoListTimerNames         func(byUser bool) []string
-	AddTimer                 func(*world.Timer, bool) bool
-	DoUpdateTimer            func(*world.Timer) int
-	DoSendAliasToScript      func(message string, alias *world.Alias, result *world.MatchResult)
+	ID                        string
+	GetMaxHistory             func() int
+	GetMaxLines               func() int
+	GetMaxRecent              func() int
+	GetConnBuffer             func() []byte
+	GetConnConnected          func() bool
+	GetHost                   func() string
+	SetHost                   func(string)
+	GetPort                   func() string
+	SetPort                   func(string)
+	GetName                   func() string
+	SetName                   func(string)
+	GetShowBroadcast          func() bool
+	SetShowBroadcast          func(bool)
+	GetCommandStackCharacter  func() string
+	SetCommandStackCharacter  func(string)
+	GetScriptPrefix           func() string
+	SetScriptPrefix           func(string)
+	GetStatus                 func() string
+	SetStatus                 func(string)
+	GetQueueDelay             func() int
+	SetQueueDelay             func(int)
+	GetQueue                  func() []*world.Command
+	GetParam                  func(string) string
+	GetParams                 func() map[string]string
+	SetParam                  func(string, string)
+	DeleteParam               func(string)
+	GetParamComment           func(string) string
+	GetParamComments          func() map[string]string
+	SetParamComment           func(string, string)
+	GetCharset                func() string
+	SetCharset                func(string)
+	GetReadyAt                func() int64
+	GetCurrentLines           func() []*world.Line
+	GetPrompt                 func() *world.Line
+	GetClientInfo             func() *world.ClientInfo
+	GetWorldData              func() *world.WorldData
+	GetScriptData             func() *world.ScriptData
+	SetPermissions            func([]string)
+	GetPermissions            func() []string
+	RequestPermissions        func(*world.Authorization)
+	GetScriptID               func() string
+	SetScriptID               func(string)
+	GetScriptType             func() string
+	GetScriptPath             func() string
+	GetLogsPath               func() string
+	GetSkeletonPath           func() string
+	GetScriptHome             func() string
+	DoLog                     func(string)
+	SetTrusted                func(*herbplugin.Trusted)
+	GetTrusted                func() *herbplugin.Trusted
+	RequestTrustDomains       func(*world.Authorization)
+	GetPluginOptions          func() herbplugin.Options
+	DoSendToConn              func(cmd []byte)
+	DoSend                    func(*world.Command)
+	DoSendToQueue             func(*world.Command)
+	DoExecute                 func(message string)
+	DoEncode                  func() ([]byte, error)
+	DoDecode                  func([]byte) error
+	DoReloadScript            func() error
+	DoSaveScript              func() error
+	DoUseScript               func(string)
+	GetRequiredParams         func() []*world.RequiredParam
+	DoRunScript               func(string)
+	DoPrint                   func(msg string)
+	DoPrintSystem             func(msg string)
+	DoPrintLocalBroadcastIn   func(msg string)
+	DoPrintGlobalBroadcastIn  func(msg string)
+	DoPrintLocalBroadcastOut  func(msg string)
+	DoPrintGlobalBroadcastOut func(msg string)
+
+	DoDiscardQueue          func(force bool) int
+	DoLockQueue             func()
+	DoOmitOutput            func()
+	DoDeleteLines           func(int)
+	GetLineCount            func() int
+	DoSendBroadcastToScript func(*world.Broadcast)
+	HandleBuffer            func([]byte) bool
+	DoSendTimerToScript     func(*world.Timer)
+	DoDeleteTimer           func(string) bool
+	DoDeleteTimerByName     func(string) bool
+	DoDeleteTemporaryTimers func() int
+	DoDeleteTimerGroup      func(string, bool) int
+	DoEnableTimerByName     func(string, bool) bool
+	DoEnableTimerGroup      func(string, bool) int
+	DoResetNamedTimer       func(string) bool
+	GetTimer                func(string) *world.Timer
+	GetTimersByType         func(bool) []*world.Timer
+	DoDeleteTimerByType     func(bool)
+	AddTimers               func(ts []*world.Timer)
+	DoResetTimers           func()
+	GetTimerOption          func(name string, option string) (string, bool, bool)
+	GetTimerInfo            func(name string, infotype int) (string, bool, bool)
+	SetTimerOption          func(name string, option string, value string) (bool, bool, bool)
+	HasNamedTimer           func(string) bool
+	DoListTimerNames        func(byUser bool) []string
+	AddTimer                func(*world.Timer, bool) bool
+	DoUpdateTimer           func(*world.Timer) int
+	DoSendAliasToScript     func(message string, alias *world.Alias, result *world.MatchResult)
 
 	DoDeleteAlias            func(string) bool
 	DoDeleteAliasByName      func(string) bool

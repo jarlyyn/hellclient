@@ -28,6 +28,10 @@ const LineTypeSystem = 1
 const LineTypeReal = 2
 const LineTypeEcho = 3
 const LineTypePrompt = 4
+const LineTypeLocalBroadcastOut = 5
+const LineTypeGlobalBroadcastOut = 6
+const LineTypeLocalBroadcastIn = 7
+const LineTypeGlobalBroadcastIn = 8
 
 type Line struct {
 	Words          []Word

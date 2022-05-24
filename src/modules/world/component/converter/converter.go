@@ -20,6 +20,11 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 	b.HandleConnPrompt = b.WrapHandleBytes(c.onPrompt)
 	b.DoPrint = b.WrapHandleString(c.DoPrint)
 	b.DoPrintSystem = b.WrapHandleString(c.DoPrintSystem)
+	b.DoPrintLocalBroadcastIn = b.WrapHandleString(c.DoPrintLocalBroadcastIn)
+	b.DoPrintGlobalBroadcastIn = b.WrapHandleString(c.DoPrintGlobalBroadcastIn)
+	b.DoPrintLocalBroadcastOut = b.WrapHandleString(c.DoPrintLocalBroadcastOut)
+	b.DoPrintGlobalBroadcastOut = b.WrapHandleString(c.DoPrintGlobalBroadcastOut)
+
 }
 
 func (c *Converter) onPrompt(bus *bus.Bus, msg []byte) {
@@ -71,17 +76,26 @@ func (c *Converter) DoPrintEcho(b *bus.Bus, cmd *world.Command) {
 	line.Append(w)
 	b.RaiseLineEvent(line)
 }
+func (c *Converter) DoPrintLocalBroadcastIn(b *bus.Bus, msg string) {
+	c.print(b, world.LineTypeLocalBroadcastIn, msg)
+}
+func (c *Converter) DoPrintGlobalBroadcastIn(b *bus.Bus, msg string) {
+	c.print(b, world.LineTypeGlobalBroadcastIn, msg)
+}
+func (c *Converter) DoPrintLocalBroadcastOut(b *bus.Bus, msg string) {
+	c.print(b, world.LineTypeLocalBroadcastOut, msg)
+}
+func (c *Converter) DoPrintGlobalBroadcastOut(b *bus.Bus, msg string) {
+	c.print(b, world.LineTypeGlobalBroadcastOut, msg)
+}
 func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {
-	line := world.NewLine()
-	line.Type = world.LineTypeSystem
-	w := world.Word{
-		Text: msg,
-	}
-	line.Append(w)
-	b.RaiseLineEvent(line)
+	c.print(b, world.LineTypeSystem, msg)
 }
 
 func (c *Converter) DoPrint(b *bus.Bus, msg string) {
+	c.print(b, world.LineTypePrint, msg)
+}
+func (c *Converter) print(b *bus.Bus, linetype int, msg string) {
 	line := world.NewLine()
 	line.Type = world.LineTypePrint
 	w := world.Word{
@@ -89,8 +103,8 @@ func (c *Converter) DoPrint(b *bus.Bus, msg string) {
 	}
 	line.Append(w)
 	b.RaiseLineEvent(line)
-}
 
+}
 func (c *Converter) ConvertToLine(bus *bus.Bus, msg []byte, onError func(err error) bool) *world.Line {
 	charset := bus.GetCharset()
 	return ConvertToLine(msg, charset, onError)

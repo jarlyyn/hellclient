@@ -344,6 +344,13 @@ func (s *Script) SendBroadcast(b *bus.Bus, bc *world.Broadcast) {
 	if e != nil {
 		s.SetCreator("broadcast", bc.Message)
 		e.OnBroadCast(b, bc)
+		if b.GetShowBroadcast() {
+			if bc.Global {
+				b.DoPrintGlobalBroadcastIn(bc.Message)
+			} else {
+				b.DoPrintLocalBroadcastIn(bc.Message)
+			}
+		}
 	}
 }
 func (s *Script) HandleBuffer(b *bus.Bus, data []byte) bool {

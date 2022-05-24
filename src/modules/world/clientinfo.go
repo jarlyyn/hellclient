@@ -44,6 +44,7 @@ type WorldData struct {
 	ParamComments         map[string]string
 	Permissions           []string
 	ScriptID              string
+	ShowBroadcast         bool
 	Trusted               herbplugin.Trusted
 	Triggers              []*Trigger
 	Timers                []*Timer
@@ -61,6 +62,7 @@ func (d *WorldData) ConvertSettings(id string) *WorldSettings {
 		settings.Name = d.Name
 		settings.CommandStackCharacter = d.CommandStackCharacter
 		settings.ScriptPrefix = d.ScriptPrefix
+		settings.ShowBroadcast = d.ShowBroadcast
 	}
 	return settings
 }
@@ -73,6 +75,7 @@ type WorldSettings struct {
 	Name                  string
 	CommandStackCharacter string
 	ScriptPrefix          string
+	ShowBroadcast         bool
 }
 
 func NewWorldData() *WorldData {

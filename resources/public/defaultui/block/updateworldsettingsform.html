@@ -28,7 +28,10 @@
     </el-form-item>
     <el-form-item label="命令分割符">
       <el-input v-model="worldsettingsUpdateForm.CommandStackCharacter"></el-input>
-    </el-form-item>        
+    </el-form-item>     
+    <el-form-item label="显示广播信息">
+      <el-checkbox v-model="worldsettingsUpdateForm.ShowBroadcast">显示</el-checkbox>
+    </el-form-item>    
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="worldsettingsUpdateFormVisible = false">取 消</el-button>
