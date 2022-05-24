@@ -72,6 +72,16 @@
 .words.echo::before{content:"↣";color:teal}
 .words.system{color: red;white-space: pre-wrap}
 .words.system::before{content:"⯳";color:purple}
+
+.words.localbcin,.words.globalbcin{color:rgb(127,127,127)}
+.words.localbcout,.words.globalbcout{color:rgb(127,127,127)}
+
+.words.localbcin::before,.words.globalbcin::before,.words.localbcout::before,.words.globalbcout::before{color:rgb(127,127,127)}
+.words.localbcin::before{content:"☎本地广播"}
+.words.globalbcin::before{content:"☎全局广播"}
+.words.localbcout::before{content:"☎本地广播出"}
+.words.globalbcout::before{content:"☎全局广播出"}
+
 .words.print{color:mediumspringgreen;    white-space: pre-wrap}
 .words.print::before{content:"↢";color:green;padding-left: 0.5em}
 .advancemode #alllines .has-trigger::after{content:"⚙" ;color: rgb(0,255,255);padding-left: 0.5em}

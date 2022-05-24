@@ -97,7 +97,7 @@ func (c *Converter) DoPrint(b *bus.Bus, msg string) {
 }
 func (c *Converter) print(b *bus.Bus, linetype int, msg string) {
 	line := world.NewLine()
-	line.Type = world.LineTypePrint
+	line.Type = linetype
 	w := world.Word{
 		Text: msg,
 	}

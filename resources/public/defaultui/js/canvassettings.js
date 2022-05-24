@@ -48,7 +48,11 @@ define(function (require) {
     var printcolor="mediumspringgreen"
     var printicon="↢"
     var printiconcolor="green"
-
+    var localbcinicon="☎本地广播 "
+    var globalbcinicon="☎全局广播 "
+    var localbcouticon="☎本地广播出 "
+    var globalbcouticon="☎全集广播出 "
+    var bccolor="rgb(127,127,127)"
     return {
         lineheight: lineheight,
         linewidth: linewidth,
@@ -99,6 +103,10 @@ define(function (require) {
         printcolor:printcolor,
         printicon:printicon,
         printiconcolor:printiconcolor,
-    
+        bccolor:bccolor,
+        localbcinicon:localbcinicon,
+        globalbcinicon:globalbcinicon,
+        localbcouticon:localbcouticon,
+        globalbcouticon:globalbcouticon,
     }
 })

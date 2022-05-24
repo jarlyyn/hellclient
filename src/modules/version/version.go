@@ -7,9 +7,9 @@ import (
 )
 
 const Major = 0
-const Year = 2021
-const Month = 12
-const Day = 31
+const Year = 2022
+const Month = 05
+const Day = 24
 const Patch = 0
 const Build = ""
 

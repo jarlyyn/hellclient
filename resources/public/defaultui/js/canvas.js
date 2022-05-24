@@ -51,6 +51,26 @@ define(function (require) {
                     icon = settings.echoicon
                     iconcolor = settings.echoiconcolor
                     break;
+                case 5:
+                    color=settings.bccolor
+                    icon=settings.localbcouticon
+                    iconcolor=settings.bccolor
+                    break;
+                case 6:
+                    color=settings.bccolor
+                    icon=settings.globalbcouticon
+                    iconcolor=settings.bccolor
+                    break;
+                case 7:
+                    color=settings.bccolor
+                    icon=settings.localbcinicon
+                    iconcolor=settings.bccolor
+                    break;
+                case 8:
+                    color=settings.bccolor
+                    icon=settings.globalbcinicon
+                    iconcolor=settings.bccolor
+                    break;
                 default:
                     break;
             }
