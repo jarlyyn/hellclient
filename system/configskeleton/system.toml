@@ -17,9 +17,13 @@ Switch=""
 #对外的网址，用于通知时传递对外链接
 URL="http://127.0.0.1:4355"
 
+
 #DefaultServer 创建游戏时的默认主机地址
 #格式为 www.example.com:5555
 DefaultServer=""
+#默认字符集，可以空字符串,UTF8,GBK,BIG5
+DefaultCharset=""
+
 #最大命令记录数，小于等于0则为程序默认
 MaxHistory=0
 #最大历史记录数，小于等于0则为程序默认

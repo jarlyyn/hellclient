@@ -420,6 +420,10 @@ func (p *Prophet) onCmdDefaultServer(conn connections.OutputConnection, cmd comm
 	p.Titan.HandleCmdDefaultServer()
 	return nil
 }
+func (p *Prophet) onCmdDefaultCharset(conn connections.OutputConnection, cmd command.Command) error {
+	p.Titan.HandleCmdDefaultCharset()
+	return nil
+}
 func (p *Prophet) onCmdRequestPermissions(conn connections.OutputConnection, cmd command.Command) error {
 	var msg = &world.Authorization{}
 	if json.Unmarshal(cmd.Data(), msg) != nil {
@@ -530,6 +534,7 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("updateWorldSettings", p.onCmdUpdateWorldSettings)
 	handlers.Register("updateScriptSettings", p.onCmdUpdateScriptSettings)
 	handlers.Register("defaultServer", p.onCmdDefaultServer)
+	handlers.Register("defaultCharset", p.onCmdDefaultCharset)
 	handlers.Register("requestPermissions", p.onCmdRequestPermissions)
 	handlers.Register("requestTrustDomains", p.onCmdRequestTrustDomains)
 	handlers.Register("authorized", p.onCmdAuthorized)

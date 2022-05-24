@@ -65,6 +65,8 @@ const MsgTypeRequiredParamsMessage = "requiredParams"
 
 const MsgTypeDefaultServer = "defaultServer"
 
+const MsgTypeDefaultCharset = "defaultCharset"
+
 const MsgTypeRequestPermissions = "requestPermissions"
 
 const MsgTypeRequestTrustDomains = "requestTrustDomains"
@@ -233,6 +235,10 @@ func PublishRequiredParamsMessage(p Publisher, world string, rp []*world.Require
 
 func PublishDefaultServerMessage(p Publisher, server string) {
 	p.Publish(New(MsgTypeDefaultServer, "", server))
+}
+
+func PublishDefaultCharsetMessage(p Publisher, charset string) {
+	p.Publish(New(MsgTypeDefaultCharset, "", charset))
 }
 
 func PublishRequestPermissions(p Publisher, world string, a *world.Authorization) {

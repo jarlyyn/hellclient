@@ -298,6 +298,10 @@ func (t *Titan) HandleCmdDefaultServer() {
 	go msg.PublishDefaultServerMessage(t, app.System.DefaultServer)
 }
 
+func (t *Titan) HandleCmdDefaultCharset() {
+	go msg.PublishDefaultCharsetMessage(t, app.System.DefaultCharset)
+}
+
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()

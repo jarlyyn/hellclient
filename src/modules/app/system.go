@@ -19,6 +19,7 @@ type SystemConfig struct {
 	Password       string
 	Switch         string
 	DefaultServer  string
+	DefaultCharset string
 	URL            string
 	MaxHistory     int
 	MaxLines       int

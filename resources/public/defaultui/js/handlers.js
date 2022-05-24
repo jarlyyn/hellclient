@@ -193,6 +193,11 @@ handlers.requiredParams=function(data){
     vm.requiredParamsVisible=true;
     vm.requiredParams=data||[]
 }
+handlers.defaultCharset=function(data){
+    if ((vm.gameCreateForm.Charset==""||vm.gameCreateForm.Charset==undefined) && data!=""){
+        vm.gameCreateForm.Charset=data.toUpperCase()
+    }
+}
 handlers.defaultServer=function(data){
     var server=data.split(":")
     var host=server[0]
@@ -201,8 +206,10 @@ handlers.defaultServer=function(data){
     vm.gameCreateForm={
         Host:host,
         Port:port,
+        Charset:"",
     };
     vm.gameCreateFormVisible=true;
+    send("defaultCharset","")
 }
 handlers.requestPermissions=function(data){
     vm.RequestPermissions=data
