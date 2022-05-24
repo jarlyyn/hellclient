@@ -1,14 +1,15 @@
 package log
 
 import (
-	"log"
 	"hellclient/modules/app"
 	"hellclient/modules/world/bus"
+	"log"
 	"os"
 	"path/filepath"
 	"sync"
 	"time"
 
+	"github.com/herb-go/logger"
 	"github.com/herb-go/util"
 )
 
@@ -18,12 +19,21 @@ type Log struct {
 
 func (l *Log) InstallTo(b *bus.Bus) {
 	dolog := b.WrapHandleError(l.DoLogError)
-	b.HandleConverterError = dolog
+	debug := b.WrapHandleError(l.DoDebugError)
+	b.HandleConverterError = debug
 	b.HandleCmdError = dolog
 	b.HandleConnError = dolog
 	b.HandleScriptError = dolog
 	b.HandleTriggerError = dolog
 	b.DoLog = b.WrapHandleString(l.Log)
+}
+func (l *Log) DoDebugError(b *bus.Bus, err error) {
+	if err == nil {
+		return
+	}
+	go func() {
+		logger.Debug(err.Error())
+	}()
 }
 func (l *Log) DoLogError(b *bus.Bus, err error) {
 	if err == nil {

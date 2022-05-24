@@ -6,7 +6,7 @@ import (
 	"github.com/jarlyyn/ansi"
 )
 
-func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *world.Line {
+func ConvertToLine(msg []byte, charset string, errhandler func(err error) bool) *world.Line {
 	line := world.NewLine()
 	if len(msg) == 0 {
 		return line
@@ -206,8 +206,9 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error)) *worl
 			}
 		}
 		if err != nil {
-			errhandler(err)
-			// return
+			if !errhandler(err) {
+				return nil
+			}
 		}
 	}
 	return line

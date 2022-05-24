@@ -10,6 +10,10 @@ type Converter struct {
 	Lock sync.RWMutex
 }
 
+func nopOnError(err error) bool {
+	return false
+}
+
 func (c *Converter) InstallTo(b *bus.Bus) {
 	b.DoSend = b.WrapHandleSend(c.Send)
 	b.HandleConnReceive = b.WrapHandleBytes(c.onMsg)
@@ -19,7 +23,7 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 }
 
 func (c *Converter) onPrompt(bus *bus.Bus, msg []byte) {
-	line := c.ConvertToLine(bus, msg)
+	line := c.ConvertToLine(bus, msg, nopOnError)
 	if line != nil {
 		bus.RaisePromptEvent(line)
 	}
@@ -28,14 +32,15 @@ func (c *Converter) onMsg(bus *bus.Bus, msg []byte) {
 	if len(msg) == 0 {
 		return
 	}
-	line := c.ConvertToLine(bus, msg)
+	line := c.ConvertToLine(bus, msg, func(err error) bool { return c.onError(bus, err) })
 	if line != nil {
 		line.Type = world.LineTypeReal
 		bus.RaiseLineEvent(line)
 	}
 }
-func (c *Converter) onError(bus *bus.Bus, err error) {
+func (c *Converter) onError(bus *bus.Bus, err error) bool {
 	bus.HandleConverterError(err)
+	return true
 }
 
 func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
@@ -86,9 +91,9 @@ func (c *Converter) DoPrint(b *bus.Bus, msg string) {
 	b.RaiseLineEvent(line)
 }
 
-func (c *Converter) ConvertToLine(bus *bus.Bus, msg []byte) *world.Line {
+func (c *Converter) ConvertToLine(bus *bus.Bus, msg []byte, onError func(err error) bool) *world.Line {
 	charset := bus.GetCharset()
-	return ConvertToLine(msg, charset, func(err error) { c.onError(bus, err) })
+	return ConvertToLine(msg, charset, onError)
 }
 
 func New() *Converter {

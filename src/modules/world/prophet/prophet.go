@@ -7,9 +7,8 @@ import (
 	"sync"
 	"sync/atomic"
 
+	"github.com/herb-go/logger"
 	"github.com/herb-go/uniqueid"
-
-	"github.com/herb-go/util"
 
 	"github.com/herb-go/connections"
 
@@ -136,16 +135,14 @@ func (p *Prophet) Enter(w http.ResponseWriter, r *http.Request) error {
 func (p *Prophet) OnMessage(msg *connections.Message) {
 	_, _, cerr := p.Handlers.Exec(msg)
 	if cerr != nil {
-		go func() {
-			p.OnError(cerr)
-		}()
+		p.OnError(cerr)
 	}
 
 }
 
 //OnError called when onconnection error raised.
 func (p *Prophet) OnError(err *connections.Error) {
-	util.LogError(err.Error)
+	logger.Debug(err.Error.Error())
 }
 
 //OnClose called when connection closed.
