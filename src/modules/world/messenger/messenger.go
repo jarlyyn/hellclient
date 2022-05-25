@@ -41,6 +41,7 @@ func (m *Messenger) Publish(t *titan.Titan, msg *world.Message) {
 }
 func (m *Messenger) Init(t *titan.Titan) {
 	m.G.IDGenerator = uniqueid.DefaultGenerator.GenerateID
+	t.BindRequestEvent(m, m.Publish)
 	m.Titan = t
 }
 
@@ -64,7 +65,7 @@ func (m *Messenger) OnMessage(msg *connections.Message) {
 		logger.Debug(err.Error())
 		return
 	}
-	m.Titan.RaiseRequestEvent(data)
+	m.Titan.OnResponse(data)
 }
 
 //OnError called when onconnection error raised.

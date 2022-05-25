@@ -340,6 +340,7 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindHistoriesEvent(t, t.onHistory)
 	b.BindLinesEvent(t, t.onLines)
 	b.BindBroadcastEvent(t, t.onBroadcast)
+	b.BindRequestEvent(t, t.onRequest)
 	b.BindScriptMessageEvent(t, t.onScriptMessage)
 	b.GetScriptPath = t.GetScriptPath
 	b.GetLogsPath = t.GetLogsPath
