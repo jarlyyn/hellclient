@@ -199,6 +199,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 
 	l.SetGlobal("Broadcast", l.NewFunction(a.Broadcast))
 	l.SetGlobal("Notify", l.NewFunction(a.Notify))
+	l.SetGlobal("Request", l.NewFunction(a.Request))
 
 	l.SetGlobal("GetGlobalOption", l.NewFunction(a.GetGlobalOption))
 
@@ -1252,6 +1253,11 @@ func (a *luaapi) Broadcast(L *lua.LState) int {
 func (a *luaapi) Notify(L *lua.LState) int {
 	a.API.Notify(L.ToString(1), L.ToString(2))
 	return 0
+}
+func (a *luaapi) Request(L *lua.LState) int {
+	id := a.API.Request(L.ToString(1), L.ToString(2))
+	L.Push(lua.LString(id))
+	return 1
 }
 func (a *luaapi) GetGlobalOption(L *lua.LState) int {
 	result := a.API.GetGlobalOption(L.ToString(1))

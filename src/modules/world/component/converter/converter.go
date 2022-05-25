@@ -24,7 +24,8 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 	b.DoPrintGlobalBroadcastIn = b.WrapHandleString(c.DoPrintGlobalBroadcastIn)
 	b.DoPrintLocalBroadcastOut = b.WrapHandleString(c.DoPrintLocalBroadcastOut)
 	b.DoPrintGlobalBroadcastOut = b.WrapHandleString(c.DoPrintGlobalBroadcastOut)
-
+	b.DoPrintRequest = b.WrapHandleString(c.DoPrintRequest)
+	b.DoPrintResponse = b.WrapHandleString(c.DoPrintResponse)
 }
 
 func (c *Converter) onPrompt(bus *bus.Bus, msg []byte) {
@@ -75,6 +76,12 @@ func (c *Converter) DoPrintEcho(b *bus.Bus, cmd *world.Command) {
 	}
 	line.Append(w)
 	b.RaiseLineEvent(line)
+}
+func (c *Converter) DoPrintRequest(b *bus.Bus, msg string) {
+	c.print(b, world.LineTypeRequest, msg)
+}
+func (c *Converter) DoPrintResponse(b *bus.Bus, msg string) {
+	c.print(b, world.LineTypeResponse, msg)
 }
 func (c *Converter) DoPrintLocalBroadcastIn(b *bus.Bus, msg string) {
 	c.print(b, world.LineTypeLocalBroadcastIn, msg)

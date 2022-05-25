@@ -32,6 +32,8 @@ const LineTypeLocalBroadcastOut = 5
 const LineTypeGlobalBroadcastOut = 6
 const LineTypeLocalBroadcastIn = 7
 const LineTypeGlobalBroadcastIn = 8
+const LineTypeRequest = 9
+const LineTypeResponse = 10
 
 type Line struct {
 	Words          []Word

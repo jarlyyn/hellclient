@@ -65,3 +65,35 @@ Notify("ID挂了","被NPC xxx 杀死了")
 ### 返回值
 
 无
+
+## Request
+发送请求
+
+### 原型
+```
+Request(type string, data string) string
+```
+
+### 描述
+
+发送请求
+
+* type 请求类型，原则上相应请求的服务应该返回同样的type
+* data 发送的数据
+
+参考[文档](../features/requestresponse.md)
+### 代码范例
+
+Javascript
+```
+world.Note(world.Request("testmessage","messagedata"))
+```
+
+Lua
+```
+Note(Request("testmessage","messagedata")))
+```
+
+### 返回值
+
+唯一ID,可用于响应出发函数里进行匹配

@@ -68,4 +68,10 @@ Switch服务器是一个Basic验证的Websocket广播服务器
 
 在配置文件中进行设置后，可以通过API发送邮件进行通知
 
-借口详见[API文档](,,/api/apicommunication.md#Notify)
+接口详见[API文档](,,/api/apicommunication.md#Notify)
+
+## 请求相应服务
+
+通过基于Websocket的接口进行功能扩展
+
+详见[文档](./requestresponse)

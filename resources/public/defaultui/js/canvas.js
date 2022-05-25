@@ -71,6 +71,16 @@ define(function (require) {
                     icon=settings.globalbcinicon
                     iconcolor=settings.bccolor
                     break;
+                case 9:
+                    color=settings.bccolor
+                    icon=settings.requesticon
+                    iconcolor=settings.bccolor
+                    break;
+                case 10:
+                    color=settings.bccolor
+                    icon=settings.responseicon
+                    iconcolor=settings.bccolor
+                    break;
                 default:
                     break;
             }

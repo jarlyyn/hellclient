@@ -10,6 +10,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
             6: " globalbcout",
             7: " localbcin",
             8: " globalbcin",
+            9: " request",
+            10: " response",
         },
         current: "",
         currenttab: "",

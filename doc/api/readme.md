@@ -150,6 +150,7 @@
 
 * [Broadcast 广播](apicommunication.md#Broadcast)
 * [Notify 通知](apicommunication.md#Notify)
+* [Request 请求](apicommunication.md#Request)
 
 ## 授权接口
 * [CheckPermissions 检查权限](apiauth.md#CheckPermissions)

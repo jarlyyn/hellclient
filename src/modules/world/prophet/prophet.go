@@ -193,6 +193,7 @@ func (p *Prophet) Start() {
 
 // Stop stop consumer
 func (p *Prophet) Stop() {
+	p.Gateway.Stop()
 }
 func (p *Prophet) Publish(t *titan.Titan, msg *message.Message) {
 	p.Adapter.Exec(msg)

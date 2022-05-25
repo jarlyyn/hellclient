@@ -52,6 +52,8 @@ define(function (require) {
     var globalbcinicon="☎全局广播 "
     var localbcouticon="☎本地广播出 "
     var globalbcouticon="☎全集广播出 "
+    var requesticon="☎请求 "
+    var responseicon="☎响应 "
     var bccolor="rgb(127,127,127)"
     return {
         lineheight: lineheight,
@@ -108,5 +110,7 @@ define(function (require) {
         globalbcinicon:globalbcinicon,
         localbcouticon:localbcouticon,
         globalbcouticon:globalbcouticon,
+        requesticon:requesticon,
+        responseicon:responseicon,
     }
 })

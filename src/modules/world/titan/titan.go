@@ -50,6 +50,7 @@ type Titan struct {
 	MaxRecent      int
 	LinesPerScreen int
 	msgEvent       *busevent.Event
+	requestEvent   *busevent.Event
 }
 
 func (t *Titan) CreateBus() *bus.Bus {
@@ -143,6 +144,12 @@ func (t *Titan) onBroadcast(b *bus.Bus, bc *world.Broadcast) {
 	if bc.Global {
 		go t.hellswitch.Broadcast(bytes.Join([][]byte{[]byte(bc.Channel), []byte(bc.Message)}, GlobalMessageSep))
 	}
+}
+
+func (t *Titan) onRequest(b *bus.Bus, msg *world.Message) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	t.RaiseRequestEvent(msg)
 }
 func (t *Titan) OnCreateFail(errors []*validator.FieldError) {
 	msg.PublishCreateFail(t, errors)
@@ -355,6 +362,17 @@ func (t *Titan) RequestTrustDomains(b *bus.Bus, a *world.Authorization) {
 	if w != nil {
 		msg.PublishRequestTrustDomains(t, b.ID, a)
 	}
+}
+func (t *Titan) RaiseRequestEvent(msg *world.Message) {
+	t.requestEvent.Raise(msg)
+}
+func (t *Titan) BindRequestEvent(id interface{}, fn func(t *Titan, msg *world.Message)) {
+	t.requestEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(t, data.(*world.Message))
+		},
+	)
 }
 func (t *Titan) RaiseMsgEvent(msg *message.Message) {
 	t.msgEvent.Raise(msg)
@@ -915,6 +933,12 @@ func (t *Titan) GetScriptHome(b *bus.Bus) string {
 
 var GlobalMessageSep = []byte(" ")
 
+func (t *Titan) OnResponse(msg *world.Message) {
+	w := t.World(msg.World)
+	if w != nil {
+		w.DoSendResponseToScript(msg)
+	}
+}
 func (t *Titan) OnGlobalMessage(msg []byte) {
 	var data = bytes.SplitN(msg, GlobalMessageSep, 3)
 	switch string(data[0]) {
@@ -946,8 +970,9 @@ func (t *Titan) Stop() {
 }
 func New() *Titan {
 	t := &Titan{
-		Worlds:   map[string]*bus.Bus{},
-		msgEvent: busevent.New(),
+		Worlds:       map[string]*bus.Bus{},
+		msgEvent:     busevent.New(),
+		requestEvent: busevent.New(),
 	}
 	t.hellswitch = hellswitch.New()
 	t.hellswitch.OnGlobalMessage = t.OnGlobalMessage

@@ -336,6 +336,16 @@ func (s *Script) verifyChannel(channel string) bool {
 	}
 	return channel == s.Data.Channel
 }
+func (s *Script) SendResponse(b *bus.Bus, msg *world.Message) {
+	e := s.getEngine()
+	if e != nil {
+		s.SetCreator("response", msg.Type)
+		e.OnResponse(b, msg)
+		if b.GetShowBroadcast() {
+			b.DoPrintResponse(msg.Desc())
+		}
+	}
+}
 func (s *Script) SendBroadcast(b *bus.Bus, bc *world.Broadcast) {
 	if !s.verifyChannel(bc.Channel) {
 		return
@@ -399,6 +409,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.DoSendTriggerToScript = b.WrapHandleTrigger(s.SendTrigger)
 	b.DoSendBroadcastToScript = b.WrapHandleBroadcast(s.SendBroadcast)
 	b.DoSendCallbackToScript = b.WrapHandleCallback(s.SendCallback)
+	b.DoSendResponseToScript = b.WrapHandleResponse(s.SendResponse)
 	b.DoRunScript = b.WrapHandleString(s.Run)
 	b.GetStatus = s.GetStatus
 	b.SetStatus = b.WrapHandleString(s.SetStatus)

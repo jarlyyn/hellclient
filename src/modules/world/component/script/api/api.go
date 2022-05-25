@@ -1170,3 +1170,12 @@ func (a *API) Decrypt(data string, key string) *string {
 	str := string(result)
 	return &str
 }
+
+func (a *API) Request(reqtype string, data string) string {
+	msg := world.CreateMessage(a.Bus.ID, reqtype, data)
+	a.Bus.RaiseRequestEvent(msg)
+	if a.Bus.GetShowBroadcast() {
+		a.Bus.DoPrintRequest(msg.Desc())
+	}
+	return msg.ID
+}

@@ -15,3 +15,6 @@ end
 
 onBroadcast=function(msg,global,channel,global)
 end
+
+onResponse=function(type,id,data)
+end

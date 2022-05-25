@@ -86,9 +86,9 @@ func UpdateScript(t *titan.Titan, data []byte) {
 	sd.OnConnect = form.OnConnect
 	sd.OnDisconnect = form.OnDisconnect
 	sd.OnBroadcast = form.OnBroadcast
+	sd.OnResponse = form.OnResponse
 	sd.OnAssist = form.OnAssist
 	sd.Channel = form.Channel
-
 	t.Locker.Unlock()
 	go func() {
 		t.OnUpdateScriptSuccess(form.ID)

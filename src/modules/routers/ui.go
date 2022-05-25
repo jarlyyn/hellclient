@@ -2,7 +2,9 @@ package routers
 
 import (
 	"hellclient/modules/app"
+	messengeractions "hellclient/modules/world/messenger/actions"
 	prophetactions "hellclient/modules/world/prophet/actions"
+
 	"hellclient/modules/world/titan"
 	"runtime"
 	"time"
@@ -28,6 +30,7 @@ var RouterUIFactory = router.NewFactory(func() router.Router {
 		HandleFunc(simplehttpserver.ServeFolder(util.Resources("public")))
 	Router.HandleHomepage().HandleFunc(simplehttpserver.ServeFile(util.Resources("defaultui", "index.html")))
 	Router.Handle("/ws").HandleFunc(prophetactions.WebsocketAction)
+	Router.Handle("/messenger").HandleFunc(messengeractions.WebsocketAction)
 	Router.Handle(titan.GamePrefix).Handle(titan.NewWebdavServer())
 	if app.Development.Profiling {
 		runtime.SetBlockProfileRate(int(10 * time.Second))

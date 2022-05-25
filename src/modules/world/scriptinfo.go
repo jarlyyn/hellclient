@@ -36,6 +36,7 @@ type ScriptSettings struct {
 	OnConnect    string
 	OnDisconnect string
 	OnBroadcast  string
+	OnResponse   string
 	OnAssist     string
 	OnBuffer     string
 	OnBufferMin  int
@@ -52,6 +53,7 @@ type ScriptData struct {
 	OnConnect      string
 	OnDisconnect   string
 	OnBroadcast    string
+	OnResponse     string
 	OnAssist       string
 	OnBuffer       string
 	OnBufferMin    int
@@ -87,6 +89,7 @@ func (d *ScriptData) ConvertSettings(name string) *ScriptSettings {
 		settings.OnConnect = d.OnConnect
 		settings.OnDisconnect = d.OnDisconnect
 		settings.OnBroadcast = d.OnBroadcast
+		settings.OnResponse = d.OnResponse
 		settings.OnAssist = d.OnAssist
 		settings.Channel = d.Channel
 	}
@@ -105,6 +108,8 @@ func (d *ScriptData) ConvertInfo(id string) *ScriptInfo {
 		info.OnConnect = d.OnConnect
 		info.OnDisconnect = d.OnDisconnect
 		info.OnAssist = d.OnAssist
+		info.OnBroadCast = d.OnResponse
+		info.OnResponse = d.OnResponse
 	}
 	return info
 }
@@ -122,4 +127,6 @@ type ScriptInfo struct {
 	OnConnect    string
 	OnDisconnect string
 	OnAssist     string
+	OnBroadCast  string
+	OnResponse   string
 }

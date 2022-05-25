@@ -39,6 +39,7 @@ type JsEngine struct {
 	onDisconnect string
 	onConnect    string
 	onBroadCast  string
+	onResponse   string
 	onBuffer     string
 	onBufferMin  int
 	onBufferMax  int
@@ -57,6 +58,7 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 	e.onConnect = data.OnConnect
 	e.onDisconnect = data.OnDisconnect
 	e.onBroadCast = data.OnBroadcast
+	e.onResponse = data.OnResponse
 	e.onBuffer = data.OnBuffer
 	e.onBufferMax = data.OnBufferMax
 	e.onBufferMin = data.OnBufferMin
@@ -176,6 +178,17 @@ func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Unlock()
 	go e.Call(b, e.onBroadCast, bc.Message, bc.Global, bc.Channel, bc.ID)
 }
+
+func (e *JsEngine) OnResponse(b *bus.Bus, msg *world.Message) {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil {
+		e.Locker.Unlock()
+		return
+	}
+	e.Locker.Unlock()
+	go e.Call(b, e.onResponse, msg.Type, msg.ID, msg.Data)
+}
+
 func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 	e.Locker.Lock()
 	if e.Plugin.Runtime == nil || e.onBuffer == "" {

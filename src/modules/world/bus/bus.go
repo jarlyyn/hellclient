@@ -81,6 +81,8 @@ type Bus struct {
 	DoPrintGlobalBroadcastIn  func(msg string)
 	DoPrintLocalBroadcastOut  func(msg string)
 	DoPrintGlobalBroadcastOut func(msg string)
+	DoPrintRequest            func(msg string)
+	DoPrintResponse           func(msg string)
 
 	DoDiscardQueue          func(force bool) int
 	DoLockQueue             func()
@@ -189,6 +191,8 @@ type Bus struct {
 	DoPushMetronome        func(cmds []*world.Command, grouped bool)
 	DoMetronomeSend        func(cmds *world.Command)
 	DoMetronomeLock        func()
+	DoSendResponseToScript func(msg *world.Message)
+	RequestEvent           busevent.Event
 	BroadcastEvent         busevent.Event
 	LineEvent              busevent.Event
 	PromptEvent            busevent.Event
@@ -334,6 +338,11 @@ func (b *Bus) WrapHandleTrigger(f func(b *Bus, line *world.Line, trigger *world.
 func (b *Bus) WrapHandleBroadcast(f func(b *Bus, bc *world.Broadcast)) func(bc *world.Broadcast) {
 	return func(bc *world.Broadcast) {
 		f(b, bc)
+	}
+}
+func (b *Bus) WrapHandleResponse(f func(b *Bus, bc *world.Message)) func(msg *world.Message) {
+	return func(msg *world.Message) {
+		f(b, msg)
 	}
 }
 func (b *Bus) WrapHandleCallback(f func(b *Bus, bc *world.Callback)) func(bc *world.Callback) {
@@ -501,7 +510,17 @@ func (b *Bus) BindLinesEvent(id interface{}, fn func(b *Bus, lines []*world.Line
 		},
 	)
 }
-
+func (b *Bus) RaiseRequestEvent(msg *world.Message) {
+	b.RequestEvent.Raise(msg)
+}
+func (b *Bus) BindRequestEvent(id interface{}, fn func(b *Bus, msg *world.Message)) {
+	b.RequestEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b, data.(*world.Message))
+		},
+	)
+}
 func (b *Bus) RaiseBroadcastEvent(bc *world.Broadcast) {
 	b.BroadcastEvent.Raise(bc)
 }

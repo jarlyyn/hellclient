@@ -102,6 +102,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	jp.Runtime.Set("world", world)
 	AppendToWorld(jp.Runtime, world, "print", a.Print)
 	AppendToWorld(jp.Runtime, world, "Note", a.Note)
+
 	AppendToWorld(jp.Runtime, world, "SendImmediate", a.SendImmediate)
 	AppendToWorld(jp.Runtime, world, "Send", a.Send)
 	AppendToWorld(jp.Runtime, world, "SendNoEcho", a.SendNoEcho)
@@ -230,6 +231,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 
 	AppendToWorld(jp.Runtime, world, "Broadcast", a.Broadcast)
 	AppendToWorld(jp.Runtime, world, "Notify", a.Notify)
+	AppendToWorld(jp.Runtime, world, "Request", a.Request)
 
 	AppendToWorld(jp.Runtime, world, "GetGlobalOption", a.GetGlobalOption)
 
@@ -251,9 +253,14 @@ func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	a.API.Note(strings.Join(msg, " "))
 	return goja.Null()
 }
+func (a *jsapi) Request(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	msgtype := call.Argument(0).String()
+	msg := call.Argument(1).String()
+	id := a.API.Request(msgtype, msg)
+	return r.ToValue(id)
+}
 func (a *jsapi) Note(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	info := call.Argument(0).String()
-
 	a.API.Note(info)
 	return goja.Null()
 }
