@@ -53,3 +53,8 @@ func SendPrompt(b *bus.Bus, script string, title string, intro string, value str
 	return ui
 
 }
+
+func HideAll(b *bus.Bus) {
+	ui := CreateUserInput(NameHideall, "", nil)
+	b.RaiseScriptMessageEvent(ui)
+}

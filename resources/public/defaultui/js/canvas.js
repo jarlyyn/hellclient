@@ -124,7 +124,7 @@ define(function (require) {
         return result
     }
     var Drawline = function (line) {
-        var result = RenderLine(line,false,true)
+        var result = RenderLine(line,false,false)
         result.forEach(function (line) {
             Lines.push(line)
         })

@@ -179,6 +179,10 @@ type Userinput struct {
 	bus *bus.Bus
 }
 
+func (u *Userinput) HideAll(L *lua.LState) int {
+	userinput.HideAll(u.bus)
+	return 0
+}
 func (u *Userinput) NewVisualPrompt(L *lua.LState) int {
 	_ = L.Get(1) //this
 	vp := &VisualPrompt{
@@ -234,6 +238,7 @@ func (u *Userinput) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("newlist", L.NewFunction(u.NewList))
 	t.RawSetString("newdatagrid", L.NewFunction(u.NewDatagrid))
 	t.RawSetString("newvisualprompt", L.NewFunction(u.NewVisualPrompt))
+	t.RawSetString("hideall", L.NewFunction(u.HideAll))
 	return t
 }
 func NewUserinputModule(b *bus.Bus) *herbplugin.Module {

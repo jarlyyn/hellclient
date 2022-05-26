@@ -172,6 +172,10 @@ type Userinput struct {
 	bus *bus.Bus
 }
 
+func (u *Userinput) HideAll(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	userinput.HideAll(u.bus)
+	return nil
+}
 func (u *Userinput) NewVisualPrompt(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	vp := &VisualPrompt{
 		VisualPrompt: userinput.CreateVisualPrompt(call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String()),
@@ -214,6 +218,7 @@ func (u *Userinput) Convert(r *goja.Runtime) goja.Value {
 	obj.Set("newlist", u.NewList)
 	obj.Set("newdatagrid", u.NewDatagrid)
 	obj.Set("newvisualprompt", u.NewVisualPrompt)
+	obj.Set("hideall", u.HideAll)
 	return obj
 }
 func NewUserinputModule(b *bus.Bus) *herbplugin.Module {

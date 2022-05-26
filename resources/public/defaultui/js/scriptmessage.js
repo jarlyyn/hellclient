@@ -5,6 +5,11 @@ define(function (require) {
     var _=require("lodash")
     var handlers=app.onScriptMessage;
     var send=app.send;
+    handlers["userinput.hideall"]=function(data){
+        vm.userinputListVisible=false
+        vm.userinputDatagridVisible=false
+        vm.visualPromptVisible=false
+    }
     handlers["userinput.prompt"]=function(data){
         var msgbody=data.Data
         if (msgbody==undefined){

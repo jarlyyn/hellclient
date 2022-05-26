@@ -244,6 +244,32 @@ local vp=Userinput:newvisualprompt("test data visualprompt","A test data grid","
 
 新可视化输入对象
 
+## Userinput.hideall
+
+隐藏界面UI
+
+### 描述
+
+隐藏界面的UI
+
+由于confirm,Alert,promot属于弹框，所以调用该方法后不保证会关闭，这个取决于实际前端的实现
+
+List,Datagrid,VirualPrompt的操作界面会进行隐藏
+
+### 代码范例
+Javascript
+```
+Userinput.hideall()
+```
+
+Lua
+```
+Userinput.hideall()
+```
+
+### 返回值
+
+无
 ## List.append
 
 列表追加

@@ -204,6 +204,7 @@
 * [Userinput.newlist 新建列表](apiuserinput.md#Userinputnewlist)
 * [Userinput.newdatagrid 新建数据表格](apiuserinput.md#Userinputnewdatagrid)
 * [Userinput.newvisualprompt 新建可视化输入](apiuserinput.md#Userinputnewvisualprompt)
+* [Userinput.hideall 隐藏界面UI](apiuserinput.md#hideall)
 * [List.append 列表追加](apiuserinput.md#Listappend)
 * [List.setmutli 列表设置多选](apiuserinput.md#Listsetmutli)  
 * [List.setvalue 列表设置值](apiuserinput.md#Listsetvalue)

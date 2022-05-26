@@ -9,4 +9,5 @@ const (
 	NameDatagrid     = "userinput.datagrid"
 	NameHideDatagrid = "userinput.hidedatagrid"
 	NameVisualPrompt = "userinput.visualprompt"
+	NameHideall      = "userinput.hideall"
 )
