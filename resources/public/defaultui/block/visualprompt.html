@@ -2,7 +2,7 @@
   <div slot="title">
     <span class="el-dialog__title">{{visualPrompt.Data.Title}}</span>
     <el-tooltip v-if="visualPrompt.Data.RefreshCallback" class="item" effect="light" content="刷新"  placement="bottom">
-    <el-button  @click="onButton('visualPromptRefresh')" type="text" icon="el-icon-refresh" type="success" size="mini" circle></el-button>
+    <el-button  @click="onButton('visualPromptRefresh')" type="text" icon="el-icon-refresh" type="success" size="mini" circle>刷新</el-button>
     </el-tooltip>
   </div>
         <div :class="'media '+ (visualPrompt.Data.Portrait?'portrait':'landscape')">

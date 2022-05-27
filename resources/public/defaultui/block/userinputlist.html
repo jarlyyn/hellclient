@@ -2,7 +2,7 @@
   direction="btt" :close="onUserinputListClose">
 
   <div id="userinput-list-body">
-    <span>{{userinputList.Data.Intro}}</span>
+    <span class="intro">{{userinputList.Data.Intro}}</span>
     <div v-show="!userinputList.Data.Mutli">
       <el-table
         :data="userinputList.Data.Items.filter(data => !userinputListSearch || data.Value.toLowerCase().includes(userinputListSearch.toLowerCase()))"
