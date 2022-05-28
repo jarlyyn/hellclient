@@ -64,6 +64,7 @@ type Bus struct {
 	GetTrusted                func() *herbplugin.Trusted
 	RequestTrustDomains       func(*world.Authorization)
 	GetPluginOptions          func() herbplugin.Options
+	DoReloadPermissions       func()
 	DoSendToConn              func(cmd []byte)
 	DoSend                    func(*world.Command)
 	DoSendToQueue             func(*world.Command)

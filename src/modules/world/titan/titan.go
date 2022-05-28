@@ -865,6 +865,7 @@ func (t *Titan) HandleCmdAuthorized(id string) {
 		trusted := w.GetTrusted()
 		a.Permissions = append([]string{}, p...)
 		a.Domains = append([]string{}, trusted.Domains...)
+		go w.DoReloadPermissions()
 		msg.PublishAuthorized(t, id, a)
 	}
 }

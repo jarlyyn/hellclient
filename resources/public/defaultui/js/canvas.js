@@ -113,6 +113,9 @@ define(function (require) {
                 }
                 ctx.fillStyle = settings[word.Color] || color
                 ctx.font = word.Bold ? settings.fontbold : settings.font
+                if (word.Blinking){
+                    ctx.font=settings.fontblinking
+                }
                 ctx.fillText(char, l.Position, settings.middleline)
                 l.Position += width
                 if (l.Position >= settings.linewidth && nocr) {

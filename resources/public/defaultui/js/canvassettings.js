@@ -5,6 +5,7 @@ define(function (require) {
     var maxlines = 60
     var font = "14px monospace"
     var fontbold= "bold 14px monospace"
+    var fontblinking= "italic 14px monospace"
     var background = "#000000"
     var color = "#ffffff"
     var Black = "rgb(0,0,0)"
@@ -62,6 +63,7 @@ define(function (require) {
         maxlines: maxlines,
         font: font,
         fontbold:fontbold,
+        fontblinking:fontblinking,
         background: background,
         color: color,
         Black: Black,

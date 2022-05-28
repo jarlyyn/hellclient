@@ -29,6 +29,7 @@ type Script struct {
 	Data          *world.ScriptData
 	Mapper        *mapper.Mapper
 	engine        Engine
+	Options       herbplugin.Options
 }
 type ScriptOptions struct {
 	Home string
@@ -63,20 +64,28 @@ func (s *Script) decodeScript(data []byte) error {
 	s.Data = scriptdata
 	return nil
 }
-
-func (s *Script) PluginOptions(b *bus.Bus) herbplugin.Options {
-	home := b.GetScriptHome()
+func (s *Script) ReloadPermissions(b *bus.Bus) {
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
+	s.reloadPermissions(b)
+}
+func (s *Script) reloadPermissions(b *bus.Bus) {
+
 	opt := herbplugin.NewOptions()
 	opt.Location.Path = path.Join(b.GetScriptPath(), b.GetScriptID(), "script")
 	opt.Trusted = b.GetTrusted()
 	opt.Permissions = b.GetPermissions()
-	so := &ScriptOptions{
-		PlainOptions: opt,
-		Home:         home,
+	s.Options = opt
+}
+func (s *Script) PluginOptions(b *bus.Bus) herbplugin.Options {
+	home := b.GetScriptHome()
+	s.Locker.Lock()
+	defer s.Locker.Unlock()
+	s.Options = &ScriptOptions{
+		Home: home,
 	}
-	return so
+	s.reloadPermissions(b)
+	return s.Options
 }
 
 func (s *Script) ScriptData(b *bus.Bus) *world.ScriptData {
@@ -410,6 +419,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.DoSendBroadcastToScript = b.WrapHandleBroadcast(s.SendBroadcast)
 	b.DoSendCallbackToScript = b.WrapHandleCallback(s.SendCallback)
 	b.DoSendResponseToScript = b.WrapHandleResponse(s.SendResponse)
+	b.DoReloadPermissions = b.Wrap(s.ReloadPermissions)
 	b.DoRunScript = b.WrapHandleString(s.Run)
 	b.GetStatus = s.GetStatus
 	b.SetStatus = b.WrapHandleString(s.SetStatus)
