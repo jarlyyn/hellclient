@@ -29,7 +29,7 @@ type Script struct {
 	Data          *world.ScriptData
 	Mapper        *mapper.Mapper
 	engine        Engine
-	Options       herbplugin.Options
+	Options       *ScriptOptions
 }
 type ScriptOptions struct {
 	Home string
@@ -75,7 +75,7 @@ func (s *Script) reloadPermissions(b *bus.Bus) {
 	opt.Location.Path = path.Join(b.GetScriptPath(), b.GetScriptID(), "script")
 	opt.Trusted = b.GetTrusted()
 	opt.Permissions = b.GetPermissions()
-	s.Options = opt
+	s.Options.PlainOptions = opt
 }
 func (s *Script) PluginOptions(b *bus.Bus) herbplugin.Options {
 	home := b.GetScriptHome()

@@ -832,6 +832,7 @@ func (t *Titan) HandleCmdRequestPermissions(a *world.Authorization) {
 			items = append(items, authed)
 		}
 		w.SetPermissions(items)
+		w.DoReloadPermissions()
 		if a.Script != "" {
 			go w.DoRunScript(a.Script)
 		}
@@ -852,6 +853,7 @@ func (t *Titan) HandleCmdRequestTrustDomains(a *world.Authorization) {
 			trusted.Domains = append(trusted.Domains, authed)
 		}
 		w.SetTrusted(trusted)
+		w.DoReloadPermissions()
 		if a.Script != "" {
 			go w.DoRunScript(a.Script)
 		}
@@ -876,6 +878,7 @@ func (t *Titan) HandleCmdRevokeAuthorized(id string) {
 		trusted := w.GetTrusted()
 		trusted.Domains = []string{}
 		w.SetTrusted(trusted)
+		w.DoReloadPermissions()
 		msg.PublishAuthorized(t, id, world.NewAuthorized())
 	}
 }
