@@ -29,6 +29,10 @@ func (p *VisualPrompt) SetRefreshCallback(L *lua.LState) int {
 	p.VisualPrompt.SetRefreshCallback(L.ToString((1)))
 	return 0
 }
+func (p *VisualPrompt) Append(L *lua.LState) int {
+	p.VisualPrompt.Append(L.ToString(1), L.ToString(2))
+	return 0
+}
 func (p *VisualPrompt) Publish(L *lua.LState) int {
 	if p.VisualPrompt.IsURL() {
 		u, err := url.Parse(p.VisualPrompt.Source)
@@ -48,6 +52,7 @@ func (p *VisualPrompt) Convert(L *lua.LState) lua.LValue {
 	t := L.NewTable()
 	t.RawSetString("setmediatype", L.NewFunction(p.SetMediaType))
 	t.RawSetString("setportrait", L.NewFunction(p.SetPortrait))
+	t.RawSetString("append", L.NewFunction(p.Append))
 	t.RawSetString("setrefreshcallback", L.NewFunction(p.SetRefreshCallback))
 	t.RawSetString("publish", L.NewFunction(p.Publish))
 	return t

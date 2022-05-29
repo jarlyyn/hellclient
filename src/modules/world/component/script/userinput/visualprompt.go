@@ -12,6 +12,7 @@ type VisualPrompt struct {
 	Intro           string
 	Source          string
 	MediaType       string
+	Items           []*Item
 	Portrait        bool
 	RefreshCallback string
 }
@@ -28,6 +29,9 @@ func (p *VisualPrompt) SetPortrait(v bool) {
 }
 func (p *VisualPrompt) SetRefreshCallback(c string) {
 	p.RefreshCallback = c
+}
+func (p *VisualPrompt) Append(key string, value string) {
+	p.Items = append(p.Items, &Item{Key: key, Value: value})
 }
 func (p *VisualPrompt) Publish(b *bus.Bus, script string) *Userinput {
 	ui := CreateUserInput(NameVisualPrompt, script, p)

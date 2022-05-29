@@ -15,9 +15,22 @@
         </ul>          </div>
         </div>
         <div class="intro">{{visualPrompt.Data.Intro}}</div>
-        <el-input v-model="visualPrompt.Data.Value"></el-input>
+        <el-input v-if="visualPrompt.Data.Items==null || visualPrompt.Data.Items.length==0" v-model="visualPrompt.Data.Value"></el-input>
+        <el-table v-else
+        :data="visualPrompt.Data.Items"
+        style="width: 100%">
+        <el-table-column width="80px">
+          <template slot-scope="scope">
+            <el-button size="mini" type="success" @click="handleSelectVisualPromptList(scope.$index, scope.row)">选择
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="" prop="Value">
+        </el-table-column>
+      </el-table>
+
         <div slot="footer" class="dialog-footer">
           <el-button @click="visualPromptVisible = false">取 消</el-button>
-          <el-button type="primary" @click="onButton('visualPromptSubmit')">确 定</el-button>
+          <el-button type="primary" @click="onButton('visualPromptSubmit')" v-if="visualPrompt.Data.Items==null || visualPrompt.Data.Items.length==0">确 定</el-button>
         </div>
       </el-dialog>              

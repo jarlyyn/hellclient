@@ -29,6 +29,10 @@ func (p *VisualPrompt) SetRefreshCallback(call goja.FunctionCall, r *goja.Runtim
 	p.VisualPrompt.SetRefreshCallback(call.Argument(0).String())
 	return nil
 }
+func (p *VisualPrompt) Append(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	p.VisualPrompt.Append(call.Argument(0).String(), call.Argument(1).String())
+	return nil
+}
 func (p *VisualPrompt) Publish(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	if p.VisualPrompt.IsURL() {
 		u, err := url.Parse(p.VisualPrompt.Source)
@@ -47,6 +51,7 @@ func (p *VisualPrompt) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("setmediatype", p.SetMediaType)
 	obj.Set("setportrait", p.SetPortrait)
+	obj.Set("append", p.Append)
 	obj.Set("setrefreshcallback", p.SetRefreshCallback)
 	obj.Set("publish", p.Publish)
 	return obj

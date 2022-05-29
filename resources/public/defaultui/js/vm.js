@@ -289,6 +289,11 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
             gamelistRowClassName: function (data) {
                 return data.row.Running ? "game-list-running" : "game-list-not-running"
             },
+            handleSelectVisualPromptList:function (index, row) {
+                this.callback(this.visualPrompt, 0, row.Key)
+                vm.visualPrompt = null
+                vm.visualPromptVisible = false
+            },
             handleSelectUserinputList: function (index, row) {
                 this.callback(this.userinputList, 0, row.Key)
                 vm.userinputList = null
