@@ -1,6 +1,9 @@
 package userinput
 
-import "hellclient/modules/world/bus"
+import (
+	"hellclient/modules/world/bus"
+	"strings"
+)
 
 const MediaTypeImage = "image"
 
@@ -13,6 +16,10 @@ type VisualPrompt struct {
 	RefreshCallback string
 }
 
+func (p *VisualPrompt) IsURL() bool {
+	t := strings.ToLower(p.MediaType)
+	return t == "" || t == "image"
+}
 func (p *VisualPrompt) SetMediaType(t string) {
 	p.MediaType = t
 }

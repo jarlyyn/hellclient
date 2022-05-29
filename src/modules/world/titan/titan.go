@@ -434,6 +434,7 @@ func (t *Titan) HandleCmdAliases(id string, byuser bool) {
 	w := t.World(id)
 	if w != nil {
 		aliases := w.GetAliasesByType(byuser)
+		sort.Sort(world.Aliases(aliases))
 		if byuser {
 			msg.PublishUserAliases(t, id, aliases)
 		} else {
@@ -489,6 +490,7 @@ func (t *Titan) HandleCmdTriggers(id string, byuser bool) {
 	w := t.World(id)
 	if w != nil {
 		triggers := w.GetTriggersByType(byuser)
+		sort.Sort(world.Triggers(triggers))
 		if byuser {
 			msg.PublishUserTriggers(t, id, triggers)
 		} else {
@@ -546,6 +548,7 @@ func (t *Titan) HandleCmdTimers(id string, byuser bool) {
 	w := t.World(id)
 	if w != nil {
 		timers := w.GetTimersByType(byuser)
+		sort.Sort(world.Timers(timers))
 		if byuser {
 			msg.PublishUserTimers(t, id, timers)
 		} else {

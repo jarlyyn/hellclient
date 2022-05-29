@@ -243,6 +243,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "Encrypt", a.Encrypt)
 	AppendToWorld(jp.Runtime, world, "Decrypt", a.Decrypt)
 
+	AppendToWorld(jp.Runtime, world, "DumpOutput", a.DumpOutput)
 }
 
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1172,6 +1173,13 @@ func (a *jsapi) Decrypt(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	}
 	return r.ToValue(*result)
 }
+
+func (a *jsapi) DumpOutput(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	length := int(call.Argument(0).ToInteger())
+	offset := int(call.Argument(1).ToInteger())
+	return r.ToValue(a.API.DumpOutput(length, offset))
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

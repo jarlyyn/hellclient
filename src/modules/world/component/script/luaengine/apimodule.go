@@ -211,6 +211,8 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("Encrypt", l.NewFunction(a.Encrypt))
 	l.SetGlobal("Decrypt", l.NewFunction(a.Decrypt))
 
+	l.SetGlobal("DumpOutput", l.NewFunction(a.DumpOutput))
+
 }
 
 func (a *luaapi) Milliseconds(L *lua.LState) int {
@@ -1338,6 +1340,13 @@ func (a *luaapi) Decrypt(L *lua.LState) int {
 	} else {
 		L.Push(lua.LString(*result))
 	}
+	return 1
+}
+
+func (a *luaapi) DumpOutput(L *lua.LState) int {
+	length := L.ToInt(1)
+	offset := L.ToInt(2)
+	L.Push(lua.LString(a.API.DumpOutput(length, offset)))
 	return 1
 }
 

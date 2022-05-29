@@ -30,12 +30,14 @@ func (p *VisualPrompt) SetRefreshCallback(L *lua.LState) int {
 	return 0
 }
 func (p *VisualPrompt) Publish(L *lua.LState) int {
-	u, err := url.Parse(p.VisualPrompt.Source)
-	if err != nil {
-		panic(err)
-	}
-	if !p.bus.GetPluginOptions().MustAuthorizeDomain(u.Host) {
-		panic(herbplugin.NewUnauthorizeDomainError(u.Host))
+	if p.VisualPrompt.IsURL() {
+		u, err := url.Parse(p.VisualPrompt.Source)
+		if err != nil {
+			panic(err)
+		}
+		if !p.bus.GetPluginOptions().MustAuthorizeDomain(u.Host) {
+			panic(herbplugin.NewUnauthorizeDomainError(u.Host))
+		}
 	}
 	ui := p.VisualPrompt.Publish(p.bus, L.ToString((1)))
 	L.Push(lua.LString(ui.ID))

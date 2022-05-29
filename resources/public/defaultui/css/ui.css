@@ -2,9 +2,9 @@
 body{text-size-adjust: none;background: black;color:white;font-family: monospace;margin:0;padding:0;visibility: hidden;overflow-y: hidden;}
 #world{overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
 ul,li{padding:0;margin:0;list-style: none}
-ul#lines,ul#alllines{white-space: pre;font-family: monospace;}
-ul#alllines{background: black;padding:0;margin:0;color:white}
-ul#lines li,ul#alllines li{max-width: 80em;overflow: hidden;}
+ul#lines,ul#alllines,ul#visualPrompt-alllines{white-space: pre;font-family: monospace;}
+ul#visualPrompt-alllines,ul#alllines{background: black;padding:0;margin:0;color:white}
+ul#visualPrompt-alllines li,ul#lines li,ul#alllines li{max-width: 80em;overflow: hidden;}
 ul#lines{padding-bottom: 60px;margin-bottom:-32px;padding-top: 110px;padding-left:0;}
 #footer{position: fixed;bottom:0;height: 32px;left:0;width:100%;background:black}
 #user-input{height: 32px;padding-left: 8em;padding-right:8em;position: relative;}
@@ -92,7 +92,7 @@ html body .el-table .game-list-not-running{
     margin-top: 0.5em;
     text-align: right;
 }
-
+#visualPrompt .el-dialog{min-width: 900px}
 #visualPrompt .media.landscape .image img{
     width: 90%;
     display: block;

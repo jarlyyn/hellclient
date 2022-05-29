@@ -85,6 +85,12 @@ define(function (require) {
     }
     handlers["userinput.visualprompt"]=function(data){
         vm.visualPrompt=data
+        switch (vm.visualPrompt.Data.MediaType){
+            case "output":
+                vm.visualPrompt.Data.Output=JSON.parse(vm.visualPrompt.Data.Source)
+                vm.visualPrompt.Data.Source=""
+                break
+        }
         vm.visualPromptVisible=true    
     }  
     

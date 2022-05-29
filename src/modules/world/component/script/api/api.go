@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"hellclient/modules/notifier"
 	"hellclient/modules/version"
@@ -1178,4 +1179,22 @@ func (a *API) Request(reqtype string, data string) string {
 		a.Bus.DoPrintRequest(msg.Desc())
 	}
 	return msg.ID
+}
+
+func (a *API) DumpOutput(length int, offset int) string {
+	if length < 0 {
+		length = 0
+	}
+	if offset < 0 {
+		offset = 0
+	}
+	line := a.Bus.GetRecentLines(offset + length)
+	if offset > len(line) {
+		offset = len(line)
+	}
+	data, err := json.Marshal(line[offset:])
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
 }
