@@ -214,6 +214,118 @@ local data=ReadHomeLines("mydata.txt")
 
 字符串列表
 
+## HasModFile
+
+检查模组文件
+
+### 原型
+```
+HasModFile(name string) bool
+```
+
+### 描述
+
+判断指定的模组文件是否存在
+
+* name 以脚本模组目录为基准的文件位置
+
+如果文件在脚本模组目录范围外，会报告错误
+  
+如果有任何其他错误，认为文件不存在
+
+如果游戏没有开启模组功能，则返回False
+### 代码范例
+
+Javascript
+```
+var exists=world.HasModFile("myfile")
+```
+
+Lua
+```
+local exists=HasModFile("myfile")
+```
+
+### 返回值
+
+布尔值
+
+## ReadModFile
+
+读取模组文件
+
+### 原型
+```
+ReadModFile(name string) string
+```
+
+### 描述
+
+读取给定模组文件的文件内容
+
+* name 以脚本模组目录为基准的文件位置
+
+
+如果文件位置在授权范围外，将会报错
+
+其他的文件操作错误也会报错
+
+如果游戏没有开启模组功能，会报错。
+
+
+### 代码范例
+
+Javascript
+```
+var data=world.ReadModFile("mydata.txt")
+```
+
+Lua
+```
+local data=ReadModFile("mydata.txt")
+```
+
+### 返回值
+
+文件内容
+
+
+## ReadModLines
+
+读取脚本模组文件并分行
+
+### 原型
+```
+ReadModLines(name string) []string
+```
+
+### 描述
+
+读取给定模组文件的文件内容，并以\n为分割符分割为字符串列表
+
+* name 以脚本模组目录为基准的文件位置
+
+
+如果文件位置在授权范围外，将会报错
+
+其他的文件操作错误也会报错
+
+如果游戏没有开启模组功能，会报错。
+### 代码范例
+Javascript
+```
+var data=world.ReadModLines("mydata.txt")
+```
+
+Lua
+```
+local data=ReadModLines("mydata.txt")
+```
+
+### 返回值
+
+字符串列表
+
 ## WriteLog
 
 写入日志
