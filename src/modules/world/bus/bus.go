@@ -56,6 +56,7 @@ type Bus struct {
 	SetScriptID               func(string)
 	GetScriptType             func() string
 	GetScriptPath             func() string
+	GetModPath                func() string
 	GetScriptModPath          func() string
 	GetLogsPath               func() string
 	GetSkeletonPath           func() string

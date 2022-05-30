@@ -16,6 +16,7 @@ const Ext = ".toml"
 
 const ScriptsFolder = "/game/scripts"
 const LogsFolder = "/game/logs"
+const ModsFolder = "/game/mods"
 
 const GamePrefix = "/game/"
 const GameFolder = "game"
@@ -27,6 +28,7 @@ func CreatePangu() {
 	Pangu.Path = util.AppData(WorldsFolder)
 	Pangu.Scriptpath = util.AppData(ScriptsFolder)
 	Pangu.Logpath = util.AppData(LogsFolder)
+	Pangu.Modpath = util.AppData(ModsFolder)
 	Pangu.Skeletonpath = util.AppData(SkeletonsFolder)
 	Pangu.MaxHistory = app.System.MaxHistory
 	if Pangu.MaxHistory <= 0 {
@@ -47,6 +49,7 @@ func CreatePangu() {
 	os.MkdirAll(Pangu.Path, util.DefaultFolderMode)
 	os.MkdirAll(Pangu.Scriptpath, util.DefaultFolderMode)
 	os.MkdirAll(Pangu.Logpath, util.DefaultFolderMode)
+	os.MkdirAll(Pangu.Modpath, util.DefaultFolderMode)
 
 }
 

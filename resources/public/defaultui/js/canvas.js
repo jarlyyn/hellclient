@@ -107,11 +107,18 @@ define(function (require) {
                     l = createLine(line.ID, index)
                     ctx = l.Canvas.getContext('2d')
                 }
-                if (word.Background) {
-                    ctx.fillStyle = settings[word.Background] || settings.background
+                let bgcolor=word.Background?word.Background:settings.background
+                let fontcolor=settings[word.Color] || color
+                if (word.Inverse){
+                    let c=fontcolor
+                    fontcolor=bgcolor
+                    bgcolor=c
+                }
+                if (bgcolor) {
+                    ctx.fillStyle = bgcolor
                     ctx.fillRect(l.Position, 0, width, settings.lineheight)
                 }
-                ctx.fillStyle = settings[word.Color] || color
+                ctx.fillStyle = fontcolor
                 ctx.font = word.Bold ? settings.fontbold : settings.font
                 if (word.Blinking){
                     ctx.font=settings.fontblinking

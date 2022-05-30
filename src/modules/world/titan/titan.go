@@ -344,6 +344,8 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindRequestEvent(t, t.onRequest)
 	b.BindScriptMessageEvent(t, t.onScriptMessage)
 	b.GetScriptPath = t.GetScriptPath
+	b.GetModPath = t.GetModPath
+
 	b.GetLogsPath = t.GetLogsPath
 	b.GetSkeletonPath = t.GetSkeletonPath
 	b.GetScriptHome = b.WrapGetString(t.GetScriptHome)
@@ -607,6 +609,9 @@ func (t *Titan) GetSkeletonPath() string {
 }
 func (t *Titan) GetScriptPath() string {
 	return t.Scriptpath
+}
+func (t *Titan) GetModPath() string {
+	return t.Modpath
 }
 func (t *Titan) GetLogsPath() string {
 	return t.Logpath

@@ -33,6 +33,7 @@
 .words .BG-Bright-Cyan{background:rgb(0,255,255)}
 .words .BG-Bright-White{background:rgb(255,255,255)}
 
+.words .inverse.BG-{color:rgb(0,0,0)}
 .words .inverse.BG-Black{color:rgb(0,0,0)}
 .words .inverse.BG-Red{color:rgb(127,0,0)}
 .words .inverse.BG-Green{color:rgb(0,147,0)}
