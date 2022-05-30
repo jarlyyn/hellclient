@@ -1346,7 +1346,8 @@ func (a *luaapi) Decrypt(L *lua.LState) int {
 func (a *luaapi) DumpOutput(L *lua.LState) int {
 	length := L.ToInt(1)
 	offset := L.ToInt(2)
-	L.Push(lua.LString(a.API.DumpOutput(length, offset)))
+	prerry := L.ToBool(3)
+	L.Push(lua.LString(a.API.DumpOutput(length, offset, prerry)))
 	return 1
 }
 

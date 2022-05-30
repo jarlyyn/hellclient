@@ -6,12 +6,12 @@ import (
 	"github.com/jarlyyn/ansi"
 )
 
-func ConvertToLine(msg []byte, charset string, errhandler func(err error) bool) *world.Line {
+func ConvertToLine(last *world.Word, msg []byte, charset string, errhandler func(err error) bool) (*world.Line, *world.Word) {
 	line := world.NewLine()
 	if len(msg) == 0 {
-		return line
+		return line, last
 	}
-	w := world.Word{}
+	w := last.Inherit()
 	var s *ansi.S
 	var err error
 	var b []byte
@@ -26,14 +26,14 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error) bool) 
 				}
 				w.Text = string(b)
 				line.Append(w)
-				w = world.Word{}
+				w = &world.Word{}
 			} else if s.Type == "CSI" {
 				for _, v := range s.Params {
 					switch v {
 					case "0":
 						{
 							w.Color = ""
-							w.Background = "BG-"
+							w.Background = ""
 							w.Bold = false
 						}
 					case "1":
@@ -102,35 +102,35 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error) bool) 
 						}
 					case "40":
 						{
-							w.Background = "BG-Black"
+							w.Background = "Black"
 						}
 					case "41":
 						{
-							w.Background = "BG-Red"
+							w.Background = "Red"
 						}
 					case "42":
 						{
-							w.Background = "BG-Green"
+							w.Background = "Green"
 						}
 					case "43":
 						{
-							w.Background = "BG-Yellow"
+							w.Background = "Yellow"
 						}
 					case "44":
 						{
-							w.Background = "BG-Blue"
+							w.Background = "Blue"
 						}
 					case "45":
 						{
-							w.Background = "BG-Magenta"
+							w.Background = "Magenta"
 						}
 					case "46":
 						{
-							w.Background = "BG-Cyan"
+							w.Background = "Cyan"
 						}
 					case "47":
 						{
-							w.Background = "BG-White"
+							w.Background = "White"
 						}
 					case "90":
 						{
@@ -166,35 +166,35 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error) bool) 
 						}
 					case "100":
 						{
-							w.Background = "BG-Bright-Black"
+							w.Background = "Bright-Black"
 						}
 					case "101":
 						{
-							w.Background = "BG-Bright-Red"
+							w.Background = "Bright-Red"
 						}
 					case "102":
 						{
-							w.Background = "BG-Bright-Green"
+							w.Background = "Bright-Green"
 						}
 					case "103":
 						{
-							w.Background = "BG-Bright-Yellow"
+							w.Background = "Bright-Yellow"
 						}
 					case "104":
 						{
-							w.Background = "BG-Bright-Blue"
+							w.Background = "Bright-Blue"
 						}
 					case "105":
 						{
-							w.Background = "BG-Bright-Magenta"
+							w.Background = "Bright-Magenta"
 						}
 					case "106":
 						{
-							w.Background = "BG-Bright-Cyan"
+							w.Background = "Bright-Cyan"
 						}
 					case "107":
 						{
-							w.Background = "BG-Bright-White"
+							w.Background = "Bright-White"
 						}
 					case "256":
 						line = world.NewLine()
@@ -207,9 +207,9 @@ func ConvertToLine(msg []byte, charset string, errhandler func(err error) bool) 
 		}
 		if err != nil {
 			if !errhandler(err) {
-				return nil
+				return nil, w
 			}
 		}
 	}
-	return line
+	return line, w
 }

@@ -8,6 +8,7 @@ import (
 
 type Converter struct {
 	Lock sync.RWMutex
+	Last *world.Word
 }
 
 func nopOnError(err error) bool {
@@ -29,12 +30,16 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 }
 
 func (c *Converter) onPrompt(bus *bus.Bus, msg []byte) {
+	c.Lock.Lock()
+	defer c.Lock.Unlock()
 	line := c.ConvertToLine(bus, msg, nopOnError)
 	if line != nil {
 		bus.RaisePromptEvent(line)
 	}
 }
 func (c *Converter) onMsg(bus *bus.Bus, msg []byte) {
+	c.Lock.Lock()
+	defer c.Lock.Unlock()
 	if len(msg) == 0 {
 		return
 	}
@@ -71,7 +76,7 @@ func (c *Converter) DoPrintEcho(b *bus.Bus, cmd *world.Command) {
 	line.Creator = cmd.Creator
 	line.CreatorType = cmd.CreatorType
 	line.Type = world.LineTypeEcho
-	w := world.Word{
+	w := &world.Word{
 		Text: cmd.Mesasge,
 	}
 	line.Append(w)
@@ -105,7 +110,7 @@ func (c *Converter) DoPrint(b *bus.Bus, msg string) {
 func (c *Converter) print(b *bus.Bus, linetype int, msg string) {
 	line := world.NewLine()
 	line.Type = linetype
-	w := world.Word{
+	w := &world.Word{
 		Text: msg,
 	}
 	line.Append(w)
@@ -114,7 +119,9 @@ func (c *Converter) print(b *bus.Bus, linetype int, msg string) {
 }
 func (c *Converter) ConvertToLine(bus *bus.Bus, msg []byte, onError func(err error) bool) *world.Line {
 	charset := bus.GetCharset()
-	return ConvertToLine(msg, charset, onError)
+	l, last := ConvertToLine(c.Last, msg, charset, onError)
+	c.Last = last
+	return l
 }
 
 func New() *Converter {

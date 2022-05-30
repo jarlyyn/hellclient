@@ -294,3 +294,113 @@ Note (GetStyleInfo (100, 2, 14))
 ### 返回值
 
 见描述
+
+## DumpOutput
+
+导出输出
+### 原型
+
+```
+DumpOutput(length int, offset int, pretty bool) string
+```
+
+### 描述
+
+将屏幕指定行数的输出导出到字符串变量内。
+
+与GetRecentLines的区别是取得的是JSON序列化后的数据，可以用于直接分析，也可以在Userinput的VisualPrompt中以output的Mediatype直接显示。
+
+* length 整数,总计返回的行数,小于0当作0处理
+* offset 整数,跳开多少行开始导出，小于0当作0处理
+* pretty 布尔值，是否格式化输出
+
+能获取的文字上限为100行
+
+### 代码范例
+
+Javascript
+```
+world.Note(world.DumpOutput(10,2,true))
+```
+
+Lua
+```
+Note(DumpOutput(10,2,true))
+```
+
+### 返回值
+
+字符串化的Line数组
+
+[Line结构](../struct/line.md)
+
+范例为
+
+```json
+[
+ {
+  "Words": [
+   {
+    "Text": "目前的字符集是简体，请输入GB/BIG5改变字符集，或直接登录用户。",
+    "Color": "",
+    "Background": "",
+    "Bold": false,
+    "Underlined": false,
+    "Blinking": false,
+    "Inverse": false
+   }
+  ],
+  "ID": "d1dsufeg15qrdu71tgt3kp",
+  "Time": 1653893585,
+  "Type": 2,
+  "OmitFromLog": false,
+  "OmitFromOutput": false,
+  "Triggers": [
+   "on_global"
+  ],
+  "CreatorType": "",
+  "Creator": ""
+ },
+ {
+  "Words": [
+   {
+    "Text": "请输入您的英文名字(",
+    "Color": "",
+    "Background": "",
+    "Bold": false,
+    "Underlined": false,
+    "Blinking": false,
+    "Inverse": false
+   },
+   {
+    "Text": "忘记密码请输入「pass」",
+    "Color": "Cyan",
+    "Background": "",
+    "Bold": false,
+    "Underlined": false,
+    "Blinking": false,
+    "Inverse": false
+   },
+   {
+    "Text": ")：",
+    "Color": "",
+    "Background": "",
+    "Bold": false,
+    "Underlined": false,
+    "Blinking": false,
+    "Inverse": false
+   }
+  ],
+  "ID": "d1dsufeg16eibl71tgt3kq",
+  "Time": 1653893585,
+  "Type": 2,
+  "OmitFromLog": false,
+  "OmitFromOutput": false,
+  "Triggers": [
+   "on_global"
+  ],
+  "CreatorType": "",
+  "Creator": ""
+ }
+]
+```

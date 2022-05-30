@@ -16,6 +16,20 @@ type Word struct {
 	Inverse    bool
 }
 
+func (w *Word) Inherit() *Word {
+	if w == nil {
+		return &Word{}
+	}
+	return &Word{
+		Text:       "",
+		Color:      w.Color,
+		Background: w.Background,
+		Bold:       w.Bold,
+		Underlined: w.Underlined,
+		Blinking:   w.Blinking,
+		Inverse:    w.Inverse,
+	}
+}
 func (w *Word) GetColorRGB() int {
 	return Colours[w.Color]
 }
@@ -23,20 +37,41 @@ func (w *Word) GetBGColorRGB() int {
 	return Colours[w.Background]
 }
 
+//通过Print打印
 const LineTypePrint = 0
+
+//系统信息
 const LineTypeSystem = 1
+
+//收到的真实信息
 const LineTypeReal = 2
+
+//输入回显
 const LineTypeEcho = 3
+
+//输入行类型
 const LineTypePrompt = 4
+
+//发出的本地广播
 const LineTypeLocalBroadcastOut = 5
+
+//发出的全局广播
 const LineTypeGlobalBroadcastOut = 6
+
+//收到的本地广播
 const LineTypeLocalBroadcastIn = 7
+
+//收到的全局广播
 const LineTypeGlobalBroadcastIn = 8
+
+//Websocket发出的请求的信息
 const LineTypeRequest = 9
+
+//Websocket收到的响应的信息
 const LineTypeResponse = 10
 
 type Line struct {
-	Words          []Word
+	Words          []*Word
 	ID             string
 	Time           int64
 	Type           int
@@ -47,7 +82,7 @@ type Line struct {
 	Creator        string
 }
 
-func (l *Line) Append(w Word) {
+func (l *Line) Append(w *Word) {
 	l.Words = append(l.Words, w)
 }
 func (l *Line) Plain() string {
@@ -84,69 +119,53 @@ func (l *Line) GetWordStartColumn(idx int) int {
 }
 func NewLine() *Line {
 	return &Line{
-		Words: []Word{},
+		Words: []*Word{},
 		ID:    uniqueid.MustGenerateID(),
 		Time:  time.Now().Unix(),
 	}
 }
 
 var Colours = map[string]int{
-	"Black":             0x000000,
-	"Red":               0x7f0000,
-	"Green":             0x009300,
-	"Yellow":            0xfc7f00,
-	"Blue":              0x00007f,
-	"Magenta":           0x9c009c,
-	"Cyan":              0x009393,
-	"White":             0xd2d2d2,
-	"BrightBlack":       0x7f7f7f,
-	"BrightRed":         0xff0000,
-	"BrightGreen":       0x00fc00,
-	"BrightYellow":      0xffff00,
-	"BrightBlue":        0x0000fc,
-	"BrightMagenta":     0xff00ff,
-	"BrightCyan":        0x00ffff,
-	"BrightWhite":       0xffffff,
-	"BGBlack":           0x000000,
-	"BGRed":             0x7f0000,
-	"BGGreen":           0x009300,
-	"BGYellow":          0xfc7f00,
-	"BGBlue":            0x00007f,
-	"BGMagenta":         0x9c009c,
-	"BGCyan":            0x009393,
-	"BGWhite":           0xd2d2d2,
-	"BGBrightBlack":     0x7f7f7f,
-	"BGBrightRed":       0xff0000,
-	"BGBrightGreen":     0x00fc00,
-	"BGBrightYellow":    0xffff00,
-	"BGBrightBlue":      0x0000fc,
-	"BGBrightMagenta":   0xff00ff,
-	"BGBrightCyan":      0x00ffff,
-	"BGBrightWhite":     0xffffff,
-	"Bright-Black":      0x7f7f7f,
-	"Bright-Red":        0xff0000,
-	"Bright-Green":      0x00fc00,
-	"Bright-Yellow":     0xffff00,
-	"Bright-Blue":       0x0000fc,
-	"Bright-Magenta":    0xff00ff,
-	"Bright-Cyan":       0x00ffff,
-	"Bright-White":      0xffffff,
-	"BG-Black":          0x000000,
-	"BG-Red":            0x7f0000,
-	"BG-Green":          0x009300,
-	"BG-Yellow":         0xfc7f00,
-	"BG-Blue":           0x00007f,
-	"BG-Magenta":        0x9c009c,
-	"BG-Cyan":           0x009393,
-	"BG-White":          0xd2d2d2,
-	"BG-Bright-Black":   0x7f7f7f,
-	"BG-Bright-Red":     0xff0000,
-	"BG-Bright-Green":   0x00fc00,
-	"BG-Bright-Yellow":  0xffff00,
-	"BG-Bright-Blue":    0x0000fc,
-	"BG-Bright-Magenta": 0xff00ff,
-	"BG-Bright-Cyan":    0x00ffff,
-	"BG-Bright-White":   0xffffff,
+	"Black":           0x000000,
+	"Red":             0x7f0000,
+	"Green":           0x009300,
+	"Yellow":          0xfc7f00,
+	"Blue":            0x00007f,
+	"Magenta":         0x9c009c,
+	"Cyan":            0x009393,
+	"White":           0xd2d2d2,
+	"BrightBlack":     0x7f7f7f,
+	"BrightRed":       0xff0000,
+	"BrightGreen":     0x00fc00,
+	"BrightYellow":    0xffff00,
+	"BrightBlue":      0x0000fc,
+	"BrightMagenta":   0xff00ff,
+	"BrightCyan":      0x00ffff,
+	"BrightWhite":     0xffffff,
+	"BGBlack":         0x000000,
+	"BGRed":           0x7f0000,
+	"BGGreen":         0x009300,
+	"BGYellow":        0xfc7f00,
+	"BGBlue":          0x00007f,
+	"BGMagenta":       0x9c009c,
+	"BGCyan":          0x009393,
+	"BGWhite":         0xd2d2d2,
+	"BGBrightBlack":   0x7f7f7f,
+	"BGBrightRed":     0xff0000,
+	"BGBrightGreen":   0x00fc00,
+	"BGBrightYellow":  0xffff00,
+	"BGBrightBlue":    0x0000fc,
+	"BGBrightMagenta": 0xff00ff,
+	"BGBrightCyan":    0x00ffff,
+	"BGBrightWhite":   0xffffff,
+	"Bright-Black":    0x7f7f7f,
+	"Bright-Red":      0xff0000,
+	"Bright-Green":    0x00fc00,
+	"Bright-Yellow":   0xffff00,
+	"Bright-Blue":     0x0000fc,
+	"Bright-Magenta":  0xff00ff,
+	"Bright-Cyan":     0x00ffff,
+	"Bright-White":    0xffffff,
 }
 var NamedColor = map[string]int{
 	"black":   Colours["Black"],

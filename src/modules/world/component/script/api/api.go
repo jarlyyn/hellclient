@@ -1181,7 +1181,7 @@ func (a *API) Request(reqtype string, data string) string {
 	return msg.ID
 }
 
-func (a *API) DumpOutput(length int, offset int) string {
+func (a *API) DumpOutput(length int, offset int, pretty bool) string {
 	if length < 0 {
 		length = 0
 	}
@@ -1192,7 +1192,14 @@ func (a *API) DumpOutput(length int, offset int) string {
 	if offset > len(line) {
 		offset = len(line)
 	}
-	data, err := json.Marshal(line[offset:])
+	var data []byte
+	var err error
+	if pretty {
+		data, err = json.MarshalIndent(line[offset:], "", " ")
+	} else {
+		data, err = json.Marshal(line[offset:])
+
+	}
 	if err != nil {
 		panic(err)
 	}

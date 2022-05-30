@@ -87,7 +87,7 @@
 .words.request::before{content:"☎请求"}
 .words.response::before{content:"☎响应"}
 
-.words.print{color:mediumspringgreen;    white-space: pre-wrap}
+.words.print{color:mediumspringgreen;    white-space: pre-wrap;word-break: break-all;text-align: justify;}
 .words.print::before{content:"↢";color:green;padding-left: 0.5em}
 .advancemode #alllines .has-trigger::after{content:"⚙" ;color: rgb(0,255,255);padding-left: 0.5em}
 .advancemode #alllines .creator-type-trigger::after{content:"⚙" ;color:rgb(255,255,0);padding-left: 0.5em}

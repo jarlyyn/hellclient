@@ -43,6 +43,7 @@ type Titan struct {
 	Path           string
 	hellswitch     *hellswitch.Hellswitch
 	Scriptpath     string
+	Modpath        string
 	Skeletonpath   string
 	Logpath        string
 	MaxHistory     int

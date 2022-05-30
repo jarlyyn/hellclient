@@ -884,7 +884,11 @@ SetMediaType(t string)
 
 ### 描述
 
-设置可视化输入的媒体类型，暂时只支持image
+设置可视化输入的媒体类型，暂时只支持image和output
+
+默认为image
+
+output需要将url设置为DumpOutput的返回值(JSON格式的Line数组)
 
 ### 代码范例
 
@@ -999,3 +1003,38 @@ VisualPrompt.publish("onvisualprompt")
 ### 返回值
 
 唯一ID
+
+## VisualPrompt.append
+
+列表追加
+
+## 原型
+
+```
+Append(key string, value string)
+```
+
+### 描述
+
+向列表里加入一对键值
+
+* key 选择后返回给回调的key
+* value 显示的值
+
+当VisualPrompt的列表不为空时，将现实类似List的列表选择，代替原有的输入框
+
+### 范例代码
+
+Javascript
+```
+VisualPrompt.append("sword","长剑")
+```
+
+Lua
+```
+VisualPrompt.append("sword","长剑")
+```
+
+### 返回值
+
+无

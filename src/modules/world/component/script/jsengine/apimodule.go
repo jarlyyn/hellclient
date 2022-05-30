@@ -1177,7 +1177,8 @@ func (a *jsapi) Decrypt(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (a *jsapi) DumpOutput(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	length := int(call.Argument(0).ToInteger())
 	offset := int(call.Argument(1).ToInteger())
-	return r.ToValue(a.API.DumpOutput(length, offset))
+	pretty := call.Argument(2).ToBoolean()
+	return r.ToValue(a.API.DumpOutput(length, offset, pretty))
 }
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
