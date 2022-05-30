@@ -7,8 +7,9 @@ import (
 )
 
 type Converter struct {
-	Lock sync.RWMutex
-	Last *world.Word
+	SendLock  sync.RWMutex
+	InputLock sync.RWMutex
+	Last      *world.Word
 }
 
 func nopOnError(err error) bool {
@@ -30,16 +31,16 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 }
 
 func (c *Converter) onPrompt(bus *bus.Bus, msg []byte) {
-	c.Lock.Lock()
-	defer c.Lock.Unlock()
+	c.InputLock.Lock()
+	defer c.InputLock.Unlock()
 	line := c.ConvertToLine(bus, msg, nopOnError)
 	if line != nil {
 		bus.RaisePromptEvent(line)
 	}
 }
 func (c *Converter) onMsg(bus *bus.Bus, msg []byte) {
-	c.Lock.Lock()
-	defer c.Lock.Unlock()
+	c.InputLock.Lock()
+	defer c.InputLock.Unlock()
 	if len(msg) == 0 {
 		return
 	}
@@ -55,8 +56,8 @@ func (c *Converter) onError(bus *bus.Bus, err error) bool {
 }
 
 func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
-	c.Lock.Lock()
-	defer c.Lock.Unlock()
+	c.SendLock.Lock()
+	defer c.SendLock.Unlock()
 	b, err := world.FromUTF8(bus.GetCharset(), []byte(cmd.Mesasge))
 	if err != nil {
 		bus.HandleConverterError(err)
