@@ -25,6 +25,8 @@ type Bus struct {
 	SetName                   func(string)
 	GetShowBroadcast          func() bool
 	SetShowBroadcast          func(bool)
+	GetModEnabled             func() bool
+	SetModEnabled             func(bool)
 	GetCommandStackCharacter  func() string
 	SetCommandStackCharacter  func(string)
 	GetScriptPrefix           func() string

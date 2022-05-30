@@ -728,6 +728,9 @@ func (a *API) WriteHomeFile(p herbplugin.Plugin, name string, body []byte) {
 }
 
 func (a *API) MustCleanModFileInsidePath(name string) string {
+	if !a.Bus.GetModEnabled() {
+		return ""
+	}
 	sid := a.Bus.GetScriptID()
 	if sid == "" {
 		return ""
@@ -743,6 +746,9 @@ func (a *API) MustCleanModFileInsidePath(name string) string {
 	return name
 }
 func (a *API) HasModFile(p herbplugin.Plugin, name string) bool {
+	if !a.Bus.GetModEnabled() {
+		return false
+	}
 	filename := a.MustCleanModFileInsidePath(name)
 	if filename == "" {
 		panic(fmt.Errorf("read %s not allowed", name))

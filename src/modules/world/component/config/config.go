@@ -219,6 +219,16 @@ func (c *Config) GetShowBroadcast() bool {
 	defer c.Locker.Unlock()
 	return c.Data.ShowBroadcast
 }
+func (c *Config) SetModEnabled(s bool) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.ModEnabled = s
+}
+func (c *Config) GetModEnabled() bool {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.ModEnabled
+}
 func (c *Config) OnReady(b *bus.Bus) {
 	c.ReadyAt = time.Now().Unix()
 }
@@ -248,7 +258,6 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetPermissions = c.SetPermissions
 	b.GetScriptID = c.GetScriptID
 	b.SetScriptID = c.SetScriptID
-
 	b.GetName = c.GetName
 	b.SetName = c.SetName
 	b.GetCommandStackCharacter = c.GetCommandStackCharacter
@@ -257,6 +266,8 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetScriptPrefix = c.SetScriptPrefix
 	b.GetShowBroadcast = c.GetShowBroadcast
 	b.SetShowBroadcast = c.SetShowBroadcast
+	b.GetModEnabled = c.GetModEnabled
+	b.SetModEnabled = c.SetModEnabled
 	b.BindInitEvent(b, c.OnReady)
 }
 

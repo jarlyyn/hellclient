@@ -28,6 +28,7 @@ type UpdateGameForm struct {
 	ScriptPrefix          string
 	CommandStackCharacter string
 	ShowBroadcast         bool
+	ModEnabled            bool
 }
 
 //UpdateGameFormID form id of form update game
@@ -95,6 +96,7 @@ func UpdateGame(t *titan.Titan, data []byte) {
 	w.SetCommandStackCharacter(form.CommandStackCharacter)
 	w.SetName(form.Name)
 	w.SetShowBroadcast(form.ShowBroadcast)
+	w.SetModEnabled(form.ModEnabled)
 	t.Locker.Unlock()
 	go func() {
 		t.OnUpdateSuccess(form.ID)
