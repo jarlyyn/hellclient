@@ -157,6 +157,11 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 
 	l.SetGlobal("ReadFile", l.NewFunction(a.NewReadFileAPI(p)))
 	l.SetGlobal("ReadLines", l.NewFunction(a.NewReadLinesAPI(p)))
+
+	l.SetGlobal("HasModFile", l.NewFunction(a.NewHasModFileAPI(p)))
+	l.SetGlobal("ReadModFile", l.NewFunction(a.NewReadModFileAPI(p)))
+	l.SetGlobal("ReadModLines", l.NewFunction(a.NewReadModLinesAPI(p)))
+
 	l.SetGlobal("HasHomeFile", l.NewFunction(a.NewHasHomeFileAPI(p)))
 	l.SetGlobal("ReadHomeFile", l.NewFunction(a.NewReadHomeFileAPI(p)))
 	l.SetGlobal("WriteHomeFile", l.NewFunction(a.NewWriteHomeFileAPI(p)))
@@ -808,9 +813,26 @@ func (a *luaapi) NewReadLinesAPI(p herbplugin.Plugin) func(L *lua.LState) int {
 		return 1
 	}
 }
+func (a *luaapi) NewReadModFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		L.Push(lua.LString(a.API.ReadModFile(p, L.ToString(1))))
+		return 1
+	}
+}
 func (a *luaapi) NewReadHomeFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
 	return func(L *lua.LState) int {
 		L.Push(lua.LString(a.API.ReadHomeFile(p, L.ToString(1))))
+		return 1
+	}
+}
+func (a *luaapi) NewReadModLinesAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		lines := a.API.ReadModLines(p, L.ToString(1))
+		t := L.NewTable()
+		for _, v := range lines {
+			t.Append(lua.LString(v))
+		}
+		L.Push(t)
 		return 1
 	}
 }
@@ -829,6 +851,12 @@ func (a *luaapi) NewWriteHomeFileAPI(p herbplugin.Plugin) func(L *lua.LState) in
 	return func(L *lua.LState) int {
 		a.API.WriteHomeFile(p, L.ToString(1), []byte(L.ToString(2)))
 		return 0
+	}
+}
+func (a *luaapi) NewHasModFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		L.Push(lua.LBool(a.API.HasModFile(p, L.ToString(1))))
+		return 1
 	}
 }
 func (a *luaapi) NewHasHomeFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {

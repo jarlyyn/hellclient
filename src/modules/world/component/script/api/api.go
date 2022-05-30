@@ -673,7 +673,7 @@ func (a *API) MustCheckHome() {
 		panic(err)
 	}
 }
-func (a *API) MustCleahHomeFileInsidePath(name string) string {
+func (a *API) MustCleanHomeFileInsidePath(name string) string {
 	home := a.Bus.GetScriptHome()
 	name = herbplugin.MustCleanPath(home, name)
 	if name == "" {
@@ -686,7 +686,7 @@ func (a *API) MustCleahHomeFileInsidePath(name string) string {
 }
 func (a *API) HasHomeFile(p herbplugin.Plugin, name string) bool {
 	a.MustCheckHome()
-	filename := a.MustCleahHomeFileInsidePath(name)
+	filename := a.MustCleanHomeFileInsidePath(name)
 	if filename == "" {
 		panic(fmt.Errorf("read %s not allowed", name))
 	}
@@ -701,7 +701,7 @@ func (a *API) HasHomeFile(p herbplugin.Plugin, name string) bool {
 }
 func (a *API) ReadHomeFile(p herbplugin.Plugin, name string) string {
 	a.MustCheckHome()
-	filename := a.MustCleahHomeFileInsidePath(name)
+	filename := a.MustCleanHomeFileInsidePath(name)
 	if filename == "" {
 		panic(fmt.Errorf("read %s not allowed", name))
 	}
@@ -711,9 +711,13 @@ func (a *API) ReadHomeFile(p herbplugin.Plugin, name string) string {
 	}
 	return string(data)
 }
+func (a *API) ReadHomeLines(p herbplugin.Plugin, name string) []string {
+	data := a.ReadHomeFile(p, name)
+	return strings.Split(lineReplacer.Replace(data), "\n")
+}
 func (a *API) WriteHomeFile(p herbplugin.Plugin, name string, body []byte) {
 	a.MustCheckHome()
-	filename := a.MustCleahHomeFileInsidePath(name)
+	filename := a.MustCleanHomeFileInsidePath(name)
 	if filename == "" {
 		panic(fmt.Errorf("write %s not allowed", name))
 	}
@@ -722,8 +726,49 @@ func (a *API) WriteHomeFile(p herbplugin.Plugin, name string, body []byte) {
 		panic(err)
 	}
 }
-func (a *API) ReadHomeLines(p herbplugin.Plugin, name string) []string {
-	data := a.ReadHomeFile(p, name)
+
+func (a *API) MustCleanModFileInsidePath(name string) string {
+	sid := a.Bus.GetScriptID()
+	if sid == "" {
+		return ""
+	}
+	modpath := filepath.Join(a.Bus.GetModPath(), sid+".mod")
+	name = herbplugin.MustCleanPath(modpath, name)
+	if name == "" {
+		return name
+	}
+	if !strings.HasPrefix(name, modpath) {
+		return ""
+	}
+	return name
+}
+func (a *API) HasModFile(p herbplugin.Plugin, name string) bool {
+	filename := a.MustCleanModFileInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("read %s not allowed", name))
+	}
+	_, err := os.Stat(filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+		panic(err)
+	}
+	return true
+}
+func (a *API) ReadModFile(p herbplugin.Plugin, name string) string {
+	filename := a.MustCleanModFileInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("read %s not allowed", name))
+	}
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+func (a *API) ReadModLines(p herbplugin.Plugin, name string) []string {
+	data := a.ReadModFile(p, name)
 	return strings.Split(lineReplacer.Replace(data), "\n")
 }
 

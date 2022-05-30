@@ -32,13 +32,14 @@ type Script struct {
 	Options       *ScriptOptions
 }
 type ScriptOptions struct {
-	Home string
+	Home    string
+	ModPath string
 	*herbplugin.PlainOptions
 }
 
 func (o *ScriptOptions) MustAuthorizePath(path string) bool {
 	path = filepath.Clean(path)
-	if strings.HasPrefix(path, o.Home) {
+	if strings.HasPrefix(path, o.Home) || strings.HasPrefix(path, o.ModPath) {
 		return true
 	}
 	return o.PlainOptions.MustAuthorizePath(path)
@@ -78,11 +79,14 @@ func (s *Script) reloadPermissions(b *bus.Bus) {
 	s.Options.PlainOptions = opt
 }
 func (s *Script) PluginOptions(b *bus.Bus) herbplugin.Options {
+	var modpath = ""
 	home := b.GetScriptHome()
+	modpath = filepath.Join(modpath, b.GetScriptID())
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
 	s.Options = &ScriptOptions{
-		Home: home,
+		Home:    home,
+		ModPath: modpath,
 	}
 	s.reloadPermissions(b)
 	return s.Options

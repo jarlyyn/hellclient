@@ -191,10 +191,16 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 
 	AppendToWorld(jp.Runtime, world, "ReadFile", a.NewReadFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadLines", a.NewReadLinesAPI(p))
+
+	AppendToWorld(jp.Runtime, world, "HasModFile", a.NewHasModFileAPI(p))
+	AppendToWorld(jp.Runtime, world, "ReadModFile", a.NewReadModFileAPI(p))
+	AppendToWorld(jp.Runtime, world, "ReadModLines", a.NewReadModLinesAPI(p))
+
 	AppendToWorld(jp.Runtime, world, "HasHomeFile", a.NewHasHomeFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadHomeFile", a.NewReadHomeFileAPI(p))
-	AppendToWorld(jp.Runtime, world, "WriteHomeFile", a.NewWriteHomeFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadHomeLines", a.NewReadHomeLinesAPI(p))
+	AppendToWorld(jp.Runtime, world, "WriteHomeFile", a.NewWriteHomeFileAPI(p))
+
 	AppendToWorld(jp.Runtime, world, "SplitN", a.SplitNfunc)
 	AppendToWorld(jp.Runtime, world, "UTF8Len", a.UTF8Len)
 	AppendToWorld(jp.Runtime, world, "UTF8Index", a.UTF8Index)
@@ -751,6 +757,11 @@ func (a *jsapi) NewReadFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall,
 		return r.ToValue(a.API.ReadFile(p, call.Argument(0).String()))
 	}
 }
+func (a *jsapi) NewHasModFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.HasModFile(p, call.Argument(0).String()))
+	}
+}
 func (a *jsapi) NewHasHomeFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		return r.ToValue(a.API.HasHomeFile(p, call.Argument(0).String()))
@@ -762,6 +773,11 @@ func (a *jsapi) NewWriteHomeFileAPI(p herbplugin.Plugin) func(call goja.Function
 		return nil
 	}
 }
+func (a *jsapi) NewReadModFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.ReadModFile(p, call.Argument(0).String()))
+	}
+}
 func (a *jsapi) NewReadHomeFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		return r.ToValue(a.API.ReadHomeFile(p, call.Argument(0).String()))
@@ -770,6 +786,17 @@ func (a *jsapi) NewReadHomeFileAPI(p herbplugin.Plugin) func(call goja.FunctionC
 func (a *jsapi) NewReadLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		lines := a.API.ReadLines(p, call.Argument(0).String())
+		t := []interface{}{}
+		for _, v := range lines {
+			t = append(t, v)
+		}
+		return r.NewArray(t...)
+
+	}
+}
+func (a *jsapi) NewReadModLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		lines := a.API.ReadModLines(p, call.Argument(0).String())
 		t := []interface{}{}
 		for _, v := range lines {
 			t = append(t, v)
