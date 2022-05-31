@@ -1,3 +1,5 @@
+// +build !nopcre
+
 package luaengine
 
 import (

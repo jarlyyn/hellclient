@@ -17,14 +17,15 @@ const DefaultDebounceDuration = 200 * time.Millisecond
 
 //Conn :mud conn
 type Conn struct {
-	telnet    *telnet.Conn
-	c         chan int
-	running   bool
-	buffer    []byte
-	Lock      sync.RWMutex
-	SendLock  sync.RWMutex
-	sendQueue *list.List
-	Debounce  *debounce.Debounce
+	telnet      *telnet.Conn
+	c           chan int
+	running     bool
+	buffer      []byte
+	RunningLock sync.RWMutex
+	BufferLock  sync.RWMutex
+	SendLock    sync.RWMutex
+	sendQueue   *list.List
+	Debounce    *debounce.Debounce
 }
 
 func isClosedError(err error) bool {
@@ -56,8 +57,8 @@ func (conn *Conn) C() chan int {
 	return conn.c
 }
 func (conn *Conn) UpdatePrompt(bus *bus.Bus) {
-	conn.Lock.Lock()
-	defer conn.Lock.Unlock()
+	conn.RunningLock.Lock()
+	defer conn.RunningLock.Unlock()
 	if conn.running {
 		go bus.HandleConnPrompt(conn.buffer)
 	}
@@ -68,11 +69,12 @@ func (conn *Conn) Stop(b *bus.Bus) {
 
 //Connect :connect to mud
 func (conn *Conn) Connect(bus *bus.Bus) error {
-	conn.Lock.Lock()
-	defer conn.Lock.Unlock()
+	conn.RunningLock.Lock()
 	if conn.running == true {
+		conn.RunningLock.Unlock()
 		return nil
 	}
+	conn.RunningLock.Unlock()
 	timeout := app.System.ConnectTimeout
 	if timeout <= 0 {
 		timeout = 1
@@ -81,10 +83,16 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	if err != nil {
 		return err
 	}
+	conn.RunningLock.Lock()
 	conn.running = true
+	conn.RunningLock.Unlock()
+
+	conn.BufferLock.Lock()
 	conn.c = make(chan int)
 	conn.buffer = make([]byte, 0, 1024)
 	conn.telnet = t
+	conn.BufferLock.Unlock()
+
 	go conn.Receiver(bus)
 	go bus.RaiseConnectedEvent()
 	return nil
@@ -92,18 +100,23 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 
 //Close :close mud conn
 func (conn *Conn) Close(bus *bus.Bus) error {
-	conn.Lock.Lock()
-	defer conn.Lock.Unlock()
+	conn.RunningLock.Lock()
 	if conn.running == false {
+		conn.RunningLock.Unlock()
 		return nil
 	}
+	conn.RunningLock.Unlock()
+
+	conn.BufferLock.Lock()
 	conn.running = false
+	buffer := conn.buffer
 	conn.buffer = []byte{}
-	go bus.HandleConnPrompt(conn.buffer)
-	go conn.Debounce.Discard()
 	close(conn.c)
 	err := conn.telnet.Close()
 	conn.telnet = nil
+	conn.BufferLock.Unlock()
+	go bus.HandleConnPrompt(buffer)
+	go conn.Debounce.Discard()
 	go bus.RaiseDisconnectedEvent()
 
 	return err
@@ -112,7 +125,7 @@ func (conn *Conn) flushBuffer(bus *bus.Bus) {
 	buf := conn.buffer
 	conn.Debounce.Reset()
 	conn.buffer = []byte{}
-	conn.Lock.Unlock()
+	conn.BufferLock.Unlock()
 	bus.HandleConnReceive(buf)
 }
 func (conn *Conn) Receiver(bus *bus.Bus) {
@@ -129,23 +142,23 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 			if !isClosedError(err) {
 				bus.HandleConnError(err)
 			}
-			conn.Lock.Lock()
+			conn.RunningLock.Lock()
 			if conn.running == true {
 				go bus.RaiseServerCloseEvent()
 			}
-			conn.Lock.Unlock()
+			conn.RunningLock.Unlock()
 			conn.Close(bus)
 
 			return
 		}
-		conn.Lock.Lock()
+		conn.BufferLock.Lock()
 		if s == del2 || s == nop {
-			conn.Lock.Unlock()
+			conn.BufferLock.Unlock()
 			continue
 		}
 		if s == del {
 			if err != nil {
-				conn.Lock.Unlock()
+				conn.BufferLock.Unlock()
 				bus.HandleConnError(err)
 				return
 			}
@@ -157,7 +170,7 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 			conn.flushBuffer(bus)
 			continue
 		}
-		conn.Lock.Unlock()
+		conn.BufferLock.Unlock()
 		conn.Debounce.Exec()
 	}
 }
@@ -165,14 +178,14 @@ func (conn *Conn) Connected(bus *bus.Bus) bool {
 	if conn == nil {
 		return false
 	}
-	conn.Lock.Lock()
-	defer conn.Lock.Unlock()
+	conn.RunningLock.Lock()
+	defer conn.RunningLock.Unlock()
 
 	return conn.running
 }
 func (conn *Conn) Buffer(bus *bus.Bus) []byte {
-	conn.Lock.RLock()
-	defer conn.Lock.RUnlock()
+	conn.BufferLock.RLock()
+	defer conn.BufferLock.RUnlock()
 	return conn.buffer
 }
 func (conn *Conn) Send(bus *bus.Bus, cmd []byte) {
