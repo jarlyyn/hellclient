@@ -113,6 +113,9 @@ line-height: 1.5em;
     color: #333333;
     font-size: 16px;
 }
+#visualPrompt .text{
+    white-space:pre-line
+}
 .update-comment textarea,.update-required textarea,.update-variable textarea{
     height: 16em;
 }

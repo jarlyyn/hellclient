@@ -14,6 +14,9 @@
             </li>
         </ul>          </div>
         </div>
+        <div class="text" v-if="visualPrompt.Data.MediaType=='text'">
+          <span>{{visualPrompt.Data.Source}}</span>
+        </div>
         <div class="intro">{{visualPrompt.Data.Intro}}</div>
         <el-input v-if="visualPrompt.Data.Items==null || visualPrompt.Data.Items.length==0" v-model="visualPrompt.Data.Value"></el-input>
         <el-table v-else

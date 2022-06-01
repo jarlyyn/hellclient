@@ -221,6 +221,10 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("SliceOutput", l.NewFunction(a.SliceOutput))
 	l.SetGlobal("OutputToText", l.NewFunction(a.OutputToText))
 	l.SetGlobal("FormatOutput", l.NewFunction(a.FormatOutput))
+
+	l.SetGlobal("Simulate", l.NewFunction(a.Simulate))
+	l.SetGlobal("SimulateOutput", l.NewFunction(a.SimulateOutput))
+
 }
 
 func (a *luaapi) Milliseconds(L *lua.LState) int {
@@ -1403,6 +1407,17 @@ func (a *luaapi) FormatOutput(L *lua.LState) int {
 	output := L.ToString(1)
 	L.Push(lua.LString(a.API.FormatOutput(output)))
 	return 1
+}
+
+func (a *luaapi) Simulate(L *lua.LState) int {
+	text := L.ToString(1)
+	a.API.Simulate(text)
+	return 0
+}
+func (a *luaapi) SimulateOutput(L *lua.LState) int {
+	output := L.ToString(1)
+	a.API.SimulateOutput(output)
+	return 0
 }
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",

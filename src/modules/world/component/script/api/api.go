@@ -1299,9 +1299,9 @@ func (a *API) OutputToText(output string) string {
 	if err != nil {
 		panic(err)
 	}
-	var lines = make([]string, 0, len(list))
+	var lines = make([]string, len(list))
 	for k := range list {
-		var words = make([]string, 0, len(list[k].Words))
+		var words = make([]string, len(list[k].Words))
 		for wordsindex := range words {
 			words[wordsindex] = list[k].Words[wordsindex].Text
 		}
@@ -1322,4 +1322,31 @@ func (a *API) FormatOutput(output string) string {
 	}
 	return string(data)
 
+}
+
+func (a *API) Simulate(text string) {
+	line := world.NewLine()
+	line.Type = world.LineTypeReal
+	line.ID = uniqueid.MustGenerateID()
+	word := world.NewWord()
+	word.Text = text
+	line.Words = append(line.Words, word)
+	go func() {
+		a.Bus.RaiseLineEvent(line)
+	}()
+}
+
+func (a *API) SimulateOutput(output string) {
+	var list = []*world.Line{}
+	err := json.Unmarshal([]byte(output), &list)
+	if err != nil {
+		panic(err)
+	}
+	go func() {
+		for _, line := range list {
+			line.Type = world.LineTypeReal
+			line.ID = uniqueid.MustGenerateID()
+			a.Bus.RaiseLineEvent(line)
+		}
+	}()
 }

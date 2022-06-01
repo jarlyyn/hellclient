@@ -37,6 +37,10 @@ func (w *Word) GetBGColorRGB() int {
 	return Colours[w.Background]
 }
 
+func NewWord() *Word {
+	return &Word{}
+}
+
 //通过Print打印
 const LineTypePrint = 0
 
