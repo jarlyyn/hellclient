@@ -1232,7 +1232,7 @@ func (a *API) Request(reqtype string, data string) string {
 	return msg.ID
 }
 
-func (a *API) DumpOutput(length int, offset int, pretty bool) string {
+func (a *API) DumpOutput(length int, offset int) string {
 	if length < 0 {
 		length = 0
 	}
@@ -1245,14 +1245,81 @@ func (a *API) DumpOutput(length int, offset int, pretty bool) string {
 	}
 	var data []byte
 	var err error
-	if pretty {
-		data, err = json.MarshalIndent(line[offset:], "", " ")
-	} else {
-		data, err = json.Marshal(line[offset:])
-
-	}
+	data, err = json.Marshal(line[offset:])
 	if err != nil {
 		panic(err)
 	}
 	return string(data)
+}
+
+func (a *API) ConcatOutput(output1 string, output2 string) string {
+	var list1 = []*world.Line{}
+	var list2 = []*world.Line{}
+	var err error
+	err = json.Unmarshal([]byte(output1), &list1)
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal([]byte(output2), &list2)
+	if err != nil {
+		panic(err)
+	}
+	list1 = append(list1, list2...)
+	result, err := json.Marshal(list1)
+	if err != nil {
+		panic(err)
+	}
+	return string(result)
+}
+func (a *API) SliceOutput(output string, start int, end int) string {
+	var list = []*world.Line{}
+	err := json.Unmarshal([]byte(output), &list)
+	if err != nil {
+		panic(err)
+	}
+	if start < 0 {
+		start = 0
+	}
+	if start >= len(list) {
+		start = len(list) - 1
+	}
+	if end <= 0 || end > len(list) {
+		end = len(list)
+	}
+
+	data, err := json.Marshal(list[start:end])
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+func (a *API) OutputToText(output string) string {
+	var list = []*world.Line{}
+	err := json.Unmarshal([]byte(output), &list)
+	if err != nil {
+		panic(err)
+	}
+	var lines = make([]string, 0, len(list))
+	for k := range list {
+		var words = make([]string, 0, len(list[k].Words))
+		for wordsindex := range words {
+			words[wordsindex] = list[k].Words[wordsindex].Text
+		}
+		lines[k] = strings.Join(words, "")
+	}
+	return strings.Join(lines, "\n")
+}
+
+func (a *API) FormatOutput(output string) string {
+	var list = []*world.Line{}
+	err := json.Unmarshal([]byte(output), &list)
+	if err != nil {
+		panic(err)
+	}
+	data, err := json.MarshalIndent(list, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+
 }

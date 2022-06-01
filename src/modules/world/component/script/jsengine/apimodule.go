@@ -250,6 +250,10 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "Decrypt", a.Decrypt)
 
 	AppendToWorld(jp.Runtime, world, "DumpOutput", a.DumpOutput)
+	AppendToWorld(jp.Runtime, world, "ConcatOutput", a.ConcatOutput)
+	AppendToWorld(jp.Runtime, world, "SliceOutput", a.SliceOutput)
+	AppendToWorld(jp.Runtime, world, "OutputToText", a.OutputToText)
+	AppendToWorld(jp.Runtime, world, "FormatOutput", a.FormatOutput)
 }
 
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1204,8 +1208,27 @@ func (a *jsapi) Decrypt(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (a *jsapi) DumpOutput(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	length := int(call.Argument(0).ToInteger())
 	offset := int(call.Argument(1).ToInteger())
-	pretty := call.Argument(2).ToBoolean()
-	return r.ToValue(a.API.DumpOutput(length, offset, pretty))
+	return r.ToValue(a.API.DumpOutput(length, offset))
+}
+
+func (a *jsapi) ConcatOutput(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	output1 := call.Argument(0).String()
+	output2 := call.Argument(1).String()
+	return r.ToValue(a.API.ConcatOutput(output1, output2))
+}
+func (a *jsapi) SliceOutput(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	output := call.Argument(0).String()
+	start := int(call.Argument(1).ToInteger())
+	end := int(call.Argument(2).ToInteger())
+	return r.ToValue(a.API.SliceOutput(output, start, end))
+}
+func (a *jsapi) OutputToText(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	output := call.Argument(0).String()
+	return r.ToValue(a.API.OutputToText(output))
+}
+func (a *jsapi) FormatOutput(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	output := call.Argument(0).String()
+	return r.ToValue(a.API.FormatOutput(output))
 }
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {

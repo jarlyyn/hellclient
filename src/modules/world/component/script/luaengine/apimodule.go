@@ -217,7 +217,10 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("Decrypt", l.NewFunction(a.Decrypt))
 
 	l.SetGlobal("DumpOutput", l.NewFunction(a.DumpOutput))
-
+	l.SetGlobal("ConcatOutput", l.NewFunction(a.ConcatOutput))
+	l.SetGlobal("SliceOutput", l.NewFunction(a.SliceOutput))
+	l.SetGlobal("OutputToText", l.NewFunction(a.OutputToText))
+	l.SetGlobal("FormatOutput", l.NewFunction(a.FormatOutput))
 }
 
 func (a *luaapi) Milliseconds(L *lua.LState) int {
@@ -1374,11 +1377,33 @@ func (a *luaapi) Decrypt(L *lua.LState) int {
 func (a *luaapi) DumpOutput(L *lua.LState) int {
 	length := L.ToInt(1)
 	offset := L.ToInt(2)
-	prerry := L.ToBool(3)
-	L.Push(lua.LString(a.API.DumpOutput(length, offset, prerry)))
+	L.Push(lua.LString(a.API.DumpOutput(length, offset)))
 	return 1
 }
 
+func (a *luaapi) ConcatOutput(L *lua.LState) int {
+	output1 := L.ToString(1)
+	output2 := L.ToString(2)
+	L.Push(lua.LString(a.API.ConcatOutput(output1, output2)))
+	return 1
+}
+func (a *luaapi) SliceOutput(L *lua.LState) int {
+	output := L.ToString(1)
+	start := L.ToInt(2)
+	end := L.ToInt(3)
+	L.Push(lua.LString(a.API.SliceOutput(output, start, end)))
+	return 1
+}
+func (a *luaapi) OutputToText(L *lua.LState) int {
+	output := L.ToString(1)
+	L.Push(lua.LString(a.API.OutputToText(output)))
+	return 1
+}
+func (a *luaapi) FormatOutput(L *lua.LState) int {
+	output := L.ToString(1)
+	L.Push(lua.LString(a.API.FormatOutput(output)))
+	return 1
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
