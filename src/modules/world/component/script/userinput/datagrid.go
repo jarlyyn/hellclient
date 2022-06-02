@@ -15,6 +15,7 @@ type Datagrid struct {
 	OnUpdate string
 	OnView   string
 	OnCreate string
+	OnSelect string
 }
 
 func (g *Datagrid) Hide(b *bus.Bus) {
@@ -52,6 +53,9 @@ func (g *Datagrid) SetOnCreate(oncreate string) {
 }
 func (g *Datagrid) SetOnUpdate(onupdate string) {
 	g.OnUpdate = onupdate
+}
+func (g *Datagrid) SetOnSelect(onselect string) {
+	g.OnSelect = onselect
 }
 func (g *Datagrid) ResetItems() {
 	g.Items = []*Item{}

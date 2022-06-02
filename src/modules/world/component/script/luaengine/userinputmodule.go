@@ -99,6 +99,10 @@ func (g *Datagrid) SetOnView(L *lua.LState) int {
 	g.Datagrid.SetOnView(L.ToString(1))
 	return 0
 }
+func (g *Datagrid) SetOnSelect(L *lua.LState) int {
+	g.Datagrid.SetOnSelect(L.ToString(1))
+	return 0
+}
 func (g *Datagrid) SetOnCreate(L *lua.LState) int {
 	g.Datagrid.SetOnCreate(L.ToString(1))
 	return 0
@@ -132,6 +136,7 @@ func (g *Datagrid) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("setoncreate", L.NewFunction(g.SetOnCreate))
 	t.RawSetString("setonupdate", L.NewFunction(g.SetOnUpdate))
 	t.RawSetString("setonview", L.NewFunction(g.SetOnView))
+	t.RawSetString("setonselect", L.NewFunction(g.SetOnSelect))
 	t.RawSetString("setondelete", L.NewFunction(g.SetOnDelete))
 	t.RawSetString("setonfilter", L.NewFunction(g.SetOnFilter))
 	t.RawSetString("setonpage", L.NewFunction(g.SetOnPage))
