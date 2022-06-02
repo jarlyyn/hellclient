@@ -18,6 +18,7 @@
         <el-table-column label="操作" width="240px">
           <template slot-scope="scope">
             <el-button-group>
+            <el-button v-if="userinputDatagrid.Data.OnSelect" size="mini" type="success" @click="handleUserinputDatagridSelect(scope.$index, scope.row)">选择</el-button>
             <el-button v-if="userinputDatagrid.Data.OnView" size="mini" type="success" icon="el-icon-view" @click="handleUserinputDatagridView(scope.$index, scope.row)"></el-button>
             <el-button v-if="userinputDatagrid.Data.OnUpdate" size="mini" type="warning" class="el-icon-edit" @click="handleUserinputDatagridUpdate(scope.$index, scope.row)"></el-button>
             <el-button v-if="userinputDatagrid.Data.OnDelete" size="mini" type="danger" icon="el-icon-delete" @click="handleUserinputDatagridDelete(scope.$index, scope.row)"></el-button>

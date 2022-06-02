@@ -21,6 +21,7 @@
 数据表格可以维护一个表格，并对表格提供基本的维护功能，包括、
 
 * 查看操作
+* 选择操作
 * 编辑操作
 * 删除操作
 * 创建操作
@@ -700,6 +701,42 @@ Datagrid.setonview("handleview")
 Lua
 ```
 Datagrid.setonview("handleview")
+```
+
+### 返回值
+
+无
+
+## Datagrid.setonselect
+
+数据表格设置选择回调
+
+### 原型
+
+```
+SetOnSelect(onselect string)
+```
+
+### 描述
+
+设置数据表格的选择按钮回调
+
+只有设置了回调，查看按钮才会出现
+
+### 回调函数
+
+* data 需要操作的元素的key
+
+### 代码范例
+
+Javascript
+```
+Datagrid.setonselect("handleselect")
+```
+
+Lua
+```
+Datagrid.setonselect("handleselect")
 ```
 
 ### 返回值

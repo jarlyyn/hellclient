@@ -378,6 +378,16 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
                     vm.callback(data,0,row.Key)
                 }
             },
+            handleUserinputDatagridSelect:function(index, row){
+                if (this.userinputDatagrid.Data.OnSelect){
+                    var data={
+                        ID:this.userinputDatagrid.ID,
+                        Name:this.userinputDatagrid.Name,
+                        Script:this.userinputDatagrid.Data.OnSelect,
+                    }
+                    vm.callback(data,0,row.Key)
+                }
+            },
             handleUserinputDatagridUpdate:function(index, row){
                 if (this.userinputDatagrid.Data.OnUpdate){
                     var data={
