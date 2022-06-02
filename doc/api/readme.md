@@ -153,6 +153,7 @@
 * [SliceOutput 切割输出](apioutput.md#SliceOutput)
 * [OutputToText 输出转文字](apioutput.md#OutputToText)
 * [FormatOutput 格式化输出](apioutput.md#FormatOutput)
+* [PrintOutput 格式化输出](apioutput.md#PrintOutput)
 * [Simulate 模拟发送文字](apioutput.md#Simulate)
 * [SimulateOutput 模拟发送输出](apioutput.md#SimulateOutput)
 

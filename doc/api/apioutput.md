@@ -536,6 +536,37 @@ Note(FormatOutput(output))
 
 字符串化的Line数组
 
+## PrintOutput
+
+打印文字为输出
+
+### 原型
+
+```go
+PrintOutput(text string) string
+```
+
+### 描述
+
+打印文字为输出(按打印的形式显示)
+
+一般与ConcatCombine配合
+
+### 代码范例
+
+Javascript
+```
+world.Simulate(world.PrintOutput(output))
+```
+
+Lua
+```
+Simulate(PrintOutput(output))
+```
+
+### 返回值
+
+字符串化的Line数组
 
 ## Simulate
 
