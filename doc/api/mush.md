@@ -352,7 +352,7 @@
 * SetWorldWindowStatus <不兼容>
 * ShiftTabCompleteItem <不兼容>
 * ShowInfoBar <不兼容>
-* Simulate <待定>
+* Simulate <兼容>
 * Sound <不兼容>
 * SpeedWalkDelay <兼容>
 * SpellCheck <不兼容>

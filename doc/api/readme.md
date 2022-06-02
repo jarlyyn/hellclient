@@ -148,6 +148,14 @@
 * [GetRecentLines 获取近期内容](apioutput.md#GetRecentLines)
 * [GetLineInfo 获取指定行信息](apioutput.md#GetLineInfo)
 * [GetStyleInfo 获取样式信息](apioutput.md#GetStyleInfo)
+* [DumpOutput 导出输出](apioutput.md#DumpOutput)
+* [ConcatOutput 连接输出](apioutput.md#ConcatOutput)
+* [SliceOutput 切割输出](apioutput.md#SliceOutput)
+* [OutputToText 输出转文字](apioutput.md#OutputToText)
+* [FormatOutput 格式化输出](apioutput.md#FormatOutput)
+* [Simulate 模拟发送文字](apioutput.md#Simulate)
+* [SimulateOutput 模拟发送输出](apioutput.md#SimulateOutput)
+
 
 ## 通讯接口
 

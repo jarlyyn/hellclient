@@ -97,6 +97,11 @@
 .advancemode #alllines .creator-type-system::after{content:"⏻" ;color:rgb(255,255,0);padding-left: 0.5em}
 .advancemode #alllines .creator-type-run::after{content:"⏯" ;color:rgb(255,255,0);padding-left: 0.5em}
 
+#visualPrompt .text{
+    background-color: black;
+    color:white
+}
+
 @keyframes blinking {
     from {
         opacity: 1.0;

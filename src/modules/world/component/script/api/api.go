@@ -1286,7 +1286,9 @@ func (a *API) SliceOutput(output string, start int, end int) string {
 	if end <= 0 || end > len(list) {
 		end = len(list)
 	}
-
+	if end < start {
+		end = start
+	}
 	data, err := json.Marshal(list[start:end])
 	if err != nil {
 		panic(err)
@@ -1325,14 +1327,16 @@ func (a *API) FormatOutput(output string) string {
 }
 
 func (a *API) Simulate(text string) {
-	line := world.NewLine()
-	line.Type = world.LineTypeReal
-	line.ID = uniqueid.MustGenerateID()
-	word := world.NewWord()
-	word.Text = text
-	line.Words = append(line.Words, word)
+	var list = strings.Split(text, "\n")
 	go func() {
-		a.Bus.RaiseLineEvent(line)
+		for _, t := range list {
+			line := world.NewLine()
+			line.Type = world.LineTypeReal
+			word := world.NewWord()
+			word.Text = t
+			line.Words = append(line.Words, word)
+			a.Bus.RaiseLineEvent(line)
+		}
 	}()
 }
 

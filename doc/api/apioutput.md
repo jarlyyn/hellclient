@@ -301,7 +301,7 @@ Note (GetStyleInfo (100, 2, 14))
 ### 原型
 
 ```
-DumpOutput(length int, offset int, pretty bool) string
+DumpOutput(length int, offset int) string
 ```
 
 ### 描述
@@ -312,7 +312,6 @@ DumpOutput(length int, offset int, pretty bool) string
 
 * length 整数,总计返回的行数,小于0当作0处理
 * offset 整数,跳开多少行开始导出，小于0当作0处理
-* pretty 布尔值，是否格式化输出
 
 能获取的文字上限为100行
 
@@ -320,12 +319,12 @@ DumpOutput(length int, offset int, pretty bool) string
 
 Javascript
 ```
-world.Note(world.DumpOutput(10,2,true))
+world.Note(world.DumpOutput(10,2))
 ```
 
 Lua
 ```
-Note(DumpOutput(10,2,true))
+Note(DumpOutput(10,2))
 ```
 
 ### 返回值
@@ -334,7 +333,7 @@ Note(DumpOutput(10,2,true))
 
 [Line结构](../struct/line.md)
 
-范例为
+范例\(格式化后\)为
 
 ```json
 [
@@ -404,3 +403,202 @@ Note(DumpOutput(10,2,true))
  }
 ]
 ```
+
+## ConcatOutput
+
+连接输出
+
+### 原型
+
+```go
+ConcatOutput(output1 string, output2 string) string
+```
+
+### 描述
+
+解析两个输出数据，并拼接起来
+
+* output1 开头部分的输出
+* output2 结束部分的输出
+
+
+### 代码范例
+
+Javascript
+```
+world.Note(world.ConcatOutput(world.DumpOutput(10,2),world.DumpOutput(10,20)))
+```
+
+Lua
+```
+Note(ConcatOutput(DumpOutput(10,2),DumpOutput(10,20)))
+```
+
+### 返回值
+
+字符串化的Line数组
+
+## SliceOutput
+
+切割输出
+
+### 原型
+
+```go
+SliceOutput(output string, start int, end int) string
+```
+
+### 描述
+
+从原输出的指定位置切割出新输出
+
+* output 原输出
+* start 从0开始序号，超过原输出序号最大值则默认为原序号最大值
+* end 结束位置，小于等于0或者大于输出长度，则切割所有剩下的输出。如果比start小，则视为和start一样大
+
+
+### 代码范例
+
+Javascript
+```
+world.Note(world.SliceOutput(output,1,2))
+```
+
+Lua
+```
+Note(SliceOutput(output,1,2))
+```
+
+### 返回值
+
+字符串化的Line数组
+
+## OutputToText
+
+输出转文字
+
+### 原型
+
+```go
+OutputToText(output string) string
+```
+
+### 描述
+
+将原输出的正文部分去掉格式后转成文字
+
+* output 原输出
+
+
+### 代码范例
+
+Javascript
+```
+world.Note(world.OutputToText(output))
+```
+
+Lua
+```
+Note(OutputToText(output))
+```
+
+### 返回值
+
+回车\(\\n\)分割的纯文本
+
+## FormatOutput
+
+格式化输出
+
+### 原型
+
+```go
+FormatOutput(output string) string
+```
+
+### 描述
+
+将输出格式化为易于阅读的形式
+
+### 代码范例
+
+Javascript
+```
+world.Note(world.FormatOutput(output))
+```
+
+Lua
+```
+Note(FormatOutput(output))
+```
+
+### 返回值
+
+字符串化的Line数组
+
+
+## Simulate
+
+模拟发送文字
+
+### 原型
+
+```go
+Simulate(lines string)
+```
+
+### 描述
+
+将文字模拟为收到的无格式Mud信息
+
+* lines 回车分割的文字
+
+### 代码范例
+
+Javascript
+```
+world.Simulate(output)
+```
+
+Lua
+```
+Simulate(output)
+```
+
+### 返回值
+
+无
+
+## SimulateOutput
+
+模拟发送输出
+
+### 原型
+
+```go
+Simulate(output string)
+```
+
+### 描述
+
+将输出模拟为收到Mud信息
+
+* output 输出
+
+可以与 DumpOutput,WriteHomeFile,ReadHomeFile配合，进行输出的录制和重放，便于开发和维护机器
+
+### 代码范例
+
+Javascript
+```
+world.SimulateOutput(output)
+```
+
+Lua
+```
+SimulateOutput(output)
+```
+
+### 返回值
+
+无
