@@ -254,6 +254,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "SliceOutput", a.SliceOutput)
 	AppendToWorld(jp.Runtime, world, "OutputToText", a.OutputToText)
 	AppendToWorld(jp.Runtime, world, "FormatOutput", a.FormatOutput)
+	AppendToWorld(jp.Runtime, world, "PrintOutput", a.PrintOutput)
 
 	AppendToWorld(jp.Runtime, world, "Simulate", a.Simulate)
 	AppendToWorld(jp.Runtime, world, "SimulateOutput", a.SimulateOutput)
@@ -1232,6 +1233,10 @@ func (a *jsapi) OutputToText(call goja.FunctionCall, r *goja.Runtime) goja.Value
 func (a *jsapi) FormatOutput(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	output := call.Argument(0).String()
 	return r.ToValue(a.API.FormatOutput(output))
+}
+func (a *jsapi) PrintOutput(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	output := call.Argument(0).String()
+	return r.ToValue(a.API.PrintOutput(output))
 }
 func (a *jsapi) Simulate(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	text := call.Argument(0).String()

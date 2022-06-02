@@ -1326,6 +1326,21 @@ func (a *API) FormatOutput(output string) string {
 
 }
 
+func (a *API) PrintOutput(text string) string {
+	line := world.NewLine()
+	line.Type = world.LineTypePrint
+	word := world.NewWord()
+	word.Text = text
+	line.Words = append(line.Words, word)
+	list := []*world.Line{line}
+	data, err := json.MarshalIndent(list, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+
+}
+
 func (a *API) Simulate(text string) {
 	var list = strings.Split(text, "\n")
 	go func() {
@@ -1348,7 +1363,6 @@ func (a *API) SimulateOutput(output string) {
 	}
 	go func() {
 		for _, line := range list {
-			line.Type = world.LineTypeReal
 			line.ID = uniqueid.MustGenerateID()
 			a.Bus.RaiseLineEvent(line)
 		}
