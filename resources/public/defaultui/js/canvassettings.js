@@ -16,6 +16,14 @@ define(function (require) {
     var Magenta = "rgb(156,0,156)"
     var Cyan = "rgb(0,147,147)"
     var White = "rgb(210,210,210)"
+    var BoldBlack="rgb(64,64,64)"
+    var BoldRed="rgb(191,0,0)"
+    var BoldGreen = "rgb(0,201,0)"
+    var BoldYellow = "rgb(255,191,0)"
+    var BoldBlue = "rgb(0,0,191)"
+    var BoldMagenta = "rgb(220,0,220)"
+    var BoldCyan = "rgb(0,221,221)"
+    var BoldWhite = "rgb(225,225,225)"
     var BrightBlack = "rgb(127,127,127)"
     var BrightRed = "rgb(255,0,0)"
     var BrightGreen = "rgb(0,252,0)"
@@ -58,6 +66,14 @@ define(function (require) {
         Magenta: Magenta,
         Cyan: Cyan,
         White: White,
+        BoldBlack: Black,
+        BoldRed: BoldRed,
+        BoldGreen: BoldGreen,
+        BoldYellow: BoldYellow,
+        BoldBlue: BoldBlue,
+        BoldMagenta: BoldMagenta,
+        BoldCyan: BoldCyan,
+        BoldWhite: White,
         "Bright-Black": BrightBlack,
         "Bright-Red": BrightRed,
         "Bright-Green": BrightGreen,

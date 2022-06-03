@@ -107,8 +107,14 @@ define(function (require) {
                     l = createLine(line.ID, index)
                     ctx = l.Canvas.getContext('2d')
                 }
+                let fontcolor
                 let bgcolor=word.Background?settings[word.Background]:settings.background
-                let fontcolor=settings[word.Color] || color
+                if (word.Color){
+                    fontcolor=(word.Bold && !word.Inverse)?settings["Bold"+word.Color]:settings[word.Color]    
+                }else{
+                    fontcolor=color
+                }
+                
                 if (word.Inverse){
                     let c=fontcolor
                     fontcolor=bgcolor

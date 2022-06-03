@@ -8,6 +8,15 @@
 .words .Magenta{color:rgb(156,0,156)}
 .words .Cyan{color:rgb(0,147,147)}
 .words .White{color:rgb(210,210,210)}
+
+.words .Red.bold{color:rgb(191,0,0)}
+.words .Green.bold{color:rgb(0,201,0)}
+.words .Yellow.bold{color:rgb(255,191,0)}
+.words .Blue.bold{color:rgb(0,0,191)}
+.words .Magenta.bold{color:rgb(220,0,220)}
+.words .Cyan.bold{color:rgb(0,221,221)}
+
+
 .words .Bright-Black{color:rgb(127,127,127)}
 .words .Bright-Red{color:rgb(255,0,0)}
 .words .Bright-Green{color:rgb(0,252,0)}
@@ -42,6 +51,7 @@
 .words .inverse.BG-Magenta{color:rgb(156,0,156)}
 .words .inverse.BG-Cyan{color:rgb(0,147,147)}
 .words .inverse.BG-White{color:rgb(210,210,210)}
+
 .words .inverse.BG-Bright-Black{color:rgb(127,127,127)}
 .words .inverse.BG-Bright-Red{color:rgb(255,0,0)}
 .words .inverse.BG-Bright-Green{color:rgb(0,252,0)}
@@ -58,6 +68,16 @@
 .words .inverse.Magenta{background:rgb(156,0,156)}
 .words .inverse.Cyan{background:rgb(0,147,147)}
 .words .inverse.White{background:rgb(210,210,210)}
+
+.words .inverse.Red.bold{background:rgb(191,0,0)}
+.words .inverse.Green.bold{background:rgb(0,201,0)}
+.words .inverse.Yellow.bold{background:rgb(255,191,0)}
+.words .inverse.Blue.bold{background:rgb(0,0,191)}
+.words .inverse.Magenta.bold{background:rgb(220,0,220)}
+.words .inverse.Cyan.bold{background:rgb(0,221,221)}
+
+
+
 .words .inverse.Bright-Black{background:rgb(127,127,127)}
 .words .inverse.Bright-Red{background:rgb(255,0,0)}
 .words .inverse.Bright-Green{background:rgb(0,252,0)}

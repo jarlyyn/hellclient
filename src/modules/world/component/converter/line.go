@@ -26,7 +26,7 @@ func ConvertToLine(last *world.Word, msg []byte, charset string, errhandler func
 				}
 				w.Text = string(b)
 				line.Append(w)
-				w = &world.Word{}
+				w = w.Inherit()
 			} else if s.Type == "CSI" {
 				for _, v := range s.Params {
 					switch v {
@@ -35,6 +35,9 @@ func ConvertToLine(last *world.Word, msg []byte, charset string, errhandler func
 							w.Color = ""
 							w.Background = ""
 							w.Bold = false
+							w.Inverse = false
+							w.Underlined = false
+							w.Blinking = false
 						}
 					case "1":
 						{
@@ -211,5 +214,5 @@ func ConvertToLine(last *world.Word, msg []byte, charset string, errhandler func
 			}
 		}
 	}
-	return line, w
+	return line, nil
 }
