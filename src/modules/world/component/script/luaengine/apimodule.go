@@ -226,6 +226,13 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("Simulate", l.NewFunction(a.Simulate))
 	l.SetGlobal("SimulateOutput", l.NewFunction(a.SimulateOutput))
 
+	l.SetGlobal("DumpTriggers", l.NewFunction(a.DumpTriggers))
+	l.SetGlobal("RestoreTriggers", l.NewFunction(a.RestoreTriggers))
+	l.SetGlobal("DumpTimers", l.NewFunction(a.DumpTimers))
+	l.SetGlobal("RestoreTimers", l.NewFunction(a.RestoreTimers))
+	l.SetGlobal("DumpAliases", l.NewFunction(a.DumpAliases))
+	l.SetGlobal("RestoreAliases", l.NewFunction(a.RestoreAliases))
+
 }
 
 func (a *luaapi) Milliseconds(L *lua.LState) int {
@@ -1424,6 +1431,40 @@ func (a *luaapi) SimulateOutput(L *lua.LState) int {
 	a.API.SimulateOutput(output)
 	return 0
 }
+func (a *luaapi) DumpTriggers(L *lua.LState) int {
+	byUser := L.ToBool(1)
+	L.Push(lua.LString(a.API.DumpTriggers(byUser)))
+	return 1
+}
+func (a *luaapi) RestoreTriggers(L *lua.LState) int {
+	data := L.ToString(1)
+	byUser := L.ToBool(2)
+	a.API.RestoreTriggers(data, byUser)
+	return 0
+}
+func (a *luaapi) DumpTimers(L *lua.LState) int {
+	byUser := L.ToBool(1)
+	L.Push(lua.LString(a.API.DumpTimers(byUser)))
+	return 1
+}
+func (a *luaapi) RestoreTimers(L *lua.LState) int {
+	data := L.ToString(1)
+	byUser := L.ToBool(2)
+	a.API.RestoreTimers(data, byUser)
+	return 0
+}
+func (a *luaapi) DumpAliases(L *lua.LState) int {
+	byUser := L.ToBool(1)
+	L.Push(lua.LString(a.API.DumpAliases(byUser)))
+	return 1
+}
+func (a *luaapi) RestoreAliases(L *lua.LState) int {
+	data := L.ToString(1)
+	byUser := L.ToBool(2)
+	a.API.RestoreAliases(data, byUser)
+	return 0
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

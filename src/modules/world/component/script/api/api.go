@@ -1368,3 +1368,61 @@ func (a *API) SimulateOutput(output string) {
 		}
 	}()
 }
+
+func (a *API) DumpTriggers(byUser bool) string {
+	t := a.Bus.GetTriggersByType(byUser)
+	data, err := json.Marshal(t)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+func (a *API) RestoreTriggers(data string, byUser bool) {
+	var list = []*world.Trigger{}
+	err := json.Unmarshal([]byte(data), &list)
+	if err != nil {
+		panic(err)
+	}
+	for _, v := range list {
+		v.SetByUser(byUser)
+	}
+	a.Bus.AddTriggers(list)
+}
+func (a *API) DumpTimers(byUser bool) string {
+	t := a.Bus.GetTimersByType(byUser)
+	data, err := json.Marshal(t)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+func (a *API) RestoreTimers(data string, byUser bool) {
+	var list = []*world.Timer{}
+	err := json.Unmarshal([]byte(data), &list)
+	if err != nil {
+		panic(err)
+	}
+	for _, v := range list {
+		v.SetByUser(byUser)
+	}
+	a.Bus.AddTimers(list)
+}
+func (a *API) DumpAliases(byUser bool) string {
+	al := a.Bus.GetAliasesByType(byUser)
+	data, err := json.Marshal(al)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+func (a *API) RestoreAliases(data string, byUser bool) {
+	var list = []*world.Alias{}
+	err := json.Unmarshal([]byte(data), &list)
+	if err != nil {
+		panic(err)
+	}
+	for _, v := range list {
+		v.SetByUser(byUser)
+	}
+	a.Bus.AddAliases(list)
+}

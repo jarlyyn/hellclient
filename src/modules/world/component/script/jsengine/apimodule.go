@@ -258,6 +258,13 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 
 	AppendToWorld(jp.Runtime, world, "Simulate", a.Simulate)
 	AppendToWorld(jp.Runtime, world, "SimulateOutput", a.SimulateOutput)
+
+	AppendToWorld(jp.Runtime, world, "DumpTriggers", a.DumpTriggers)
+	AppendToWorld(jp.Runtime, world, "RestoreTriggers", a.RestoreTriggers)
+	AppendToWorld(jp.Runtime, world, "DumpTimers", a.DumpTimers)
+	AppendToWorld(jp.Runtime, world, "RestoreTimers", a.RestoreTimers)
+	AppendToWorld(jp.Runtime, world, "DumpAliases", a.DumpAliases)
+	AppendToWorld(jp.Runtime, world, "RestoreAliases", a.RestoreAliases)
 }
 
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1247,7 +1254,41 @@ func (a *jsapi) SimulateOutput(call goja.FunctionCall, r *goja.Runtime) goja.Val
 	output := call.Argument(0).String()
 	a.API.SimulateOutput(output)
 	return nil
+}
 
+func (a *jsapi) DumpTriggers(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	byUser := call.Argument(0).ToBoolean()
+	result := r.ToValue(a.API.DumpTriggers(byUser))
+	return result
+}
+func (a *jsapi) RestoreTriggers(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	data := call.Argument(0).String()
+	byUser := call.Argument(1).ToBoolean()
+	a.API.RestoreTriggers(data, byUser)
+	return nil
+}
+func (a *jsapi) DumpTimers(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	byUser := call.Argument(0).ToBoolean()
+	result := r.ToValue(a.API.DumpTimers(byUser))
+	return result
+}
+func (a *jsapi) RestoreTimers(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	data := call.Argument(0).String()
+	byUser := call.Argument(1).ToBoolean()
+	a.API.RestoreTimers(data, byUser)
+	return nil
+}
+func (a *jsapi) DumpAliases(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	byUser := call.Argument(0).ToBoolean()
+	result := r.ToValue(a.API.DumpAliases(byUser))
+	return result
+
+}
+func (a *jsapi) RestoreAliases(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	data := call.Argument(0).String()
+	byUser := call.Argument(1).ToBoolean()
+	a.API.RestoreAliases(data, byUser)
+	return nil
 }
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
