@@ -9,12 +9,14 @@
 .words .Cyan{color:rgb(0,147,147)}
 .words .White{color:rgb(210,210,210)}
 
+.words .Black.bold{color:rgb(64,64,64)}
 .words .Red.bold{color:rgb(191,0,0)}
 .words .Green.bold{color:rgb(0,201,0)}
 .words .Yellow.bold{color:rgb(255,191,0)}
 .words .Blue.bold{color:rgb(0,0,191)}
 .words .Magenta.bold{color:rgb(220,0,220)}
 .words .Cyan.bold{color:rgb(0,221,221)}
+.words .White.bold{color:rgb(225,225,225)}
 
 
 .words .Bright-Black{color:rgb(127,127,127)}
@@ -52,6 +54,16 @@
 .words .inverse.BG-Cyan{color:rgb(0,147,147)}
 .words .inverse.BG-White{color:rgb(210,210,210)}
 
+.words .inverse.BG-.bold{color:rgb(64,64,64)}
+.words .inverse.BG-Black.bold{color:rgb(64,64,64)}
+.words .inverse.BG-Red.bold{color:rgb(191,0,0)}
+.words .inverse.BG-Green.bold{color:rgb(0,201,0)}
+.words .inverse.BG-Yellow.bold{color:rgb(255,191,0)}
+.words .inverse.BG-Blue.bold{color:rgb(0,0,191)}
+.words .inverse.BG-Magenta.bold{color:rgb(220,0,220)}
+.words .inverse.BG-Cyan.bold{color:rgb(0,221,221)}
+.words .inverse.BG-White.bold{color:rgb(225,225,225)}
+
 .words .inverse.BG-Bright-Black{color:rgb(127,127,127)}
 .words .inverse.BG-Bright-Red{color:rgb(255,0,0)}
 .words .inverse.BG-Bright-Green{color:rgb(0,252,0)}
@@ -69,12 +81,14 @@
 .words .inverse.Cyan{background:rgb(0,147,147)}
 .words .inverse.White{background:rgb(210,210,210)}
 
+.words .inverse.Black.bold{background:rgb(64,64,64)}
 .words .inverse.Red.bold{background:rgb(191,0,0)}
 .words .inverse.Green.bold{background:rgb(0,201,0)}
 .words .inverse.Yellow.bold{background:rgb(255,191,0)}
 .words .inverse.Blue.bold{background:rgb(0,0,191)}
 .words .inverse.Magenta.bold{background:rgb(220,0,220)}
 .words .inverse.Cyan.bold{background:rgb(0,221,221)}
+.words .inverse.White.bold{background:rgb(225,225,225)}
 
 
 
