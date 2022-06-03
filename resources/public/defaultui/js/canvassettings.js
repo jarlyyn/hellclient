@@ -1,11 +1,15 @@
 define(function (require) {
     var lineheight = 20
-    var linewidth = 80 * 14
+    var fontsize=14
+    var linewidth = 80 * fontsize
     var middleline = lineheight / 2
+    var underlineoffset=1
+    var underline = lineheight -((lineheight-fontsize)/ 2)+underlineoffset
+    var underlineheight=1
     var maxlines = 60
-    var font = "14px monospace"
-    var fontbold= "bold 14px monospace"
-    var fontblinking= "italic 14px monospace"
+    var font = fontsize+"px monospace"
+    var fontbold= "bold "+fontsize+"px monospace"
+    var fontblinking= "italic "+fontsize+"px monospace"
     var background = "#000000"
     var color = "#ffffff"
     var Black = "rgb(0,0,0)"
@@ -52,6 +56,8 @@ define(function (require) {
         lineheight: lineheight,
         linewidth: linewidth,
         middleline: middleline,
+        underline:underline,
+        underlineheight:underlineheight,
         maxlines: maxlines,
         font: font,
         fontbold:fontbold,

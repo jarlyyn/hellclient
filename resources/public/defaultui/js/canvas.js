@@ -130,6 +130,9 @@ define(function (require) {
                     ctx.font=settings.fontblinking
                 }
                 ctx.fillText(char, l.Position, settings.middleline)
+                if (word.Underlined){
+                    ctx.fillRect(l.Position, settings.underline, width, settings.underlineheight);
+                }
                 l.Position += width
                 if (l.Position >= settings.linewidth && nocr) {
                     break
