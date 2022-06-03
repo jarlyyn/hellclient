@@ -672,3 +672,101 @@ StopEvaluatingTriggers()
 ### 返回值
 
 无
+
+## DumpTriggers
+
+导出触发器列表
+
+### 原型
+
+```
+DumpTriggers(byUser bool) string
+```
+### 描述
+
+以序列化后的JSON形式导出触发器列表
+
+* byUser 为true导出游戏触发列表，为false导出脚本触发列表
+### 代码范例
+
+Javascript:
+```
+world.Note(world.DumpTriggers(true))
+```
+
+Lua:
+```
+Note(DumpTriggers(true))
+```
+
+### 返回值
+
+序列化后的触发器列表
+
+触发器结构为
+
+```go
+type Trigger struct {
+	ID                string
+	Name              string
+	Enabled           bool
+	Match             string
+	Send              string
+	ColourChangeType  int
+	Colour            int
+	Wildcard          int
+	SoundFileName     string
+	SoundIfInactive   bool
+	Script            string
+	SendTo            int
+	Sequence          int
+	ExpandVariables   bool
+	Temporary         bool
+	OneShot           bool
+	Regexp            bool
+	Repeat            bool
+	MultiLine         bool
+	LinesToMatch      int
+	WildcardLowerCase bool
+	Group             string
+	IgnoreCase        bool
+	KeepEvaluating    bool
+	OmitFromLog       bool
+	OmitFromOutput    bool
+	Inverse           bool
+	Italic            bool
+	Variable          string
+}
+```
+
+## RestoreTriggers
+
+恢复触发器列表
+
+### 原型
+```
+RestoreTriggers(data string,byuser bool)
+```
+
+### 描述
+
+将JSON序列化的触发器导入
+
+* data 需要导入的JSON数据
+* byuser 为true导入游戏触发，false导入脚本触发
+
+### 代码范例
+
+Javascript:
+```
+world.DumpTrRestoreTriggersiggers(data,true)
+```
+
+Lua:
+```
+RestoreTriggers(data,true)
+```
+
+### 返回值
+
+无

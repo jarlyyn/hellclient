@@ -495,3 +495,93 @@ SetAliasOption(name string, option string, value string) int
 * eAliasCannotBeEmpty 匹配文本不能为空
 * eOK 成功
 
+
+## DumpAliases
+
+导出别名列表
+
+### 原型
+
+```
+DumpAliases(byUser bool) string
+```
+### 描述
+
+以序列化后的JSON形式导出别名列表
+
+* byUser 为true导出游戏别名列表，为false导出脚本别名列表
+### 代码范例
+
+Javascript:
+```
+world.Note(world.DumpAliases(true))
+```
+
+Lua:
+```
+Note(DumpAliases(true))
+```
+
+### 返回值
+
+序列化后的别名列表
+
+别名结构为
+
+```go
+type Alias struct {
+	ID                     string
+	Name                   string
+	Enabled                bool
+	Match                  string
+	Send                   string
+	Script                 string
+	SendTo                 int
+	Sequence               int
+	ExpandVariables        bool
+	Temporary              bool
+	OneShot                bool
+	Regexp                 bool
+	Group                  string
+	IgnoreCase             bool
+	KeepEvaluating         bool
+	Menu                   bool
+	OmitFromLog            bool
+	Variable               string
+	ReverseSpeedwalk       bool
+	OmitFromOutput         bool
+	OmitFromCommandHistory bool
+}
+```
+
+## RestoreAliases
+
+恢复别名列表
+
+### 原型
+```
+RestoreAliases(data string,byuser bool)
+```
+
+### 描述
+
+将JSON序列化的别名导入
+
+* data 需要导入的JSON数据
+* byuser 为true导入游戏别名，false导入脚本别名
+
+### 代码范例
+
+Javascript:
+```
+world.RestoreAliases(data,true)
+```
+
+Lua:
+```
+RestoreAliases(data,true)
+```
+
+### 返回值
+
+无

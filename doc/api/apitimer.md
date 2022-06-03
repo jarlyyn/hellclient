@@ -581,3 +581,90 @@ SetTimerOption ("mytimer", "minute", "5")
 * eTimerNotFound 计时器未找到
 * eTimeInvalid 时间无效
 * eOK 设置成功
+
+## DumpTimers
+
+导出计时器列表
+
+### 原型
+
+```
+DumpTimers(byUser bool) string
+```
+### 描述
+
+以序列化后的JSON形式导出计时器列表
+
+* byUser 为true导出游戏计时器列表，为false导出脚本计时器列表
+### 代码范例
+
+Javascript:
+```
+world.Note(world.DumpTimers(true))
+```
+
+Lua:
+```
+Note(DumpTimers(true))
+```
+
+### 返回值
+
+序列化后的计时器列表
+
+计时器结构为
+
+```go
+type Timer struct {
+	ID                    string
+	Name                  string
+	Enabled               bool
+	Hour                  int
+	Minute                int
+	Second                float64
+	Send                  string
+	Script                string
+	AtTime                bool
+	SendTo                int
+	ActionWhenDisconnectd bool
+	Temporary             bool
+	OneShot               bool
+	Group                 string
+	Variable              string
+	OmitFromLog           bool
+	OmitFromOutput        bool
+}
+
+```
+
+## RestoreTimers
+
+恢复计时器列表
+
+### 原型
+```
+RestoreTimers(data string,byuser bool)
+```
+
+### 描述
+
+将JSON序列化的计时器导入
+
+* data 需要导入的JSON数据
+* byuser 为true导入游戏计时器，false导入脚本计时器
+
+### 代码范例
+
+Javascript:
+```
+world.RestoreTimers(data,true)
+```
+
+Lua:
+```
+RestoreTimers(data,true)
+```
+
+### 返回值
+
+无

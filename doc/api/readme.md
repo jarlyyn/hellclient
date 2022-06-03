@@ -14,6 +14,8 @@
 * [GetAliasOption 获取别名选项](apialias.md#GetAliasOption)
 * [IsAlias 判断别名是否存在](apialias.md#IsAlias)
 * [SetAliasOption 设置别名选项](apialias.md#SetAliasOption)
+* [DumpAliases 导出别名列表](apialias.md#DumpAliases)
+* [RestoreAliases 导入别名列表](apialias.md#RestoreAliases)
 
 ## 计时器接口
 
@@ -30,6 +32,8 @@
 * [ResetTimer 重置计时器](apitimer.md#ResetTimer)
 * [ResetTimers 重置全部计时器](apitimer.md#ResetTimers)
 * [SetTimerOption 设置计时器选项](apitimer.md#SetTimerOption)
+* [DumpTimers 导出计时器列表](apitimer.md#DumpTimers)
+* [RestoreTimers 导入计时器列表](apitimer.md#RestoreTimers)
 
 ## 触发器接口
 
@@ -46,6 +50,9 @@
 * [IsTrigger 判断触发器是否存在](apitrigger.md#IsTrigger)
 * [SetTriggerOption 设置触发器选项](apitrigger.md#SetTriggerOption)
 * [StopEvaluatingTriggers 停止执行触发器](apitrigger.md#StopEvaluatingTriggers)
+* [DumpTriggers 导出触发器列表](apitrigger.md#DumpTriggers)
+* [RestoreTriggers 导入触发器列表](apitrigger.md#RestoreTriggers)
+  
 
 ## 游戏管理接口
 * [GetWorldById 废弃接口](apiworld.md#GetWorldById)

@@ -921,7 +921,7 @@ SetMediaType(t string)
 
 ### 描述
 
-设置可视化输入的媒体类型，暂时只支持image和output
+设置可视化输入的媒体类型，暂时只支持image，output和text
 
 默认为image
 
