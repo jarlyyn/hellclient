@@ -6,6 +6,14 @@
 
 Mapper是每个游戏独立的地图对象,所有的操作都基于这个对象
 
+注:出于兼容性考虑,Mapper的方法都可以使用全小写的方式调用
+
+如
+
+```
+Mapper.reset
+```
+
 ### room
 
 房间，地图中的每个位置的具体信息
@@ -68,7 +76,7 @@ type Step struct {
 
 飞行列表,就是一个路径列表，用于只带那些从所有房间都可以进入的路径，不依附于特定房间
 
-## Mapper.reset
+## Mapper.Reset
 
 重置地图
 
@@ -86,19 +94,19 @@ Reset()
 
 Javascript
 ```
-Mapper.reset()
+Mapper.Reset()
 ```
 
 Lua
 ```
-Mapper:reset()
+Mapper:Reset()
 ```
 
 ### 返回值
 
 无
 
-## Mapper.addtags
+## Mapper.AddTags
 
 添加标签
 
@@ -115,19 +123,19 @@ AddTags(tagnames []string)
 
 Javascript
 ```
-Mapper.addtags("tag1","tag2","tag3")
+Mapper.AddTags("tag1","tag2","tag3")
 ```
 
 Lua
 ```
-Mapper:addtags("tag1","tag2","tag3")
+Mapper:AddTags("tag1","tag2","tag3")
 ```
 
 ### 返回值
 
 无
 
-## Mapper.settag
+## Mapper.SetTag
 
 设置标签
 
@@ -148,12 +156,12 @@ SetTag(tagname string, enabled bool)
 
 Javascript
 ```
-Mapper.settag("mytag",true)
+Mapper.SetTag("mytag",true)
 ```
 
 Lua
 ```
-Mapper:settag("mytag",true)
+Mapper:SetTag("mytag",true)
 ```
 
 ### 返回值
@@ -177,19 +185,19 @@ SetTags(tagnames []string)
 
 Javascript
 ```
-Mapper.settags("tag1","tag2","tag3")
+Mapper.SetTags("tag1","tag2","tag3")
 ```
 
 Lua
 ```
-Mapper:settags("tag1","tag2","tag3")
+Mapper:SetTags("tag1","tag2","tag3")
 ```
 
 ### 返回值
 
 无
 
-### Mapper.flashtags
+### Mapper.FlashTags
 
 清理标签
 
@@ -207,18 +215,18 @@ FlashTags()
 
 Javascript
 ```
-Mapper.flashtags()
+Mapper.FlashTags()
 ```
 Lua
 ```
-Mapper:flashtags()
+Mapper:FlashTags()
 ```
 
 ### 返回值
 
 无
 
-## Mapper.tags
+## Mapper.Tags
 
 获取标签
 
@@ -247,7 +255,7 @@ Note(Mapper:Tags)
 
 字符串列表
 
-## Mapper.getpath
+## Mapper.GetPath
 
 获取路径
 
@@ -295,7 +303,7 @@ end
 
 见描述
 
-## Mapper.addpath
+## Mapper.AddPath
 
 添加路径
 
@@ -316,17 +324,19 @@ AddPath(id string, path *Path) bool
 
 Javascript
 ```
+Mapper.AddPath("roomid",path)
 ```
 
 Lua
 ```
+Mapper.AddPath("roomid",path)
 ```
 
 ### 返回值
 
 房间是否存在
 
-## Mapper.newpath
+## Mapper.NewPath
 
 新建路径
 
@@ -344,7 +354,7 @@ NewPath() *Path
 
 Javascript
 ```
-var path=Mapper.newpath()
+var path=Mapper.Newpath()
 path.command="command"
 path.from="form"
 path.to="to"
@@ -355,7 +365,7 @@ path.excludetags=["extag1","extag2"]
 
 Lua
 ```
-local path=Mapper:newpath()
+local path=Mapper:Newpath()
 path.command="command"
 path.from="form"
 path.to="to"
@@ -368,7 +378,7 @@ path.excludetags={"extag1","extag2"}
 
 path 对象
 
-## Mapper.getroomid
+## Mapper.GetRoomID
 
 获取房间id
 
@@ -398,7 +408,7 @@ local rooms=Mapper:GetRoomID("房间")
 
 房间名匹配的房间ID列表
 
-## Mapper.getroomname
+## Mapper.GetRoomName
 
 获取房间名
 
@@ -429,7 +439,7 @@ Note(Mapper:GetRoomName("房间名"))
 
 空
 
-## Mapper.setroomname
+## Mapper.SetRoomName
 
 设置房间
 
@@ -459,7 +469,7 @@ Mapper:SetRoomName("start","开始")
 
 无
 
-## Mapper.clearroom
+## Mapper.ClearRoom
 
 清理房间
 
@@ -477,19 +487,19 @@ ClearRoom(id string)
 
 Javascript
 ```
-Mapper.clearroom("new")
+Mapper.ClearRoom("new")
 ```
 
 Lua
 ```
-Mapper:clearroom("new")
+Mapper:ClearRoom("new")
 ```
 
 ### 返回值
 
 无
 
-## Mapper.newarea 
+## Mapper.NewArea 
 
 新建区域
 
@@ -528,7 +538,7 @@ end
 
 字符串列表
 
-## Mapper.getexits
+## Mapper.GetExits
 
 获取房间出口
 
@@ -587,7 +597,7 @@ end
 
 path对象列表
 
-## Mapper.flylist
+## Mapper.FlyList
 
 获取飞行列表
 
@@ -598,13 +608,13 @@ FlyList() []*Path
 
 ### 描述
 
-获取当前地图的flylist
+获取当前地图的FlyList
 
 ### 代码范例
 
 Javascript
 ```
-var flyList=Mapper.flyList()
+var flyList=Mapper.FlyList()
 
 flyList.forEach(function (fly){
     world.Note(fly.command) //出口命令
@@ -621,7 +631,7 @@ flyList.forEach(function (fly){
 
 Lua
 ```
-local flyList=Mapper:flyList()
+local flyList=Mapper:FlyList()
 for k, fly in pairs(flyList) do
     Note(fly.command) //出口命令
     Note(fly.delay) //出口延迟
@@ -658,12 +668,12 @@ SetFlyList(fly []*Path)
 
 Javascript
 ```
-Mapper.setflylist(list)
+Mapper.SetFlyList(list)
 ```
 
 Lua
 ```
-Mapper:setflylist(list)
+Mapper:SetFlyList(list)
 ```
 
 ### 返回值

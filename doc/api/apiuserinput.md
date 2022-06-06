@@ -6,6 +6,9 @@
 
 大部分数据输入支持回调函数，通过回调函数来相应用户的操作
 
+注:出于兼容性考虑,Userinput,List,VisualPrompt,Datagrid的方法都可以使用全小写的方式调用
+
+
 ### List
 
 列表
@@ -35,7 +38,7 @@
 
 可视化输入一般用于识别图片或验证码，并输入内容
 
-## Userinput.prompt
+## Userinput.Prompt
 
 用户输入框
 
@@ -62,19 +65,19 @@ Prompt (script string, title string, intro string, value string) string
 
 Javascript
 ```
-Userinput.prompt("handleprompt","Input","what's your name","")
+Userinput.Prompt("handleprompt","Input","what's your name","")
 ```
 
 Lua
 ```
-Userinput:prompt("handleprompt","Input","what's your name","")
+Userinput:Prompt("handleprompt","Input","what's your name","")
 ```
 
 ### 返回值
 
 唯一id
 
-## Userinput.confirm
+## Userinput.Confirm
 
 用户确认框
 
@@ -98,19 +101,19 @@ Confirm(script string, title string, intro string) string
 
 Javascript
 ```
-Userinput.confirm("handleprompt","Input","what's your name")
+Userinput.Confirm("handleprompt","Input","what's your name")
 ```
 
 Lua
 ```
-Userinput:confirm("handleprompt","Input","what's your name")
+Userinput:Confirm("handleprompt","Input","what's your name")
 ```
 
 ### 返回值
 
 唯一id
 
-## Userinput.alert
+## Userinput.Alert
 
 用户提示框
 
@@ -134,19 +137,19 @@ Alert(script string, title string, intro string) string
 
 Javascript
 ```
-Userinput.alert("handleprompt","Input","what's your name")
+Userinput.Alert("handleprompt","Input","what's your name")
 ```
 
 Lua
 ```
-Userinput:alert("handleprompt","Input","what's your name")
+Userinput:Alert("handleprompt","Input","what's your name")
 ```
 
 ### 返回值
 
 唯一id
 
-## Userinput.newlist
+## Userinput.NewList
 
 新建列表
 
@@ -160,7 +163,7 @@ NewList(title string, intro string, withfilter bool)*List
 
 创建一个列表
 
-列表需要发布(publish)后才会显示
+列表需要发布(Publish)后才会显示
 * title 列表标题
 * intro 列表介绍
 * withfilter 列表是否带过滤器
@@ -168,19 +171,19 @@ NewList(title string, intro string, withfilter bool)*List
 
 Javascript
 ```
-var list=Userinput.newlist("test list","A test list",true)
+var list=Userinput.NewList("test list","A test list",true)
 ```
 
 Lua
 ```
-local list=Userinput:newlist("test list","A test list",true)
+local list=Userinput:NewList("test list","A test list",true)
 ```
 
 ### 返回值
 
 新列表对象
 
-## Userinput.newdatagrid
+## Userinput.NewDatagrid
 
 新建数据表格
 
@@ -200,19 +203,19 @@ NewDatagrid(title string, intro string) *Datagrid
 
 Javascript
 ```
-var datagrid=Userinput.newdatagrid("test data grid","A test data grid")
+var datagrid=Userinput.NewDatagrid("test data grid","A test data grid")
 ```
 
 Lua
 ```
-local datagrid=Userinput:newdatagrid("test data grid","A test data grid")
+local datagrid=Userinput:NewDatagrid("test data grid","A test data grid")
 ```
 
 ### 返回值
 
 新数据表格对象
 
-## Userinput.newvisualprompt
+## Userinput.NewVisualPrompt
 
 新建可视化输入
 
@@ -233,19 +236,19 @@ NewVisualPrompt(title string, intro string, source string) *VisualPrompt
 
 Javascript
 ```
-var vp=Userinput.newvisualprompt("test data visualprompt","A test data grid","http://127.0.0.1/test.png")
+var vp=Userinput.NewVisualPrompt("test data visualprompt","A test data grid","http://127.0.0.1/test.png")
 ```
 
 Lua
 ```
-local vp=Userinput:newvisualprompt("test data visualprompt","A test data grid","http://127.0.0.1/test.png)
+local vp=Userinput:NewVisualPrompt("test data visualprompt","A test data grid","http://127.0.0.1/test.png)
 ```
 
 ### 返回值
 
 新可视化输入对象
 
-## Userinput.hideall
+## Userinput.HideAll
 
 隐藏界面UI
 
@@ -260,18 +263,18 @@ List,Datagrid,VirualPrompt的操作界面会进行隐藏
 ### 代码范例
 Javascript
 ```
-Userinput.hideall()
+Userinput.HideAll()
 ```
 
 Lua
 ```
-Userinput.hideall()
+Userinput.HideAll()
 ```
 
 ### 返回值
 
 无
-## List.append
+## List.Append
 
 列表追加
 
@@ -292,19 +295,19 @@ Append(key string, value string)
 
 Javascript
 ```
-list.append("sword","长剑")
+list.Append("sword","长剑")
 ```
 
 Lua
 ```
-list.append("sword","长剑")
+list.Append("sword","长剑")
 ```
 
 ### 返回值
 
 无
 
-## List.setmutli
+## List.SetMutli
 
 列表设置多选
 
@@ -329,19 +332,19 @@ SetMutli(mutli bool)
 
 Javascript
 ```
-List.setmutli(true)
+List.SetMutli(true)
 ```
 
 Lua
 ```
-List.setmutli(true)
+List.SetMutli(true)
 ```
 
 ### 返回值
 
 无
 
-## List.setvalue
+## List.SetValue
 
 列表设置值
 
@@ -360,19 +363,19 @@ SetValues(values []string)
 
 Javascript
 ```
-List.setvalue(["key1","key2","key3"])
+List.SetValue(["key1","key2","key3"])
 ```
 
 Lua
 ```
-List.setvalue({"key1","key2","key3"})
+List.SetValue({"key1","key2","key3"})
 ```
 
 ### 返回值
 
 无
 
-## List.publish
+## List.Publish
 
 列表发布
 
@@ -396,19 +399,19 @@ Publish(script string) string
 
 Javascript
 ```
-List.publish("handlelist")
+List.Publish("handlelist")
 ```
 
 Lua
 ```
-List.publish("handlelist")
+List.Publish("handlelist")
 ```
 
 ### 返回值
 
 唯一id
 
-## Datagrid.append
+## Datagrid.Append
 
 数据表格追加数据
 
@@ -424,19 +427,19 @@ Append(key string, value string)
 ### 范例代码
 Javascript
 ```
-Datagrid.append("key","value")
+Datagrid.Append("key","value")
 ```
 
 Lua
 ```
-Datagrid.append("key","value")
+Datagrid.Append("key","value")
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.resetitems
+## Datagrid.ResetItems
 
 数据表格重置元素
 
@@ -453,18 +456,18 @@ ResetItems()
 
 Javascript
 ```
-Datagrid.resetitems()
+Datagrid.ResetItems()
 ```
 
 Lua
 ```
-Datagrid.resetitems()
+Datagrid.ResetItems()
 ```
 
 ### 返回值
 
 空
-## Datagrid.setfilter
+## Datagrid.SetFilter
 
 数据表格设置过滤值
 
@@ -480,19 +483,19 @@ SetFilter(filter string)
 
 Javascript
 ```
-Datagrid.setfilter("filter)
+Datagrid.SetFilter("filter)
 ```
 
 Lua
 ```
-Datagrid.setfilter("filter)
+Datagrid.SetFilter("filter)
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.getfilter
+## Datagrid.GetFilter
 
 数据表格获取过滤值
 
@@ -509,18 +512,18 @@ GetFilter() string
 
 Javascript
 ```
-world.Note(Datagrid.getfilter())
+world.Note(Datagrid.GetFilter())
 ```
 
 Lua
 ```
-Note(Datagrid.getfilter())
+Note(Datagrid.GetFilter())
 ```
 ### 返回值
 
 字符串
 
-## Datagrid.setmaxpage
+## Datagrid.SetMaxPage
 
 数据表格设置最大页数
 
@@ -535,19 +538,19 @@ SetMaxPage(page int)
 ### 范例代码
 Javascript
 ```
-Datagrid.setmaxpage(10)
+Datagrid.SetMaxPage(10)
 ```
 
 Lua
 ```
-Datagrid.setmaxpage(10)
+Datagrid.SetMaxPage(10)
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.setpage
+## Datagrid.SetPage
 
 数据表格设置当前页
 
@@ -563,19 +566,19 @@ SetPage(page int)
 ### 范例代码
 Javascript
 ```
-Datagrid.setpage(3)
+Datagrid.SetPage(3)
 ```
 
 Lua
 ```
-Datagrid.setpage(3)
+Datagrid.SetPage(3)
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.getpage
+## Datagrid.GetPage
 
 数据表格获取当前页
 
@@ -592,18 +595,18 @@ GetPage() int
 
 Javascript
 ```
-world.Note(Datagrid.getpage)
+world.Note(Datagrid.GetPage())
 ```
 
 Lua
 ```
-Note(Datagrid.getpage)
+Note(Datagrid.GetPage())
 ```
 ### 返回值
 
 整数的当前页
 
-## Datagrid.setoncreate
+## Datagrid.SetOnCreate
 
 数据表格设置创建回调
 
@@ -623,19 +626,19 @@ SetOnCreate(oncreate string)
 
 Javascript
 ```
-Datagrid.setonupdate("handleupdate")
+Datagrid.SetOnCreate("handleupdate")
 ```
 
 Lua
 ```
-Datagrid.setonupdate("handleupdate")
+Datagrid.SetOnCreate("handleupdate")
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.setonupdate
+## Datagrid.SetOnUpdate
 
 数据表格设置更新回调
 
@@ -659,19 +662,19 @@ SetOnUpdate(onupdate string)
 
 Javascript
 ```
-Datagrid.setonupdate("handleupdate")
+Datagrid.SetOnUpdate("handleupdate")
 ```
 
 Lua
 ```
-Datagrid.setonupdate("handleupdate")
+Datagrid.SetOnUpdate("handleupdate")
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.setonview
+## Datagrid.SetOnView
 
 数据表格设置查看回调
 
@@ -695,19 +698,19 @@ SetOnView(onview string)
 
 Javascript
 ```
-Datagrid.setonview("handleview")
+Datagrid.SetOnView("handleview")
 ```
 
 Lua
 ```
-Datagrid.setonview("handleview")
+Datagrid.SetOnView("handleview")
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.setonselect
+## Datagrid.SetOnSelect
 
 数据表格设置选择回调
 
@@ -731,19 +734,19 @@ SetOnSelect(onselect string)
 
 Javascript
 ```
-Datagrid.setonselect("handleselect")
+Datagrid.SetOnSelect("handleselect")
 ```
 
 Lua
 ```
-Datagrid.setonselect("handleselect")
+Datagrid.SetOnSelect("handleselect")
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.setondelete
+## Datagrid.SetOnDelete
 
 数据表格设置删除回调
 
@@ -767,19 +770,19 @@ SetOnDelete(ondelete string)
 
 Javascript
 ```
-Datagrid.setondelete("handledelete")
+Datagrid.SetOnDelete("handledelete")
 ```
 
 Lua
 ```
-Datagrid.setondelete("handledelete")
+Datagrid.SetOnDelete("handledelete")
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.setonfilter
+## Datagrid.SetOnFilter
 
 数据表格设置过滤回调
 
@@ -803,19 +806,19 @@ SetOnFilter(onfilter string)
 
 Javascript
 ```
-Datagrid.setonfilter("handlefilter")
+Datagrid.SetOnFilter("handlefilter")
 ```
 
 Lua
 ```
-Datagrid.setonfilter("handlefilter")
+Datagrid.SetOnFilter("handlefilter")
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.setonpage
+## Datagrid.SetOnPage
 
 数据表格设置分页回调
 
@@ -839,19 +842,19 @@ SetOnPage(onpage string)
 
 Javascript
 ```
-Datagrid.setonpage("handlepage")
+Datagrid.SetOnPage("handlepage")
 ```
 
 Lua
 ```
-Datagrid.setonpage("handlepage")
+Datagrid.SetOnPage("handlepage")
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.hide
+## Datagrid.Hide
 
 数据表格隐藏
 
@@ -868,19 +871,19 @@ Hide()
 
 Javascript
 ```
-Datagrid.hide()
+Datagrid.Hide()
 ```
 
 Lua
 ```
-Datagrid.hide()
+Datagrid.Hide()
 ```
 
 ### 返回值
 
 无
 
-## Datagrid.publish
+## Datagrid.Publish
 
 数据表格发布
 
@@ -898,19 +901,19 @@ Publish(script string) string
 
 Javascript
 ```
-Datagrid.publish("onclose")
+Datagrid.Publish("onclose")
 ```
 
 Lua
 ```
-Datagrid.publish("onclose")
+Datagrid.Publish("onclose")
 ```
 
 ### 返回值
 
 唯一id
 
-## VisualPrompt.setmediatype
+## VisualPrompt.SetMediaType
 
 可视化输入设置媒体类型
 
@@ -931,19 +934,19 @@ output需要将url设置为DumpOutput的返回值(JSON格式的Line数组)
 
 Javascript
 ```
-VisualPrompt.setmediatype("image")
+VisualPrompt.SetMediaType("image")
 ```
 
 Lua
 ```
-VisualPrompt.setmediatype("image")
+VisualPrompt.SetMediaType("image")
 ```
 
 ### 返回值
 
 无
 
-## VisualPrompt.setportrait
+## VisualPrompt.SetPortrait
 
 可视化输入设置垂直模式
 
@@ -960,19 +963,19 @@ SetPortrait(v bool)
 
 Javascript
 ```
-VisualPrompt.setportrait(true)
+VisualPrompt.SetPortrait(true)
 ```
 
 Lua
 ```
-VisualPrompt.setportrait(true)
+VisualPrompt.SetPortrait(true)
 ```
 
 ### 返回值
 
 无
 
-### VisualPrompt.setrefreshcallback
+### VisualPrompt.SetRefreshCallback
 
 可视化输入设置刷新回调
 
@@ -992,19 +995,19 @@ SetRefreshCallback(callback string)
 
 Javascript
 ```
-VisualPrompt.setrefreshcallback("handlerefresh")
+VisualPrompt.SetRefreshCallback("handlerefresh")
 ```
 
 Lua
 ```
-VisualPrompt.setrefreshcallback("handlerefresh")
+VisualPrompt.SetRefreshCallback("handlerefresh")
 ```
 
 ### 返回值
 
 无
 
-## VisualPrompt.publish
+## VisualPrompt.Publish
 
 可视化输入发布
 
@@ -1029,19 +1032,19 @@ script为接受用户提交的回调
 
 Javascript
 ```
-VisualPrompt.publish("onvisualprompt")
+VisualPrompt.Publish("onvisualprompt")
 ```
 
 Lua
 ```
-VisualPrompt.publish("onvisualprompt")
+VisualPrompt.Publish("onvisualprompt")
 ```
 
 ### 返回值
 
 唯一ID
 
-## VisualPrompt.append
+## VisualPrompt.Append
 
 列表追加
 
@@ -1064,12 +1067,12 @@ Append(key string, value string)
 
 Javascript
 ```
-VisualPrompt.append("sword","长剑")
+VisualPrompt.Append("sword","长剑")
 ```
 
 Lua
 ```
-VisualPrompt.append("sword","长剑")
+VisualPrompt.Append("sword","长剑")
 ```
 
 ### 返回值

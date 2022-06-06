@@ -21,7 +21,17 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				l.Push(lua.LNumber(b.GetMetronomeBeats()))
 				return 1
 			}))
+			m.RawSetString("GetBeats", l.NewFunction(func(L *lua.LState) int {
+				l.Push(lua.LNumber(b.GetMetronomeBeats()))
+				return 1
+			}))
 			m.RawSetString("setbeats", l.NewFunction(func(L *lua.LState) int {
+				_ = l.Get(1) //this
+				b.SetMetronomeBeats(l.ToInt(2))
+				return 0
+			}))
+
+			m.RawSetString("SetBeats", l.NewFunction(func(L *lua.LState) int {
 				_ = l.Get(1) //this
 				b.SetMetronomeBeats(l.ToInt(2))
 				return 0
@@ -30,11 +40,19 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				b.DoResetMetronome()
 				return 0
 			}))
+			m.RawSetString("Reset", l.NewFunction(func(L *lua.LState) int {
+				b.DoResetMetronome()
+				return 0
+			}))
 			m.RawSetString("getspace", l.NewFunction(func(L *lua.LState) int {
 				l.Push(lua.LNumber(b.GetMetronomeSpace()))
 				return 1
 			}))
-			m.RawSetString("getqueue", l.NewFunction(func(L *lua.LState) int {
+			m.RawSetString("GetSpace", l.NewFunction(func(L *lua.LState) int {
+				l.Push(lua.LNumber(b.GetMetronomeSpace()))
+				return 1
+			}))
+			getqueue := l.NewFunction(func(L *lua.LState) int {
 				q := b.GetMetronomeQueue()
 				t := l.NewTable()
 				for k := range q {
@@ -42,8 +60,14 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				}
 				l.Push(t)
 				return 1
-			}))
+			})
+			m.RawSetString("getqueue", getqueue)
+			m.RawSetString("GetQueue", getqueue)
 			m.RawSetString("discard", l.NewFunction(func(L *lua.LState) int {
+				b.DoDiscardMetronome(L.ToBool(1))
+				return 0
+			}))
+			m.RawSetString("Discard", l.NewFunction(func(L *lua.LState) int {
 				b.DoDiscardMetronome(L.ToBool(1))
 				return 0
 			}))
@@ -51,7 +75,15 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				b.DoLockMetronomeQueue()
 				return 0
 			}))
+			m.RawSetString("LockQueue", l.NewFunction(func(L *lua.LState) int {
+				b.DoLockMetronomeQueue()
+				return 0
+			}))
 			m.RawSetString("full", l.NewFunction(func(L *lua.LState) int {
+				b.DoFullMetronome()
+				return 0
+			}))
+			m.RawSetString("Full", l.NewFunction(func(L *lua.LState) int {
 				b.DoFullMetronome()
 				return 0
 			}))
@@ -59,7 +91,15 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				b.DoFullTickMetronome()
 				return 0
 			}))
+			m.RawSetString("FullTick", l.NewFunction(func(L *lua.LState) int {
+				b.DoFullTickMetronome()
+				return 0
+			}))
 			m.RawSetString("getinterval", l.NewFunction(func(L *lua.LState) int {
+				l.Push(lua.LNumber(b.GetMetronomeInterval() / time.Millisecond))
+				return 1
+			}))
+			m.RawSetString("GetInterval", l.NewFunction(func(L *lua.LState) int {
 				l.Push(lua.LNumber(b.GetMetronomeInterval() / time.Millisecond))
 				return 1
 			}))
@@ -68,7 +108,16 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				b.SetMetronomeInterval(time.Duration(l.ToInt64(2)) * time.Millisecond)
 				return 0
 			}))
+			m.RawSetString("SetInterval", l.NewFunction(func(L *lua.LState) int {
+				_ = l.Get(1) //this
+				b.SetMetronomeInterval(time.Duration(l.ToInt64(2)) * time.Millisecond)
+				return 0
+			}))
 			m.RawSetString("gettick", l.NewFunction(func(L *lua.LState) int {
+				l.Push(lua.LNumber(b.GetMetronomeTick() / time.Millisecond))
+				return 1
+			}))
+			m.RawSetString("GetTick", l.NewFunction(func(L *lua.LState) int {
 				l.Push(lua.LNumber(b.GetMetronomeTick() / time.Millisecond))
 				return 1
 			}))
@@ -77,7 +126,12 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				b.SetMetronomeTick(time.Duration(l.ToInt64(2)) * time.Millisecond)
 				return 0
 			}))
-			m.RawSetString("push", l.NewFunction(func(L *lua.LState) int {
+			m.RawSetString("SetTick", l.NewFunction(func(L *lua.LState) int {
+				_ = l.Get(1) //this
+				b.SetMetronomeTick(time.Duration(l.ToInt64(2)) * time.Millisecond)
+				return 0
+			}))
+			push := l.NewFunction(func(L *lua.LState) int {
 				_ = l.Get(1) //this
 				args := l.ToTable(2)
 				grouped := l.ToBool(3)
@@ -90,7 +144,9 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				})
 				b.DoPushMetronome(cmds, grouped)
 				return 0
-			}))
+			})
+			m.RawSetString("push", push)
+			m.RawSetString("Push", push)
 			l.SetGlobal("Metronome", m)
 			next(ctx, plugin)
 		},

@@ -14,6 +14,8 @@
 * 第11秒时，第1秒发送的5个命令已经超过一个周期，从队列中发送前5个命令，队列中还有1个命令
 * 第15秒时，第2秒发送的命令全都超过一个周期，发送队列内剩余的1个命令，队列为空
 
+注:出于兼容性考虑,Metronome的方法都可以使用全小写的方式调用
+
 ### tick
 发送限制的周期
 
@@ -32,7 +34,7 @@
 
 无法直接发送的命令将进入队列，并以interval为间隔检查是否可以再次发送
 
-## Metronome.getbeats
+## Metronome.GetBeats
 
 获取发送限制
 
@@ -52,19 +54,19 @@ Beats() int
 
 Javascript
 ```
-world.Note(Metronome.getbeats())
+world.Note(Metronome.GetBeats())
 ```
 
 Lua
 ```
-Note(Metronome:getbeats())
+Note(Metronome:GetBeats())
 ```
 
 ### 返回值
 
 设置的限制值
 
-## Metronome.setbeats
+## Metronome.SetBeats
 
 设置发送限制
 
@@ -83,19 +85,19 @@ SetBeats(beats int)
 
 Javascript
 ```
-Metronome.setbeats(15)
+Metronome.SetBeats(15)
 ```
 
 Lua
 ```
-Metronome:setbeats(15)
+Metronome:SetBeats(15)
 ```
 
 ### 返回值
 
 无
 
-## Metronome.reset
+## Metronome.Reset
 
 重置限流器
 
@@ -124,7 +126,7 @@ Metronome:Reset()
 
 无
 
-## Metronome.getspace
+## Metronome.GetSpace
 
 获取剩余空间
 
@@ -141,19 +143,19 @@ Space() int
 ### 范例代码
 Javascript
 ```
-world.Note(Metronome.getspace())
+world.Note(Metronome.GetSpace())
 ```
 
 Lua
 ```
-Note(Metronome:getspace())
+Note(Metronome:GetSpace())
 ```
 
 ### 返回值
 
 整数
 
-## Metronome.getqueue
+## Metronome.GetQueue
 
 获取队列
 
@@ -170,7 +172,7 @@ Queue() []string
 
 Javascript
 ```
-var queue=Metronome.getqueue()
+var queue=Metronome.GetQueue()
 queue.forEach(function (cmd) {
     world.Note(cmd)
 })
@@ -178,7 +180,7 @@ queue.forEach(function (cmd) {
 
 Lua
 ```
-local queue=Metronome:getqueue()
+local queue=Metronome:GetQueue()
 for k, cmd in pairs(queue) do
     Note(cmd)
 end
@@ -187,7 +189,7 @@ end
 
 命令速组
 
-## Metronome.discard
+## Metronome.Discard
 
 放弃队列
 
@@ -206,19 +208,19 @@ Discard(force bool) bool
 
 Javascript
 ```
-world.Note(Metronome.discard(true))
+world.Note(Metronome.Discard(true))
 ```
 
 Lua
 ```
-Note(Metronome:discard(true))
+Note(Metronome:Discard(true))
 ```
 
 ### 返回值
 
 销毁是否成功
 
-## Metronome.lockqueue
+## Metronome.LockQueue
 
 锁定队列
 
@@ -237,19 +239,19 @@ LockQueue()
 
 Javascript
 ```
-Metronome.lockqueue()
+Metronome.LockQueue()
 ```
 
 Lua
 ```
-Metronome:lockqueue
+Metronome:LockQueue
 ```
 
 ### 返回值
 
 无
 
-## Metronome.full
+## Metronome.Full
 
 填充完整周期
 
@@ -262,25 +264,25 @@ Full()
 
 在限流器里填充一个完整周期，确保当前队列输出后一个周期内不会发送命令
 
-应该与Metronome.discard 配合使用
+应该与Metronome.Discard 配合使用
 
 ### 代码范例
 
 Javascript
 ```
-Metronome.full()
+Metronome.Full()
 ```
 
 Lua
 ```
-Metronome:full()
+Metronome:Full()
 ```
 
 ### 返回值
 
 无
 
-## Metronome.fulltick
+## Metronome.FullTick
 
 填充当前周期
 
@@ -300,19 +302,19 @@ FullTick()
 
 Javascript
 ```
-Metronome.fulltick()
+Metronome.FullTick()
 ```
 
 Lua
 ```
-Metronome:fulltick()
+Metronome:FullTick()
 ```
 
 ### 返回值
 
 无
 
-## Metronome.getinterval
+## Metronome.GetInterval
 
 获取发送间隔
 
@@ -333,19 +335,19 @@ Interval() int
 
 Javascript
 ```
-world.Note(Metronome.getinterval())
+world.Note(Metronome.GetInterval())
 ```
 
 Lua
 ```
-Note(Metronome:getinterval())
+Note(Metronome:GetInterval())
 ```
 
 ### 返回值
 
 以毫秒(1/1000秒)为单位的整数
 
-## Metronome.setinterval
+## Metronome.SetInterval
 
 设置发送间隔
 
@@ -364,19 +366,19 @@ SetInterval(interval int)
 
 Javascript
 ```
-Metronome.setinterval(50)
+Metronome.SetInterval(50)
 ```
 
 Lua
 ```
-Metronome:setinterval(50)
+Metronome:SetInterval(50)
 ```
 
 ### 返回值
 
 空
 
-## Metronome.gettick
+## Metronome.GetTick
 
 获取限流周期
 
@@ -396,12 +398,12 @@ Tick() int
 
 Javascript
 ```
-world.Note(Metronome.gettick())
+world.Note(Metronome.GetTick())
 ```
 
 Lua
 ```
-Note(Metronome:gettick())
+Note(Metronome:GetTick())
 ```
 
 ### 返回值
@@ -427,19 +429,19 @@ SetTick(tick int)
 
 Javascript
 ```
-Metronome.settick(50)
+Metronome.SetTick(50)
 ```
 
 Lua
 ```
-Metronome:settick(50)
+Metronome:SetTick(50)
 ```
 
 ### 返回值
 
 空
 
-## Metronome.push
+## Metronome.Push
 
 推送命令
 
@@ -461,12 +463,12 @@ Push(cmds []string,grouped bool,echo bool)
 
 Javascript
 ```
-Metronome.push(["w","n","s"],true,true)
+Metronome.Push(["w","n","s"],true,true)
 ```
 
 Lua
 ```
-Metronome:push({"w","n","s"},true,true)
+Metronome:Push({"w","n","s"},true,true)
 ```
 
 ### 返回值

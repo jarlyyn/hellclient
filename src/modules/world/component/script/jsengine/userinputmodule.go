@@ -50,10 +50,15 @@ func (p *VisualPrompt) Publish(call goja.FunctionCall, r *goja.Runtime) goja.Val
 func (p *VisualPrompt) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("setmediatype", p.SetMediaType)
+	obj.Set("SetMediaType", p.SetMediaType)
 	obj.Set("setportrait", p.SetPortrait)
+	obj.Set("SetPortrait", p.SetPortrait)
 	obj.Set("append", p.Append)
+	obj.Set("Append", p.Append)
 	obj.Set("setrefreshcallback", p.SetRefreshCallback)
+	obj.Set("SetRefreshCallback", p.SetRefreshCallback)
 	obj.Set("publish", p.Publish)
+	obj.Set("Publish", p.Publish)
 	return obj
 }
 
@@ -127,21 +132,37 @@ func (g *Datagrid) Hide(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (g *Datagrid) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("append", g.Append)
+	obj.Set("Append", g.Append)
 	obj.Set("publish", g.Publish)
+	obj.Set("Publish", g.Publish)
 	obj.Set("resetitems", g.ResetItems)
+	obj.Set("ResetItems", g.ResetItems)
 	obj.Set("setoncreate", g.SetOnCreate)
+	obj.Set("SetOnCreate", g.SetOnCreate)
 	obj.Set("setonupdate", g.SetOnUpdate)
+	obj.Set("SetOnUpdate", g.SetOnUpdate)
 	obj.Set("setonview", g.SetOnView)
+	obj.Set("SetOnView", g.SetOnView)
 	obj.Set("setonselect", g.SetOnSelect)
+	obj.Set("SetOnSelect", g.SetOnSelect)
 	obj.Set("setondelete", g.SetOnDelete)
+	obj.Set("SetOnDelete", g.SetOnDelete)
 	obj.Set("setonfilter", g.SetOnFilter)
+	obj.Set("SetOnFilter", g.SetOnFilter)
 	obj.Set("setonpage", g.SetOnPage)
+	obj.Set("SetOnPage", g.SetOnPage)
 	obj.Set("setfilter", g.SetFilter)
+	obj.Set("SetFilter", g.SetFilter)
 	obj.Set("getfilter", g.GetFilter)
+	obj.Set("GetFilter", g.GetFilter)
 	obj.Set("setmaxpage", g.SetMaxPage)
+	obj.Set("SetMaxPage", g.SetMaxPage)
 	obj.Set("setpage", g.SetPage)
+	obj.Set("SetPage", g.SetPage)
 	obj.Set("getpage", g.GetPage)
+	obj.Set("GetPage", g.GetPage)
 	obj.Set("hide", g.Hide)
+	obj.Set("Hide", g.Hide)
 	return obj
 }
 
@@ -174,9 +195,13 @@ func (l *List) SetMutli(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (l *List) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("append", l.Append)
+	obj.Set("Append", l.Append)
 	obj.Set("publish", l.Publish)
+	obj.Set("Publish", l.Publish)
 	obj.Set("setmutli", l.SetMutli)
+	obj.Set("SetMutli", l.SetMutli)
 	obj.Set("setvalues", l.SetValues)
+	obj.Set("SetValues", l.SetValues)
 	return obj
 }
 
@@ -225,12 +250,19 @@ func (u *Userinput) Alert(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (u *Userinput) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("prompt", u.Prompt)
+	obj.Set("Prompt", u.Prompt)
 	obj.Set("confirm", u.Confirm)
+	obj.Set("Confirm", u.Confirm)
 	obj.Set("alert", u.Alert)
+	obj.Set("Alert", u.Alert)
 	obj.Set("newlist", u.NewList)
+	obj.Set("Newlist", u.NewList)
 	obj.Set("newdatagrid", u.NewDatagrid)
+	obj.Set("NewDatagrid", u.NewDatagrid)
 	obj.Set("newvisualprompt", u.NewVisualPrompt)
+	obj.Set("NewVisualPrompt", u.NewVisualPrompt)
 	obj.Set("hideall", u.HideAll)
+	obj.Set("HideAll", u.HideAll)
 	return obj
 }
 func NewUserinputModule(b *bus.Bus) *herbplugin.Module {

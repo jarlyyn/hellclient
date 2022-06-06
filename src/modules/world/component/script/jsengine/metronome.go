@@ -21,7 +21,14 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 			m.Set("getbeats", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				return r.ToValue(b.GetMetronomeBeats())
 			})
+			m.Set("GetBeats", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				return r.ToValue(b.GetMetronomeBeats())
+			})
 			m.Set("setbeats", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				b.SetMetronomeBeats(int(call.Argument(0).ToInteger()))
+				return nil
+			})
+			m.Set("SetBeats", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				b.SetMetronomeBeats(int(call.Argument(0).ToInteger()))
 				return nil
 			})
@@ -29,13 +36,27 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				b.DoResetMetronome()
 				return nil
 			})
+			m.Set("Reset", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				b.DoResetMetronome()
+				return nil
+			})
 			m.Set("getspace", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				return r.ToValue(b.GetMetronomeSpace())
+			})
+			m.Set("GetSpace", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				return r.ToValue(b.GetMetronomeSpace())
 			})
 			m.Set("getqueue", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				return r.ToValue(b.GetMetronomeQueue())
 			})
+			m.Set("GetQueue", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				return r.ToValue(b.GetMetronomeQueue())
+			})
 			m.Set("discard", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				b.DoDiscardMetronome(call.Argument(0).ToBoolean())
+				return nil
+			})
+			m.Set("Discard", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				b.DoDiscardMetronome(call.Argument(0).ToBoolean())
 				return nil
 			})
@@ -43,7 +64,15 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				b.DoLockMetronomeQueue()
 				return nil
 			})
+			m.Set("Lockqueue", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				b.DoLockMetronomeQueue()
+				return nil
+			})
 			m.Set("full", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				b.DoFullMetronome()
+				return nil
+			})
+			m.Set("Full", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				b.DoFullMetronome()
 				return nil
 			})
@@ -51,21 +80,39 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				b.DoFullTickMetronome()
 				return nil
 			})
+			m.Set("FullTick", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				b.DoFullTickMetronome()
+				return nil
+			})
 			m.Set("getinterval", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				return r.ToValue(b.GetMetronomeInterval() / time.Millisecond)
+			})
+			m.Set("GetInterval", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				return r.ToValue(b.GetMetronomeInterval() / time.Millisecond)
 			})
 			m.Set("setinterval", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				b.SetMetronomeInterval(time.Duration(call.Argument(0).ToInteger()) * time.Millisecond)
 				return nil
 			})
+			m.Set("SetInterval", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				b.SetMetronomeInterval(time.Duration(call.Argument(0).ToInteger()) * time.Millisecond)
+				return nil
+			})
 			m.Set("gettick", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				return r.ToValue(b.GetMetronomeTick() / time.Millisecond)
+			})
+			m.Set("GetTick", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				return r.ToValue(b.GetMetronomeTick() / time.Millisecond)
 			})
 			m.Set("settick", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				b.SetMetronomeTick(time.Duration(call.Argument(0).ToInteger()) * time.Millisecond)
 				return nil
 			})
-			m.Set("push", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+			m.Set("SetTick", func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+				b.SetMetronomeTick(time.Duration(call.Argument(0).ToInteger()) * time.Millisecond)
+				return nil
+			})
+			push := func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 				args := []string{}
 				err := r.ExportTo(call.Argument(0), &args)
 				if err != nil {
@@ -81,7 +128,9 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				}
 				b.DoPushMetronome(cmds, grouped)
 				return nil
-			})
+			}
+			m.Set("push", push)
+			m.Set("Push", push)
 			r.Set("Metronome", m)
 			next(ctx, plugin)
 		},

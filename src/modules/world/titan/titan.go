@@ -44,7 +44,6 @@ type Titan struct {
 	hellswitch     *hellswitch.Hellswitch
 	Scriptpath     string
 	Modpath        string
-	Skeletonpath   string
 	Logpath        string
 	MaxHistory     int
 	MaxLines       int
@@ -347,7 +346,6 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.GetModPath = t.GetModPath
 
 	b.GetLogsPath = t.GetLogsPath
-	b.GetSkeletonPath = t.GetSkeletonPath
 	b.GetScriptHome = b.WrapGetString(t.GetScriptHome)
 	b.RequestPermissions = b.WrapHandleAuthorization(t.RequestPermissions)
 	b.RequestTrustDomains = b.WrapHandleAuthorization(t.RequestTrustDomains)
@@ -604,9 +602,6 @@ func (t *Titan) HandleCmdFindHistory(id string, position int) {
 	}
 }
 
-func (t *Titan) GetSkeletonPath() string {
-	return t.Skeletonpath
-}
 func (t *Titan) GetScriptPath() string {
 	return t.Scriptpath
 }

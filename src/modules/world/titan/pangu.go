@@ -29,7 +29,6 @@ func CreatePangu() {
 	Pangu.Scriptpath = util.AppData(ScriptsFolder)
 	Pangu.Logpath = util.AppData(LogsFolder)
 	Pangu.Modpath = util.AppData(ModsFolder)
-	Pangu.Skeletonpath = util.AppData(SkeletonsFolder)
 	Pangu.MaxHistory = app.System.MaxHistory
 	if Pangu.MaxHistory <= 0 {
 		Pangu.MaxHistory = DefaultMaxHistory

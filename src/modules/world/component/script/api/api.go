@@ -10,8 +10,6 @@ import (
 	"hellclient/modules/version"
 	"hellclient/modules/world"
 	"hellclient/modules/world/bus"
-	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -633,44 +631,6 @@ func (a *API) MustCheckHome() {
 		if id == "" {
 			return
 		}
-		skel := filepath.Join(a.Bus.GetSkeletonPath(), id)
-		if os.IsNotExist(err) {
-			os.MkdirAll(home, util.DefaultFolderMode)
-			_, err = os.Stat(skel)
-			if err != nil {
-				if os.IsNotExist(err) {
-					return
-				}
-				panic(err)
-			}
-			err := filepath.Walk(skel, func(path string, info fs.FileInfo, err error) error {
-				if err != nil {
-					panic(err)
-				}
-				if info.IsDir() {
-					return os.MkdirAll(path, util.DefaultFolderMode)
-				}
-				folder, _ := filepath.Split(path)
-				err = os.MkdirAll(folder, util.DefaultFolderMode)
-				if err != nil {
-					panic(err)
-				}
-				data, err := ioutil.ReadFile(filepath.Join(skel, path))
-				if err != nil {
-					panic(err)
-				}
-				err = ioutil.WriteFile(filepath.Join(home, path), data, util.DefaultFileMode)
-				if err != nil {
-					panic(err)
-				}
-				return nil
-			})
-			if err != nil {
-				panic(err)
-			}
-			return
-		}
-		panic(err)
 	}
 }
 func (a *API) MustCleanHomeFileInsidePath(name string) string {

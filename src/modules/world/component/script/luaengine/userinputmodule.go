@@ -51,10 +51,15 @@ func (p *VisualPrompt) Publish(L *lua.LState) int {
 func (p *VisualPrompt) Convert(L *lua.LState) lua.LValue {
 	t := L.NewTable()
 	t.RawSetString("setmediatype", L.NewFunction(p.SetMediaType))
+	t.RawSetString("SetMediaType", L.NewFunction(p.SetMediaType))
 	t.RawSetString("setportrait", L.NewFunction(p.SetPortrait))
-	t.RawSetString("append", L.NewFunction(p.Append))
-	t.RawSetString("setrefreshcallback", L.NewFunction(p.SetRefreshCallback))
-	t.RawSetString("publish", L.NewFunction(p.Publish))
+	t.RawSetString("SetPortrait", L.NewFunction(p.SetPortrait))
+	t.RawSetString("Append", L.NewFunction(p.Append))
+	t.RawSetString("Append", L.NewFunction(p.Append))
+	t.RawSetString("SetRefreshCallback", L.NewFunction(p.SetRefreshCallback))
+	t.RawSetString("SetRefreshCallback", L.NewFunction(p.SetRefreshCallback))
+	t.RawSetString("Publish", L.NewFunction(p.Publish))
+	t.RawSetString("Publish", L.NewFunction(p.Publish))
 	return t
 }
 
@@ -146,6 +151,23 @@ func (g *Datagrid) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("setpage", L.NewFunction(g.SetPage))
 	t.RawSetString("getpage", L.NewFunction(g.GetPage))
 	t.RawSetString("hide", L.NewFunction(g.Hide))
+
+	t.RawSetString("Append", L.NewFunction(g.Append))
+	t.RawSetString("Publish", L.NewFunction(g.Publish))
+	t.RawSetString("ResetItems", L.NewFunction(g.ResetItems))
+	t.RawSetString("SetOnCreate", L.NewFunction(g.SetOnCreate))
+	t.RawSetString("SetOnUpdate", L.NewFunction(g.SetOnUpdate))
+	t.RawSetString("SetOnView", L.NewFunction(g.SetOnView))
+	t.RawSetString("SetOnSelect", L.NewFunction(g.SetOnSelect))
+	t.RawSetString("SetOnDelete", L.NewFunction(g.SetOnDelete))
+	t.RawSetString("SetOnFilter", L.NewFunction(g.SetOnFilter))
+	t.RawSetString("SetOnPage", L.NewFunction(g.SetOnPage))
+	t.RawSetString("SetFilter", L.NewFunction(g.SetFilter))
+	t.RawSetString("GetFilter", L.NewFunction(g.GetFilter))
+	t.RawSetString("SetMaxPage", L.NewFunction(g.SetMaxPage))
+	t.RawSetString("SetPage", L.NewFunction(g.SetPage))
+	t.RawSetString("GetPage", L.NewFunction(g.GetPage))
+	t.RawSetString("Hide", L.NewFunction(g.Hide))
 	return t
 }
 
@@ -184,6 +206,12 @@ func (l *List) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("publish", L.NewFunction(l.Publish))
 	t.RawSetString("setvalues", L.NewFunction(l.SetValues))
 	t.RawSetString("setmutli", L.NewFunction(l.SetMutli))
+
+	t.RawSetString("Append", L.NewFunction(l.Append))
+	t.RawSetString("Publish", L.NewFunction(l.Publish))
+	t.RawSetString("SetValues", L.NewFunction(l.SetValues))
+	t.RawSetString("SetMutli", L.NewFunction(l.SetMutli))
+
 	return t
 }
 
@@ -251,6 +279,14 @@ func (u *Userinput) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("newdatagrid", L.NewFunction(u.NewDatagrid))
 	t.RawSetString("newvisualprompt", L.NewFunction(u.NewVisualPrompt))
 	t.RawSetString("hideall", L.NewFunction(u.HideAll))
+
+	t.RawSetString("Prompt", L.NewFunction(u.Prompt))
+	t.RawSetString("Confirm", L.NewFunction(u.Confirm))
+	t.RawSetString("Alert", L.NewFunction(u.Alert))
+	t.RawSetString("NewList", L.NewFunction(u.NewList))
+	t.RawSetString("NewDatagrid", L.NewFunction(u.NewDatagrid))
+	t.RawSetString("NewVisualPrompt", L.NewFunction(u.NewVisualPrompt))
+	t.RawSetString("HideAll", L.NewFunction(u.HideAll))
 	return t
 }
 func NewUserinputModule(b *bus.Bus) *herbplugin.Module {
