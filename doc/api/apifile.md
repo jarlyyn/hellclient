@@ -214,6 +214,38 @@ local data=ReadHomeLines("mydata.txt")
 
 字符串列表
 
+## MakeHomeFolder
+
+创建用户目录
+
+### 原型
+```
+MakeHomeFolder(name string) bool
+```
+
+### 描述
+
+创建指定的用户目录
+
+* name 以用户脚本根目录为基准的目录名
+
+如果文件在家目录范围外，会报告错误
+
+### 代码范例
+
+Javascript
+```
+var success=world.MakeHomeFolder("myfolder")
+```
+
+Lua
+```
+local success=MakeHomeFolder("myfolder")
+```
+
+### 返回值
+
+布尔值,是否成功创建目录
 ## HasModFile
 
 检查模组文件
@@ -382,3 +414,4 @@ eOK
 ### 返回值
 
 eOK
+

@@ -139,6 +139,9 @@
 * [ReadHomeFile 读取用户文件](apifile.md#ReadHomeFile)
 * [WriteHomeFile 写入用户文件](apifile.md#WriteHomeFile)
 * [ReadHomeLines 读取用户文件并分行](apifile.md#ReadHomeLines)
+* [MakeHomeFolder 创建用户目录](apifile.md#MakeHomeFolder)
+
+
 * [HasModFile 检查用户文件](apifile.md#HasModFile)
 * [ReadModFile 读取用户文件](apifile.md#ReadModFile)
 * [ReadModLines 读取用户文件并分行](apifile.md#ReadModLines)

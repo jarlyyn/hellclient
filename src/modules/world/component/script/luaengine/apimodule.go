@@ -162,6 +162,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("ReadModFile", l.NewFunction(a.NewReadModFileAPI(p)))
 	l.SetGlobal("ReadModLines", l.NewFunction(a.NewReadModLinesAPI(p)))
 
+	l.SetGlobal("MakeHomeFolder", l.NewFunction(a.NewMakeHomeFolderAPI(p)))
 	l.SetGlobal("HasHomeFile", l.NewFunction(a.NewHasHomeFileAPI(p)))
 	l.SetGlobal("ReadHomeFile", l.NewFunction(a.NewReadHomeFileAPI(p)))
 	l.SetGlobal("WriteHomeFile", l.NewFunction(a.NewWriteHomeFileAPI(p)))
@@ -874,6 +875,14 @@ func (a *luaapi) NewHasModFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
 		return 1
 	}
 }
+
+func (a *luaapi) NewMakeHomeFolderAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		L.Push(lua.LBool(a.API.MakeHomeFolder(p, L.ToString(1))))
+		return 1
+	}
+}
+
 func (a *luaapi) NewHasHomeFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
 	return func(L *lua.LState) int {
 		L.Push(lua.LBool(a.API.HasHomeFile(p, L.ToString(1))))

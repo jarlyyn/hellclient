@@ -196,6 +196,8 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "ReadModFile", a.NewReadModFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadModLines", a.NewReadModLinesAPI(p))
 
+	AppendToWorld(jp.Runtime, world, "MakeHomeFolder", a.NewMakeHomeFolderAPI(p))
+
 	AppendToWorld(jp.Runtime, world, "HasHomeFile", a.NewHasHomeFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadHomeFile", a.NewReadHomeFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadHomeLines", a.NewReadHomeLinesAPI(p))
@@ -775,6 +777,11 @@ func (a *jsapi) NewReadFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall,
 func (a *jsapi) NewHasModFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		return r.ToValue(a.API.HasModFile(p, call.Argument(0).String()))
+	}
+}
+func (a *jsapi) NewMakeHomeFolderAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.MakeHomeFolder(p, call.Argument(0).String()))
 	}
 }
 func (a *jsapi) NewHasHomeFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
