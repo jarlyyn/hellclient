@@ -693,7 +693,7 @@ func (a *API) MakeHomeFolder(p herbplugin.Plugin, name string) bool {
 	if filename == "" {
 		panic(fmt.Errorf("make folder %s not allowed", name))
 	}
-	err := os.MkdirAll(filename, util.DefaultFileMode)
+	err := os.MkdirAll(filename, util.DefaultFolderMode)
 	if err != nil {
 		if os.IsExist(err) {
 			return false
