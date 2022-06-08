@@ -6,6 +6,7 @@ import (
 	"hellclient/modules/routers"
 	"hellclient/modules/userpassword"
 	"net/http"
+	"time"
 
 	"github.com/herb-go/herb/middleware"
 	"github.com/herb-go/util"
@@ -16,6 +17,8 @@ import (
 const ModuleName = "900uiserver"
 
 const BasicauthRealm = ""
+
+var ReadTimeout = 5 * time.Minute
 
 func PasswordMiddleware(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	username, password := userpassword.Load()
@@ -44,6 +47,7 @@ func init() {
 			PasswordMiddleware,
 		).Handle(routers.RouterUIFactory.CreateRouter())
 		s := http.Server{}
+		s.ReadTimeout = ReadTimeout
 		s.Addr = app.System.Addr
 		s.Handler = a
 		go s.ListenAndServe()

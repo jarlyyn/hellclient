@@ -108,7 +108,11 @@ func (c *Config) DeleteParam(key string) {
 func (c *Config) GetParams() map[string]string {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
-	return c.Data.Params
+	result := make(map[string]string, len(c.Data.Params))
+	for k := range c.Data.Params {
+		result[k] = c.Data.Params[k]
+	}
+	return result
 }
 
 func (c *Config) GetParamComment(key string) string {
@@ -124,6 +128,10 @@ func (c *Config) SetParamComment(key string, value string) {
 func (c *Config) GetParamComments() map[string]string {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
+	result := make(map[string]string, len(c.Data.ParamComments))
+	for k := range c.Data.ParamComments {
+		result[k] = c.Data.ParamComments[k]
+	}
 	return c.Data.ParamComments
 }
 

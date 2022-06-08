@@ -128,8 +128,7 @@ func (a *API) Base64Decode(text string) *string {
 	return &result
 }
 func (a *API) GetVariable(text string) string {
-	allvar := a.Bus.GetParams()
-	return allvar[text]
+	return a.Bus.GetParam(text)
 }
 func (a *API) SetVariable(name string, content string) int {
 	a.Bus.SetParam(name, content)

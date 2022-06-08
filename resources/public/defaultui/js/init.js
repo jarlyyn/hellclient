@@ -1,4 +1,5 @@
 requirejs.config({
+    "waitSeconds":0,
     "paths": {
         "text":"/public/defaultui/js/text.min",
         "vue":"/public/defaultui/js/vue",
