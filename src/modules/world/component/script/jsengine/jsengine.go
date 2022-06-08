@@ -201,7 +201,11 @@ func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 		return false
 	}
 	e.Locker.Unlock()
-	return e.Call(b, e.onBuffer, string(data)).ToBoolean()
+	result := e.Call(b, e.onBuffer, string(data))
+	if result == nil {
+		return false
+	}
+	return result.ToBoolean()
 }
 
 func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
