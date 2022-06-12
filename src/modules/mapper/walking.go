@@ -84,6 +84,9 @@ func (w *Walking) Walk() []*Step {
 		if rooms[v] == nil {
 			continue
 		}
+		if w.from == v {
+			return []*Step{}
+		}
 		tolist[v] = true
 	}
 	if len(tolist) == 0 {
