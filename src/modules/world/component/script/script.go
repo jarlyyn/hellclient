@@ -71,7 +71,9 @@ func (s *Script) ReloadPermissions(b *bus.Bus) {
 	s.reloadPermissions(b)
 }
 func (s *Script) reloadPermissions(b *bus.Bus) {
-
+	if s.Options == nil {
+		return
+	}
 	opt := herbplugin.NewOptions()
 	opt.Location.Path = path.Join(b.GetScriptPath(), b.GetScriptID(), "script")
 	opt.Trusted = b.GetTrusted()
