@@ -361,6 +361,14 @@ func (s *Script) SendResponse(b *bus.Bus, msg *world.Message) {
 		}
 	}
 }
+func (s *Script) SendHUDClick(b *bus.Bus, c *world.Click) {
+	e := s.getEngine()
+	if e != nil {
+		s.SetCreator("hudclick", "")
+		e.OnHUDClick(b, c)
+	}
+}
+
 func (s *Script) SendBroadcast(b *bus.Bus, bc *world.Broadcast) {
 	if !s.verifyChannel(bc.Channel) {
 		return
@@ -425,6 +433,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.DoSendBroadcastToScript = b.WrapHandleBroadcast(s.SendBroadcast)
 	b.DoSendCallbackToScript = b.WrapHandleCallback(s.SendCallback)
 	b.DoSendResponseToScript = b.WrapHandleResponse(s.SendResponse)
+	b.DoSendHUDClickToScript = b.WrapHandleClick(s.SendHUDClick)
 	b.DoReloadPermissions = b.Wrap(s.ReloadPermissions)
 	b.DoRunScript = b.WrapHandleString(s.Run)
 	b.GetStatus = s.GetStatus

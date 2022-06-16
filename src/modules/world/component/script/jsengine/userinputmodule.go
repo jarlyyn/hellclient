@@ -246,7 +246,10 @@ func (u *Userinput) Alert(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	ui := userinput.SendAlert(u.bus, call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String())
 	return r.ToValue(ui.ID)
 }
-
+func (u *Userinput) Popup(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	ui := userinput.SendPopup(u.bus, call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String(), call.Argument(3).String())
+	return r.ToValue(ui.ID)
+}
 func (u *Userinput) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("prompt", u.Prompt)
@@ -255,6 +258,8 @@ func (u *Userinput) Convert(r *goja.Runtime) goja.Value {
 	obj.Set("Confirm", u.Confirm)
 	obj.Set("alert", u.Alert)
 	obj.Set("Alert", u.Alert)
+	obj.Set("popup", u.Popup)
+	obj.Set("Popup", u.Popup)
 	obj.Set("newlist", u.NewList)
 	obj.Set("Newlist", u.NewList)
 	obj.Set("newdatagrid", u.NewDatagrid)

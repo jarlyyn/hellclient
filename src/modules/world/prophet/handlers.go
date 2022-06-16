@@ -474,6 +474,15 @@ func (p *Prophet) onCmdFindHistory(conn connections.OutputConnection, cmd comman
 	p.Titan.HandleCmdFindHistory(id, msg)
 	return nil
 }
+func (p *Prophet) onCmdHUDClick(conn connections.OutputConnection, cmd command.Command) error {
+	id := p.Current.Load().(string)
+	var msg = &world.Click{}
+	if json.Unmarshal(cmd.Data(), msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdHUDClick(id, msg)
+	return nil
+}
 
 func (p *Prophet) onCmdUpdatePassword(conn connections.OutputConnection, cmd command.Command) error {
 	if forms.UpdatePassword(p.Titan, cmd.Data()) {
@@ -541,5 +550,6 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("revokeAuthorized", p.onCmdRevokeAuthorized)
 	handlers.Register("masssend", p.onCmdMasssend)
 	handlers.Register("findhistory", p.onCmdFindHistory)
+	handlers.Register("hudclick", p.onCmdHUDClick)
 
 }

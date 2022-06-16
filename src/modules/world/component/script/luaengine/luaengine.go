@@ -39,6 +39,7 @@ type LuaEngine struct {
 	onConnect    string
 	onBroadCast  string
 	onResponse   string
+	onHUDClick   string
 	onBuffer     string
 	onBufferMin  int
 	onBufferMax  int
@@ -59,6 +60,7 @@ func (e *LuaEngine) Open(b *bus.Bus) error {
 	e.onBroadCast = data.OnBroadcast
 	e.onResponse = data.OnResponse
 	e.onBuffer = data.OnBuffer
+	e.onHUDClick = data.OnHUDClick
 	e.onBufferMin = data.OnBufferMin
 	e.onBufferMax = data.OnBufferMax
 	err := util.Catch(func() {
@@ -194,6 +196,17 @@ func (e *LuaEngine) OnResponse(b *bus.Bus, msg *world.Message) {
 	e.Locker.Unlock()
 	go e.Call(b, fn, lua.LString(msg.Type), lua.LString(msg.ID), lua.LString(msg.Data))
 }
+
+func (e *LuaEngine) OnHUDClick(b *bus.Bus, c *world.Click) {
+	e.Locker.Lock()
+	if e.Plugin.LState == nil {
+		e.Locker.Unlock()
+		return
+	}
+	fn := e.Plugin.LState.GetGlobal(e.onHUDClick)
+	e.Locker.Unlock()
+	go e.Call(b, fn, lua.LNumber(c.X), lua.LNumber(c.Y))
+}
 func (e *LuaEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 	e.Locker.Lock()
 	if e.Plugin.LState == nil || e.onBuffer == "" {
@@ -242,6 +255,9 @@ func (e *LuaEngine) Call(b *bus.Bus, fn lua.LValue, args ...lua.LValue) lua.LVal
 	defer e.Locker.Unlock()
 	L := e.Plugin.LState
 	if L == nil {
+		return nil
+	}
+	if fn.Type() == lua.LTNil {
 		return nil
 	}
 	if err := L.CallByParam(lua.P{

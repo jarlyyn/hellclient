@@ -271,8 +271,10 @@ onButton.updateScriptSettings=function(){
         OnClose: vm.scriptSettings.OnClose,
         OnConnect: vm.scriptSettings.OnConnect,
         OnDisconnect: vm.scriptSettings.OnDisconnect,
+        OnResponse:vm.scriptSettings.OnResponse,
         OnOpen: vm.scriptSettings.OnOpen,
         Type: vm.scriptSettings.Type,
+        OnHUDClick:vm.scriptSettings.OnHUDClick,
     }
     vm.scriptsettingsUpdateFormVisible=true
 }

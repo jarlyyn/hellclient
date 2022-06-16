@@ -621,6 +621,14 @@ func (t *Titan) HandleCmdFindHistory(id string, position int) {
 	}
 }
 
+func (t *Titan) HandleCmdHUDClick(id string, click *world.Click) {
+	w := t.World(id)
+	if w != nil {
+		w.DoSendHUDClickToScript(click)
+	}
+
+}
+
 func (t *Titan) GetScriptPath() string {
 	return t.Scriptpath
 }

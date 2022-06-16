@@ -39,6 +39,7 @@ type JsEngine struct {
 	onDisconnect string
 	onConnect    string
 	onBroadCast  string
+	onHUDClick   string
 	onResponse   string
 	onBuffer     string
 	onBufferMin  int
@@ -59,6 +60,7 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 	e.onDisconnect = data.OnDisconnect
 	e.onBroadCast = data.OnBroadcast
 	e.onResponse = data.OnResponse
+	e.onHUDClick = data.OnHUDClick
 	e.onBuffer = data.OnBuffer
 	e.onBufferMax = data.OnBufferMax
 	e.onBufferMin = data.OnBufferMin
@@ -178,6 +180,16 @@ func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Unlock()
 	go e.Call(b, e.onBroadCast, bc.Message, bc.Global, bc.Channel, bc.ID)
 }
+func (e *JsEngine) OnHUDClick(b *bus.Bus, c *world.Click) {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil {
+		e.Locker.Unlock()
+		return
+	}
+	e.Locker.Unlock()
+	go e.Call(b, e.onHUDClick, c.X, c.Y)
+
+}
 
 func (e *JsEngine) OnResponse(b *bus.Bus, msg *world.Message) {
 	e.Locker.Lock()
@@ -241,6 +253,9 @@ func (e *JsEngine) Call(b *bus.Bus, source string, args ...interface{}) goja.Val
 	defer e.Locker.Unlock()
 	r := e.Plugin.Runtime
 	if r == nil {
+		return nil
+	}
+	if source == "" {
 		return nil
 	}
 	s, err := r.RunString(source)

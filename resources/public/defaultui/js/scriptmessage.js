@@ -5,6 +5,17 @@ define(function (require) {
     var _=require("lodash")
     var handlers=app.onScriptMessage;
     var send=app.send;
+    handlers["userinput.popup"]=function(data){
+        vm.$notify({
+            title: data.Data.Title,
+            message: data.Data.Intro,
+            duration: 5000,
+            type:data.Data.Type,
+            onClick:function(){
+                vm.callback(data,-1,"ok")
+            }
+          });  
+    }
     handlers["userinput.hideall"]=function(data){
         vm.userinputListVisible=false
         vm.userinputDatagridVisible=false

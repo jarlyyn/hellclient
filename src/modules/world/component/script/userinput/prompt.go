@@ -51,9 +51,17 @@ func SendPrompt(b *bus.Bus, script string, title string, intro string, value str
 	ui := CreateUserInput(NamePrompt, script, data)
 	b.RaiseScriptMessageEvent(ui)
 	return ui
-
 }
-
+func SendPopup(b *bus.Bus, script string, title string, intro string, popuptype string) *Userinput {
+	data := map[string]interface{}{
+		"Title": title,
+		"Intro": intro,
+		"Type":  popuptype,
+	}
+	ui := CreateUserInput(NamePopup, script, data)
+	b.RaiseScriptMessageEvent(ui)
+	return ui
+}
 func HideAll(b *bus.Bus) {
 	ui := CreateUserInput(NameHideall, "", nil)
 	b.RaiseScriptMessageEvent(ui)

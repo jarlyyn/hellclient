@@ -1,4 +1,4 @@
-define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/canvas.js"], function (Vue, app, _,canvas) {
+define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/canvas.js"], function (Vue, app, _, canvas) {
     var onButton = app.onButton;
     var data = {
         typeclass: {
@@ -13,7 +13,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
             9: " request",
             10: " response",
         },
-        hud:[],
+        hud: [],
         current: "",
         currenttab: "",
         status: "",
@@ -49,7 +49,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
         useraliaslist: null,
         scriptaliaslist: null,
         aliasesVisible: false,
-        aliasCreateForm:null,
+        aliasCreateForm: null,
         aliasCreateFormVisible: false,
         updatingAlias: null,
         aliasUpdateFormVisible: false,
@@ -71,8 +71,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
         userinputList: null,
         userinputListVisible: false,
         userinputListSearch: "",
-        userinputDatagrid:null,
-        userinputDatagridVisible:false,
+        userinputDatagrid: null,
+        userinputDatagridVisible: false,
         switchstatus: 0,
         statusVisible: false,
         worldSettings: null,
@@ -89,17 +89,17 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
         worldsettingsUpdateFormVisible: false,
         scriptsettingsUpdateForm: null,
         scriptsettingsUpdateFormVisible: false,
-        RequestPermissions:null,
-        RequestPermissionsVisible:false,
-        RequestTrustDomains:null,
-        RequestTrustDomainsVisible:false,
+        RequestPermissions: null,
+        RequestPermissionsVisible: false,
+        RequestTrustDomains: null,
+        RequestTrustDomainsVisible: false,
         MassSendForm: null,
         MassSendFormVisible: false,
-        Authorized:null,
-        AuthorizedVisible:false,
-        visualPrompt:null,
-        visualPromptVisible:false,
-        historypos:-1,
+        Authorized: null,
+        AuthorizedVisible: false,
+        visualPrompt: null,
+        visualPromptVisible: false,
+        historypos: -1,
         usesrpasswordForm: null,
         usesrpasswordFormVisible: false,
         sendto: {
@@ -130,15 +130,15 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
         methods: {
             send: function () {
                 app.send("send", this.cmd)
-                vm.historypos=0
+                vm.historypos = 0
                 document.getElementById("user-input").getElementsByTagName("input")[0].select()
             },
-            domasssend:function(){
-                if (vm.MassSendForm){
-                    app.send("masssend",vm.MassSendForm.Value)
+            domasssend: function () {
+                if (vm.MassSendForm) {
+                    app.send("masssend", vm.MassSendForm.Value)
                 }
-                vm.MassSendForm=null
-                vm.MassSendFormVisible=false
+                vm.MassSendForm = null
+                vm.MassSendFormVisible = false
             },
             onChange: function (current) {
                 if (vm.clients.length) {
@@ -241,7 +241,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
                     confirmButtonText: '编辑',
                     cancelButtonText: '取消',
                     inputValue: current,
-                    inputType:"textarea",
+                    inputType: "textarea",
                     customClass: "update-variable",
                 }).then(({ value }) => {
                     app.send("updateParam", [vm.current, name, value])
@@ -253,7 +253,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
                 vm.$prompt(row.Intro, '设置变量' + row.Name + "[" + row.Desc + "]", {
                     confirmButtonText: '设置',
                     cancelButtonText: '取消',
-                    inputType:"textarea",
+                    inputType: "textarea",
                     customClass: "update-required",
                     inputValue: vm.paramsinfo.Params[row.Name],
                 }).then(({ value }) => {
@@ -281,7 +281,9 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
                     Code: code,
                     data: data,
                 }
-                app.send("callback", [this.current, JSON.stringify(cb)])
+                if (msg.Script) {
+                    app.send("callback", [this.current, JSON.stringify(cb)])
+                }
             },
             onDrop: function () {
                 vm.allLinesVisible = false
@@ -290,7 +292,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
             gamelistRowClassName: function (data) {
                 return data.row.Running ? "game-list-running" : "game-list-not-running"
             },
-            handleSelectVisualPromptList:function (index, row) {
+            handleSelectVisualPromptList: function (index, row) {
                 this.callback(this.visualPrompt, 0, row.Key)
                 vm.visualPrompt = null
                 vm.visualPromptVisible = false
@@ -311,13 +313,13 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
                 this.callback(this.userinputDatagrid, -1, "")
                 vm.userinputDatagrid = null
                 vm.userinputDatagridVisible = false
-                },
+            },
             assist: function () {
                 app.send("assist", this.current)
             },
-            masssend:function(){
-                vm.MassSendForm={},
-                vm.MassSendFormVisible=true
+            masssend: function () {
+                vm.MassSendForm = {},
+                    vm.MassSendFormVisible = true
             },
             updateRequiredParams: function () {
                 app.send("updateRequiredParams", { Current: vm.current, RequiredParams: this.requiredParams })
@@ -352,114 +354,117 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
                 this.requiredParams = vm.requiredParams.splice(index, 1)
                 this.updateRequiredParams()
             },
-            onUserinputListMutliChange:function(val){
-                this.userinputList.Data.Values=[]
-                var self=this
-                val.forEach(function(data){
+            onUserinputListMutliChange: function (val) {
+                this.userinputList.Data.Values = []
+                var self = this
+                val.forEach(function (data) {
                     self.userinputList.Data.Values.push(data.Key)
                 })
             },
-            onUserinputDatagridPage:function(page){
-                if (this.userinputDatagrid.Data.OnPage){
-                    var data={
-                        ID:this.userinputDatagrid.ID,
-                        Name:this.userinputDatagrid.Name,
-                        Script:this.userinputDatagrid.Data.OnPage,
+            onUserinputDatagridPage: function (page) {
+                if (this.userinputDatagrid.Data.OnPage) {
+                    var data = {
+                        ID: this.userinputDatagrid.ID,
+                        Name: this.userinputDatagrid.Name,
+                        Script: this.userinputDatagrid.Data.OnPage,
                     }
-                    vm.callback(data,0,page+"")
+                    vm.callback(data, 0, page + "")
                 }
             },
-            handleUserinputDatagridView:function(index, row){
-                if (this.userinputDatagrid.Data.OnView){
-                    var data={
-                        ID:this.userinputDatagrid.ID,
-                        Name:this.userinputDatagrid.Name,
-                        Script:this.userinputDatagrid.Data.OnView,
+            handleUserinputDatagridView: function (index, row) {
+                if (this.userinputDatagrid.Data.OnView) {
+                    var data = {
+                        ID: this.userinputDatagrid.ID,
+                        Name: this.userinputDatagrid.Name,
+                        Script: this.userinputDatagrid.Data.OnView,
                     }
-                    vm.callback(data,0,row.Key)
+                    vm.callback(data, 0, row.Key)
                 }
             },
-            handleUserinputDatagridSelect:function(index, row){
-                if (this.userinputDatagrid.Data.OnSelect){
-                    var data={
-                        ID:this.userinputDatagrid.ID,
-                        Name:this.userinputDatagrid.Name,
-                        Script:this.userinputDatagrid.Data.OnSelect,
+            handleUserinputDatagridSelect: function (index, row) {
+                if (this.userinputDatagrid.Data.OnSelect) {
+                    var data = {
+                        ID: this.userinputDatagrid.ID,
+                        Name: this.userinputDatagrid.Name,
+                        Script: this.userinputDatagrid.Data.OnSelect,
                     }
-                    vm.callback(data,0,row.Key)
+                    vm.callback(data, 0, row.Key)
                 }
             },
-            handleUserinputDatagridUpdate:function(index, row){
-                if (this.userinputDatagrid.Data.OnUpdate){
-                    var data={
-                        ID:this.userinputDatagrid.ID,
-                        Name:this.userinputDatagrid.Name,
-                        Script:this.userinputDatagrid.Data.OnUpdate,
+            handleUserinputDatagridUpdate: function (index, row) {
+                if (this.userinputDatagrid.Data.OnUpdate) {
+                    var data = {
+                        ID: this.userinputDatagrid.ID,
+                        Name: this.userinputDatagrid.Name,
+                        Script: this.userinputDatagrid.Data.OnUpdate,
                     }
-                    vm.callback(data,0,row.Key)
+                    vm.callback(data, 0, row.Key)
                 }
             },
-            handleUserinputDatagridDelete:function(index, row){
-                if (this.userinputDatagrid.Data.OnDelete){
-                    var data={
-                        ID:this.userinputDatagrid.ID,
-                        Name:this.userinputDatagrid.Name,
-                        Script:this.userinputDatagrid.Data.OnDelete,
+            handleUserinputDatagridDelete: function (index, row) {
+                if (this.userinputDatagrid.Data.OnDelete) {
+                    var data = {
+                        ID: this.userinputDatagrid.ID,
+                        Name: this.userinputDatagrid.Name,
+                        Script: this.userinputDatagrid.Data.OnDelete,
                     }
-                        vm.callback(data,0,row.Key)
+                    vm.callback(data, 0, row.Key)
                     vm.$confirm('是否要删除该数据?', row.Value, {
                         confirmButtonText: '删除',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                        vm.callback(data,0,row.Key)
+                        vm.callback(data, 0, row.Key)
                     }).catch(() => {
-                    })                    
+                    })
                 }
             },
-            onUserinputDatagridFilter:function(){
-                var vm=this
-                if (vm.userinputDatagrid.Data.OnFilter){
-                    var data={
-                        ID:this.userinputDatagrid.ID,
-                        Name:this.userinputDatagrid.Name,
-                        Script:this.userinputDatagrid.Data.OnFilter,
+            onUserinputDatagridFilter: function () {
+                var vm = this
+                if (vm.userinputDatagrid.Data.OnFilter) {
+                    var data = {
+                        ID: this.userinputDatagrid.ID,
+                        Name: this.userinputDatagrid.Name,
+                        Script: this.userinputDatagrid.Data.OnFilter,
                     }
-                vm.$prompt("设置搜索关键字", {
-                    confirmButtonText: '提交',
-                    cancelButtonText: '取消',
-                    inputValue:vm.userinputDatagrid.Data.Filter,
-                    onClose:function(){
-                        vm.callback(data,-1,"")
-                    }
-                  }).then(({ value }) => {
-                    vm.callback(data,0,value)
-                  }).catch(() => {
-                  });
+                    vm.$prompt("设置搜索关键字", {
+                        confirmButtonText: '提交',
+                        cancelButtonText: '取消',
+                        inputValue: vm.userinputDatagrid.Data.Filter,
+                        onClose: function () {
+                            vm.callback(data, -1, "")
+                        }
+                    }).then(({ value }) => {
+                        vm.callback(data, 0, value)
+                    }).catch(() => {
+                    });
                 }
             },
-            onUserinputDatagridCreate:function(){
-                var vm=this
-                if (vm.userinputDatagrid.Data.OnCreate){
-                    var data={
-                        ID:this.userinputDatagrid.ID,
-                        Name:this.userinputDatagrid.Name,
-                        Script:this.userinputDatagrid.Data.OnCreate,
+            onUserinputDatagridCreate: function () {
+                var vm = this
+                if (vm.userinputDatagrid.Data.OnCreate) {
+                    var data = {
+                        ID: this.userinputDatagrid.ID,
+                        Name: this.userinputDatagrid.Name,
+                        Script: this.userinputDatagrid.Data.OnCreate,
                     }
-                    vm.callback(data,0,"")
+                    vm.callback(data, 0, "")
                 }
             },
-            onUp:function(){
-                app.send("findhistory",vm.historypos+1)
+            onUp: function () {
+                app.send("findhistory", vm.historypos + 1)
             },
-            onDown:function(){
-                if (vm.historypos<=0){
-                    vm.historypos=-1
-                    vm.cmd=""
+            onDown: function () {
+                if (vm.historypos <= 0) {
+                    vm.historypos = -1
+                    vm.cmd = ""
                     return
                 }
-                app.send("findhistory",vm.historypos-1)
+                app.send("findhistory", vm.historypos - 1)
             },
+            onHUDClick:function(e){
+                app.send("hudclick",{X:e.offsetX/e.target.width,Y:e.offsetY/e.target.height})
+            }
         }
     })
     return vm

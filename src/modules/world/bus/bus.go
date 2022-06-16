@@ -93,6 +93,7 @@ type Bus struct {
 	DoOmitOutput            func()
 	DoDeleteLines           func(int)
 	GetLineCount            func() int
+	DoSendHUDClickToScript  func(*world.Click)
 	DoSendBroadcastToScript func(*world.Broadcast)
 	HandleBuffer            func([]byte) bool
 	DoSendTimerToScript     func(*world.Timer)
@@ -350,6 +351,11 @@ func (b *Bus) WrapHandleTrigger(f func(b *Bus, line *world.Line, trigger *world.
 func (b *Bus) WrapHandleBroadcast(f func(b *Bus, bc *world.Broadcast)) func(bc *world.Broadcast) {
 	return func(bc *world.Broadcast) {
 		f(b, bc)
+	}
+}
+func (b *Bus) WrapHandleClick(f func(b *Bus, c *world.Click)) func(c *world.Click) {
+	return func(c *world.Click) {
+		f(b, c)
 	}
 }
 func (b *Bus) WrapHandleResponse(f func(b *Bus, bc *world.Message)) func(msg *world.Message) {
