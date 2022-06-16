@@ -1,5 +1,4 @@
 define(function (require) {
-    var body=document.getElementsByTagName("body")[0]
     var settings = require("./canvassettings.js")
     var Canvas = document.getElementById("output")
     Canvas.width = settings.linewidth
@@ -168,16 +167,19 @@ define(function (require) {
         }
     }
     var RenderHUD=function(content){
+        var hudwrapper=document.getElementById("hudwrapper")
         let hud=document.getElementById("hud")
         if (content.length==0){
             hud.style.height=0  
             hud.height=0
+            hudwrapper.className="hide"
             return 
         }
-        hud.style.height=settings.lineheight*content.length+settings.hudbottom+settings.hudtop+"px"
-        hud.height=settings.lineheight*content.length+settings.hudbottom+settings.hudtop
+        hudwrapper.className=""
+        hud.style.height=settings.lineheight*content.length+"px"
+        hud.height=settings.lineheight*content.length
         hud.width=settings.linewidth
-        let top=settings.hudtop
+        let top=0
         content.forEach(function(data){
             if (data){
                 let result=RenderLine(data,true, true,settings.hudbackground)

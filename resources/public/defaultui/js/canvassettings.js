@@ -52,13 +52,9 @@ define(function (require) {
     var requesticon="☎请求 "
     var responseicon="☎响应 "
     var bccolor="rgb(127,127,127)"
-    var hudbackground = "#333333"
-    var hudbottom = 10
-    var hudtop = 10
+    var hudbackground = "#222222"
     return {
         hudbackground:hudbackground,
-        hudbottom:hudbottom,
-        hudtop:hudtop,
         lineheight: lineheight,
         linewidth: linewidth,
         middleline: middleline,

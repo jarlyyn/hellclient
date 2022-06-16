@@ -166,6 +166,7 @@ onButton.about=function(){
 onButton.createAlias=function(){
     vm.createFail=[];
     vm.aliasCreateForm={
+        SendTo:"0",
         Sequence:100,
     };
     vm.aliasCreateFormVisible=true;
@@ -197,6 +198,7 @@ onButton.scripttriggers=function(){
 onButton.createTrigger=function(){
     vm.createFail=[];
     vm.triggerCreateForm={
+        SendTo:"0",
         Sequence:100,
     };
     vm.triggerCreateFormVisible=true;

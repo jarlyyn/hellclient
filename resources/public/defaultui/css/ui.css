@@ -148,3 +148,4 @@ line-height: 1.5em;
 }
 
 #stage {background:black;bottom: 32px ;left:0;position: fixed;z-index: -1;}
+#hudwrapper.hide{display:none}
