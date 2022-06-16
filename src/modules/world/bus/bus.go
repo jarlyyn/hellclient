@@ -196,6 +196,12 @@ type Bus struct {
 	DoMetronomeSend        func(cmds *world.Command)
 	DoMetronomeLock        func()
 	DoSendResponseToScript func(msg *world.Message)
+
+	GetHUDSize       func() int
+	SetHUDSize       func(int)
+	GetHUDContent    func() []*world.Line
+	UpdateHUDContent func(start int, content []*world.Line) bool
+
 	RequestEvent           busevent.Event
 	BroadcastEvent         busevent.Event
 	LineEvent              busevent.Event
@@ -212,6 +218,8 @@ type Bus struct {
 	LinesEvent             busevent.Event
 	QueueDelayUpdatedEvent busevent.Event
 	ScriptMessageEvent     busevent.Event
+	HUDUpdateEvent         busevent.Event
+	HUDContentEvent        busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -556,6 +564,28 @@ func (b *Bus) BindScriptMessageEvent(id interface{}, fn func(b *Bus, msg interfa
 		id,
 		func(data interface{}) {
 			fn(b, data)
+		},
+	)
+}
+func (b *Bus) RaiseHUDUpdateEvent(diff *world.DiffLines) {
+	b.HUDUpdateEvent.Raise(diff)
+}
+func (b *Bus) BindHUDUpdateEvent(id interface{}, fn func(b *Bus, diff *world.DiffLines)) {
+	b.HUDUpdateEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b, data.(*world.DiffLines))
+		},
+	)
+}
+func (b *Bus) RaiseHUDContentEvent(lines []*world.Line) {
+	b.HUDContentEvent.Raise(lines)
+}
+func (b *Bus) BindHUDContentEvent(id interface{}, fn func(b *Bus, lines []*world.Line)) {
+	b.HUDContentEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b, data.([]*world.Line))
 		},
 	)
 }

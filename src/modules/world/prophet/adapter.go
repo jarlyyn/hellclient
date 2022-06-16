@@ -57,5 +57,6 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("requestTrustDomains", p.newRoomAdapter("requestTrustDomains"))
 	adapter.Register("authorized", p.newRoomAdapter("authorized"))
 	adapter.Register("foundhistory", p.newRoomAdapter("foundhistory"))
-
+	adapter.Register("hudcontent", p.newRoomAdapter("hudcontent"))
+	adapter.Register("hudupdate", p.newRoomAdapter("hudupdate"))
 }

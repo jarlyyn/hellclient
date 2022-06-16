@@ -225,3 +225,15 @@ func GetBoldColour(code int) int {
 	}
 	return 0
 }
+
+type DiffLines struct {
+	Start   int
+	Content []*Line
+}
+
+var CreateDiffLines = func(start int, content []*Line) *DiffLines {
+	return &DiffLines{
+		Start:   start,
+		Content: content,
+	}
+}

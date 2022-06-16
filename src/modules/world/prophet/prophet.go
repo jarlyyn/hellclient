@@ -186,6 +186,8 @@ func (p *Prophet) onCurrent(roomid string) {
 	p.Titan.HandleCmdPrompt(roomid)
 	p.Titan.HandleCmdStatus(roomid)
 	p.Titan.HandleCmdHistory(roomid)
+	p.Titan.HandleCmdHUDContent(roomid)
+
 }
 func (p *Prophet) Start() {
 	go connections.Consume(p.Gateway, p)

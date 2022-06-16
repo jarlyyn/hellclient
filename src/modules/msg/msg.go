@@ -75,6 +75,9 @@ const MsgTypeAuthorized = "authorized"
 
 const MsgTypeFoundHistory = "foundhistory"
 
+const MsgTypeHUDUpdate = "hudupdate"
+const MsgTypeHUDContent = "hudcontent"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -255,4 +258,12 @@ func PublishAuthorized(p Publisher, world string, a *world.Authorized) {
 
 func PublishFoundHistory(p Publisher, world string, h *world.FoundHistory) {
 	p.Publish(New(MsgTypeFoundHistory, world, h))
+}
+
+func PublishHUDUpdate(p Publisher, world string, diff *world.DiffLines) {
+	p.Publish(New(MsgTypeHUDUpdate, world, diff))
+}
+
+func PublishHUDContent(p Publisher, world string, lines []*world.Line) {
+	p.Publish(New(MsgTypeHUDContent, world, lines))
 }

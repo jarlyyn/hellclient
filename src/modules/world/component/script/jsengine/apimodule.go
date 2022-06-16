@@ -267,6 +267,13 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "RestoreTimers", a.RestoreTimers)
 	AppendToWorld(jp.Runtime, world, "DumpAliases", a.DumpAliases)
 	AppendToWorld(jp.Runtime, world, "RestoreAliases", a.RestoreAliases)
+
+	AppendToWorld(jp.Runtime, world, "SetHUDSize", a.SetHUDSize)
+	AppendToWorld(jp.Runtime, world, "GetHUDContent", a.GetHUDContent)
+	AppendToWorld(jp.Runtime, world, "GetHUDSize", a.GetHUDSize)
+	AppendToWorld(jp.Runtime, world, "UpdateHUD", a.UpdateHUD)
+	AppendToWorld(jp.Runtime, world, "NewLine", a.NewLine)
+	AppendToWorld(jp.Runtime, world, "NewWord", a.NewWord)
 }
 
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1297,7 +1304,32 @@ func (a *jsapi) RestoreAliases(call goja.FunctionCall, r *goja.Runtime) goja.Val
 	a.API.RestoreAliases(data, byUser)
 	return nil
 }
-
+func (a *jsapi) SetHUDSize(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	size := call.Argument(0).ToInteger()
+	a.API.SetHUDSize(int(size))
+	return nil
+}
+func (a *jsapi) GetHUDContent(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	content := a.API.GetHUDContent()
+	return r.ToValue(content)
+}
+func (a *jsapi) GetHUDSize(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	size := a.API.GetHUDContent()
+	return r.ToValue(size)
+}
+func (a *jsapi) UpdateHUD(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	start := call.Argument(0).ToInteger()
+	content := call.Argument(1).String()
+	result := a.API.UpdateHUD(int(start), content)
+	return r.ToValue(result)
+}
+func (a *jsapi) NewLine(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.NewLine())
+}
+func (a *jsapi) NewWord(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	text := call.Argument(0).String()
+	return r.ToValue(a.API.NewWord(text))
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

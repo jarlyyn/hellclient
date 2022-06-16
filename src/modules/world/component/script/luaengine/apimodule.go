@@ -234,6 +234,12 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("DumpAliases", l.NewFunction(a.DumpAliases))
 	l.SetGlobal("RestoreAliases", l.NewFunction(a.RestoreAliases))
 
+	l.SetGlobal("SetHUDSize", l.NewFunction(a.SetHUDSize))
+	l.SetGlobal("GetHUDContent", l.NewFunction(a.GetHUDContent))
+	l.SetGlobal("GetHUDSize", l.NewFunction(a.GetHUDSize))
+	l.SetGlobal("UpdateHUD", l.NewFunction(a.UpdateHUD))
+	l.SetGlobal("NewLine", l.NewFunction(a.NewLine))
+	l.SetGlobal("NewWord", l.NewFunction(a.NewWord))
 }
 
 func (a *luaapi) Milliseconds(L *lua.LState) int {
@@ -1473,7 +1479,37 @@ func (a *luaapi) RestoreAliases(L *lua.LState) int {
 	a.API.RestoreAliases(data, byUser)
 	return 0
 }
-
+func (a *luaapi) SetHUDSize(L *lua.LState) int {
+	size := L.ToInt(1)
+	a.API.SetHUDSize(size)
+	return 0
+}
+func (a *luaapi) GetHUDContent(L *lua.LState) int {
+	content := a.API.GetHUDContent()
+	L.Push(lua.LString(content))
+	return 1
+}
+func (a *luaapi) GetHUDSize(L *lua.LState) int {
+	size := a.API.GetHUDSize()
+	L.Push(lua.LNumber(size))
+	return 1
+}
+func (a *luaapi) UpdateHUD(L *lua.LState) int {
+	start := L.ToInt(1)
+	content := L.ToString(2)
+	result := a.API.UpdateHUD(start, content)
+	L.Push(lua.LBool(result))
+	return 1
+}
+func (a *luaapi) NewLine(L *lua.LState) int {
+	L.Push(lua.LString(a.API.NewLine()))
+	return 1
+}
+func (a *luaapi) NewWord(L *lua.LState) int {
+	data := L.ToString(1)
+	L.Push(lua.LString(a.API.NewWord(data)))
+	return 1
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

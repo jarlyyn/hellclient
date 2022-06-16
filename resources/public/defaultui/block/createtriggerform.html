@@ -25,7 +25,7 @@
                 v-model="triggerCreateForm.Send">
               </el-input>
                           </el-form-item>
-                <el-form-item label="优先级" ><el-input v-model="triggerCreateForm.Sequence"></el-input></el-form-item>
+                <el-form-item label="优先级" ><el-input-number v-model="triggerCreateForm.Sequence"></el-input-number></el-form-item>
                 <el-form-item label="调用脚本函数" ><el-input v-model="triggerCreateForm.Script"></el-input></el-form-item>
                 <el-form-item label="分组名" ><el-input v-model="triggerCreateForm.Group" ></el-input></el-form-item>
                 <el-form-item v-if="triggerCreateForm.SendTo==9"label="变量名" ><el-input v-model="triggerCreateForm.Variable" ></el-input></el-form-item>

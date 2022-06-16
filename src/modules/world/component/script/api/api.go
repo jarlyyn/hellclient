@@ -1401,3 +1401,46 @@ func (a *API) RestoreAliases(data string, byUser bool) {
 	}
 	a.Bus.AddAliases(list)
 }
+
+func (a *API) SetHUDSize(size int) {
+	a.Bus.SetHUDSize(size)
+}
+
+func (a *API) GetHUDContent() string {
+	var content = a.Bus.GetHUDContent()
+	data, err := json.Marshal(content)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+
+func (a *API) GetHUDSize() int {
+	return a.Bus.GetHUDSize()
+}
+func (a *API) UpdateHUD(start int, content string) bool {
+	var lines = []*world.Line{}
+	err := json.Unmarshal([]byte(content), &lines)
+	if err != nil {
+		panic(err)
+	}
+	return a.Bus.UpdateHUDContent(start, lines)
+}
+func (a *API) NewLine() string {
+	line := world.NewLine()
+	line.Type = world.LineTypeReal
+	data, err := json.Marshal(line)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+func (a *API) NewWord(value string) string {
+	word := world.NewWord()
+	word.Text = value
+	data, err := json.Marshal(word)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}

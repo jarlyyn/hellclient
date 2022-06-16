@@ -13,6 +13,7 @@ import (
 	"hellclient/modules/world/component/config"
 	"hellclient/modules/world/component/conn"
 	"hellclient/modules/world/component/converter"
+	"hellclient/modules/world/component/hud"
 	"hellclient/modules/world/component/info"
 	"hellclient/modules/world/component/log"
 	"hellclient/modules/world/component/metronome"
@@ -65,6 +66,7 @@ func (t *Titan) CreateBus() *bus.Bus {
 		queue.New(),
 		script.New(),
 		metronome.New(),
+		hud.New(),
 		t,
 	)
 	b.RaiseInitEvent()
@@ -110,6 +112,12 @@ func (t *Titan) onConnected(b *bus.Bus) {
 func (t *Titan) onDisconnected(b *bus.Bus) {
 	b.DoPrintSystem(app.Time.Datetime(time.Now()) + "  与服务器断开连接接 ")
 	msg.PublishDisconnected(t, b.ID)
+}
+func (t *Titan) onHUDUpdate(b *bus.Bus, diff *world.DiffLines) {
+	msg.PublishHUDUpdate(t, b.ID, diff)
+}
+func (t *Titan) onHUDContent(b *bus.Bus, content []*world.Line) {
+	msg.PublishHUDContent(t, b.ID, content)
 }
 func (t *Titan) onPrompt(b *bus.Bus, prompt *world.Line) {
 	msg.PublishPrompt(t, b.ID, prompt)
@@ -206,6 +214,14 @@ func (t *Titan) HandleCmdHistory(id string) {
 		msg.PublishHistory(t, id, h)
 	}
 }
+func (t *Titan) HandleCmdHUDContent(id string) {
+	w := t.World(id)
+	if w != nil {
+		lines := w.GetHUDContent()
+		msg.PublishHUDContent(t, id, lines)
+	}
+}
+
 func (t *Titan) HandleCmdAllLines(id string) {
 	w := t.World(id)
 	if w != nil {
@@ -342,6 +358,9 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindBroadcastEvent(t, t.onBroadcast)
 	b.BindRequestEvent(t, t.onRequest)
 	b.BindScriptMessageEvent(t, t.onScriptMessage)
+	b.BindHUDContentEvent(t, t.onHUDContent)
+	b.BindHUDUpdateEvent(t, t.onHUDUpdate)
+
 	b.GetScriptPath = t.GetScriptPath
 	b.GetModPath = t.GetModPath
 
