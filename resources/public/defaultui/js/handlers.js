@@ -19,6 +19,19 @@ handlers.line=function(data){
 handlers.prompt=function(data){
     canvas.DrawPrompt(data)
 }
+handlers.hudcontent=function(data){
+    vm.hud=data
+    canvas.RenderHUD(vm.hud)
+}
+handlers.hudupdate=function(data){
+    let start=data.Start
+    let content=data.Content
+    content.forEach(function(line){
+        vm.hud[start]=line
+        start++
+    })
+    canvas.RenderHUD(vm.hud)
+}
 handlers.clients=function(data){
     vm.info=[]
     vm.clients=data

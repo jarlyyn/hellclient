@@ -13,6 +13,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash","/public/defaultui/js/can
             9: " request",
             10: " response",
         },
+        hud:[],
         current: "",
         currenttab: "",
         status: "",

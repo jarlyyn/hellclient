@@ -1,4 +1,5 @@
 define(function (require) {
+    var body=document.getElementsByTagName("body")[0]
     var settings = require("./canvassettings.js")
     var Canvas = document.getElementById("output")
     Canvas.width = settings.linewidth
@@ -10,7 +11,7 @@ define(function (require) {
     PromptCanvas.height = settings.lineheight
 
     var Lines = []
-    var createLine = function (id, index) {
+    var createLine = function (id, index,bcolor) {
         var c = document.createElement("canvas")
         c.width = settings.linewidth
         c.height = settings.lineheight
@@ -18,7 +19,7 @@ define(function (require) {
         var ctx = c.getContext('2d')
         ctx.textBaseline = "middle"
         ctx.font = settings.font
-        ctx.fillStyle = settings.background
+        ctx.fillStyle = bcolor
         ctx.fillRect(0, 0, settings.linewidth, settings.lineheight)
         return {
             ID: id,
@@ -27,10 +28,13 @@ define(function (require) {
             Index: index,
         }
     }
-    var RenderLine = function (line, withouticon, nocr) {
+    var RenderLine = function (line, withouticon, nocr,bcolor) {
         result = []
         var index = 0
-        var l = createLine(line.ID, index)
+        if (!bcolor){
+            bcolor=settings.background
+        }
+        var l = createLine(line.ID, index,bcolor)
         var color = settings.color
         var icon = ""
         var iconcolor = ""
@@ -118,7 +122,7 @@ define(function (require) {
 
                 }
                 let fontcolor
-                let bgcolor=backgroundname?settings[backgroundname]:settings.background
+                let bgcolor=backgroundname?settings[backgroundname]:settings.bcolor
                 if (colorname){
                     fontcolor=word.Bold?settings["Bold"+colorname]:settings[colorname]    
                 }else{
@@ -163,6 +167,26 @@ define(function (require) {
             ctx.fillRect(0, 0, settings.linewidth, settings.lineheight)
         }
     }
+    var RenderHUD=function(content){
+        let hud=document.getElementById("hud")
+        if (content.length==0){
+            hud.style.height=0  
+            hud.height=0
+            return 
+        }
+        hud.style.height=settings.lineheight*content.length+settings.hudbottom+settings.hudtop+"px"
+        hud.height=settings.lineheight*content.length+settings.hudbottom+settings.hudtop
+        hud.width=settings.linewidth
+        let top=settings.hudtop
+        content.forEach(function(data){
+            if (data){
+                let result=RenderLine(data,true, true,settings.hudbackground)
+                var ctx=hud.getContext('2d');
+                ctx.drawImage(result[0].Canvas, 0, top, settings.linewidth, settings.lineheight)
+            }
+            top+=settings.lineheight
+        })
+    }
     var Render = function () {
         Lines.sort(function (a, b) {
             if (a.ID != b.ID) {
@@ -182,6 +206,7 @@ define(function (require) {
         Lines = []
     }
     return {
+        RenderHUD:RenderHUD,
         Drawline: Drawline,
         Render: Render,
         Clean: Clean,

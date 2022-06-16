@@ -152,7 +152,8 @@
     animation: blinking 1200ms infinite;
 
 }
-
+#hudwrapper{position: absolute;z-index: 1;top:108px;left:0;background-color: #333333;width: 100%;}
+#hud{width:1120px;height:0}
 #output{width:1120px;height:1200px}
 #prompt-output{width:1120px;height:20px}
 
