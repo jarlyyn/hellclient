@@ -1262,7 +1262,7 @@ func (a *API) SliceOutput(output string, start int, end int) string {
 		end = len(list)
 	}
 	if end < start {
-		end = start
+		end = start - 1
 	}
 	data, err := json.Marshal(list[start:end])
 	if err != nil {

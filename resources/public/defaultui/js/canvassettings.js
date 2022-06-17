@@ -52,7 +52,7 @@ define(function (require) {
     var requesticon="☎请求 "
     var responseicon="☎响应 "
     var bccolor="rgb(127,127,127)"
-    var hudbackground = "#222222"
+    var hudbackground = "#333333"
     return {
         hudbackground:hudbackground,
         lineheight: lineheight,
