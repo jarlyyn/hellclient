@@ -92,8 +92,13 @@ define(function (require) {
     }
     handlers["userinput.note"]=function(data){
         vm.userinputNote=data
-        if (data.Data.Type=="md"){
-            data.Data.MD=MD.render(data.Data.Body)
+        switch(data.Data.Type){
+            case "md":
+                data.Data.MD=MD.render(data.Data.Body)
+                break
+            case "output":
+                data.Data.Output=JSON.parse(data.Data.Body)
+                break
         }
         vm.userinputNoteVisible=true
     }

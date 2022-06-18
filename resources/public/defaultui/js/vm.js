@@ -325,7 +325,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             },
             onMDClick:function(event){
                 if (event.target.localName=="a"){
-                    console.log(event.target.attributes.href.value)
+                    this.callback(this.userinputNote,0,event.target.attributes.href.value)
                     event.preventDefault()
                 }
 

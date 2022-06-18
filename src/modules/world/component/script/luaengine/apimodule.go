@@ -155,6 +155,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("SetSpeedWalkDelay", l.NewFunction(a.SetSpeedWalkDelay))
 	l.SetGlobal("GetSpeedWalkDelay", l.NewFunction(a.GetSpeedWalkDelay))
 
+	l.SetGlobal("HasFile", l.NewFunction(a.NewHasFileAPI(p)))
 	l.SetGlobal("ReadFile", l.NewFunction(a.NewReadFileAPI(p)))
 	l.SetGlobal("ReadLines", l.NewFunction(a.NewReadLinesAPI(p)))
 
@@ -818,6 +819,14 @@ func (a *luaapi) Queue(L *lua.LState) int {
 	L.Push(lua.LNumber(a.API.Queue(L.ToString(1), a.optional(L, 2))))
 	return 1
 }
+
+func (a *luaapi) NewHasFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		L.Push(lua.LBool(a.API.HasFile(p, L.ToString(1))))
+		return 1
+	}
+}
+
 func (a *luaapi) NewReadFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
 	return func(L *lua.LState) int {
 		L.Push(lua.LString(a.API.ReadFile(p, L.ToString(1))))

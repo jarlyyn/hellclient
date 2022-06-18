@@ -753,6 +753,21 @@ func (a *API) ReadModLines(p herbplugin.Plugin, name string) []string {
 	return strings.Split(lineReplacer.Replace(data), "\n")
 }
 
+func (a *API) HasFile(p herbplugin.Plugin, name string) bool {
+	o := p.PluginOptions()
+	filename := o.GetLocation().MustCleanInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("read %s not allowed", name))
+	}
+	_, err := os.Stat(filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+		panic(err)
+	}
+	return true
+}
 func (a *API) ReadFile(p herbplugin.Plugin, name string) string {
 	o := p.PluginOptions()
 	filename := o.GetLocation().MustCleanInsidePath(name)

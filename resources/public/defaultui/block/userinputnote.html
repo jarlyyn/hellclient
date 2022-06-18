@@ -3,7 +3,9 @@
 
   <div id="userinput-note-body">
     <div  class="md" v-if="userinputNote.Data.Type=='md'" @click.capture="onMDClick"v-html="userinputNote.Data.MD"></div>
-    <div v-else-if="userinputNote.Data.Type=='line'"></div>
+    <div class="output" v-else-if="userinputNote.Data.Type=='output'">
+      <ul id="userinput-note-body-alllines"><li v-bind:class="'words '+ typeclass[line.Type] + ' '+(line.Triggers?'has-trigger':'')+ (line.CreatorType?(' creator-type-'+line.CreatorType):'')" :title="(new Date(line.Time*1000)).toString()+(line.Triggers?('\nTriggers:\n'+line.Triggers.join('\n')):'')+(line.Creator?('\n'+line.CreatorType+':'+line.Creator):'')" v-for="line in userinputNote.Data.Output"><span v-if="line.IsSystem">🗨️</span><span v-bind:class="word.Color + ' BG-' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')" v-for="word in line.Words" >{{word.Text}}</span></li></ul>
+    </div>
     <div class="text" v-else>{{userinputNote.Data.Body}}</div>
   </div>
 </el-drawer>

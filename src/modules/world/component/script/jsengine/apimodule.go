@@ -189,6 +189,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "SetSpeedWalkDelay", a.SetSpeedWalkDelay)
 	AppendToWorld(jp.Runtime, world, "GetSpeedWalkDelay", a.GetSpeedWalkDelay)
 
+	AppendToWorld(jp.Runtime, world, "HasFile", a.NewHasFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadFile", a.NewReadFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadLines", a.NewReadLinesAPI(p))
 
@@ -775,7 +776,11 @@ func (a *jsapi) SetSpeedWalkDelay(call goja.FunctionCall, r *goja.Runtime) goja.
 func (a *jsapi) GetSpeedWalkDelay(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.SpeedWalkDelay())
 }
-
+func (a *jsapi) NewHasFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.HasFile(p, call.Argument(0).String()))
+	}
+}
 func (a *jsapi) NewReadFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		return r.ToValue(a.API.ReadFile(p, call.Argument(0).String()))
