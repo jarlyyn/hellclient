@@ -65,7 +65,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
         paramsinfo: null,
         aboutVisible: false,
         version: "",
-        uiversion: "22.06.08",
+        uiversion: "22.06.18",
         showRequiredParams: true,
         allgameVisible: false,
         userinputList: null,
