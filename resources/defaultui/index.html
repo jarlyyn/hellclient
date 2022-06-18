@@ -10,6 +10,7 @@
   <link rel="shortcut icon" href="/public/defaultui/image/favicon.png">
   <style>
   </style>
+  <script src="/public/defaultui/js/markdown-it.min.js"></script>
   <script data-main="/public/defaultui/js/init.js" src="/public/defaultui/js/require.min.js"></script>
 </head>
 
@@ -48,6 +49,7 @@
     <div id="updateworldsettingsform"></div>
     <div id="updatescriptsettingsform"></div>
     <div id="userinputdatagrid"></div>
+    <div id="userinputnote"></div>
     <div id="requestpermissions"></div>
     <div id="requesttrustdomains"></div>
     <div id="authorized"></div>
@@ -92,7 +94,10 @@
       </div>
     </div>
   </div>
-
+  <script>
+    var MD=markdownit()
+    MD.disable("image")
+  </script>
   <script>
     var body = document.getElementsByTagName("html")[0]
   </script>

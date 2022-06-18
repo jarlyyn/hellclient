@@ -1,0 +1,9 @@
+<el-drawer v-if="userinputNote" :title="userinputNote.Data.Title" :visible.sync="userinputNoteVisible" size="80%"
+  direction="btt">
+
+  <div id="userinput-note-body">
+    <div  class="md" v-if="userinputNote.Data.Type=='md'" @click.capture="onMDClick"v-html="userinputNote.Data.MD"></div>
+    <div v-else-if="userinputNote.Data.Type=='line'"></div>
+    <div class="text" v-else>{{userinputNote.Data.Body}}</div>
+  </div>
+</el-drawer>

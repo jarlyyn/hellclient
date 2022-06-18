@@ -90,6 +90,13 @@ define(function (require) {
         vm.userinputDatagrid=data
         vm.userinputDatagridVisible=true
     }
+    handlers["userinput.note"]=function(data){
+        vm.userinputNote=data
+        if (data.Data.Type=="md"){
+            data.Data.MD=MD.render(data.Data.Body)
+        }
+        vm.userinputNoteVisible=true
+    }
     handlers["userinput.hidedatagrid"]=function(data){
         vm.userinputDatagrid=null
         vm.userinputDatagridVisible=false

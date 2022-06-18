@@ -275,12 +275,20 @@ func (u *Userinput) Popup(L *lua.LState) int {
 	L.Push(lua.LString(ui.ID))
 	return 1
 }
+func (u *Userinput) Note(L *lua.LState) int {
+	_ = L.Get(1) //this
+	ui := userinput.SendNote(u.bus, L.ToString(2), L.ToString(3), L.ToString(4), L.ToString(5))
+	L.Push(lua.LString(ui.ID))
+	return 1
+}
 func (u *Userinput) Convert(L *lua.LState) lua.LValue {
 	t := L.NewTable()
 	t.RawSetString("prompt", L.NewFunction(u.Prompt))
 	t.RawSetString("confirm", L.NewFunction(u.Confirm))
 	t.RawSetString("alert", L.NewFunction(u.Alert))
 	t.RawSetString("popup", L.NewFunction(u.Popup))
+	t.RawSetString("note", L.NewFunction(u.Note))
+
 	t.RawSetString("newlist", L.NewFunction(u.NewList))
 	t.RawSetString("newdatagrid", L.NewFunction(u.NewDatagrid))
 	t.RawSetString("newvisualprompt", L.NewFunction(u.NewVisualPrompt))
@@ -290,6 +298,8 @@ func (u *Userinput) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("Confirm", L.NewFunction(u.Confirm))
 	t.RawSetString("Alert", L.NewFunction(u.Alert))
 	t.RawSetString("Popup", L.NewFunction(u.Popup))
+	t.RawSetString("Note", L.NewFunction(u.Note))
+
 	t.RawSetString("NewList", L.NewFunction(u.NewList))
 	t.RawSetString("NewDatagrid", L.NewFunction(u.NewDatagrid))
 	t.RawSetString("NewVisualPrompt", L.NewFunction(u.NewVisualPrompt))

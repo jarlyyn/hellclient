@@ -135,7 +135,13 @@
     background-color: black;
     color:white
 }
-
+#userinput-note-body .text{
+    background-color: black;
+    color:white
+}
+#userinput-note-body .md{
+    color:#333333
+}
 @keyframes blinking {
     from {
         opacity: 1.0;

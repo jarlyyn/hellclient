@@ -41,7 +41,17 @@ func SendAlert(b *bus.Bus, script string, title string, intro string) *Userinput
 	return ui
 
 }
+func SendNote(b *bus.Bus, script string, title string, body string, notetype string) *Userinput {
+	data := map[string]interface{}{
+		"Title": title,
+		"Body":  body,
+		"Type":  notetype,
+	}
+	ui := CreateUserInput(NameNote, script, data)
+	b.RaiseScriptMessageEvent(ui)
+	return ui
 
+}
 func SendPrompt(b *bus.Bus, script string, title string, intro string, value string) *Userinput {
 	data := map[string]interface{}{
 		"Title": title,

@@ -73,6 +73,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
         userinputListSearch: "",
         userinputDatagrid: null,
         userinputDatagridVisible: false,
+        userinputNote:false,
+        userinputNoteVisible:false,
         switchstatus: 0,
         statusVisible: false,
         worldSettings: null,
@@ -320,6 +322,13 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             masssend: function () {
                 vm.MassSendForm = {},
                     vm.MassSendFormVisible = true
+            },
+            onMDClick:function(event){
+                if (event.target.localName=="a"){
+                    console.log(event.target.attributes.href.value)
+                    event.preventDefault()
+                }
+
             },
             updateRequiredParams: function () {
                 app.send("updateRequiredParams", { Current: vm.current, RequiredParams: this.requiredParams })
