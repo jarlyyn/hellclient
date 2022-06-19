@@ -1230,12 +1230,12 @@ func (a *API) DumpOutput(length int, offset int) string {
 		offset = 0
 	}
 	line := a.Bus.GetRecentLines(offset + length)
-	if offset > len(line) {
-		offset = len(line)
+	if length > len(line) {
+		length = len(line)
 	}
 	var data []byte
 	var err error
-	data, err = json.Marshal(line[offset:])
+	data, err = json.Marshal(line[0:length])
 	if err != nil {
 		panic(err)
 	}
