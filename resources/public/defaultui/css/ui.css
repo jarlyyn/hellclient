@@ -133,7 +133,7 @@ line-height: 1.3em;
     font-size: 16px;
 }
 #userinput-note-body .text{
-    white-space:-wrap
+    white-space: pre-wrap;
 }
 #userinput-note-body .md a{
     color:green
