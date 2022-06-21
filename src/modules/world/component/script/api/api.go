@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"sync/atomic"
@@ -1488,5 +1489,7 @@ func (a *API) GetModInfo(herbplugin.Plugin) *world.Mod {
 			mod.FileList = append(mod.FileList, name)
 		}
 	}
+	sort.Strings(mod.FolderList)
+	sort.Strings(mod.FileList)
 	return mod
 }
