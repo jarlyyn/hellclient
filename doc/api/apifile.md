@@ -1,5 +1,62 @@
 # 文件处理
 
+## HasFile
+
+检查文件
+
+### 原型
+```
+HasMFile(name string) bool
+```
+
+### 描述
+
+判断指定的模组文件是否存在
+
+* name 以脚本模组目录为基准的文件位置
+
+如果文件在脚本模组目录范围外，会报告错误
+  
+如果有任何其他错误，认为文件不存在
+### 代码范例
+
+Javascript
+```
+var exists=world.HasFile("myfile")
+```
+
+Lua
+```
+local exists=HasFile("myfile")
+```
+
+### 返回值
+
+布尔值
+
+## ReadModFile
+
+读取模组文件
+
+### 原型
+```
+ReadModFile(name string) string
+```
+
+### 描述
+
+读取给定模组文件的文件内容
+
+* name 以脚本模组目录为基准的文件位置
+
+
+如果文件位置在授权范围外，将会报错
+
+其他的文件操作错误也会报错
+
+如果游戏没有开启模组功能，会报错。
+
+
 ## ReadFile
 
 读取脚本文件

@@ -133,6 +133,7 @@
 * [BoldColour 获取高亮色彩rgb](apicolor.md#)
 
 ## 文件处理
+* [HasFile 读取脚本文件](apifile.md#HasFile)
 * [ReadFile 读取脚本文件](apifile.md#ReadFile)
 * [ReadLines 读取脚本文件并分行](apifile.md#ReadLines)
 * [HasHomeFile 检查用户文件](apifile.md#HasHomeFile)
@@ -223,6 +224,8 @@
 * [Userinput.Prompt 用户输入框](apiuserinput.md#UserinputPrompt)
 * [Userinput.Confirm 用户确认框](apiuserinput.md#UserinputConfirm)
 * [Userinput.Alert 用户提示](apiuserinput.md#UserinputAlert)
+* [Userinput.Popup 弹框提示](apiuserinput.md#UserinputPopup)
+* [Userinput.Note 弹出文本](apiuserinput.md#UserinputNote)
 * [Userinput.NewList 新建列表](apiuserinput.md#UserinputNewList)
 * [Userinput.NewDatagrid 新建数据表格](apiuserinput.md#Userinputnewdatagrid)
 * [Userinput.NewVisualPrompt 新建可视化输入](apiuserinput.md#UserinputNewVisualPrompt)

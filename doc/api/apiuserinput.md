@@ -149,6 +149,82 @@ Userinput:Alert("handleprompt","Input","what's your name")
 
 唯一id
 
+## Userinput.Popup
+
+弹出提醒框
+
+### 原型
+```
+Popup (script string, title string, intro string, popuptype string) string
+```
+
+### 描述
+
+弹窗请求用户输入
+
+* script 回调脚本
+* title 标题
+* intro 描述
+* popuptype  弹窗类型，可选值为 success warning info error,默认无
+
+### 回调函数
+
+* code 成功非0
+
+### 代码范例
+
+Javascript
+```
+Userinput.Popup("handlepopup","Popuptitle","Popupcontent","success")
+```
+
+Lua
+```
+Userinput:Popup("handlepopup","Popuptitle","Popupcontent","success")
+```
+
+### 返回值
+
+唯一id
+
+## Userinput.Note
+
+显示文本
+
+### 原型
+```
+Note (script string, title string, body string, type string) string
+```
+
+### 描述
+
+弹窗请求用户输入
+
+* script 回调脚本
+* title 标题
+* body 正文，类型取决于type
+* type  征文类型，可选值为text,md,output,分别为纯文本格式，Markdown格式，output格式
+
+### 回调函数
+
+* code 成功非0
+* data 当MD格式的链接被点击时，链接href将作为data回调
+### 代码范例
+
+Javascript
+```
+Userinput.Note("handlenote","Title","# md content [a](href)","md")
+```
+
+Lua
+```
+Userinput:Note("handlenote","Title","# md content [a](href)"","md")
+```
+
+### 返回值
+
+唯一id
+
 ## Userinput.NewList
 
 新建列表
