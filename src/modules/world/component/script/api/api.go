@@ -10,6 +10,7 @@ import (
 	"hellclient/modules/version"
 	"hellclient/modules/world"
 	"hellclient/modules/world/bus"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -720,6 +721,7 @@ func (a *API) MustCleanModFileInsidePath(name string) string {
 	}
 	return name
 }
+
 func (a *API) HasModFile(p herbplugin.Plugin, name string) bool {
 	if !a.Bus.GetModEnabled() {
 		return false
@@ -1458,4 +1460,33 @@ func (a *API) NewWord(value string) string {
 		panic(err)
 	}
 	return string(data)
+}
+
+func (a *API) GetModInfo(herbplugin.Plugin) *world.Mod {
+	mod := world.NewMod()
+	if !a.Bus.GetModEnabled() {
+		return mod
+	}
+	mod.Enabled = true
+	modpath := a.MustCleanModFileInsidePath("")
+	if modpath == "" {
+		panic(fmt.Errorf("get mod info not allowed"))
+	}
+	files, err := ioutil.ReadDir(modpath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return mod
+		}
+		panic(err)
+	}
+	mod.Exists = true
+	for _, f := range files {
+		name := filepath.Base(f.Name())
+		if f.IsDir() {
+			mod.FolderList = append(mod.FolderList, name)
+		} else {
+			mod.FileList = append(mod.FileList, name)
+		}
+	}
+	return mod
 }

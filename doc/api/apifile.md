@@ -303,6 +303,55 @@ local success=MakeHomeFolder("myfolder")
 ### 返回值
 
 布尔值,是否成功创建目录
+
+## GetModInfo
+
+返回模组信息
+
+### 原型
+```
+GetModInfo() *world.Mod
+```
+
+### 描述
+
+返回模组信息
+
+### 代码范例
+
+Javascript
+```
+let mod=world.GetModInfo()
+world.Note(mod.Enabeld)
+world.Note(mod.Exists)
+world.Note(mod.FileList)
+world.Note(mod.FolderList)
+
+```
+
+Lua
+```
+local mod=GetModInfo()
+Note(mod.Enabeld)
+Note(mod.Exists)
+Note(mod.FileList)
+Note(mod.FolderList)
+```
+
+### 返回值
+
+```
+type Mod struct {
+    //Mod是否启用
+	Enabled    bool
+    //Mod目录是否存在
+	Exists     bool
+    //Mod目录下的文件列表
+	FileList   []string
+    //Mod目录下的目录列表
+	FolderList []string
+}
+```
 ## HasModFile
 
 检查模组文件

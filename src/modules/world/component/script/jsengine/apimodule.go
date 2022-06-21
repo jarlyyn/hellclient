@@ -196,6 +196,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "HasModFile", a.NewHasModFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadModFile", a.NewReadModFileAPI(p))
 	AppendToWorld(jp.Runtime, world, "ReadModLines", a.NewReadModLinesAPI(p))
+	AppendToWorld(jp.Runtime, world, "GetModInfo", a.NewGetModInfoAPI(p))
 
 	AppendToWorld(jp.Runtime, world, "MakeHomeFolder", a.NewMakeHomeFolderAPI(p))
 
@@ -776,6 +777,18 @@ func (a *jsapi) SetSpeedWalkDelay(call goja.FunctionCall, r *goja.Runtime) goja.
 func (a *jsapi) GetSpeedWalkDelay(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.SpeedWalkDelay())
 }
+
+func (a *jsapi) NewGetModInfoAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		mod := a.API.GetModInfo(p)
+		result := r.NewObject()
+		result.Set("Enabled", r.ToValue(mod.Enabled))
+		result.Set("Exists", r.ToValue(mod.Exists))
+		result.Set("FileList", r.ToValue(mod.FileList))
+		result.Set("FolderList", r.ToValue(mod.FolderList))
+		return result
+	}
+}
 func (a *jsapi) NewHasFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		return r.ToValue(a.API.HasFile(p, call.Argument(0).String()))
@@ -1335,6 +1348,7 @@ func (a *jsapi) NewWord(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	text := call.Argument(0).String()
 	return r.ToValue(a.API.NewWord(text))
 }
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

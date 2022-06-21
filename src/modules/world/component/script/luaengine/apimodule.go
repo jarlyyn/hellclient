@@ -162,6 +162,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("HasModFile", l.NewFunction(a.NewHasModFileAPI(p)))
 	l.SetGlobal("ReadModFile", l.NewFunction(a.NewReadModFileAPI(p)))
 	l.SetGlobal("ReadModLines", l.NewFunction(a.NewReadModLinesAPI(p)))
+	l.SetGlobal("GetModInfo", l.NewFunction(a.NewGetModInfoAPI(p)))
 
 	l.SetGlobal("MakeHomeFolder", l.NewFunction(a.NewMakeHomeFolderAPI(p)))
 	l.SetGlobal("HasHomeFile", l.NewFunction(a.NewHasHomeFileAPI(p)))
@@ -841,6 +842,28 @@ func (a *luaapi) NewReadLinesAPI(p herbplugin.Plugin) func(L *lua.LState) int {
 			t.Append(lua.LString(v))
 		}
 		L.Push(t)
+		return 1
+	}
+}
+
+func (a *luaapi) NewGetModInfoAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		mod := a.API.GetModInfo(p)
+		result := L.NewTable()
+		result.RawSetString("Enabled", lua.LBool(mod.Enabled))
+		result.RawSetString("Exists", lua.LBool(mod.Exists))
+		filelist := L.NewTable()
+		for _, name := range mod.FileList {
+			filelist.Append(lua.LString(name))
+		}
+		result.RawSetString("FileList", filelist)
+
+		folderlist := L.NewTable()
+		for _, name := range mod.FolderList {
+			folderlist.Append(lua.LString(name))
+		}
+		result.RawSetString("FolderList", folderlist)
+		L.Push(result)
 		return 1
 	}
 }
