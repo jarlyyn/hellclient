@@ -1,5 +1,129 @@
 # 界面接口
 
+## GetHUDSize
+
+获取HUD尺寸
+
+### 原型
+
+```
+GetHUDSize()int
+```
+
+### 描述
+
+获取HUD区域的尺寸
+### 代码范例
+
+Javascript
+```
+world.Note(world.GetHUDSize());
+```
+
+Lua
+```
+Note(GetHUDSize());
+```
+
+### 返回值
+
+整数代表的尺寸
+
+## SetHUDSize
+
+获取HUD尺寸
+
+### 原型
+
+```
+SetHUDSize(size int)
+```
+
+### 描述
+
+设置HUD区域的尺寸，设置后HUD内容将清空
+
+* size 尺寸
+### 代码范例
+
+Javascript
+```
+world.SetHUDSize(10)
+```
+
+Lua
+```
+SetHUDSize(10)
+```
+
+### 返回值
+
+无
+
+## GetHUDContent
+
+获取HUD内容
+
+### 原型
+
+```
+GetHUDContent()string
+```
+
+### 描述
+
+获取HUD区域的内容，格式类似DumpOutput
+
+### 代码范例
+
+Javascript
+```
+world.Note(world.GetHUDContent())
+```
+
+Lua
+```
+Note(GetHUDContent())
+```
+
+### 返回值
+
+JSON序列化的Line数组
+
+## UpdateHUDContent
+
+更新HUD内容
+
+### 原型
+
+```
+UpdateHUDContent(start int,content string)bool
+```
+
+### 描述
+
+更新HUD中指定行的内容
+
+* start 内容开始行数
+* content JSON格式序列化后的Line数组,类似DumpOutput的输出
+
+### 代码范例
+
+Javascript
+```
+world.Note(world.UpdateHUDContent(1,world.DumpOutput(10)))
+```
+
+Lua
+```
+Note(UpdateHUDContent(1,DumpOutput(10)))
+```
+
+### 返回值
+
+布尔值，更新是否成功。
+
+start小于0或者start加上正文行数超过HUD尺寸则失败
 ## FlashIcon
 
 废弃

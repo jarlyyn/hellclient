@@ -116,6 +116,11 @@
 * [Disconnect 断开连接](apiconnect.md#Disconnect)
 
 ## 界面
+* [GetHUDSize 获取HUD尺寸](apiui.md#GetHUDSize)
+* [SetHUDSize 设置HUD尺寸](apiui.md#SetHUDSize)
+* [GetHUDContent 获取HUD内容](apiui.md#GetHUDContent)
+* [UpdateHUDContent 更新HUD内容](apiui.md#UpdateHUDContent)
+
 * [FlashIcon 废弃](apiui.md#FlashIcon)
 * [SetStatus 设置状态文本](apiui.md#SetStatus)
 * [DeleteCommandHistory 删除命令记录](apiui.md#DeleteCommandHistory)
