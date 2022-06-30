@@ -69,6 +69,12 @@ github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce h1:I6nl8yaDFh91E/dq4/
 github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce/go.mod h1:ERIZX3zLBWh/atzC9vfuC0JhLhcLtzNcdJCJp5N1MBQ=
 github.com/jarlyyn/golang-pkg-pcre v0.0.0-20210729155851-15228a92fd51 h1:BLpeo5AF6/tGmMvddxEQBFuQbBOZg9nt8OwBTtu/zp8=
 github.com/jarlyyn/golang-pkg-pcre v0.0.0-20210729155851-15228a92fd51/go.mod h1:kKTkas2FilKHjt6BmTj4+i08zQSVODOf3wTEUbkKVWo=
+github.com/jarlyyn/telnet v0.0.0-20180329124119-c3b780dc415b h1:zP38zGIazmR+zeVlcgIQLjB5vD5v9UxKPPlMyLBSjkU=
+github.com/jarlyyn/telnet v0.0.0-20180329124119-c3b780dc415b/go.mod h1:x1s2DpI93+/ZvUVTjXvmKIoB0+nE5Ie/8j8gUhnNyMc=
+github.com/jarlyyn/telnet v0.0.0-20220630063234-2d955f18eb12 h1:TRbqxX6cSBSTWUjXGnvyySc1dQgOPQeV4HNLqD+MMOs=
+github.com/jarlyyn/telnet v0.0.0-20220630063234-2d955f18eb12/go.mod h1:x1s2DpI93+/ZvUVTjXvmKIoB0+nE5Ie/8j8gUhnNyMc=
+github.com/jarlyyn/telnet v0.0.0-20220630063902-25597769f592 h1:2dCOTynADZlf475r+87gnXIxmMvzJwKQE1B5D2C6yP8=
+github.com/jarlyyn/telnet v0.0.0-20220630063902-25597769f592/go.mod h1:x1s2DpI93+/ZvUVTjXvmKIoB0+nE5Ie/8j8gUhnNyMc=
 github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible h1:jdpOPRN1zP63Td1hDQbZW73xKmzDvZHzVdNYxhnTMDA=
 github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible/go.mod h1:1c7szIrayyPPB/987hsnvNzLushdWf4o/79s3P08L8A=
 github.com/kr/pretty v0.2.1 h1:Fmg33tUaq4/8ym9TJN1x7sLJnHVwhP33CNkpYV/7rwI=
@@ -90,8 +96,6 @@ github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5Cc
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/yuin/gopher-lua v0.0.0-20210529063254-f4c35e4016d9 h1:k/gmLsJDWwWqbLCur2yWnJzwQEKRcAHXo6seXGuSwWw=
 github.com/yuin/gopher-lua v0.0.0-20210529063254-f4c35e4016d9/go.mod h1:E1AXubJBdNmFERAOucpDIxNzeGfLzg0mYh+UfMWdChA=
-github.com/ziutek/telnet v0.0.0-20180329124119-c3b780dc415b h1:VfPXB/wCGGt590QhD1bOpv2J/AmC/RJNTg/Q59HKSB0=
-github.com/ziutek/telnet v0.0.0-20180329124119-c3b780dc415b/go.mod h1:IZpXDfkJ6tWD3PhBK5YzgQT+xJWh7OsdwiG8hA2MkO4=
 golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/net v0.0.0-20211216030914-fe4d6282115f h1:hEYJvxw1lSnWIl8X9ofsYMklzaDs90JI2az5YMd4fPM=
 golang.org/x/net v0.0.0-20211216030914-fe4d6282115f/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=

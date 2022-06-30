@@ -19,5 +19,6 @@ type Engine interface {
 	OnResponse(b *bus.Bus, msg *world.Message)
 	OnAssist(b *bus.Bus, script string)
 	OnBuffer(b *bus.Bus, data []byte) bool
+	OnSubneg(b *bus.Bus, code byte, data []byte) bool
 	Run(*bus.Bus, string)
 }

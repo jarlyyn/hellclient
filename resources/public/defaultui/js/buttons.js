@@ -275,6 +275,10 @@ onButton.updateScriptSettings=function(){
         OnOpen: vm.scriptSettings.OnOpen,
         Type: vm.scriptSettings.Type,
         OnHUDClick:vm.scriptSettings.OnHUDClick,
+        OnBuffer:vm.scriptSettings.OnBuffer,
+        OnBufferMin:vm.scriptSettings.OnBufferMin,
+        OnBufferMax:vm.scriptSettings.OnBufferMax,
+        OnSubneg:vm.scriptSettings.OnSubneg,
     }
     vm.scriptsettingsUpdateFormVisible=true
 }

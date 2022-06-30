@@ -391,9 +391,21 @@ func (s *Script) HandleBuffer(b *bus.Bus, data []byte) bool {
 	if e == nil {
 		return false
 	}
-	s.SetCreator("prompt", "")
+	s.SetCreator("buffer", "")
 	return e.OnBuffer(b, data)
 }
+func (s *Script) HandleSubneg(b *bus.Bus, data []byte) bool {
+	if len(data) < 2 {
+		return false
+	}
+	e := s.getEngine()
+	if e == nil {
+		return false
+	}
+	s.SetCreator("buffer", "")
+	return e.OnSubneg(b, data[0], data[1:])
+}
+
 func (s *Script) Run(b *bus.Bus, cmd string) {
 	e := s.getEngine()
 	if e != nil {
@@ -446,6 +458,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptCaller = s.CreatorAndType
 	b.DoAssist = b.Wrap(s.Assist)
 	b.HandleBuffer = b.WrapHandleBytesForBool(s.HandleBuffer)
+	b.HandleSubneg = b.WrapHandleBytesForBool(s.HandleSubneg)
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)

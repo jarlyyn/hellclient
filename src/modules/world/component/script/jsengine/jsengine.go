@@ -42,6 +42,7 @@ type JsEngine struct {
 	onHUDClick   string
 	onResponse   string
 	onBuffer     string
+	onSubneg     string
 	onBufferMin  int
 	onBufferMax  int
 }
@@ -62,6 +63,7 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 	e.onResponse = data.OnResponse
 	e.onHUDClick = data.OnHUDClick
 	e.onBuffer = data.OnBuffer
+	e.onSubneg = data.OnSubneg
 	e.onBufferMax = data.OnBufferMax
 	e.onBufferMin = data.OnBufferMin
 	err := util.Catch(func() {
@@ -219,7 +221,19 @@ func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 	}
 	return result.ToBoolean()
 }
-
+func (e *JsEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil || e.onSubneg == "" {
+		e.Locker.Unlock()
+		return false
+	}
+	e.Locker.Unlock()
+	result := e.Call(b, e.onSubneg, int(code), string(data))
+	if result == nil {
+		return false
+	}
+	return result.ToBoolean()
+}
 func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
 	e.Locker.Lock()
 	if e.Plugin.Runtime == nil {

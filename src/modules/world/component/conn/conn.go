@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/herb-go/misc/debounce"
-	"github.com/ziutek/telnet"
+	"github.com/jarlyyn/telnet"
 )
 
 const DefaultDebounceDuration = 200 * time.Millisecond
@@ -82,6 +82,10 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	t, err := telnet.DialTimeout("tcp", bus.GetHost()+":"+bus.GetPort(), time.Duration(timeout)*time.Second)
 	if err != nil {
 		return err
+	}
+	t.GMCP = true
+	t.OnSubneg = func(data []byte) {
+		bus.HandleSubneg(data)
 	}
 	conn.RunningLock.Lock()
 	conn.running = true

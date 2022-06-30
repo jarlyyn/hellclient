@@ -90,6 +90,10 @@ func UpdateScript(t *titan.Titan, data []byte) {
 	sd.OnAssist = form.OnAssist
 	sd.OnHUDClick = form.OnHUDClick
 	sd.Channel = form.Channel
+	sd.OnBuffer = form.OnBuffer
+	sd.OnBufferMax = form.OnBufferMax
+	sd.OnBufferMin = form.OnBufferMin
+	sd.OnSubneg = form.OnSubneg
 	t.Locker.Unlock()
 	go func() {
 		t.OnUpdateScriptSuccess(form.ID)
