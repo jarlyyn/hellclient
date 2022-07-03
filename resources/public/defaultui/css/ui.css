@@ -4,7 +4,7 @@ body{text-size-adjust: none;background: black;color:white;font-family: monospace
 ul,li{padding:0;margin:0;list-style: none}
 #userinput-note-body-alllines,ul#lines,ul#alllines,ul#visualPrompt-alllines{white-space: pre;font-family: monospace;}
 #userinput-note-body-alllines,ul#visualPrompt-alllines,ul#alllines{background: black;padding:0;margin:0;color:white}
-#userinput-note-body-alllines li,ul#visualPrompt-alllines li,ul#lines li,ul#alllines li{width: 80em;overflow: hidden;background: black}
+#userinput-note-body-alllines li,ul#visualPrompt-alllines li,ul#lines li,ul#alllines li{width: 80em;overflow: hidden;background: black;white-space: pre-wrap;word-break: break-all;}
 ul#lines{padding-bottom: 60px;margin-bottom:-32px;padding-top: 110px;padding-left:0;}
 #footer{position: fixed;bottom:0;height: 32px;left:0;width:100%;background:black}
 #user-input{height: 32px;padding-left: 8em;padding-right:8em;position: relative;}
