@@ -25,6 +25,8 @@ type Bus struct {
 	SetName                   func(string)
 	GetShowBroadcast          func() bool
 	SetShowBroadcast          func(bool)
+	GetShowSubneg             func() bool
+	SetShowSubneg             func(bool)
 	GetModEnabled             func() bool
 	SetModEnabled             func(bool)
 	GetCommandStackCharacter  func() string
@@ -85,6 +87,7 @@ type Bus struct {
 	DoPrintGlobalBroadcastIn  func(msg string)
 	DoPrintLocalBroadcastOut  func(msg string)
 	DoPrintGlobalBroadcastOut func(msg string)
+	DoPrintSubneg             func(msg string)
 	DoPrintRequest            func(msg string)
 	DoPrintResponse           func(msg string)
 

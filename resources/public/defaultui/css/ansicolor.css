@@ -110,17 +110,21 @@
 
 .words.localbcin,.words.globalbcin,
 .words.localbcout,.words.globalbcout,
-.words.request,.words.response{color:rgb(127,127,127)}
+.words.request,.words.response,
+.words.subneg{color:rgb(127,127,127)}
 
 .words.localbcin::before,.words.globalbcin::before,
 .words.localbcout::before,.words.globalbcout::before,
-.words.request::before,.words.response::before{color:rgb(127,127,127)}
+.words.request::before,.words.response::before,
+.words.subneg::before{color:rgb(127,127,127)}
+
 .words.localbcin::before{content:"☎本地广播"}
 .words.globalbcin::before{content:"☎全局广播"}
 .words.localbcout::before{content:"☎本地广播出"}
 .words.globalbcout::before{content:"☎全局广播出"}
 .words.request::before{content:"☎请求"}
 .words.response::before{content:"☎响应"}
+.words.subneg::before{content:"☎非文本信息"}
 
 .words.print{color:mediumspringgreen;    white-space: pre-wrap;word-break: break-all;text-align: justify;}
 .words.print::before{content:"↢";color:green;padding-left: 0.5em}

@@ -251,6 +251,7 @@ onButton.updateWorldSettings=function(){
         ID:vm.current,
         ScriptPrefix:vm.worldSettings.ScriptPrefix,
         ShowBroadcast:vm.worldSettings.ShowBroadcast,
+        ShowSubneg:vm.worldSettings.ShowSubneg,
         ModEnabled:vm.worldSettings.ModEnabled
     }
     vm.worldsettingsUpdateFormVisible=true

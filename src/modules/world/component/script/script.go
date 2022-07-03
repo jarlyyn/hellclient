@@ -2,6 +2,7 @@ package script
 
 import (
 	"bytes"
+	"fmt"
 	"hellclient/modules/mapper"
 	"hellclient/modules/world"
 	"hellclient/modules/world/bus"
@@ -401,6 +402,9 @@ func (s *Script) HandleSubneg(b *bus.Bus, data []byte) bool {
 	e := s.getEngine()
 	if e == nil {
 		return false
+	}
+	if b.GetShowSubneg() && len(data) > 1 {
+		b.DoPrintSubneg(fmt.Sprintf("%d %s", data[0], string(data[1:])))
 	}
 	s.SetCreator("buffer", "")
 	return e.OnSubneg(b, data[0], data[1:])

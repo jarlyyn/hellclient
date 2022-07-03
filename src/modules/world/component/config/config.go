@@ -227,6 +227,16 @@ func (c *Config) GetShowBroadcast() bool {
 	defer c.Locker.Unlock()
 	return c.Data.ShowBroadcast
 }
+func (c *Config) SetShowSubneg(s bool) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.ShowSubneg = s
+}
+func (c *Config) GetShowSubneg() bool {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.ShowSubneg
+}
 func (c *Config) SetModEnabled(s bool) {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
@@ -274,6 +284,8 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetScriptPrefix = c.SetScriptPrefix
 	b.GetShowBroadcast = c.GetShowBroadcast
 	b.SetShowBroadcast = c.SetShowBroadcast
+	b.GetShowSubneg = c.GetShowSubneg
+	b.SetShowSubneg = c.SetShowSubneg
 	b.GetModEnabled = c.GetModEnabled
 	b.SetModEnabled = c.SetModEnabled
 	b.BindInitEvent(b, c.OnReady)

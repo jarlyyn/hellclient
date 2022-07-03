@@ -51,6 +51,7 @@ define(function (require) {
     var globalbcouticon="☎全集广播出 "
     var requesticon="☎请求 "
     var responseicon="☎响应 "
+    var subnegicon="☎非文本信息 "
     var bccolor="rgb(127,127,127)"
     var hudbackground = "#333333"
     return {
@@ -106,5 +107,6 @@ define(function (require) {
         globalbcouticon:globalbcouticon,
         requesticon:requesticon,
         responseicon:responseicon,
+        subnegicon:subnegicon,
     }
 })

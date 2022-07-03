@@ -74,6 +74,9 @@ const LineTypeRequest = 9
 //Websocket收到的响应的信息
 const LineTypeResponse = 10
 
+//收到mud发来的非文本信息
+const LineTypeSubneg = 11
+
 type Line struct {
 	Words          []*Word
 	ID             string

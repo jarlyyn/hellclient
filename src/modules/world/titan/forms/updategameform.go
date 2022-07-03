@@ -28,6 +28,7 @@ type UpdateGameForm struct {
 	ScriptPrefix          string
 	CommandStackCharacter string
 	ShowBroadcast         bool
+	ShowSubneg            bool
 	ModEnabled            bool
 }
 
@@ -96,6 +97,7 @@ func UpdateGame(t *titan.Titan, data []byte) {
 	w.SetCommandStackCharacter(form.CommandStackCharacter)
 	w.SetName(form.Name)
 	w.SetShowBroadcast(form.ShowBroadcast)
+	w.SetShowSubneg(form.ShowSubneg)
 	w.SetModEnabled(form.ModEnabled)
 	t.Locker.Unlock()
 	go func() {

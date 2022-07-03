@@ -84,6 +84,10 @@ define(function (require) {
                     icon=settings.responseicon
                     iconcolor=settings.bccolor
                     break;
+                case 11:
+                    color=settings.bccolor
+                    icon=settings.subnegicon
+                    iconcolor=settings.bccolor
                 default:
                     break;
             }

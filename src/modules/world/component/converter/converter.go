@@ -26,6 +26,7 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 	b.DoPrintGlobalBroadcastIn = b.WrapHandleString(c.DoPrintGlobalBroadcastIn)
 	b.DoPrintLocalBroadcastOut = b.WrapHandleString(c.DoPrintLocalBroadcastOut)
 	b.DoPrintGlobalBroadcastOut = b.WrapHandleString(c.DoPrintGlobalBroadcastOut)
+	b.DoPrintSubneg = b.WrapHandleString(c.DoPrintSubneg)
 	b.DoPrintRequest = b.WrapHandleString(c.DoPrintRequest)
 	b.DoPrintResponse = b.WrapHandleString(c.DoPrintResponse)
 }
@@ -101,6 +102,10 @@ func (c *Converter) DoPrintLocalBroadcastOut(b *bus.Bus, msg string) {
 func (c *Converter) DoPrintGlobalBroadcastOut(b *bus.Bus, msg string) {
 	c.print(b, world.LineTypeGlobalBroadcastOut, msg)
 }
+func (c *Converter) DoPrintSubneg(b *bus.Bus, msg string) {
+	c.print(b, world.LineTypeSubneg, msg)
+}
+
 func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {
 	c.print(b, world.LineTypeSystem, msg)
 }

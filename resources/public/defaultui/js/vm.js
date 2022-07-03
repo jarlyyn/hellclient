@@ -12,6 +12,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             8: " globalbcin",
             9: " request",
             10: " response",
+            11:"subneg"
         },
         hud: [],
         current: "",
