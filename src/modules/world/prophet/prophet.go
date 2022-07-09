@@ -182,6 +182,7 @@ func (p *Prophet) OnOpen(conn connections.OutputConnection) {
 }
 
 func (p *Prophet) onCurrent(roomid string) {
+	p.Titan.Focus(roomid)
 	p.Titan.HandleCmdLines(roomid)
 	p.Titan.HandleCmdPrompt(roomid)
 	p.Titan.HandleCmdStatus(roomid)

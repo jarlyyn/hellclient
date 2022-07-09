@@ -42,6 +42,7 @@ type LuaEngine struct {
 	onHUDClick   string
 	onSubneg     string
 	onBuffer     string
+	onFocus      string
 	onBufferMin  int
 	onBufferMax  int
 }
@@ -65,6 +66,7 @@ func (e *LuaEngine) Open(b *bus.Bus) error {
 	e.onHUDClick = data.OnHUDClick
 	e.onBufferMin = data.OnBufferMin
 	e.onBufferMax = data.OnBufferMax
+	e.onFocus = data.OnFocus
 	err := util.Catch(func() {
 		newLuaInitializer(b).MustApplyInitializer(e.Plugin)
 	})
@@ -236,7 +238,16 @@ func (e *LuaEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
 	v := e.Call(b, fn, lua.LNumber(code), lua.LString(data))
 	return lua.LVAsBool(v)
 }
-
+func (e *LuaEngine) OnFocus(b *bus.Bus) {
+	e.Locker.Lock()
+	if e.Plugin.LState == nil || e.onSubneg == "" {
+		e.Locker.Unlock()
+		return
+	}
+	fn := e.Plugin.LState.GetGlobal(e.onSubneg)
+	e.Locker.Unlock()
+	e.Call(b, fn)
+}
 func (e *LuaEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
 	e.Locker.Lock()
 	if e.Plugin.LState == nil {

@@ -100,6 +100,7 @@ type Bus struct {
 	DoSendBroadcastToScript func(*world.Broadcast)
 	HandleBuffer            func([]byte) bool
 	HandleSubneg            func([]byte) bool
+	HandleFocus             func()
 	DoSendTimerToScript     func(*world.Timer)
 	DoDeleteTimer           func(string) bool
 	DoDeleteTimerByName     func(string) bool

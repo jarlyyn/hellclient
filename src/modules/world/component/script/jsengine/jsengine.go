@@ -45,6 +45,7 @@ type JsEngine struct {
 	onSubneg     string
 	onBufferMin  int
 	onBufferMax  int
+	onFocus      string
 }
 
 func NewJsEngine() *JsEngine {
@@ -66,6 +67,7 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 	e.onSubneg = data.OnSubneg
 	e.onBufferMax = data.OnBufferMax
 	e.onBufferMin = data.OnBufferMin
+	e.onFocus = data.OnFocus
 	err := util.Catch(func() {
 		newJsInitializer(b).MustApplyInitializer(e.Plugin)
 	})
@@ -233,6 +235,15 @@ func (e *JsEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
 		return false
 	}
 	return result.ToBoolean()
+}
+func (e *JsEngine) OnFocus(b *bus.Bus) {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil || e.onSubneg == "" {
+		e.Locker.Unlock()
+		return
+	}
+	e.Locker.Unlock()
+	e.Call(b, e.onFocus)
 }
 func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
 	e.Locker.Lock()

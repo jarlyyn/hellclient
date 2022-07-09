@@ -387,6 +387,14 @@ func (s *Script) SendBroadcast(b *bus.Bus, bc *world.Broadcast) {
 		}
 	}
 }
+func (s *Script) HandleFocus(b *bus.Bus) {
+	e := s.getEngine()
+	if e == nil {
+		return
+	}
+	s.SetCreator("focus", "")
+	e.OnFocus(b)
+}
 func (s *Script) HandleBuffer(b *bus.Bus, data []byte) bool {
 	e := s.getEngine()
 	if e == nil {
@@ -463,6 +471,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.DoAssist = b.Wrap(s.Assist)
 	b.HandleBuffer = b.WrapHandleBytesForBool(s.HandleBuffer)
 	b.HandleSubneg = b.WrapHandleBytesForBool(s.HandleSubneg)
+	b.HandleFocus = b.Wrap(s.HandleFocus)
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)

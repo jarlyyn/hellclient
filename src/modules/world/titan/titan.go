@@ -214,6 +214,13 @@ func (t *Titan) HandleCmdHistory(id string) {
 		msg.PublishHistory(t, id, h)
 	}
 }
+func (t *Titan) Focus(id string) {
+	w := t.World(id)
+	if w != nil {
+		w.HandleFocus()
+	}
+}
+
 func (t *Titan) HandleCmdHUDContent(id string) {
 	w := t.World(id)
 	if w != nil {
