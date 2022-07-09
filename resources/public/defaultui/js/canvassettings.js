@@ -1,11 +1,11 @@
 define(function (require) {
-    var lineheight = 20
-    var fontsize=14
+    var lineheight = 20*devicePixelRatio
+    var fontsize=14*devicePixelRatio
     var linewidth = 80 * fontsize
     var middleline = lineheight / 2
-    var underlineoffset=1
+    var underlineoffset=1*devicePixelRatio
     var underline = lineheight -((lineheight-fontsize)/ 2)+underlineoffset
-    var underlineheight=1
+    var underlineheight=1*devicePixelRatio
     var maxlines = 60
     var font = fontsize+"px monospace"
     var fontbold= "bold "+fontsize+"px monospace"

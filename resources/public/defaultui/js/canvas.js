@@ -180,7 +180,7 @@ define(function (require) {
             return 
         }
         hudwrapper.className=""
-        hud.style.height=settings.lineheight*content.length+"px"
+        hud.style.height=settings.lineheight*content.length/devicePixelRatio+"px"
         hud.height=settings.lineheight*content.length
         hud.width=settings.linewidth
         let top=0
