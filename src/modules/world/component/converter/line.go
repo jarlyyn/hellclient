@@ -214,5 +214,5 @@ func ConvertToLine(last *world.Word, msg []byte, charset string, errhandler func
 			}
 		}
 	}
-	return line, nil
+	return line, w
 }
