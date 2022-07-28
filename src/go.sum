@@ -67,12 +67,8 @@ github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73 h1:SipUePmeYLlptd3N
 github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73/go.mod h1:EuxhyAY14GgxIAKMDACoGzel9Of+11mDhWGrl7fkbQo=
 github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce h1:I6nl8yaDFh91E/dq4/TMe/y92MOXtypsY5dL/LCLCPw=
 github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce/go.mod h1:ERIZX3zLBWh/atzC9vfuC0JhLhcLtzNcdJCJp5N1MBQ=
-github.com/jarlyyn/golang-pkg-pcre v0.0.0-20210729155851-15228a92fd51 h1:BLpeo5AF6/tGmMvddxEQBFuQbBOZg9nt8OwBTtu/zp8=
-github.com/jarlyyn/golang-pkg-pcre v0.0.0-20210729155851-15228a92fd51/go.mod h1:kKTkas2FilKHjt6BmTj4+i08zQSVODOf3wTEUbkKVWo=
-github.com/jarlyyn/telnet v0.0.0-20180329124119-c3b780dc415b h1:zP38zGIazmR+zeVlcgIQLjB5vD5v9UxKPPlMyLBSjkU=
-github.com/jarlyyn/telnet v0.0.0-20180329124119-c3b780dc415b/go.mod h1:x1s2DpI93+/ZvUVTjXvmKIoB0+nE5Ie/8j8gUhnNyMc=
-github.com/jarlyyn/telnet v0.0.0-20220630063234-2d955f18eb12 h1:TRbqxX6cSBSTWUjXGnvyySc1dQgOPQeV4HNLqD+MMOs=
-github.com/jarlyyn/telnet v0.0.0-20220630063234-2d955f18eb12/go.mod h1:x1s2DpI93+/ZvUVTjXvmKIoB0+nE5Ie/8j8gUhnNyMc=
+github.com/jarlyyn/golang-pkg-pcre v0.0.0-20220728174224-9ac525e8dd72 h1:/8Xkg0+C9oFHzgwHHkRkUIYLPaUIBVKP6RQiGaBWmBM=
+github.com/jarlyyn/golang-pkg-pcre v0.0.0-20220728174224-9ac525e8dd72/go.mod h1:kKTkas2FilKHjt6BmTj4+i08zQSVODOf3wTEUbkKVWo=
 github.com/jarlyyn/telnet v0.0.0-20220630063902-25597769f592 h1:2dCOTynADZlf475r+87gnXIxmMvzJwKQE1B5D2C6yP8=
 github.com/jarlyyn/telnet v0.0.0-20220630063902-25597769f592/go.mod h1:x1s2DpI93+/ZvUVTjXvmKIoB0+nE5Ie/8j8gUhnNyMc=
 github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible h1:jdpOPRN1zP63Td1hDQbZW73xKmzDvZHzVdNYxhnTMDA=

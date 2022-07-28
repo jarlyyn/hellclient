@@ -2,7 +2,7 @@
 
 #settings
 binname="hellclient"
-buildername="build-linux-nostatic.sh"
+buildername="build-linux.sh"
 mclconvertorname="mclconvertor"
 
 winbinname="hellclient.exe"
