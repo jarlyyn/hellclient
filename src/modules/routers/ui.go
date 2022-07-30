@@ -1,7 +1,6 @@
 package routers
 
 import (
-	"hellclient/modules/app"
 	messengeractions "hellclient/modules/world/messenger/actions"
 	prophetactions "hellclient/modules/world/prophet/actions"
 
@@ -32,15 +31,15 @@ var RouterUIFactory = router.NewFactory(func() router.Router {
 	Router.Handle("/ws").HandleFunc(prophetactions.WebsocketAction)
 	Router.Handle("/messenger").HandleFunc(messengeractions.WebsocketAction)
 	Router.Handle(titan.GamePrefix).Handle(titan.NewWebdavServer())
-	if app.Development.Profiling {
-		runtime.SetBlockProfileRate(int(10 * time.Second))
-		runtime.SetMutexProfileFraction(int(10 * time.Second))
-		Router.Handle("/debug/pprof/").HandleFunc(pprof.Index)
-		Router.Handle("/debug/pprof/cmdline").HandleFunc(pprof.Cmdline)
-		Router.Handle("/debug/pprof/profile").HandleFunc(pprof.Profile)
-		Router.Handle("/debug/pprof/symbol").HandleFunc(pprof.Symbol)
-		Router.Handle("/debug/pprof/trace").HandleFunc(pprof.Trace)
-	}
+	// if app.Development.Profiling {
+	runtime.SetBlockProfileRate(int(10 * time.Second))
+	runtime.SetMutexProfileFraction(int(10 * time.Second))
+	Router.Handle("/debug/pprof/").HandleFunc(pprof.Index)
+	Router.Handle("/debug/pprof/cmdline").HandleFunc(pprof.Cmdline)
+	Router.Handle("/debug/pprof/profile").HandleFunc(pprof.Profile)
+	Router.Handle("/debug/pprof/symbol").HandleFunc(pprof.Symbol)
+	Router.Handle("/debug/pprof/trace").HandleFunc(pprof.Trace)
+	// }
 	//Put your router configure code here
 	return Router
 })
