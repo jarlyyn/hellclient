@@ -12,6 +12,22 @@ import (
 	"github.com/herb-go/herbplugin/jsplugin"
 )
 
+type JsWalkAllResult struct {
+	result *mapper.WalkAllResult
+}
+
+func (result *JsWalkAllResult) Convert(r *goja.Runtime) goja.Value {
+	t := r.NewObject()
+	steps := make([]interface{}, 0, len(result.result.Steps))
+	for _, v := range result.result.Steps {
+		s := &JsStep{step: v}
+		steps = append(steps, s.Convert(r))
+	}
+	t.Set("steps", r.NewArray(steps...))
+	t.Set("walked", result.result.Walked)
+	t.Set("notwalked", result.result.NotWalked)
+	return t
+}
 func ConvertJsPath(r *goja.Runtime, v goja.Value) *JsPath {
 	t := v.ToObject(r)
 	p := &JsPath{
@@ -139,6 +155,18 @@ func (m *JsMapper) SetTags(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 
 func (m *JsMapper) Tags(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(m.mapper.Tags())
+}
+func (m *JsMapper) WalkAll(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	targets := []string{}
+	err := r.ExportTo(call.Argument(0), &targets)
+	if err != nil {
+		return nil
+	}
+	fly := int(call.Argument(1).ToInteger())
+	maxdistant := int(call.Argument(2).ToInteger())
+	result := m.mapper.WalkAll(targets, fly != 0, maxdistant)
+	jsresult := &JsWalkAllResult{result: result}
+	return jsresult.Convert(r)
 }
 func (m *JsMapper) GetPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	if len(call.Arguments) < 3 {
@@ -280,6 +308,9 @@ func (m *JsMapper) Convert(r *goja.Runtime) goja.Value {
 	t.Set("FlyList", m.FlyList)
 	t.Set("setflylist", m.SetFlyList)
 	t.Set("SetFlyList", m.SetFlyList)
+	t.Set("WalkAll", m.WalkAll)
+	t.Set("walkall", m.WalkAll)
+
 	return t
 }
 func NewMapperModule(b *bus.Bus) *herbplugin.Module {

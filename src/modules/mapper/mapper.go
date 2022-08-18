@@ -83,6 +83,18 @@ func (m *Mapper) Tags() []string {
 	}
 	return result
 }
+func (m *Mapper) WalkAll(targets []string, fly bool, max_distance int) *WalkAllResult {
+	a := NewWakeAll()
+	a.rooms = &m.rooms
+	a.tags = m.tags
+	a.fly = m.fly
+	a.Targets = targets
+	a.MaxDistant = max_distance
+	if !fly {
+		a.fly = nil
+	}
+	return a.Start()
+}
 func (m *Mapper) GetPath(from string, fly bool, to []string) []*Step {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
@@ -129,6 +141,7 @@ func (m *Mapper) SetRoomName(id string, name string) {
 	result := m.rooms[id]
 	if result == nil {
 		result = NewRoom()
+		result.ID = id
 		m.rooms[id] = result
 	}
 	result.Name = name
