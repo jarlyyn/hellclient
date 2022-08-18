@@ -15,13 +15,14 @@ type Step struct {
 var EmptyStep = &Step{}
 
 type Walking struct {
-	tags      map[string]bool
-	rooms     *map[string]*Room
-	from      string
-	to        []string
-	fly       []*Path
-	walked    map[string]*Step
-	forwading *list.List
+	tags        map[string]bool
+	rooms       *map[string]*Room
+	from        string
+	to          []string
+	fly         []*Path
+	walked      map[string]*Step
+	forwading   *list.List
+	maxdistance int
 }
 
 func (w *Walking) FlyStep(p *Path) *Step {
@@ -60,6 +61,7 @@ func (w *Walking) validateTags(p *Path) bool {
 	return ValidateTags(w.tags, p)
 }
 func (w *Walking) Walk() []*Step {
+	distance := 0
 	rooms := *w.rooms
 	var tolist = map[string]bool{}
 	if rooms[w.from] == nil {
@@ -96,6 +98,10 @@ func (w *Walking) Walk() []*Step {
 Matching:
 	for {
 		newExits := list.New()
+		distance++
+		if w.maxdistance > 0 && distance > w.maxdistance {
+			break
+		}
 		for {
 			v := w.forwading.Front()
 			if v == nil {
@@ -104,6 +110,9 @@ Matching:
 			step := v.Value.(*Step)
 			w.forwading.Remove(v)
 			if w.walked[step.To] != nil || rooms[step.To] == nil {
+				continue
+			}
+			if w.maxdistance > 0 && step.Delay > w.maxdistance {
 				continue
 			}
 			step.remain--

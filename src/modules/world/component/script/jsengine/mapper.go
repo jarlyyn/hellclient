@@ -163,8 +163,8 @@ func (m *JsMapper) WalkAll(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		return nil
 	}
 	fly := int(call.Argument(1).ToInteger())
-	maxdistant := int(call.Argument(2).ToInteger())
-	result := m.mapper.WalkAll(targets, fly != 0, maxdistant)
+	maxdistance := int(call.Argument(2).ToInteger())
+	result := m.mapper.WalkAll(targets, fly != 0, maxdistance)
 	jsresult := &JsWalkAllResult{result: result}
 	return jsresult.Convert(r)
 }

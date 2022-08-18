@@ -89,7 +89,7 @@ func (m *Mapper) WalkAll(targets []string, fly bool, max_distance int) *WalkAllR
 	a.tags = m.tags
 	a.fly = m.fly
 	a.Targets = targets
-	a.MaxDistant = max_distance
+	a.MaxDistance = max_distance
 	if !fly {
 		a.fly = nil
 	}

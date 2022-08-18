@@ -11,17 +11,18 @@ var NewWakeAll = func() *WalkAll {
 }
 
 type WalkAll struct {
-	Targets    []string
-	MaxDistant int
-	rooms      *map[string]*Room
-	tags       map[string]bool
-	fly        []*Path
+	Targets     []string
+	MaxDistance int
+	rooms       *map[string]*Room
+	tags        map[string]bool
+	fly         []*Path
 }
 
 func (a *WalkAll) Walk(fr string, to []string) []*Step {
 	w := a.newWalking()
 	w.from = fr
 	w.to = to
+	w.maxdistance = a.MaxDistance
 	return w.Walk()
 }
 func (a *WalkAll) newWalking() *Walking {
@@ -46,7 +47,6 @@ func (a *WalkAll) Start() *WalkAllResult {
 	if len(a.Targets) < 2 {
 		return result
 	}
-	distant := 0
 	fr := a.Targets[0]
 	left := append([]string{}, a.Targets[1:]...)
 	result.Walked = []string{fr}
@@ -55,18 +55,6 @@ func (a *WalkAll) Start() *WalkAllResult {
 		steps := a.Walk(fr, left)
 		if len(steps) == 0 {
 			break
-		}
-		if a.MaxDistant > 0 {
-			for _, v := range steps {
-				d := v.Delay
-				if d <= 0 {
-					d = 1
-				}
-				distant = distant + d
-			}
-			if distant > a.MaxDistant {
-				break
-			}
 		}
 		result.Steps = append(result.Steps, steps...)
 		fr = steps[len(steps)-1].To
