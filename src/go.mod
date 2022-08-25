@@ -30,7 +30,7 @@ require (
 	github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73
 	github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce
 	github.com/jarlyyn/golang-pkg-pcre v0.0.0-20220728174224-9ac525e8dd72
-	github.com/jarlyyn/telnet v0.0.0-20220825180004-b587119d91c9
+	github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/yuin/gopher-lua v0.0.0-20210529063254-f4c35e4016d9

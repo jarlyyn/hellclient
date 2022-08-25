@@ -69,8 +69,8 @@ github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce h1:I6nl8yaDFh91E/dq4/
 github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce/go.mod h1:ERIZX3zLBWh/atzC9vfuC0JhLhcLtzNcdJCJp5N1MBQ=
 github.com/jarlyyn/golang-pkg-pcre v0.0.0-20220728174224-9ac525e8dd72 h1:/8Xkg0+C9oFHzgwHHkRkUIYLPaUIBVKP6RQiGaBWmBM=
 github.com/jarlyyn/golang-pkg-pcre v0.0.0-20220728174224-9ac525e8dd72/go.mod h1:kKTkas2FilKHjt6BmTj4+i08zQSVODOf3wTEUbkKVWo=
-github.com/jarlyyn/telnet v0.0.0-20220825180004-b587119d91c9 h1:YRRn/RxRvOm1FMgo3c8EXT32nZksaxh5b5OKKqOc6UI=
-github.com/jarlyyn/telnet v0.0.0-20220825180004-b587119d91c9/go.mod h1:x1s2DpI93+/ZvUVTjXvmKIoB0+nE5Ie/8j8gUhnNyMc=
+github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a h1:FbDbIMTprpx/b8QYCxK/tQqOmfAgTsBqG7lws5t9I7Q=
+github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a/go.mod h1:x1s2DpI93+/ZvUVTjXvmKIoB0+nE5Ie/8j8gUhnNyMc=
 github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible h1:jdpOPRN1zP63Td1hDQbZW73xKmzDvZHzVdNYxhnTMDA=
 github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible/go.mod h1:1c7szIrayyPPB/987hsnvNzLushdWf4o/79s3P08L8A=
 github.com/kr/pretty v0.2.1 h1:Fmg33tUaq4/8ym9TJN1x7sLJnHVwhP33CNkpYV/7rwI=

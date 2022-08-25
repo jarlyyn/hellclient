@@ -94,6 +94,10 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 		t.TerminalType = true
 		ttype = []string{app.System.TerminalType, TerminalType, MTTS, MTTS}
 	}
+	t.OnGA = func() {
+		conn.BufferLock.Lock()
+		conn.flushBuffer(bus)
+	}
 	t.OnSubneg = func(data []byte) {
 		if len(data) > 1 {
 			if data[0] == TTYPE && data[1] == TTYPESend {
