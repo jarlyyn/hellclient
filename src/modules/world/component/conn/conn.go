@@ -13,6 +13,12 @@ import (
 	"github.com/jarlyyn/telnet"
 )
 
+const TTYPE = byte(24)
+const TTYPESend = byte(1)
+const TTYPEIs = byte(0)
+
+const TerminalType = "VT100"
+const MTTS = "MTTS 7"
 const DefaultDebounceDuration = 200 * time.Millisecond
 
 //Conn :mud conn
@@ -52,7 +58,6 @@ func (conn *Conn) InstallTo(b *bus.Bus) {
 	b.GetConnConnected = b.WrapGetBool(conn.Connected)
 	b.BindCloseEvent(conn, conn.Stop)
 }
-
 func (conn *Conn) C() chan int {
 	return conn.c
 }
@@ -84,7 +89,24 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 		return err
 	}
 	t.GMCP = true
+	var ttype []string
+	if app.System.TerminalType != "" {
+		t.TerminalType = true
+		ttype = []string{app.System.TerminalType, TerminalType, MTTS, MTTS}
+	}
 	t.OnSubneg = func(data []byte) {
+		if len(data) > 1 {
+			if data[0] == TTYPE && data[1] == TTYPESend {
+				conn.BufferLock.Lock()
+				if len(ttype) > 0 {
+					data = []byte{TTYPEIs}
+					data = append(data, []byte(ttype[0])...)
+					t.Sub(TTYPE, data...)
+					ttype = ttype[1:]
+				}
+				conn.BufferLock.Unlock()
+			}
+		}
 		bus.HandleSubneg(data)
 	}
 	conn.RunningLock.Lock()

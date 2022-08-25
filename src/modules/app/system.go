@@ -20,6 +20,7 @@ type SystemConfig struct {
 	Switch         string
 	DefaultServer  string
 	DefaultCharset string
+	TerminalType   string
 	URL            string
 	MaxHistory     int
 	MaxLines       int

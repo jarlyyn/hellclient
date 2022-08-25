@@ -32,7 +32,8 @@ MaxLines=0
 LinesPerScreen=0
 #最大多行匹配行数，小于等于0则为程序默认
 MaxRecent=0
-
+#返回给服务器的客户端信息，留空不返回
+TerminalType="Hellclient"
 #邮件发送的设置。
 #出于推送的方便性，推荐可是使用QQ信箱，自己发送自己的模式
 #在Host和To都设置后生效
