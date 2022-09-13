@@ -23,7 +23,10 @@ func (p *VisualPrompt) SetMediaType(L *lua.LState) int {
 func (p *VisualPrompt) SetPortrait(L *lua.LState) int {
 	p.VisualPrompt.SetPortrait(L.ToBool((1)))
 	return 0
-
+}
+func (p *VisualPrompt) SetValue(L *lua.LState) int {
+	p.VisualPrompt.SetValue(L.ToString((1)))
+	return 0
 }
 func (p *VisualPrompt) SetRefreshCallback(L *lua.LState) int {
 	p.VisualPrompt.SetRefreshCallback(L.ToString((1)))
@@ -54,6 +57,8 @@ func (p *VisualPrompt) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("SetMediaType", L.NewFunction(p.SetMediaType))
 	t.RawSetString("setportrait", L.NewFunction(p.SetPortrait))
 	t.RawSetString("SetPortrait", L.NewFunction(p.SetPortrait))
+	t.RawSetString("setvalue", L.NewFunction(p.SetValue))
+	t.RawSetString("SetValue", L.NewFunction(p.SetValue))
 	t.RawSetString("Append", L.NewFunction(p.Append))
 	t.RawSetString("Append", L.NewFunction(p.Append))
 	t.RawSetString("SetRefreshCallback", L.NewFunction(p.SetRefreshCallback))

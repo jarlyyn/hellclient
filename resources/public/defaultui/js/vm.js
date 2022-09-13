@@ -317,6 +317,9 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
                 vm.userinputDatagrid = null
                 vm.userinputDatagridVisible = false
             },
+            onVisualPromptOpen:function(){
+                vm.$refs.visualPromptValue.select()
+            },
             assist: function () {
                 app.send("assist", this.current)
             },

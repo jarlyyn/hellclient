@@ -12,6 +12,7 @@ type VisualPrompt struct {
 	Intro           string
 	Source          string
 	MediaType       string
+	Value           string
 	Items           []*Item
 	Portrait        bool
 	RefreshCallback string
@@ -26,6 +27,9 @@ func (p *VisualPrompt) SetMediaType(t string) {
 }
 func (p *VisualPrompt) SetPortrait(v bool) {
 	p.Portrait = v
+}
+func (p *VisualPrompt) SetValue(v string) {
+	p.Value = v
 }
 func (p *VisualPrompt) SetRefreshCallback(c string) {
 	p.RefreshCallback = c

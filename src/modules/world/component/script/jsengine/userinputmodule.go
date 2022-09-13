@@ -23,7 +23,10 @@ func (p *VisualPrompt) SetMediaType(call goja.FunctionCall, r *goja.Runtime) goj
 func (p *VisualPrompt) SetPortrait(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	p.VisualPrompt.SetPortrait(call.Argument(0).ToBoolean())
 	return nil
-
+}
+func (p *VisualPrompt) SetValue(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	p.VisualPrompt.SetValue(call.Argument(0).String())
+	return nil
 }
 func (p *VisualPrompt) SetRefreshCallback(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	p.VisualPrompt.SetRefreshCallback(call.Argument(0).String())
@@ -53,6 +56,8 @@ func (p *VisualPrompt) Convert(r *goja.Runtime) goja.Value {
 	obj.Set("SetMediaType", p.SetMediaType)
 	obj.Set("setportrait", p.SetPortrait)
 	obj.Set("SetPortrait", p.SetPortrait)
+	obj.Set("setvalue", p.SetValue)
+	obj.Set("SetValue", p.SetValue)
 	obj.Set("append", p.Append)
 	obj.Set("Append", p.Append)
 	obj.Set("setrefreshcallback", p.SetRefreshCallback)

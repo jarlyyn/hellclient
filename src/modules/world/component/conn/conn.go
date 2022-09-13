@@ -138,13 +138,16 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 	conn.RunningLock.Unlock()
 
 	conn.BufferLock.Lock()
+	defer conn.BufferLock.Unlock()
+	conn.SendLock.Lock()
+	defer conn.SendLock.Unlock()
 	conn.running = false
 	buffer := conn.buffer
 	conn.buffer = []byte{}
 	close(conn.c)
 	err := conn.telnet.Close()
 	conn.telnet = nil
-	conn.BufferLock.Unlock()
+
 	go bus.HandleConnPrompt(buffer)
 	go conn.Debounce.Discard()
 	go bus.RaiseDisconnectedEvent()

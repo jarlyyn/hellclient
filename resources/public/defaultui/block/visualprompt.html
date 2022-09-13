@@ -1,4 +1,4 @@
-<el-dialog id="visualPrompt" v-if="visualPrompt" :visible.sync="visualPromptVisible">
+<el-dialog id="visualPrompt" v-if="visualPrompt" :visible.sync="visualPromptVisible" @opened="onVisualPromptOpen">
   <div slot="title">
     <span class="el-dialog__title">{{visualPrompt.Data.Title}}</span>
     <el-tooltip v-if="visualPrompt.Data.RefreshCallback" class="item" effect="light" content="刷新"  placement="bottom">
@@ -18,7 +18,7 @@
           <span>{{visualPrompt.Data.Source}}</span>
         </div>
         <div class="intro">{{visualPrompt.Data.Intro}}</div>
-        <el-input v-if="visualPrompt.Data.Items==null || visualPrompt.Data.Items.length==0" v-model="visualPrompt.Data.Value"></el-input>
+        <el-input ref="visualPromptValue"v-if="visualPrompt.Data.Items==null || visualPrompt.Data.Items.length==0" v-model="visualPrompt.Data.Value"></el-input>
         <el-table v-else
         :data="visualPrompt.Data.Items"
         style="width: 100%">

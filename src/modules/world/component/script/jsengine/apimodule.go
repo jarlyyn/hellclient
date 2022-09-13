@@ -1332,7 +1332,7 @@ func (a *jsapi) GetHUDContent(call goja.FunctionCall, r *goja.Runtime) goja.Valu
 	return r.ToValue(content)
 }
 func (a *jsapi) GetHUDSize(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	size := a.API.GetHUDContent()
+	size := a.API.GetHUDSize()
 	return r.ToValue(size)
 }
 func (a *jsapi) UpdateHUD(call goja.FunctionCall, r *goja.Runtime) goja.Value {
