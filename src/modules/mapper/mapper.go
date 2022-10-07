@@ -84,7 +84,7 @@ func (m *Mapper) Tags() []string {
 	return result
 }
 func (m *Mapper) WalkAll(targets []string, fly bool, max_distance int) *WalkAllResult {
-	a := NewWakeAll()
+	a := NewWalkAll()
 	a.rooms = &m.rooms
 	a.tags = m.tags
 	a.fly = m.fly

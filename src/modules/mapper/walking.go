@@ -4,6 +4,21 @@ import (
 	"container/list"
 )
 
+func ValidateTags(tags map[string]bool, p *Path) bool {
+	var matched = false
+	for k, v := range tags {
+		if v {
+			if p.ExcludeTags[k] {
+				return false
+			}
+			if p.Tags[k] {
+				matched = true
+			}
+		}
+	}
+	return len(p.Tags) == 0 || matched
+}
+
 type Step struct {
 	To      string
 	From    string
@@ -43,20 +58,7 @@ func (w *Walking) step(p *Path) *Step {
 		remain:  length,
 	}
 }
-func ValidateTags(tags map[string]bool, p *Path) bool {
-	var matched = false
-	for k, v := range tags {
-		if v {
-			if p.ExcludeTags[k] {
-				return false
-			}
-			if p.Tags[k] {
-				matched = true
-			}
-		}
-	}
-	return len(p.Tags) == 0 || matched
-}
+
 func (w *Walking) validateTags(p *Path) bool {
 	return ValidateTags(w.tags, p)
 }

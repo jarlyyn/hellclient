@@ -6,7 +6,7 @@ type WalkAllResult struct {
 	NotWalked []string
 }
 
-var NewWakeAll = func() *WalkAll {
+var NewWalkAll = func() *WalkAll {
 	return &WalkAll{}
 }
 
