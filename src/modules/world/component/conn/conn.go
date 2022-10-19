@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/herb-go/misc/debounce"
+	"github.com/herb-go/util"
 	"github.com/jarlyyn/telnet"
 )
 
@@ -170,7 +171,14 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 		if !running {
 			return
 		}
-		s, err := conn.telnet.ReadByte()
+		var err error
+		var s byte
+		err2 := util.Catch(func() {
+			s, err = conn.telnet.ReadByte()
+		})
+		if err2 != nil {
+			err = err2
+		}
 		if err != nil {
 			if !isClosedError(err) {
 				bus.HandleConnError(err)
