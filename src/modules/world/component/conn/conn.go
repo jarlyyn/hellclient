@@ -136,13 +136,12 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 		conn.RunningLock.Unlock()
 		return nil
 	}
+	conn.running = false
 	conn.RunningLock.Unlock()
-
 	conn.BufferLock.Lock()
 	defer conn.BufferLock.Unlock()
 	conn.SendLock.Lock()
 	defer conn.SendLock.Unlock()
-	conn.running = false
 	buffer := conn.buffer
 	conn.buffer = []byte{}
 	close(conn.c)
