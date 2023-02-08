@@ -212,12 +212,17 @@ func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 		return false
 	}
 	l := len(data)
-	if l < e.onBufferMin || (e.onBufferMax > 0 && l > e.onBufferMax) {
+	if data != nil && (l < e.onBufferMin || (e.onBufferMax > 0 && l > e.onBufferMax)) {
 		e.Locker.Unlock()
 		return false
 	}
 	e.Locker.Unlock()
-	result := e.Call(b, e.onBuffer, string(data))
+	var result goja.Value
+	if data != nil {
+		result = e.Call(b, e.onBuffer, string(data))
+	} else {
+		result = e.Call(b, e.onBuffer, nil)
+	}
 	if result == nil {
 		return false
 	}

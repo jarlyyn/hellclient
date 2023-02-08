@@ -98,6 +98,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	t.OnGA = func() {
 		conn.BufferLock.Lock()
 		conn.flushBuffer(bus)
+		bus.HandleBuffer(nil)
 	}
 	t.OnSubneg = func(data []byte) {
 		if len(data) > 1 {

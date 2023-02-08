@@ -218,13 +218,18 @@ func (e *LuaEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 		return false
 	}
 	l := len(data)
-	if l < e.onBufferMin || (e.onBufferMax > 0 && l > e.onBufferMax) {
+	if data != nil && (l < e.onBufferMin || (e.onBufferMax > 0 && l > e.onBufferMax)) {
 		e.Locker.Unlock()
 		return false
 	}
 	fn := e.Plugin.LState.GetGlobal(e.onBuffer)
 	e.Locker.Unlock()
-	v := e.Call(b, fn, lua.LString(data))
+	var v lua.LValue
+	if data != nil {
+		v = e.Call(b, fn, lua.LString(data))
+	} else {
+		v = e.Call(b, fn, lua.LNil)
+	}
 	return lua.LVAsBool(v)
 }
 func (e *LuaEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
