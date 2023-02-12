@@ -228,7 +228,7 @@ func (e *LuaEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 	if data != nil {
 		v = e.Call(b, fn, lua.LString(data))
 	} else {
-		v = e.Call(b, fn, lua.LNil)
+		v = e.Call(b, fn, lua.LNil, lua.LNil)
 	}
 	return lua.LVAsBool(v)
 }

@@ -219,9 +219,9 @@ func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 	e.Locker.Unlock()
 	var result goja.Value
 	if data != nil {
-		result = e.Call(b, e.onBuffer, string(data))
+		result = e.Call(b, e.onBuffer, string(data), data)
 	} else {
-		result = e.Call(b, e.onBuffer, nil)
+		result = e.Call(b, e.onBuffer, nil, nil)
 	}
 	if result == nil {
 		return false
