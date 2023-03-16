@@ -128,6 +128,8 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "WorldName", a.WorldName)
 	AppendToWorld(jp.Runtime, world, "WorldAddress", a.WorldAddress)
 	AppendToWorld(jp.Runtime, world, "WorldPort", a.WorldPort)
+	AppendToWorld(jp.Runtime, world, "WorldProxy", a.WorldProxy)
+
 	AppendToWorld(jp.Runtime, world, "Trim", a.Trim)
 	AppendToWorld(jp.Runtime, world, "GetUniqueNumber", a.GetUniqueNumber)
 	AppendToWorld(jp.Runtime, world, "GetUniqueID", a.GetUniqueID)
@@ -409,6 +411,10 @@ func (a *jsapi) WorldAddress(call goja.FunctionCall, r *goja.Runtime) goja.Value
 func (a *jsapi) WorldPort(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.WorldPort())
 }
+func (a *jsapi) WorldProxy(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.WorldProxy())
+}
+
 func (a *jsapi) Trim(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	src := call.Argument(0).String()
 	return r.ToValue(a.API.Trim(src))

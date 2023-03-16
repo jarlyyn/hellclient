@@ -85,7 +85,7 @@ func (a *API) LogSend(message string) int {
 	return EOK
 }
 func (a *API) Execute(message string) int {
-	a.Bus.DoExecute(message)
+	go a.Bus.DoExecute(message)
 	return EOK
 }
 func (a *API) SendPkt(packet string) int {
@@ -203,6 +203,9 @@ func (a *API) WorldPort() int {
 		return 0
 	}
 	return port
+}
+func (a *API) WorldProxy() string {
+	return a.Bus.GetProxy()
 }
 func (a *API) Trim(source string) string {
 	return strings.TrimSpace(source)

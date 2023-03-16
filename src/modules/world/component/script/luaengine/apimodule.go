@@ -94,6 +94,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("WorldName", l.NewFunction(a.WorldName))
 	l.SetGlobal("WorldAddress", l.NewFunction(a.WorldAddress))
 	l.SetGlobal("WorldPort", l.NewFunction(a.WorldPort))
+	l.SetGlobal("WorldProxy", l.NewFunction(a.WorldProxy))
 	l.SetGlobal("Trim", l.NewFunction(a.Trim))
 	l.SetGlobal("GetUniqueNumber", l.NewFunction(a.GetUniqueNumber))
 	l.SetGlobal("GetUniqueID", l.NewFunction(a.GetUniqueID))
@@ -387,6 +388,10 @@ func (a *luaapi) WorldAddress(L *lua.LState) int {
 }
 func (a *luaapi) WorldPort(L *lua.LState) int {
 	L.Push(lua.LNumber(a.API.WorldPort()))
+	return 1
+}
+func (a *luaapi) WorldProxy(L *lua.LState) int {
+	L.Push(lua.LString(a.API.WorldProxy()))
 	return 1
 }
 func (a *luaapi) Trim(L *lua.LState) int {

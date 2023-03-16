@@ -248,6 +248,7 @@ onButton.updateWorldSettings=function(){
         Host: vm.worldSettings.Host,
         Name: vm.worldSettings.Name,
         Port: vm.worldSettings.Port,
+        Proxy:vm.worldSettings.Proxy,
         ID:vm.current,
         ScriptPrefix:vm.worldSettings.ScriptPrefix,
         ShowBroadcast:vm.worldSettings.ShowBroadcast,

@@ -185,25 +185,48 @@ WorldPort() int
 
 获取当前游戏连接的服务器端口
 
-### Lua注意事项
-
-可以打印多个参数，同print
 
 ### 代码范例
 
 Javascript
 ```
-world.Note(world.WorldAddress());
+world.Note(world.WorldPort());
 ```
 
 Lua
 ```
-Note(WorldAddress())
+Note(WorldPort())
 ```
 
 ### 返回值
 
-无
+游戏的端口号
+
+
+```
+WorldProxy() string
+```
+
+### 描述
+
+获取当前游戏使用的代理服务器地址
+
+
+### 代码范例
+
+Javascript
+```
+world.Note(world.WorldProxy());
+```
+
+Lua
+```
+Note(WorldProxy())
+```
+
+### 返回值
+
+游戏的大理服务器信息
 
 ## DeleteGroup
 

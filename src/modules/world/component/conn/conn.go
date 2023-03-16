@@ -6,12 +6,15 @@ import (
 	"hellclient/modules/world/bus"
 	"io"
 	"net"
+	"net/url"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/herb-go/misc/debounce"
 	"github.com/herb-go/util"
 	"github.com/jarlyyn/telnet"
+	"golang.org/x/net/proxy"
 )
 
 const TTYPE = byte(24)
@@ -85,7 +88,30 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	if timeout <= 0 {
 		timeout = 1
 	}
-	t, err := telnet.DialTimeout("tcp", bus.GetHost()+":"+bus.GetPort(), time.Duration(timeout)*time.Second)
+	proxydata := strings.TrimSpace(bus.GetProxy())
+	var netconn net.Conn
+	var err error
+	if proxydata == "" {
+		netconn, err = net.DialTimeout("tcp", bus.GetHost()+":"+bus.GetPort(), time.Duration(timeout)*time.Second)
+		if err != nil {
+			return err
+		}
+	} else {
+		proxyurl, err := url.Parse(proxydata)
+		if err != nil {
+			return err
+		}
+		dialer, err := proxy.FromURL(proxyurl, &net.Dialer{Timeout: time.Duration(timeout) * time.Second})
+		if err != nil {
+			return err
+		}
+		netconn, err = dialer.Dial("tcp", bus.GetHost()+":"+bus.GetPort())
+		if err != nil {
+			return err
+		}
+
+	}
+	t, err := telnet.NewConn(netconn)
 	if err != nil {
 		return err
 	}

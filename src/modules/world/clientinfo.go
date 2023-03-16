@@ -36,6 +36,7 @@ type WorldData struct {
 	Host                  string
 	Port                  string
 	Charset               string
+	Proxy                 string
 	Name                  string
 	CommandStackCharacter string
 	ScriptPrefix          string
@@ -60,6 +61,7 @@ func (d *WorldData) ConvertSettings(id string) *WorldSettings {
 	if d != nil {
 		settings.Host = d.Host
 		settings.Port = d.Port
+		settings.Proxy = d.Proxy
 		settings.Charset = d.Charset
 		settings.Name = d.Name
 		settings.CommandStackCharacter = d.CommandStackCharacter
@@ -75,6 +77,7 @@ type WorldSettings struct {
 	ID                    string
 	Host                  string
 	Port                  string
+	Proxy                 string
 	Charset               string
 	Name                  string
 	CommandStackCharacter string

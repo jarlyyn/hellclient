@@ -21,6 +21,8 @@ type Bus struct {
 	SetHost                   func(string)
 	GetPort                   func() string
 	SetPort                   func(string)
+	GetProxy                  func() string
+	SetProxy                  func(string)
 	GetName                   func() string
 	SetName                   func(string)
 	GetShowBroadcast          func() bool

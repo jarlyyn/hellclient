@@ -39,6 +39,17 @@ func (c *Config) SetPort(bus *bus.Bus, port string) {
 	defer c.Locker.Unlock()
 	c.Data.Port = port
 }
+func (c *Config) GetProxy(bus *bus.Bus) string {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.Proxy
+}
+func (c *Config) SetProxy(bus *bus.Bus, proxy string) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.Proxy = proxy
+}
+
 func (c *Config) GetQueueDelay(bus *bus.Bus) int {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
@@ -255,6 +266,8 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetHost = b.WrapHandleString(c.SetHost)
 	b.GetPort = b.WrapGetString(c.GetPort)
 	b.SetPort = b.WrapHandleString(c.SetPort)
+	b.GetProxy = b.WrapGetString(c.GetProxy)
+	b.SetProxy = b.WrapHandleString(c.SetProxy)
 	b.GetCharset = b.WrapGetString(c.GetCharset)
 	b.SetCharset = b.WrapHandleString(c.SetCharset)
 	b.GetQueueDelay = b.WrapGetInt(c.GetQueueDelay)

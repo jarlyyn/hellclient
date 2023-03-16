@@ -27,6 +27,7 @@ type UpdateGameForm struct {
 	Charset               string
 	ScriptPrefix          string
 	CommandStackCharacter string
+	Proxy                 string
 	ShowBroadcast         bool
 	ShowSubneg            bool
 	ModEnabled            bool
@@ -99,6 +100,7 @@ func UpdateGame(t *titan.Titan, data []byte) {
 	w.SetShowBroadcast(form.ShowBroadcast)
 	w.SetShowSubneg(form.ShowSubneg)
 	w.SetModEnabled(form.ModEnabled)
+	w.SetProxy(form.Proxy)
 	t.Locker.Unlock()
 	go func() {
 		t.OnUpdateSuccess(form.ID)
