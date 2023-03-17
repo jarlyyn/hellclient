@@ -7,12 +7,12 @@ require (
 	github.com/dop251/goja v0.0.0-20211217115348-3f9136fa235d
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/gorilla/websocket v1.4.2
-	github.com/herb-go/connections v0.0.0-20211230181350-552c818e1c06
+	github.com/herb-go/connections v0.0.0-20230223155109-0db0fbe9c7e0
 	github.com/herb-go/datasource v0.0.0-20211122123843-a3546acd0d8d // indirect
 	github.com/herb-go/datasource-drivers v0.0.0-20201011165914-7717acb90545
 	github.com/herb-go/events v0.0.0-20201208131041-0345a1e2578a
-	github.com/herb-go/fetcher v0.0.0-20210413171416-cb61b9979614 // indirect
-	github.com/herb-go/herb v0.0.0-20211208162721-3915598f7a40
+	github.com/herb-go/fetcher v0.0.0-20220302132653-137ec53a4293 // indirect
+	github.com/herb-go/herb v0.0.0-20220217124526-724bf7d5e579
 	github.com/herb-go/herb-drivers v0.0.0-20210401170439-32eb00e8f0d5
 	github.com/herb-go/herbconfig v0.0.0-20210201131438-44d8e331b703
 	github.com/herb-go/herbdata v0.0.0-20211208163122-48f0cedda4b4 // indirect
@@ -24,9 +24,9 @@ require (
 	github.com/herb-go/misc v0.0.0-20211126182020-07f86379a857
 	github.com/herb-go/notification v0.0.0-20210302124907-803885c438c3
 	github.com/herb-go/notification-drivers v0.0.0-20210822103310-c7c872299d2b
-	github.com/herb-go/plugins v0.0.0-20211229184029-1022d1e57451
+	github.com/herb-go/plugins v0.0.0-20230317172022-34e60d5f28aa
 	github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531
-	github.com/herb-go/util v0.0.0-20211222163651-885e0ee2aad0
+	github.com/herb-go/util v0.0.0-20230317140044-8d93e011e1df
 	github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73
 	github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce
 	github.com/jarlyyn/golang-pkg-pcre v0.0.0-20220728174224-9ac525e8dd72

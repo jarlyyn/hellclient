@@ -27,8 +27,8 @@ func initModules() {
 
 //Init init app config and modules
 func Init() {
-	util.ApplieationLock.Lock()
-	defer util.ApplieationLock.Unlock()
+	util.ApplicationLock.Lock()
+	defer util.ApplicationLock.Unlock()
 	testingtools.SetRootPathRelativeToModules("../")
 	util.UpdatePaths()
 	util.ConfigPath = filepath.Join(util.RootPath, "test", "testconfig")
