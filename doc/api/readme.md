@@ -263,6 +263,7 @@
 
 ## http请求
 * [术语](apihttp.md#术语)
+* [HTTP.PraseURL 解析URL地址](apihttp.md#HTTPPraseURL)
 * [HTTP.New 创建新请求](apihttp.md#HTTPNew)
 * [Request.GetID 获取唯一id](apihttp.md#RequestGetID)
 * [Request.GetURL 获取请求URL](apihttp.md#RequestGetURL)

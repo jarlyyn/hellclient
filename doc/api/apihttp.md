@@ -9,6 +9,52 @@ http请求是一个用于向外部发送http请求的组件
 
 http请求的主体，可以对Request进行维护，执行后可以获取相应的相应值
 
+## HTTP.PraseURL
+
+解析URL
+
+### 原型
+
+```
+ParseURL(url string) *URL
+```
+
+### 描述
+
+解析URL
+
+* url 需要解析的URL
+
+### 代码范例
+
+Javascript
+```
+var url=HTTP.ParseURL("http://www.baidu.com)
+```
+
+Lua
+```
+var url=HTTP:ParseURL("http://www.baidu.com)
+```
+
+### 返回值
+
+URL对象
+
+```
+{
+  "Host": "www.baidu.com",
+  "Hostname": "www.baidu.com",
+  "Scheme": "http",
+  "Path": "",
+  "Query": "",
+  "User": "",
+  "Password": "",
+  "Port": "",
+  "Fragment": ""
+}
+```
+
 ## HTTP.New
 
 创建新请求
