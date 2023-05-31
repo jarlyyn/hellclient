@@ -116,6 +116,11 @@ func (m *LuaMapper) Reset(L *lua.LState) int {
 	m.mapper.Reset()
 	return 0
 }
+func (m *LuaMapper) ResetTemporary(L *lua.LState) int {
+	m.mapper.Reset()
+	return 0
+}
+
 func (m *LuaMapper) AddTags(L *lua.LState) int {
 	_ = L.Get(1) //self
 	tags := []string{}
@@ -196,6 +201,18 @@ func (m *LuaMapper) AddPath(L *lua.LState) int {
 	L.Push(lua.LBool(m.mapper.AddPath(id, path.path)))
 	return 1
 }
+func (m *LuaMapper) AddTemporaryPath(L *lua.LState) int {
+	_ = L.Get(1) //self
+	id := L.ToString(2)
+	path := ConvertLuaPath(L.Get(3))
+	if path == nil {
+		L.Push(lua.LBool(false))
+		return 1
+	}
+	L.Push(lua.LBool(m.mapper.AddTemporaryPath(id, path.path)))
+	return 1
+}
+
 func (m *LuaMapper) NewPath(L *lua.LState) int {
 	p := &LuaPath{
 		path: mapper.NewPath(),
@@ -289,6 +306,8 @@ func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
 	t := L.NewTable()
 	t.RawSetString("reset", L.NewFunction(m.Reset))
 	t.RawSetString("Reset", L.NewFunction(m.Reset))
+	t.RawSetString("resettemporary", L.NewFunction(m.ResetTemporary))
+	t.RawSetString("ResetTemporary", L.NewFunction(m.ResetTemporary))
 	t.RawSetString("addtags", L.NewFunction(m.AddTags))
 	t.RawSetString("Addtags", L.NewFunction(m.AddTags))
 	t.RawSetString("settag", L.NewFunction(m.SetTag))
@@ -301,6 +320,9 @@ func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("GetPath", L.NewFunction(m.GetPath))
 	t.RawSetString("addpath", L.NewFunction(m.AddPath))
 	t.RawSetString("AddPath", L.NewFunction(m.AddPath))
+	t.RawSetString("addtemporarypath", L.NewFunction(m.AddTemporaryPath))
+	t.RawSetString("AddTemporaryPath", L.NewFunction(m.AddTemporaryPath))
+
 	t.RawSetString("newpath", L.NewFunction(m.NewPath))
 	t.RawSetString("NewPath", L.NewFunction(m.NewPath))
 	t.RawSetString("getroomid", L.NewFunction(m.GetRoomID))

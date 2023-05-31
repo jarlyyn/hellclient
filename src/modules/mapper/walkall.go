@@ -13,7 +13,7 @@ var NewWalkAll = func() *WalkAll {
 type WalkAll struct {
 	Targets     []string
 	MaxDistance int
-	rooms       *map[string]*Room
+	rooms       *Rooms
 	tags        map[string]bool
 	fly         []*Path
 }

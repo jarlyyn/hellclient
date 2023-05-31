@@ -106,6 +106,36 @@ Mapper:Reset()
 
 无
 
+## Mapper.ResetTemporary
+
+重置通过AddTemporaryPath添加的临时路径
+
+### 原型
+
+```
+ResetTemporary()
+```
+
+### 描述
+
+重置通过AddTemporaryPath添加的临时路径
+
+### 代码范例
+
+Javascript
+```
+Mapper.ResetTemporary()
+```
+
+Lua
+```
+Mapper:ResetTemporary()
+```
+
+### 返回值
+
+无
+
 ## Mapper.AddTags
 
 添加标签
@@ -335,6 +365,42 @@ Mapper.AddPath("roomid",path)
 ### 返回值
 
 房间是否存在
+
+## Mapper.AddTemporaryPath
+
+添加路径
+
+### 原型
+
+```
+AddTemporaryPath(id string, path *Path) bool
+```
+
+### 描述
+
+添加临时路径。临时路径仅在计算路径和GetExits中使用。
+
+一般用于添加临时迷宫的地图，离开迷宫后通过ResetTemporary重置。
+
+* id 房间id，房间必须存在
+* path 路径对象，用Mapper.newpath创建
+
+### 原型
+
+Javascript
+```
+Mapper.AddTemporaryPath("roomid",path)
+```
+
+Lua
+```
+Mapper.AddTemporaryPath("roomid",path)
+```
+
+### 返回值
+
+添加是否成功
+
 
 ## Mapper.NewPath
 

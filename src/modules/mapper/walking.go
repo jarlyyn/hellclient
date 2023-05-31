@@ -31,7 +31,7 @@ var EmptyStep = &Step{}
 
 type Walking struct {
 	tags        map[string]bool
-	rooms       *map[string]*Room
+	rooms       *Rooms
 	from        string
 	to          []string
 	fly         []*Path
@@ -66,14 +66,24 @@ func (w *Walking) Walk() []*Step {
 	distance := 0
 	rooms := *w.rooms
 	var tolist = map[string]bool{}
-	if rooms[w.from] == nil {
+	room := rooms.GetRoom(w.from)
+	texits := rooms.GetTemporaryPaths(w.from)
+	if room == nil && texits == nil {
 		return nil
 	}
 	w.walked[w.from] = EmptyStep
-
-	for _, v := range rooms[w.from].Exits {
-		if w.walked[v.To] == nil && w.validateTags(v) {
-			w.forwading.PushBack(w.step(v))
+	if room != nil {
+		for _, v := range room.Exits {
+			if w.walked[v.To] == nil && w.validateTags(v) {
+				w.forwading.PushBack(w.step(v))
+			}
+		}
+	}
+	if texits != nil {
+		for _, v := range texits {
+			if w.walked[v.To] == nil && w.validateTags(v) {
+				w.forwading.PushBack(w.step(v))
+			}
 		}
 	}
 	for _, v := range w.fly {
@@ -85,7 +95,7 @@ func (w *Walking) Walk() []*Step {
 		return nil
 	}
 	for _, v := range w.to {
-		if rooms[v] == nil {
+		if rooms.GetRoom(v) == nil && rooms.GetTemporaryPaths(v) == nil {
 			continue
 		}
 		if w.from == v {
@@ -111,7 +121,10 @@ Matching:
 			}
 			step := v.Value.(*Step)
 			w.forwading.Remove(v)
-			if w.walked[step.To] != nil || rooms[step.To] == nil {
+			room := rooms.GetRoom(step.To)
+			texits := rooms.GetTemporaryPaths(step.To)
+
+			if w.walked[step.To] != nil || (room == nil && texits == nil) {
 				continue
 			}
 			if w.maxdistance > 0 && step.Delay > w.maxdistance {
@@ -127,11 +140,21 @@ Matching:
 				matchedRoom = step.To
 				break Matching
 			}
-			for _, exit := range rooms[step.To].Exits {
-				if w.walked[exit.To] == nil && w.validateTags(exit) {
-					newExits.PushBack(w.step(exit))
+			if room != nil {
+				for _, exit := range room.Exits {
+					if w.walked[exit.To] == nil && w.validateTags(exit) {
+						newExits.PushBack(w.step(exit))
+					}
 				}
 			}
+			if texits != nil {
+				for _, exit := range texits {
+					if w.walked[exit.To] == nil && w.validateTags(exit) {
+						newExits.PushBack(w.step(exit))
+					}
+				}
+			}
+
 		}
 		w.forwading.PushBackList(newExits)
 		if w.forwading.Len() == 0 {

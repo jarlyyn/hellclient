@@ -2,8 +2,6 @@ package mapper
 
 import (
 	"sync"
-
-	"github.com/herb-go/uniqueid"
 )
 
 type Path struct {
@@ -36,7 +34,7 @@ func NewRoom() *Room {
 
 type Mapper struct {
 	Locker sync.RWMutex
-	rooms  map[string]*Room
+	rooms  *Rooms
 	tags   map[string]bool
 	fly    []*Path
 }
@@ -85,7 +83,7 @@ func (m *Mapper) Tags() []string {
 }
 func (m *Mapper) WalkAll(targets []string, fly bool, max_distance int) *WalkAllResult {
 	a := NewWalkAll()
-	a.rooms = &m.rooms
+	a.rooms = m.rooms
 	a.tags = m.tags
 	a.fly = m.fly
 	a.Targets = targets
@@ -108,7 +106,7 @@ func (m *Mapper) GetPath(from string, fly bool, to []string) []*Step {
 }
 func (m *Mapper) newWalking() *Walking {
 	walking := NewWalking()
-	walking.rooms = &m.rooms
+	walking.rooms = m.rooms
 	walking.tags = m.tags
 	walking.fly = m.fly
 	return walking
@@ -117,35 +115,18 @@ func (m *Mapper) newWalking() *Walking {
 func (m *Mapper) GetRoomID(name string) []string {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	result := []string{}
-	for _, v := range m.rooms {
-		if v.Name == name {
-			result = append(result, v.ID)
-		}
-	}
-	return result
+	return m.rooms.GetRoomID(name)
 }
 
 func (m *Mapper) GetRoomName(id string) string {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	result := m.rooms[id]
-	if result == nil {
-		return ""
-	}
-	return result.Name
+	return m.rooms.GetRoomName(id)
 }
 func (m *Mapper) SetRoomName(id string, name string) {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	result := m.rooms[id]
-	if result == nil {
-		result = NewRoom()
-		result.ID = id
-		m.rooms[id] = result
-	}
-	result.Name = name
-
+	m.rooms.SetRoomName(id, name)
 }
 func (m *Mapper) AddPath(id string, p *Path) bool {
 	if p.Command == "" {
@@ -153,61 +134,50 @@ func (m *Mapper) AddPath(id string, p *Path) bool {
 	}
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	room := m.rooms[id]
-	if room == nil {
+	return m.rooms.AddPath(id, p)
+}
+func (m *Mapper) AddTemporaryPath(id string, p *Path) bool {
+	if p.Command == "" {
 		return false
 	}
-	room.Exits = append(room.Exits, p)
-	return true
+	m.Locker.Lock()
+	defer m.Locker.Unlock()
+	return m.rooms.AddTemporaryPath(id, p)
 }
+
 func (m *Mapper) ClearRoom(id string) {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	m.clearRoom(id)
-}
-func (m *Mapper) clearRoom(id string) {
-	room := NewRoom()
-	room.ID = id
-	m.rooms[id] = room
+	m.rooms.ClearRoom(id)
 }
 
 func (m *Mapper) NewArea(size int) []string {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	result := []string{}
-	for i := 0; i < size; i++ {
-		id := uniqueid.MustGenerateID()
-		result = append(result, id)
-		m.clearRoom(id)
-	}
-	return result
+	return m.rooms.NewArea(size)
 }
 func (m *Mapper) GetExits(id string, all bool) []*Path {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	result := []*Path{}
-	room := m.rooms[id]
-	if room == nil {
-		return result
-	}
-	for _, v := range room.Exits {
-		if all || ValidateTags(m.tags, v) {
-			result = append(result, v)
-		}
-	}
-	return result
+	return m.rooms.GetExits(id, m.tags, all)
+
 }
 func (m *Mapper) Reset() {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	m.rooms = map[string]*Room{}
 	m.tags = map[string]bool{}
 	m.fly = []*Path{}
+	m.rooms.Reset()
+}
+func (m *Mapper) ResetTemporary() {
+	m.Locker.Lock()
+	defer m.Locker.Unlock()
+	m.rooms.ResetTemporary()
 }
 
 func New() *Mapper {
 	return &Mapper{
-		rooms: map[string]*Room{},
+		rooms: NewRooms(),
 		tags:  map[string]bool{},
 		fly:   []*Path{},
 	}

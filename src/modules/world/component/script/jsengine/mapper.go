@@ -122,6 +122,11 @@ func (m *JsMapper) Reset(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	m.mapper.Reset()
 	return nil
 }
+func (m *JsMapper) ResetTemporary(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	m.mapper.ResetTemporary()
+	return nil
+}
+
 func (m *JsMapper) AddTags(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	tags := []string{}
 	for _, v := range call.Arguments {
@@ -202,6 +207,19 @@ func (m *JsMapper) AddPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	}
 	return r.ToValue(m.mapper.AddPath(id, path.path))
 }
+func (m *JsMapper) AddTemporaryPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	if len(call.Arguments) < 2 {
+		return nil
+	}
+
+	id := call.Argument(0).String()
+	path := ConvertJsPath(r, call.Argument(1))
+	if path == nil {
+		return nil
+	}
+	return r.ToValue(m.mapper.AddTemporaryPath(id, path.path))
+}
+
 func (m *JsMapper) NewPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	p := &JsPath{
 		path: mapper.NewPath(),
@@ -276,6 +294,8 @@ func (m *JsMapper) Convert(r *goja.Runtime) goja.Value {
 	t := r.NewObject()
 	t.Set("reset", m.Reset)
 	t.Set("Reset", m.Reset)
+	t.Set("resettemporary", m.ResetTemporary)
+	t.Set("ResetTemporary", m.ResetTemporary)
 	t.Set("addtags", m.AddTags)
 	t.Set("AddTags", m.AddTags)
 	t.Set("settag", m.SetTag)
@@ -288,6 +308,9 @@ func (m *JsMapper) Convert(r *goja.Runtime) goja.Value {
 	t.Set("GetPath", m.GetPath)
 	t.Set("addpath", m.AddPath)
 	t.Set("AddPath", m.AddPath)
+	t.Set("addtemporarypath", m.AddTemporaryPath)
+	t.Set("AddTemporaryPath", m.AddTemporaryPath)
+
 	t.Set("newpath", m.NewPath)
 	t.Set("NewPath", m.NewPath)
 	t.Set("getroomid", m.GetRoomID)
