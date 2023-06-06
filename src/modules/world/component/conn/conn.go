@@ -94,6 +94,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	if proxydata == "" {
 		netconn, err = net.DialTimeout("tcp", bus.GetHost()+":"+bus.GetPort(), time.Duration(timeout)*time.Second)
 		if err != nil {
+			go bus.RaiseDisconnectedEvent()
 			return err
 		}
 	} else {
@@ -107,12 +108,14 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 		}
 		netconn, err = dialer.Dial("tcp", bus.GetHost()+":"+bus.GetPort())
 		if err != nil {
+			go bus.RaiseDisconnectedEvent()
 			return err
 		}
 
 	}
 	t, err := telnet.NewConn(netconn)
 	if err != nil {
+		go bus.RaiseDisconnectedEvent()
 		return err
 	}
 	t.GMCP = true

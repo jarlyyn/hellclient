@@ -189,6 +189,7 @@
 ## 地图接口
 * [术语](apimapper.md#术语)
 * [Mapper.Reset 重置地图](apimapper.md#MapperReset)
+* [Mapper.ResetTemporary 重置临时路径](apimapper.md#MapperResetTemporary)
 * [Mapper.AddTags 添加标签](apimapper.md#MapperAddTags)
 * [Mapper.SetTag 设置标签](apimapper.md#MapperSetTag)
 * [Mapper.SetTags 设置标签列表](apimapper.md#MapperSetTags)
@@ -196,6 +197,7 @@
 * [Mapper.Tags 获取标签](apimapper.md#MapperTags)
 * [Mapper.GetPath 获取路径](apimapper.md#MapperGetPath)
 * [Mapper.AddPath 添加路径](apimapper.md#MapperAddPath)
+* [Mapper.AddTemporaryPath 添加临时路径](apimapper.md#MapperAddTemporaryPath)
 * [Mapper.NewPath 新建路径](apimapper.md#MapperNewPath)
 * [Mapper.GetRoomID 获取房间id](apimapper.md#MapperGetRoomID)
 * [Mapper.GetRoomName 获取房间名](apimapper.md#MapperGetRoomName)
