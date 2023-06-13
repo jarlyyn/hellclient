@@ -94,7 +94,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	if proxydata == "" {
 		netconn, err = net.DialTimeout("tcp", bus.GetHost()+":"+bus.GetPort(), time.Duration(timeout)*time.Second)
 		if err != nil {
-			go bus.RaiseDisconnectedEvent()
+			go bus.RaiseServerCloseEvent()
 			return err
 		}
 	} else {
@@ -108,14 +108,14 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 		}
 		netconn, err = dialer.Dial("tcp", bus.GetHost()+":"+bus.GetPort())
 		if err != nil {
-			go bus.RaiseDisconnectedEvent()
+			go bus.RaiseServerCloseEvent()
 			return err
 		}
 
 	}
 	t, err := telnet.NewConn(netconn)
 	if err != nil {
-		go bus.RaiseDisconnectedEvent()
+		go bus.RaiseServerCloseEvent()
 		return err
 	}
 	t.GMCP = true
@@ -181,6 +181,7 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 	go bus.HandleConnPrompt(buffer)
 	go conn.Debounce.Discard()
 	go bus.RaiseDisconnectedEvent()
+	go bus.RaiseServerCloseEvent()
 
 	return err
 }
@@ -212,11 +213,11 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 			if !isClosedError(err) {
 				bus.HandleConnError(err)
 			}
-			conn.RunningLock.Lock()
-			if conn.running == true {
-				go bus.RaiseServerCloseEvent()
-			}
-			conn.RunningLock.Unlock()
+			// conn.RunningLock.Lock()
+			// if conn.running == true {
+			// 	go bus.RaiseServerCloseEvent()
+			// }
+			// conn.RunningLock.Unlock()
 			conn.Close(bus)
 
 			return
