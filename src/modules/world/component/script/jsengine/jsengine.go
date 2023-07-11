@@ -28,6 +28,7 @@ func newJsInitializer(b *bus.Bus) *jsplugin.Initializer {
 		NewFileSystemObjectModule(b),
 		NewMetronomeModule(b),
 		NewUserinputModule(b),
+		NewBinaryModule(b),
 	}
 	return i
 }

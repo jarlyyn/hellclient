@@ -116,7 +116,7 @@ Base64Decode(text string) *string
 
 ### 描述
 
-将给到的md5码结码
+将给到的base64码结码
 
 * text 需要解码的内容
 

@@ -3,10 +3,10 @@ module hellclient
 go 1.16
 
 require (
-	github.com/BurntSushi/toml v0.4.1
-	github.com/dop251/goja v0.0.0-20211217115348-3f9136fa235d
-	github.com/fsnotify/fsnotify v1.5.1 // indirect
-	github.com/gorilla/websocket v1.4.2
+	github.com/BurntSushi/toml v1.3.2
+	github.com/dop251/goja v0.0.0-20230707174833-636fdf960de1
+	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/gorilla/websocket v1.5.0
 	github.com/herb-go/connections v0.0.0-20230223155109-0db0fbe9c7e0
 	github.com/herb-go/datasource v0.0.0-20211122123843-a3546acd0d8d // indirect
 	github.com/herb-go/datasource-drivers v0.0.0-20201011165914-7717acb90545
@@ -24,16 +24,17 @@ require (
 	github.com/herb-go/misc v0.0.0-20211126182020-07f86379a857
 	github.com/herb-go/notification v0.0.0-20210302124907-803885c438c3
 	github.com/herb-go/notification-drivers v0.0.0-20210822103310-c7c872299d2b
-	github.com/herb-go/plugins v0.0.0-20230317172022-34e60d5f28aa
+	github.com/herb-go/plugins v0.0.0-20230711110843-e87935876db3
 	github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531
-	github.com/herb-go/util v0.0.0-20230317140044-8d93e011e1df
+	github.com/herb-go/util v0.0.0-20230321163403-6a757b251968
 	github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73
 	github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce
 	github.com/jarlyyn/golang-pkg-pcre v0.0.0-20220728174224-9ac525e8dd72
 	github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible // indirect
+	github.com/robertkrimen/otto v0.2.1 // indirect
 	github.com/satori/go.uuid v1.2.0
-	github.com/yuin/gopher-lua v0.0.0-20210529063254-f4c35e4016d9
-	golang.org/x/net v0.0.0-20211216030914-fe4d6282115f
-	golang.org/x/text v0.3.7
+	github.com/yuin/gopher-lua v1.1.0
+	golang.org/x/net v0.12.0
+	golang.org/x/text v0.11.0
 )
