@@ -5,6 +5,7 @@ import (
 	"hellclient/modules/world"
 	"hellclient/modules/world/titan"
 	"net/http"
+	"time"
 
 	"github.com/herb-go/connections"
 	"github.com/herb-go/connections/room"
@@ -46,7 +47,10 @@ func (m *Messenger) Init(t *titan.Titan) {
 }
 
 func (m *Messenger) Enter(w http.ResponseWriter, r *http.Request) error {
-	wc, err := websocket.Upgrade(w, r, nil)
+	opt := websocket.NewOptions()
+	opt.ReadTimeout = 60 * time.Second
+	opt.WriteTimeout = 60 * time.Second
+	wc, err := websocket.Upgrade(w, r, opt)
 	if err != nil {
 		return err
 	}
@@ -57,7 +61,7 @@ func (m *Messenger) Enter(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-//OnMessage called when connection message received.
+// OnMessage called when connection message received.
 func (m *Messenger) OnMessage(msg *connections.Message) {
 	data := world.NewMessage()
 	err := json.Unmarshal(msg.Message, data)
@@ -68,17 +72,17 @@ func (m *Messenger) OnMessage(msg *connections.Message) {
 	m.Titan.OnResponse(data)
 }
 
-//OnError called when onconnection error raised.
+// OnError called when onconnection error raised.
 func (m *Messenger) OnError(err *connections.Error) {
 	logger.Debug(err.Error.Error())
 }
 
-//OnClose called when connection closed.
+// OnClose called when connection closed.
 func (m *Messenger) OnClose(conn connections.OutputConnection) {
 	m.Room.Leave(conn)
 }
 
-//OnOpen called when connection open.
+// OnOpen called when connection open.
 func (m *Messenger) OnOpen(conn connections.OutputConnection) {
 	m.Room.Join(conn)
 }
