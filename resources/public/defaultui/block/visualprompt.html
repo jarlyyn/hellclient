@@ -1,39 +1,56 @@
 <el-dialog id="visualPrompt" v-if="visualPrompt" :visible.sync="visualPromptVisible" @opened="onVisualPromptOpen">
   <div slot="title">
     <span class="el-dialog__title">{{visualPrompt.Data.Title}}</span>
-    <el-tooltip v-if="visualPrompt.Data.RefreshCallback" class="item" effect="light" content="刷新"  placement="bottom">
-    <el-button  @click="onButton('visualPromptRefresh')" type="text" icon="el-icon-refresh" type="success" size="mini" circle>刷新</el-button>
+    <el-tooltip v-if="visualPrompt.Data.RefreshCallback" class="item" effect="light" content="刷新" placement="bottom">
+      <el-button @click="onButton('visualPromptRefresh')" type="text" icon="el-icon-refresh" type="success" size="mini"
+        circle>刷新</el-button>
     </el-tooltip>
   </div>
-        <div :class="'media '+ (visualPrompt.Data.Portrait?'portrait':'landscape')">
-          <div class="image" v-if="visualPrompt.Data.MediaType=='image'">
-            <img :src="visualPrompt.Data.Source"/>
-          </div>
-          <div class="output" v-if="visualPrompt.Data.MediaType=='output'">
-            <ul id="visualPrompt-alllines"><li v-bind:class="'words '+ typeclass[line.Type] + ' '+(line.Triggers?'has-trigger':'')+ (line.CreatorType?(' creator-type-'+line.CreatorType):'')" :title="(new Date(line.Time*1000)).toString()+(line.Triggers?('\nTriggers:\n'+line.Triggers.join('\n')):'')+(line.Creator?('\n'+line.CreatorType+':'+line.Creator):'')" v-for="line in visualPrompt.Data.Output"><span v-if="line.IsSystem">🗨️</span><span v-bind:class="word.Color + ' BG-' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')" v-for="word in line.Words" >{{word.Text}}</span>
-            </li>
-        </ul>          </div>
-        </div>
-        <div class="text" v-if="visualPrompt.Data.MediaType=='text'">
-          <span>{{visualPrompt.Data.Source}}</span>
-        </div>
-        <div class="intro">{{visualPrompt.Data.Intro}}</div>
-        <el-input ref="visualPromptValue"v-if="visualPrompt.Data.Items==null || visualPrompt.Data.Items.length==0" v-model="visualPrompt.Data.Value"></el-input>
-        <el-table v-else
-        :data="visualPrompt.Data.Items"
-        style="width: 100%">
-        <el-table-column width="80px">
-          <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="handleSelectVisualPromptList(scope.$index, scope.row)">选择
-            </el-button>
-          </template>
-        </el-table-column>
-        <el-table-column label="" prop="Value">
-        </el-table-column>
-      </el-table>
+  <div :class="'media '+ (visualPrompt.Data.Portrait?'portrait':'landscape')">
+    <div class="image" v-if="visualPrompt.Data.MediaType=='image'">
+      <img :src="visualPrompt.Data.Source" />
+    </div>
+    <div class="output" v-if="visualPrompt.Data.MediaType=='output'">
+      <ul id="visualPrompt-alllines">
+        <li
+          v-bind:class="'words '+ typeclass[line.Type] + ' '+(line.Triggers?'has-trigger':'')+ (line.CreatorType?(' creator-type-'+line.CreatorType):'')"
+          :title="(new Date(line.Time*1000)).toString()+(line.Triggers?('\nTriggers:\n'+line.Triggers.join('\n')):'')+(line.Creator?('\n'+line.CreatorType+':'+line.Creator):'')"
+          v-for="line in visualPrompt.Data.Output"><span v-if="line.IsSystem">🗨️</span><span
+            v-bind:class="word.Color + ' BG-' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')"
+            v-for="word in line.Words">{{word.Text}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="text" v-if="visualPrompt.Data.MediaType=='text'">
+    <span>{{visualPrompt.Data.Source}}</span>
+  </div>
+  <div class="base64slide" v-if="visualPrompt.Data.MediaType=='base64slide'">
+    <el-carousel :autoplay="false" indicator-position="outside">
+      <el-carousel-item  v-for="(item,index) in visualPrompt.Data.Slides" :key="index">
+        <div :style="{'width':'100%','height':'100%',backgroundImage:'url(\''+item+'\')',backgroundRepeat:'no-repeat',backgroundPosition:'center',backgroundSize:'contain'}"></div>
+      </el-carousel-item>
+    </el-carousel>
+  
+  </div>
 
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="visualPromptVisible = false">取 消</el-button>
-          <el-button type="primary" @click="onButton('visualPromptSubmit')" v-if="visualPrompt.Data.Items==null || visualPrompt.Data.Items.length==0">确 定</el-button>
-        </div>
-      </el-dialog>              
+  <div class="intro">{{visualPrompt.Data.Intro}}</div>
+  <el-input ref="visualPromptValue" v-if="visualPrompt.Data.Items==null || visualPrompt.Data.Items.length==0"
+    v-model="visualPrompt.Data.Value"></el-input>
+  <el-table v-else :data="visualPrompt.Data.Items" style="width: 100%">
+    <el-table-column width="80px">
+      <template slot-scope="scope">
+        <el-button size="mini" type="success" @click="handleSelectVisualPromptList(scope.$index, scope.row)">选择
+        </el-button>
+      </template>
+    </el-table-column>
+    <el-table-column label="" prop="Value">
+    </el-table-column>
+  </el-table>
+
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="visualPromptVisible = false">取 消</el-button>
+    <el-button type="primary" @click="onButton('visualPromptSubmit')"
+      v-if="visualPrompt.Data.Items==null || visualPrompt.Data.Items.length==0">确 定</el-button>
+  </div>
+</el-dialog>

@@ -113,6 +113,10 @@ define(function (require) {
                 vm.visualPrompt.Data.Output=JSON.parse(vm.visualPrompt.Data.Source)
                 vm.visualPrompt.Data.Source=""
                 break
+            case "base64slide":
+                vm.visualPrompt.Data.Slides=vm.visualPrompt.Data.Source.split("|")
+                vm.visualPrompt.Data.Source=""
+                break
         }
         vm.visualPromptVisible=true    
     }  

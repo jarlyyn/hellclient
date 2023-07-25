@@ -6,6 +6,7 @@ import (
 )
 
 const MediaTypeImage = "image"
+const MediaTypeSlide = "base64slide"
 
 type VisualPrompt struct {
 	Title           string
