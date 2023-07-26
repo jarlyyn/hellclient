@@ -60,6 +60,25 @@ func (p *Prophet) newRoomAdapter(cmdtype string) func(m *message.Message) error 
 		return nil
 	}
 }
+func (p *Prophet) newConsoleAdapter(cmdtype string) func(m *message.Message) error {
+	return func(m *message.Message) error {
+		var err error
+		m.Room = ""
+		data := command.New()
+		data.CommandType = cmdtype
+		data.CommandData, err = json.Marshal(m.Data)
+		if err != nil {
+			return err
+		}
+		msg, err := data.Encode()
+		if err != nil {
+			return err
+		}
+		p.Rooms.Broadcast(m.Room, msg, nil)
+		return nil
+	}
+}
+
 func (p *Prophet) sendToUser(data []byte) error {
 	return p.Users.SendByID("user", data)
 }
@@ -115,6 +134,7 @@ func (p *Prophet) Change(roomid string) {
 	p.Current.Store(roomid)
 	go func() {
 		p.onCurrent(roomid)
+		p.Titan.ExecClients()
 	}()
 }
 func (p *Prophet) Enter(w http.ResponseWriter, r *http.Request) error {
@@ -131,7 +151,7 @@ func (p *Prophet) Enter(w http.ResponseWriter, r *http.Request) error {
 
 }
 
-//OnMessage called when connection message received.
+// OnMessage called when connection message received.
 func (p *Prophet) OnMessage(msg *connections.Message) {
 	_, _, cerr := p.Handlers.Exec(msg)
 	if cerr != nil {
@@ -140,12 +160,12 @@ func (p *Prophet) OnMessage(msg *connections.Message) {
 
 }
 
-//OnError called when onconnection error raised.
+// OnError called when onconnection error raised.
 func (p *Prophet) OnError(err *connections.Error) {
 	logger.Debug(err.Error.Error())
 }
 
-//OnClose called when connection closed.
+// OnClose called when connection closed.
 func (p *Prophet) OnClose(conn connections.OutputConnection) {
 	ctx := p.Context(conn.ID())
 	if ctx != nil {
@@ -158,7 +178,7 @@ func (p *Prophet) OnClose(conn connections.OutputConnection) {
 	p.Contexts.OnClose(conn)
 }
 
-//OnOpen called when connection open.
+// OnOpen called when connection open.
 func (p *Prophet) OnOpen(conn connections.OutputConnection) {
 	p.Contexts.OnOpen(conn)
 	ctx := p.Context(conn.ID())

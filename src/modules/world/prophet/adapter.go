@@ -59,4 +59,6 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("foundhistory", p.newRoomAdapter("foundhistory"))
 	adapter.Register("hudcontent", p.newRoomAdapter("hudcontent"))
 	adapter.Register("hudupdate", p.newRoomAdapter("hudupdate"))
+	adapter.Register("clientinfo", p.newConsoleAdapter("clientinfo"))
+
 }

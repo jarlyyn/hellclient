@@ -243,6 +243,12 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("UpdateHUD", l.NewFunction(a.UpdateHUD))
 	l.SetGlobal("NewLine", l.NewFunction(a.NewLine))
 	l.SetGlobal("NewWord", l.NewFunction(a.NewWord))
+
+	l.SetGlobal("SetPriority", l.NewFunction(a.SetPriority))
+	l.SetGlobal("GetPriority", l.NewFunction(a.GetPriority))
+	l.SetGlobal("SetSummary", l.NewFunction(a.SetSummary))
+	l.SetGlobal("GetSummary", l.NewFunction(a.GetSummary))
+
 }
 
 func (a *luaapi) Milliseconds(L *lua.LState) int {
@@ -1547,6 +1553,26 @@ func (a *luaapi) NewWord(L *lua.LState) int {
 	L.Push(lua.LString(a.API.NewWord(data)))
 	return 1
 }
+
+func (a *luaapi) SetPriority(L *lua.LState) int {
+	value := L.ToInt(1)
+	a.API.SetPriority(value)
+	return 0
+}
+func (a *luaapi) GetPriority(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.GetPriority()))
+	return 1
+}
+func (a *luaapi) SetSummary(L *lua.LState) int {
+	content := L.ToString(1)
+	a.API.SetSummary(content)
+	return 0
+}
+func (a *luaapi) GetSummary(L *lua.LState) int {
+	L.Push(lua.LString(a.API.GetSummary()))
+	return 1
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

@@ -5,15 +5,19 @@ import (
 	"hellclient/modules/world"
 	"hellclient/modules/world/bus"
 	"sync"
+	"time"
 )
 
 type Info struct {
-	Lines     *ring.Ring
-	History   *ring.Ring
-	Recent    *ring.Ring
-	Prompt    *world.Line
-	Lock      sync.RWMutex
-	LineCount int
+	Lines      *ring.Ring
+	History    *ring.Ring
+	Recent     *ring.Ring
+	Prompt     *world.Line
+	Lock       sync.RWMutex
+	LineCount  int
+	Priority   int
+	LastActive int64
+	Summary    []*world.Line
 }
 
 func (i *Info) OmitOutput(b *bus.Bus) {
@@ -56,6 +60,9 @@ func (i *Info) ClientInfo(b *bus.Bus) *world.ClientInfo {
 	info.ReadyAt = b.GetReadyAt()
 	info.Running = b.GetConnConnected()
 	info.ScriptID = b.GetScriptID()
+	info.Priority = b.GetPriority()
+	info.Summary = b.GetSummary()
+	info.LastActive = b.GetLastActive()
 	return info
 }
 
@@ -135,6 +142,16 @@ func (i *Info) GetRecentLines(count int) []*world.Line {
 	return result
 
 }
+func (i *Info) UpdateLastActive() {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	i.LastActive = time.Now().Unix()
+}
+func (i *Info) GetLastActive() int64 {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	return i.LastActive
+}
 func (i *Info) getHistories() []string {
 	var result = make([]string, 0, i.History.Len())
 	i.History.Do(func(x interface{}) {
@@ -182,6 +199,37 @@ func (i *Info) GetLine(idx int) *world.Line {
 	}
 	return v.(*world.Line)
 }
+func (i *Info) SetPriority(b *bus.Bus, priority int) {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	var changed bool
+	if i.Priority != priority {
+		changed = true
+	}
+	i.Priority = priority
+	if changed {
+		go i.RefreshClientInfo(b)
+	}
+}
+func (i *Info) GetPriority() int {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	return i.Priority
+}
+func (i *Info) SetSummary(b *bus.Bus, data []*world.Line) {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	i.Summary = data
+	go i.RefreshClientInfo(b)
+}
+func (i *Info) GetSummary() []*world.Line {
+	i.Lock.Lock()
+	defer i.Lock.Unlock()
+	return i.Summary
+}
+func (i *Info) RefreshClientInfo(b *bus.Bus) {
+	b.RaiseClientInfoEvent(i.ClientInfo(b))
+}
 func (i *Info) InstallTo(b *bus.Bus) {
 	b.GetCurrentLines = b.WrapGetLines(i.CurrentLines)
 	b.GetPrompt = b.WrapGetLine(i.CurrentPrompt)
@@ -195,6 +243,12 @@ func (i *Info) InstallTo(b *bus.Bus) {
 	b.GetRecentLines = i.GetRecentLines
 	b.GetLinesInBufferCount = i.GetLinesInBufferCount
 	b.GetLine = i.GetLine
+	b.SetPriority = b.WrapSetInt(i.SetPriority)
+	b.GetPriority = i.GetPriority
+	b.SetSummary = b.WrapSetLines(i.SetSummary)
+	b.GetSummary = i.GetSummary
+	b.UpdateLastActive = i.UpdateLastActive
+	b.GetLastActive = i.GetLastActive
 	b.BindLineEvent(i, i.onNewLine)
 	b.BindPromptEvent(i, i.onPrompt)
 	b.BindInitEvent(i, i.Init)

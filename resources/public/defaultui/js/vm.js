@@ -149,6 +149,9 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
                 }
                 return false
             },
+            onClient: function (client) {
+                    app.send("change", client.ID)
+            },
             onGamelistClick: function (row, column, event) {
                 if (vm.clients.length) {
                     app.send("change", row.ID)

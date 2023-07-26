@@ -78,6 +78,8 @@ const MsgTypeFoundHistory = "foundhistory"
 const MsgTypeHUDUpdate = "hudupdate"
 const MsgTypeHUDContent = "hudcontent"
 
+const MsgTypeClientInfo = "clientinfo"
+
 type Publisher interface {
 	Publish(msg *message.Message)
 }
@@ -266,4 +268,7 @@ func PublishHUDUpdate(p Publisher, world string, diff *world.DiffLines) {
 
 func PublishHUDContent(p Publisher, world string, lines []*world.Line) {
 	p.Publish(New(MsgTypeHUDContent, world, lines))
+}
+func PublishClientInfo(p Publisher, world string, info *world.ClientInfo) {
+	p.Publish(New(MsgTypeClientInfo, world, info))
 }

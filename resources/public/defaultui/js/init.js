@@ -39,6 +39,7 @@ requirejs.config({
         "html-visualprompt":"/public/defaultui/block/visualprompt.html",
         "html-masssendform":"/public/defaultui/block/masssendform.html",
         "html-userpasswordform":"/public/defaultui/block/userpasswordform.html",
+        "html-dashboard":"/public/defaultui/block/dashboard.html",
         "main":"/public/defaultui/js/main"
     },
 });
@@ -118,6 +119,9 @@ define(function (require) {
 
     var htmluserpasswordform=require("text!html-userpasswordform");
     document.getElementById("userpasswordform").innerHTML=htmluserpasswordform;    
+
+    var htmluserdashboard=require("text!html-dashboard");
+    document.getElementById("dashboard").innerHTML=htmluserdashboard;    
 
     var htmlalllines=require("text!html-alllines");
 

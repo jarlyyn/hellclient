@@ -119,6 +119,10 @@ func (t *Titan) onHUDUpdate(b *bus.Bus, diff *world.DiffLines) {
 func (t *Titan) onHUDContent(b *bus.Bus, content []*world.Line) {
 	msg.PublishHUDContent(t, b.ID, content)
 }
+func (t *Titan) onClientInfo(b *bus.Bus, info *world.ClientInfo) {
+	msg.PublishClientInfo(t, b.ID, info)
+}
+
 func (t *Titan) onPrompt(b *bus.Bus, prompt *world.Line) {
 	msg.PublishPrompt(t, b.ID, prompt)
 }
@@ -217,6 +221,7 @@ func (t *Titan) HandleCmdHistory(id string) {
 func (t *Titan) Focus(id string) {
 	w := t.World(id)
 	if w != nil {
+		w.UpdateLastActive()
 		w.HandleFocus()
 	}
 }
@@ -266,6 +271,10 @@ func (t *Titan) HandleCmdOpen(id string) bool {
 	if err != nil && !os.IsNotExist(err) {
 		util.LogError(err)
 		return false
+	}
+	w := t.World(id)
+	if w != nil {
+		w.UpdateLastActive()
 	}
 	return ok
 }
@@ -367,7 +376,7 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindScriptMessageEvent(t, t.onScriptMessage)
 	b.BindHUDContentEvent(t, t.onHUDContent)
 	b.BindHUDUpdateEvent(t, t.onHUDUpdate)
-
+	b.BindClientInfoEvent(t, t.onClientInfo)
 	b.GetScriptPath = t.GetScriptPath
 	b.GetModPath = t.GetModPath
 

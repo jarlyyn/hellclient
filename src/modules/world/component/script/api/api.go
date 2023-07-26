@@ -1496,3 +1496,26 @@ func (a *API) GetModInfo(herbplugin.Plugin) *world.Mod {
 	sort.Strings(mod.FileList)
 	return mod
 }
+
+func (a *API) SetPriority(value int) {
+	a.Bus.SetPriority(value)
+}
+func (a *API) GetPriority() int {
+	return a.Bus.GetPriority()
+}
+func (a *API) SetSummary(content string) {
+	var lines = []*world.Line{}
+	err := json.Unmarshal([]byte(content), &lines)
+	if err != nil {
+		panic(err)
+	}
+	a.Bus.SetSummary(lines)
+}
+func (a *API) GetSummary() string {
+	var content = a.Bus.GetSummary()
+	data, err := json.Marshal(content)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}

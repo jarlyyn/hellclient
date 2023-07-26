@@ -278,6 +278,11 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "UpdateHUD", a.UpdateHUD)
 	AppendToWorld(jp.Runtime, world, "NewLine", a.NewLine)
 	AppendToWorld(jp.Runtime, world, "NewWord", a.NewWord)
+
+	AppendToWorld(jp.Runtime, world, "SetPriority", a.SetPriority)
+	AppendToWorld(jp.Runtime, world, "GetPriority", a.GetPriority)
+	AppendToWorld(jp.Runtime, world, "SetSummary", a.SetSummary)
+	AppendToWorld(jp.Runtime, world, "GetSummary", a.GetSummary)
 }
 
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1353,6 +1358,23 @@ func (a *jsapi) NewLine(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (a *jsapi) NewWord(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	text := call.Argument(0).String()
 	return r.ToValue(a.API.NewWord(text))
+}
+
+func (a *jsapi) SetPriority(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	value := int(call.Argument(0).ToInteger())
+	a.API.SetPriority(value)
+	return goja.Null()
+}
+func (a *jsapi) GetPriority(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.GetPriority())
+}
+func (a *jsapi) SetSummary(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	content := call.Argument(1).String()
+	a.API.SetSummary(content)
+	return nil
+}
+func (a *jsapi) GetSummary(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.GetSummary())
 }
 
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {

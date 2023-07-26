@@ -19,9 +19,9 @@
   <div id="app">
     <div id="userinputlist"></div>
 
-    <div id="top"></div>
-    <div id="hudwrapper" class="hide"><canvas @mousedown="onHUDClick" id="hud"></canvas></div>
-    <div id="stage" @mousedown="onButton('allLines')">
+    <div id="top" :class="{empty:current==''}"></div>
+    <div v-if="current" id="hudwrapper" class="hide"><canvas @mousedown="onHUDClick" id="hud"></canvas></div>
+    <div v-if="current" id="stage" @mousedown="onButton('allLines')">
       <canvas id="output"></canvas>
       <canvas id="prompt-output"></canvas>
     </div>
@@ -78,7 +78,7 @@
     </el-dialog>
     <div id="alllines"></div>
 
-    <div id="footer">
+    <div v-if="current" id="footer">
       <div id="current">
         {{current}}
       </div>
@@ -93,6 +93,7 @@
         </el-input>
       </div>
     </div>
+    <div id="dashboard"></div>
   </div>
   <script>
     var MD=markdownit()

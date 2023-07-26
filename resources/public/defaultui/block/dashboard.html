@@ -1,0 +1,28 @@
+<div v-if="current==''" id="dashboard-body">
+    <div id="dashboard-content">
+        <div id="dashboard-info">
+            <el-alert title="按 数字键 进入游戏。按键盘 ` 进入紧急游戏。按键盘 Ctrl+Esc 或 Pause 返回本页。" type="info" :closable="false">
+            </el-alert>
+        </div>
+        <div id="dashboard-content-clients">
+            <div v-for="(client,index) in clients" :key="index" :class="{'dashboard-client':true,disconnected:!client.Running,'priority-0':client.Priority<=0,'priority-1':client.Priority==1,'priority-2':client.Priority>=2}" @click="onClient(client)">
+                <div class="dashboard-client-body">
+                            <div class="info">
+                                <span clas="index">{{index+1}}</span>
+                                <span class="id">{{client.ID}}</span>
+                                <span class="script">[{{client.ScriptID}}]</span>
+                                <span v-if="client.Priority<=0"class="priority priority-0">普通</span>
+                                <span v-if="client.Priority==1"class="priority priority-1">故障</span>
+                                <span v-if="client.Priority>=2"class="priority priority-2">紧急</span>
+                                <span v-if="client.Running" class="running online">在线</span>
+                                <span v-if="!client.Running" class="running offline">离线</span>
+                            </div>
+                        </div>
+                        <div class="dashboard-client-content">
+                            总是显示
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

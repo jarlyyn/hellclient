@@ -5,11 +5,14 @@ import (
 )
 
 type ClientInfo struct {
-	ID       string
-	ReadyAt  int64
-	HostPort string
-	ScriptID string
-	Running  bool
+	ID         string
+	ReadyAt    int64
+	HostPort   string
+	ScriptID   string
+	Running    bool
+	Priority   int
+	LastActive int64
+	Summary    []*Line
 }
 
 type ClientInfos []*ClientInfo

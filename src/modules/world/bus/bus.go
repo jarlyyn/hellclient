@@ -171,21 +171,26 @@ type Bus struct {
 	GetRecentLines            func(count int) []*world.Line
 	GetLine                   func(idx int) *world.Line
 	GetMapper                 func() *mapper.Mapper
-
-	AddHistory               func(string)
-	GetHistories             func() []string
-	FlushHistories           func()
-	HandleConnReceive        func(msg []byte)
-	HandleConnError          func(err error)
-	HandleConnPrompt         func(msg []byte)
-	DoConnectServer          func() error
-	DoCloseServer            func() error
-	HandleConverterError     func(err error)
-	HandleCmdError           func(err error)
-	HandleTriggerError       func(err error)
-	HandleScriptError        func(err error)
-	GetScriptCaller          func() (string, string)
-	DoStopEvaluatingTriggers func()
+	GetPriority               func() int
+	SetPriority               func(int)
+	GetSummary                func() []*world.Line
+	SetSummary                func([]*world.Line)
+	UpdateLastActive          func()
+	GetLastActive             func() int64
+	AddHistory                func(string)
+	GetHistories              func() []string
+	FlushHistories            func()
+	HandleConnReceive         func(msg []byte)
+	HandleConnError           func(err error)
+	HandleConnPrompt          func(msg []byte)
+	DoConnectServer           func() error
+	DoCloseServer             func() error
+	HandleConverterError      func(err error)
+	HandleCmdError            func(err error)
+	HandleTriggerError        func(err error)
+	HandleScriptError         func(err error)
+	GetScriptCaller           func() (string, string)
+	DoStopEvaluatingTriggers  func()
 
 	GetMetronomeBeats      func() int
 	SetMetronomeBeats      func(int)
@@ -228,6 +233,7 @@ type Bus struct {
 	ScriptMessageEvent     busevent.Event
 	HUDUpdateEvent         busevent.Event
 	HUDContentEvent        busevent.Event
+	ClientInfoEvent        busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -275,6 +281,11 @@ func (b *Bus) WrapGetLines(f func(bus *Bus) []*world.Line) func() []*world.Line 
 		return f(b)
 	}
 }
+func (b *Bus) WrapSetLines(f func(bus *Bus, lines []*world.Line)) func([]*world.Line) {
+	return func(lines []*world.Line) {
+		f(b, lines)
+	}
+}
 func (b *Bus) WrapGetBool(f func(bus *Bus) bool) func() bool {
 	return func() bool {
 		return f(b)
@@ -283,6 +294,12 @@ func (b *Bus) WrapGetBool(f func(bus *Bus) bool) func() bool {
 func (b *Bus) WrapGetInt(f func(bus *Bus) int) func() int {
 	return func() int {
 		return f(b)
+	}
+}
+
+func (b *Bus) WrapSetInt(f func(bus *Bus, value int)) func(int) {
+	return func(value int) {
+		f(b, value)
 	}
 }
 func (b *Bus) WrapGetClientInfo(f func(bus *Bus) *world.ClientInfo) func() *world.ClientInfo {
@@ -602,6 +619,18 @@ func (b *Bus) BindHUDContentEvent(id interface{}, fn func(b *Bus, lines []*world
 		},
 	)
 }
+func (b *Bus) RaiseClientInfoEvent(info *world.ClientInfo) {
+	b.ClientInfoEvent.Raise(info)
+}
+func (b *Bus) BindClientInfoEvent(id interface{}, fn func(b *Bus, info *world.ClientInfo)) {
+	b.ClientInfoEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b, data.(*world.ClientInfo))
+		},
+	)
+}
+
 func (b *Bus) Reset() {
 	*b = Bus{}
 }

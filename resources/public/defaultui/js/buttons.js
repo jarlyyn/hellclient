@@ -233,8 +233,8 @@ onButton.createVariable=function(){
       });
 
 }
-onButton.all=function(){
-    vm.allgameVisible=true
+onButton.overview=function(){
+    send("change","")
 }
 onButton.worldSettings=function(){
     vm.worldSettings=null;
