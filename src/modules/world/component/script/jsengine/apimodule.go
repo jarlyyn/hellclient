@@ -1369,7 +1369,7 @@ func (a *jsapi) GetPriority(call goja.FunctionCall, r *goja.Runtime) goja.Value 
 	return r.ToValue(a.API.GetPriority())
 }
 func (a *jsapi) SetSummary(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	content := call.Argument(1).String()
+	content := call.Argument(0).String()
 	a.API.SetSummary(content)
 	return nil
 }

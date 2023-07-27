@@ -1,4 +1,4 @@
-define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/canvas.js"], function (Vue, app, _, canvas) {
+define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/canvas.js","public/defaultui/js/vue-2-boring-avatars.umd.js"], function (Vue, app, _, canvas,avatar) {
     var onButton = app.onButton;
     var data = {
         typeclass: {
@@ -14,6 +14,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             10: " response",
             11:"subneg"
         },
+        avatorcolors:[],
         hud: [],
         current: "",
         currenttab: "",
@@ -129,6 +130,9 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
         mounted: function () {
             this.advancemode = (localStorage.getItem("hellclient-advancemode") != "");
             document.getElementsByTagName("body")[0].style.visibility = "visible";
+        },
+        components:{
+            "avatar":avatar,
         },
         methods: {
             send: function () {
@@ -480,6 +484,10 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             },
             onHUDClick:function(e){
                 app.send("hudclick",{X:e.offsetX/e.target.width,Y:e.offsetY/e.target.height})
+            },
+            doFocus:function(){
+                let input = document.getElementById("mud-input")
+                if (input) { input.focus() }                
             }
         }
     })

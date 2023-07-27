@@ -12,8 +12,10 @@ define(function (require) {
         canvas.Clean()
         vm.historypos = -1
         if (data) {
-            let input = document.getElementById("mud-input")
-            if (input) { input.focus() }
+            setTimeout(() => {
+                let input = document.getElementById("mud-input")
+                if (input) { input.focus() }                
+            }, 0);
         }
     }
     handlers.line = function (data) {

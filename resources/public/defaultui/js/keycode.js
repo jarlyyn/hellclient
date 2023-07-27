@@ -30,6 +30,24 @@ define(function (require) {
                 if (vm.current==""){
                 }
                 break
+            case "PageUp":
+                if (vm.$refs.visualPromptSlide){
+                    vm.$refs.visualPromptSlide.prev()
+                    return
+                }
+                break
+            case "PageDown":
+                if (vm.$refs.visualPromptSlide){
+                    vm.$refs.visualPromptSlide.next()
+                    return
+                }
+                break
+            case "Enter":
+                if (vm.visualPrompt){
+                    vm.onButton('visualPromptSubmit')
+                    vm.doFocus()
+                    return
+                }
         }
         console.log(event.code)
         console.log(event.ctrlKey)

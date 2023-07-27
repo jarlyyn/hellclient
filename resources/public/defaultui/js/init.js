@@ -5,6 +5,7 @@ requirejs.config({
         "vue":"/public/defaultui/js/vue",
         "lodash":"/public/defaultui/js/lodash",
         "ELEMENT":"/public/defaultui/theme-chalk/index",
+        "vue2-boring-avatars":"/public/defaultui/js/vue-2-boring-avatars.umd.js",
         "html-top":"/public/defaultui/block/top.html",
         "html-creategameform":"/public/defaultui/block/creategameform.html",
         "html-createscriptform":"/public/defaultui/block/createscriptform.html",
