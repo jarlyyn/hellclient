@@ -488,6 +488,43 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             doFocus:function(){
                 let input = document.getElementById("mud-input")
                 if (input) { input.focus() }                
+            },
+            onClientDragStart:function(e){
+                 e.dataTransfer.setData("clientindex", e.target.dataset.index);
+            },
+            onClientDrop:function(e){
+                if (!isNaN(e.dataTransfer.getData("clientindex"))){
+                    let from=e.dataTransfer.getData("clientindex")-0
+                    for(var i=0;i<e.path.length;i++){
+                        if (e.path[i].dataset["index"]!=undefined){
+                            e.preventDefault()
+                            let to=e.path[i].dataset["index"]-0
+                            if (from!=to){
+                                vm.doSwipClient(from,to)
+                            }
+                            return
+                        }
+                    }
+                }
+            },
+            doSwipClient:function(from,to){
+                let clients=vm.clients
+                if (from<0||to<0||from>=clients.length||to>=clients.length){
+                    return
+                }
+                let order=[]
+                for(var i=0;i<clients.length;i++){
+                    order.push(clients[i].ID)
+                }
+                let fromid=order[from]
+                order[from]=order[to]
+                order[to]=fromid
+                app.send("sortclients",order)
+            },
+            onClientDargOver:function(e){
+                if (e.dataTransfer.types.includes("clientindex")){
+                    e.preventDefault()
+                }
             }
         }
     })

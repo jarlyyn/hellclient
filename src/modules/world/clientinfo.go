@@ -7,6 +7,7 @@ import (
 type ClientInfo struct {
 	ID         string
 	ReadyAt    int64
+	Position   int
 	HostPort   string
 	ScriptID   string
 	Running    bool
@@ -24,6 +25,9 @@ func (info ClientInfos) Len() int {
 
 // Less reports whether the element with index i
 func (info ClientInfos) Less(i, j int) bool {
+	if info[i].Position != info[j].Position {
+		return info[i].Position < info[j].Position
+	}
 	return info[i].ReadyAt < info[j].ReadyAt
 }
 

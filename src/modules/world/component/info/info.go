@@ -63,6 +63,7 @@ func (i *Info) ClientInfo(b *bus.Bus) *world.ClientInfo {
 	info.Priority = b.GetPriority()
 	info.Summary = b.GetSummary()
 	info.LastActive = b.GetLastActive()
+	info.Position = b.GetPosition()
 	return info
 }
 

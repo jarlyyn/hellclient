@@ -490,6 +490,16 @@ func (p *Prophet) onCmdUpdatePassword(conn connections.OutputConnection, cmd com
 	}
 	return nil
 }
+
+func (p *Prophet) onCmdSortClients(conn connections.OutputConnection, cmd command.Command) error {
+	var msg []string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.DoSortClients(msg)
+	p.Titan.ExecClients()
+	return nil
+}
 func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("change", p.onCmdChange)
 	handlers.Register("connect", p.onCmdConnect)
@@ -551,5 +561,5 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("masssend", p.onCmdMasssend)
 	handlers.Register("findhistory", p.onCmdFindHistory)
 	handlers.Register("hudclick", p.onCmdHUDClick)
-
+	handlers.Register("sortclients", p.onCmdSortClients)
 }

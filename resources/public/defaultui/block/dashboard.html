@@ -1,15 +1,20 @@
 <div v-if="current==''" id="dashboard-body">
     <div id="dashboard-content">
         <div id="dashboard-info">
-            <el-alert title="按 数字键 进入游戏。按键盘 ` 进入紧急游戏。按键盘 Ctrl+Esc 或 Pause 返回本页。" type="info" :closable="false">
+            <el-alert title="按 数字键 进入游戏。按键盘 ` 快速进入游戏。按键盘 Ctrl+Esc 或 Pause 返回本页。" type="info" :closable="false">
             </el-alert>
         </div>
         <div id="dashboard-content-clients">
-            <div v-for="(client,index) in clients" :key="index"
+            <div id="clients-quick" @click="onButton('clientquick')" v-if="clients.length>0"
+                class="el-icon-s-opportunity clients-tool">
+                <div class="label">快速开始</div>
+            </div>
+            <div v-for="(client,index) in clients" :key="index" draggable="true" @dragStart="onClientDragStart"
+                @drop="onClientDrop" @dragOver="onClientDargOver" @dragEnter="onClientDargOver" :data-index="index"
                 :class="{'dashboard-client':true,disconnected:!client.Running,'priority-0':client.Priority<=0,'priority-1':client.Priority==1,'priority-2':client.Priority>=2}"
                 @click="onClient(client)">
                 <div class="avatar">
-                    <avatar variant="beam" :name="client.ID"  :size="64"></avatar>
+                    <avatar variant="beam" :name="client.ID" :size="64"></avatar>
                 </div>
                 <div class="dashboard-client-body">
                     <div class="info">
@@ -25,7 +30,8 @@
                 </div>
                 <div class="dashboard-client-content">
                     <ul class="summary" v-if="client.Summary">
-                        <li :key="index" v-if="index<2" v-bind:class="'words '+ typeclass[line.Type] + ' '+(line.Triggers?'has-trigger':'')+ (line.CreatorType?(' creator-type-'+line.CreatorType):'')"
+                        <li :key="index" v-if="index<2"
+                            v-bind:class="'words '+ typeclass[line.Type] + ' '+(line.Triggers?'has-trigger':'')+ (line.CreatorType?(' creator-type-'+line.CreatorType):'')"
                             :title="(new Date(line.Time*1000)).toString()+(line.Triggers?('\nTriggers:\n'+line.Triggers.join('\n')):'')+(line.Creator?('\n'+line.CreatorType+':'+line.Creator):'')"
                             v-for="(line,index) in client.Summary"><span v-if="line.IsSystem">🗨️</span><span
                                 v-bind:class="word.Color + ' BG-' +word.Background + (word.Bold?' bold':'') + (word.Blinking?' blinking':'') + (word.Underlined?' underlined':'')+ (word.Inverse?' inverse':'')"
@@ -34,6 +40,9 @@
                     </ul>
 
                 </div>
+            </div>
+            <div id="clients-open" @click="onButton('notopened')" class="el-icon-folder-opened clients-tool">
+                <div class="label">打开游戏</div>
             </div>
         </div>
     </div>

@@ -410,6 +410,7 @@ html body .el-table .game-list-not-running {
 #dashboard-info {
     max-width: 600px;
     margin: auto;
+    display: none;
 }
 
 #hudwrapper.hide {
@@ -418,10 +419,10 @@ html body .el-table .game-list-not-running {
 
 .dashboard-client  {
     position: relative;
-    background-color: #f0f9eb;
+    background-color: white;
     width: 440px;
-    height:80px;
-    margin: 20px auto 0;
+    height:64px;
+    margin: 8px auto 0;
     color:#333333;
     padding:10px;
     cursor: pointer;
@@ -453,16 +454,16 @@ html body .el-table .game-list-not-running {
     top: 0px;
 }
 .dashboard-client.priority-1{
-    background-color:#fdf6ec
+    background-color:#ffdba5
 }
 .dashboard-client.priority-2{
-    background-color:#fef0f0;
+    background-color:#fbc4c4;
     animation:2s infinite priority2
 }
 @keyframes priority2 { 
-    0% { background-color: #fef0f0;; }
-    75% { background-color:#fbc4c4; }
-    100% { background-color: #fef0f0; }
+    0% { background-color: #fbc4c4;; }
+    75% { background-color:#f56c6c; }
+    100% { background-color: #fbc4c4; }
 }
 .dashboard-client-content{
     margin:5px 0 5px;
@@ -472,11 +473,75 @@ html body .el-table .game-list-not-running {
 .dashboard-client .avatar{
     position: absolute;
 }
+#clients-open{
+    position: relative;
+    background-color: #409EFF;
+    width: 440px;
+    height:64px;
+    margin: 5px auto 0;
+    padding:10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 30px;
+    color: white;
+}
+#dashboard-content-clients .summary{
+    background-color: #333333;
+    padding: 0 5px;
+    margin: 0;
+    color: white;
+    height: 38px;
+}
+#dashboard-content-clients .summary li{
+    overflow: hidden;
+    background-color: #333333;
+    white-space: pre-wrap;
+    word-break: break-all;
+    height: 19px;
+    line-height: 19px;
+}
+#clients-quick{
+    position: relative;
+    background-color: #e6a23c;
+    width: 440px;
+    height:64px;
+    margin: 5px auto 0;
+    padding:10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 30px;
+    color: white;
+}
+.clients-tool{
+    position: relative;
+    line-height: 48px;
+}
+
+.clients-tool .label{ 
+    width:100%;
+    height:20px;
+    line-height: 20px;
+    position: absolute;
+    color:white;
+    font-size:16px;
+    text-align: center;
+    top: 50%;
+    left:0;
+    font-weight: bold;
+    margin-top:16px;
+}
+
 @media (min-width: 1121px) {
+    #dashboard-info{
+        display: block;
+    }
+    #dashboard .clients-tool,
     .dashboard-client{
         padding-top:20px;
         padding-bottom:20px;
         padding-left:20px;
         padding-right:20px;
+        margin-top:30px;
     }
 }
+

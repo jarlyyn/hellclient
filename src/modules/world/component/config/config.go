@@ -14,11 +14,22 @@ import (
 )
 
 type Config struct {
-	Locker  sync.Mutex
-	Data    *world.WorldData
-	ReadyAt int64
+	Locker   sync.Mutex
+	Data     *world.WorldData
+	ReadyAt  int64
+	Position int
 }
 
+func (c *Config) GetPosition() int {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Position
+}
+func (c *Config) SetPosition(value int) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Position = value
+}
 func (c *Config) GetWorldData() *world.WorldData {
 	c.Locker.Lock()
 	defer c.Locker.Unlock()
@@ -301,6 +312,8 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetShowSubneg = c.SetShowSubneg
 	b.GetModEnabled = c.GetModEnabled
 	b.SetModEnabled = c.SetModEnabled
+	b.GetPosition = c.GetPosition
+	b.SetPosition = c.SetPosition
 	b.BindInitEvent(b, c.OnReady)
 }
 

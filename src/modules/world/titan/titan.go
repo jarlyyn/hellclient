@@ -645,6 +645,24 @@ func (t *Titan) HandleCmdHUDClick(id string, click *world.Click) {
 
 }
 
+func (t *Titan) DoSortClients(order []string) string {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	ordermap := make(map[string]int)
+	max := len(order)
+	maxword := len(t.Worlds)
+	if maxword > max {
+		max = maxword
+	}
+	for k, v := range order {
+		ordermap[v] = k - max
+	}
+	for k, v := range t.Worlds {
+		v.SetPosition(ordermap[k])
+	}
+	return t.Scriptpath
+}
+
 func (t *Titan) GetScriptPath() string {
 	return t.Scriptpath
 }

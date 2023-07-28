@@ -27,7 +27,9 @@ define(function (require) {
                 }
                 break
             case "Backquote":
-                if (vm.current==""){
+                if (vm.current==""||event.ctrlKey){
+                    vm.onButton('clientquick')
+                    return
                 }
                 break
             case "PageUp":
@@ -48,6 +50,10 @@ define(function (require) {
                     vm.doFocus()
                     return
                 }
+                break
+            case "ScrollLock":
+                vm.onButton('clientquick')
+                break
         }
         console.log(event.code)
         console.log(event.ctrlKey)

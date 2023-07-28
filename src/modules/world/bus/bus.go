@@ -50,6 +50,8 @@ type Bus struct {
 	GetCharset                func() string
 	SetCharset                func(string)
 	GetReadyAt                func() int64
+	GetPosition               func() int
+	SetPosition               func(int)
 	GetCurrentLines           func() []*world.Line
 	GetPrompt                 func() *world.Line
 	GetClientInfo             func() *world.ClientInfo
