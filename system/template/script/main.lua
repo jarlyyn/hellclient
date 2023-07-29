@@ -18,3 +18,6 @@ end
 
 onResponse=function(type,id,data)
 end
+onKeyUp=function (string)
+    
+end

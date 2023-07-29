@@ -644,6 +644,12 @@ func (t *Titan) HandleCmdHUDClick(id string, click *world.Click) {
 	}
 
 }
+func (t *Titan) HandleCmdKeyUp(id string, key string) {
+	w := t.World(id)
+	if w != nil && key != "" {
+		w.DoSendKeyUpToScript(key)
+	}
+}
 
 func (t *Titan) DoSortClients(order []string) string {
 	t.Locker.Lock()

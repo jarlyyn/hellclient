@@ -82,8 +82,8 @@
       <div id="current">
         {{current}}
       </div>
-      <div id="user-input" v-on:keyup.down="onDown" v-on:keyup.up="onUp" v-on:keyup.13="send">
-        <el-input id="mud-input" size="small" placeholder="请输入命令" v-model="cmd">
+      <div id="user-input" v-on:keyup.down="onDown" v-on:keyup.up="onUp" v-on:keyup.13="send" v-on:keydown="onInputKeyDown">
+        <el-input id="mud-input" size="small" placeholder="请输入命令" v-model="cmd" >
           <el-tooltip slot="prepend" effect="light" content="助理" placement="top">
             <el-button icon="el-icon-user" @click="assist"></el-button>
           </el-tooltip>
@@ -91,6 +91,9 @@
             <el-button icon="el-icon-box" @click="masssend"></el-button>
           </el-tooltip>
         </el-input>
+      </div>
+      <div id="footer-home">
+        <el-tooltip slot="append" effect="light" content="快速切换" placement="top"><i id="footer-home-quick" class="el-icon-s-opportunity" @click="onButton('clientquick')"></i></el-tooltip><el-tooltip slot="append" effect="light" content="游戏一览" placement="top"><i id="footer-home-button" class="el-icon-s-home" @click="onButton('overview')"></i></el-tooltip>
       </div>
     </div>
     <div id="dashboard"></div>

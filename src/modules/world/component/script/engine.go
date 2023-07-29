@@ -20,6 +20,7 @@ type Engine interface {
 	OnAssist(b *bus.Bus, script string)
 	OnBuffer(b *bus.Bus, data []byte) bool
 	OnFocus(b *bus.Bus)
+	OnKeyUp(b *bus.Bus, key string)
 	OnSubneg(b *bus.Bus, code byte, data []byte) bool
 	Run(*bus.Bus, string)
 }

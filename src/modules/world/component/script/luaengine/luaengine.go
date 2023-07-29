@@ -44,6 +44,7 @@ type LuaEngine struct {
 	onSubneg     string
 	onBuffer     string
 	onFocus      string
+	onKeyUp      string
 	onBufferMin  int
 	onBufferMax  int
 }
@@ -67,6 +68,7 @@ func (e *LuaEngine) Open(b *bus.Bus) error {
 	e.onHUDClick = data.OnHUDClick
 	e.onBufferMin = data.OnBufferMin
 	e.onBufferMax = data.OnBufferMax
+	e.onKeyUp = data.OnKeyUp
 	e.onFocus = data.OnFocus
 	err := util.Catch(func() {
 		newLuaInitializer(b).MustApplyInitializer(e.Plugin)
@@ -275,6 +277,17 @@ func (e *LuaEngine) OnAssist(b *bus.Bus, script string) {
 	e.Locker.Unlock()
 	go e.Call(b, fn)
 }
+func (e *LuaEngine) OnKeyUp(b *bus.Bus, key string) {
+	e.Locker.Lock()
+	if e.Plugin.LState == nil || e.onKeyUp == "" {
+		e.Locker.Unlock()
+		return
+	}
+	fn := e.Plugin.LState.GetGlobal(e.onKeyUp)
+	e.Locker.Unlock()
+	go e.Call(b, fn, lua.LString(key))
+}
+
 func (e *LuaEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()

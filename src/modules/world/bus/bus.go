@@ -165,6 +165,7 @@ type Bus struct {
 	DoSendTriggerToScript     func(line *world.Line, trigger *world.Trigger, result *world.MatchResult)
 	DoGetTriggerWildcard      func(name string) *world.MatchResult
 	DoSendCallbackToScript    func(cb *world.Callback)
+	DoSendKeyUpToScript       func(string)
 	DoAssist                  func()
 	DoMultiLinesAppend        func(string)
 	DoMultiLinesFlush         func()

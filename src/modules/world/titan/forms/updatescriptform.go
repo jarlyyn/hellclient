@@ -10,20 +10,20 @@ import (
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
-//UpdateScriptFormFieldLabels form field labels map.
+// UpdateScriptFormFieldLabels form field labels map.
 var UpdateScriptFormFieldLabels = map[string]string{}
 
-//UpdateScriptForm form struct for update script
+// UpdateScriptForm form struct for update script
 type UpdateScriptForm struct {
 	formdata.Form
 	*world.ScriptSettings
 	ID string
 }
 
-//UpdateScriptFormID form id of form update script
+// UpdateScriptFormID form id of form update script
 const UpdateScriptFormID = "formupdatescript"
 
-//NewUpdateScriptForm create new update script form
+// NewUpdateScriptForm create new update script form
 func NewUpdateScriptForm() *UpdateScriptForm {
 	form := &UpdateScriptForm{}
 	form.SetComponentLabels(ui.MapLabels(UpdateScriptFormFieldLabels))
@@ -34,7 +34,7 @@ func (f *UpdateScriptForm) ComponentID() string {
 	return UpdateScriptFormID
 }
 
-//Validate Validate form and return any error if raised.
+// Validate Validate form and return any error if raised.
 func (f *UpdateScriptForm) Validate() error {
 
 	if !f.HasError() {
@@ -47,7 +47,7 @@ func (f *UpdateScriptForm) Validate() error {
 	return nil
 }
 
-//InitWithRequest init  update script form  with http request.
+// InitWithRequest init  update script form  with http request.
 func (f *UpdateScriptForm) InitWithRequest(r *http.Request) error {
 	//Put your request form code here.
 	//such as get current user id or ip address.
@@ -88,6 +88,7 @@ func UpdateScript(t *titan.Titan, data []byte) {
 	sd.OnBroadcast = form.OnBroadcast
 	sd.OnResponse = form.OnResponse
 	sd.OnAssist = form.OnAssist
+	sd.OnKeyUp = form.OnKeyUp
 	sd.OnHUDClick = form.OnHUDClick
 	sd.Channel = form.Channel
 	sd.OnBuffer = form.OnBuffer

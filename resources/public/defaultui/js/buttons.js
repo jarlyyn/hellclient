@@ -291,6 +291,7 @@ define(function (require) {
             Intro: vm.scriptSettings.Intro,
             Name: vm.scriptSettings.Name,
             OnAssist: vm.scriptSettings.OnAssist,
+            OnKeyUp: vm.scriptSettings.OnKeyUp,
             OnBroadcast: vm.scriptSettings.OnBroadcast,
             OnClose: vm.scriptSettings.OnClose,
             OnConnect: vm.scriptSettings.OnConnect,
@@ -303,6 +304,7 @@ define(function (require) {
             OnBufferMin: vm.scriptSettings.OnBufferMin,
             OnBufferMax: vm.scriptSettings.OnBufferMax,
             OnSubneg: vm.scriptSettings.OnSubneg,
+            OnFocus:vm.scriptSettings.OnFocus,
         }
         vm.scriptsettingsUpdateFormVisible = true
     }

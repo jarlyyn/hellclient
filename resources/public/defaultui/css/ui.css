@@ -48,6 +48,7 @@ ul#alllines li {
     background: black;
     white-space: pre-wrap;
     word-break: break-all;
+    font-size: 13px;
 }
 
 ul#lines {
@@ -63,14 +64,16 @@ ul#lines {
     height: 32px;
     left: 0;
     width: 100%;
-    background: black
+    background: black;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
 }
 
 #user-input {
     height: 32px;
-    padding-left: 8em;
-    padding-right: 8em;
     position: relative;
+    flex: 1
 }
 
 #user-input .el-input-group__prepend,
@@ -120,9 +123,8 @@ ul#lines {
     position: relative;
     font-weight: bold;
     line-height: 32px;
-    float: left;
-    width: 7em;
-    margin-right: -8em;
+    flex-basis:8em;
+    flex-grow:0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -131,10 +133,32 @@ ul#lines {
     padding: 0 0.5em 0 0.5em;
     background: black
 }
-
+#footer-home-button{
+    display: inline-block;
+    height:32px;
+    width:32px;
+    line-height: 32px;
+    text-align: center;
+}
+#footer-home{
+    position: relative;
+    font-weight: bold;
+    line-height: 32px;
+    flex-basis:8em;
+    flex-grow:0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+    text-decoration: underline;
+    padding: 0 0.5em 0 0.5em;
+    background: black;
+    color:#909399
+}
 #current:hover {
     width: 100%;
-    margin-right: -100%
+    margin-right: -100%;
+    flex-basis: 100%;
 }
 
 #main-button {
@@ -232,11 +256,6 @@ ul#lines {
     #about-button {
         display: none;
     }
-
-    #user-input {
-        padding-right: 0;
-    }
-
     #top {
         min-width: 1120px
     }
@@ -377,6 +396,7 @@ html body .el-table .game-list-not-running {
     left: 0;
     position: fixed;
     z-index: -1;
+    overflow: auto;
 }
 
 #dashboard-content {
@@ -387,7 +407,8 @@ html body .el-table .game-list-not-running {
     display: grid;
     grid-template-columns: repeat(auto-fill, 600px);
     justify-content: center;
-    margin-top: 20px;
+    margin: 20px 5px;
+    
 }
 
 .dashboard-client-body {
@@ -411,6 +432,7 @@ html body .el-table .game-list-not-running {
     max-width: 600px;
     margin: auto;
     display: none;
+    text-align: center;
 }
 
 #hudwrapper.hide {
@@ -422,7 +444,7 @@ html body .el-table .game-list-not-running {
     background-color: white;
     width: 440px;
     height:64px;
-    margin: 8px auto 0;
+    margin: 0 auto 5px;
     color:#333333;
     padding:10px;
     cursor: pointer;
@@ -478,7 +500,7 @@ html body .el-table .game-list-not-running {
     background-color: #409EFF;
     width: 440px;
     height:64px;
-    margin: 5px auto 0;
+    margin: 0 auto 5px;
     padding:10px;
     cursor: pointer;
     text-align: center;
@@ -505,7 +527,7 @@ html body .el-table .game-list-not-running {
     background-color: #e6a23c;
     width: 440px;
     height:64px;
-    margin: 5px auto 0;
+    margin: 0 auto 5px;
     padding:10px;
     cursor: pointer;
     text-align: center;
@@ -541,7 +563,7 @@ html body .el-table .game-list-not-running {
         padding-bottom:20px;
         padding-left:20px;
         padding-right:20px;
-        margin-top:30px;
+        margin-bottom:30px;
     }
 }
 

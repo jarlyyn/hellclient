@@ -40,6 +40,7 @@ type ScriptSettings struct {
 	OnHUDClick   string
 	OnAssist     string
 	OnBuffer     string
+	OnKeyUp      string
 	OnBufferMin  int
 	OnBufferMax  int
 	OnSubneg     string
@@ -57,6 +58,7 @@ type ScriptData struct {
 	OnDisconnect   string
 	OnBroadcast    string
 	OnFocus        string
+	OnKeyUp        string
 	OnHUDClick     string
 	OnResponse     string
 	OnAssist       string
@@ -97,6 +99,7 @@ func (d *ScriptData) ConvertSettings(name string) *ScriptSettings {
 		settings.OnBroadcast = d.OnBroadcast
 		settings.OnResponse = d.OnResponse
 		settings.OnAssist = d.OnAssist
+		settings.OnKeyUp = d.OnKeyUp
 		settings.Channel = d.Channel
 		settings.OnHUDClick = d.OnHUDClick
 		settings.OnBuffer = d.OnBuffer
@@ -121,6 +124,7 @@ func (d *ScriptData) ConvertInfo(id string) *ScriptInfo {
 		info.OnConnect = d.OnConnect
 		info.OnDisconnect = d.OnDisconnect
 		info.OnAssist = d.OnAssist
+		info.OnKeyUp = d.OnKeyUp
 		info.OnBroadCast = d.OnResponse
 		info.OnResponse = d.OnResponse
 		info.OnBuffer = d.OnBuffer
@@ -146,6 +150,7 @@ type ScriptInfo struct {
 	OnConnect    string
 	OnDisconnect string
 	OnAssist     string
+	OnKeyUp      string
 	OnBroadCast  string
 	OnResponse   string
 	OnHUDClick   string

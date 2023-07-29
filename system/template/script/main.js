@@ -24,3 +24,6 @@ onBroadcast=function(msg,global,channel,global){
 onResponse=function(type,id,data){
     
 }
+onkeyup=function(key){
+
+}

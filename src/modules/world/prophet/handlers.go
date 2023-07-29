@@ -500,6 +500,15 @@ func (p *Prophet) onCmdSortClients(conn connections.OutputConnection, cmd comman
 	p.Titan.ExecClients()
 	return nil
 }
+func (p *Prophet) onCmdKeyUp(conn connections.OutputConnection, cmd command.Command) error {
+	id := p.Current.Load().(string)
+	var msg string
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleCmdKeyUp(id, msg)
+	return nil
+}
 func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("change", p.onCmdChange)
 	handlers.Register("connect", p.onCmdConnect)
@@ -562,4 +571,6 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("findhistory", p.onCmdFindHistory)
 	handlers.Register("hudclick", p.onCmdHUDClick)
 	handlers.Register("sortclients", p.onCmdSortClients)
+	handlers.Register("keyup", p.onCmdKeyUp)
+
 }

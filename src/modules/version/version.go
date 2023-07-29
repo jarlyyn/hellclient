@@ -9,7 +9,7 @@ import (
 const Major = 0
 const Year = 2023
 const Month = 7
-const Day = 11
+const Day = 30
 const Patch = 0
 const Build = ""
 

@@ -1,4 +1,4 @@
-define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/canvas.js","public/defaultui/js/vue-2-boring-avatars.umd.js"], function (Vue, app, _, canvas,avatar) {
+define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/canvas.js", "public/defaultui/js/vue-2-boring-avatars.umd.js"], function (Vue, app, _, canvas, avatar) {
     var onButton = app.onButton;
     var data = {
         typeclass: {
@@ -12,9 +12,9 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             8: " globalbcin",
             9: " request",
             10: " response",
-            11:"subneg"
+            11: "subneg"
         },
-        avatorcolors:[],
+        avatorcolors: [],
         hud: [],
         current: "",
         currenttab: "",
@@ -67,7 +67,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
         paramsinfo: null,
         aboutVisible: false,
         version: "",
-        uiversion: "22.06.30",
+        uiversion: "23.07.30",
         showRequiredParams: true,
         allgameVisible: false,
         userinputList: null,
@@ -75,8 +75,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
         userinputListSearch: "",
         userinputDatagrid: null,
         userinputDatagridVisible: false,
-        userinputNote:false,
-        userinputNoteVisible:false,
+        userinputNote: false,
+        userinputNoteVisible: false,
         switchstatus: 0,
         statusVisible: false,
         worldSettings: null,
@@ -131,10 +131,16 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             this.advancemode = (localStorage.getItem("hellclient-advancemode") != "");
             document.getElementsByTagName("body")[0].style.visibility = "visible";
         },
-        components:{
-            "avatar":avatar,
+        components: {
+            "avatar": avatar,
         },
         methods: {
+            onKeyUp:function(event){
+                app.KeyUp(event)
+            },
+            onInputKeyDown: function (event) {
+                app.onInputKeyDown(event)
+            },
             send: function () {
                 app.send("send", this.cmd)
                 vm.historypos = 0
@@ -154,7 +160,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
                 return false
             },
             onClient: function (client) {
-                    app.send("change", client.ID)
+                app.send("change", client.ID)
             },
             onGamelistClick: function (row, column, event) {
                 if (vm.clients.length) {
@@ -324,7 +330,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
                 vm.userinputDatagrid = null
                 vm.userinputDatagridVisible = false
             },
-            onVisualPromptOpen:function(){
+            onVisualPromptOpen: function () {
                 vm.$refs.visualPromptValue.select()
             },
             assist: function () {
@@ -334,9 +340,9 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
                 vm.MassSendForm = {},
                     vm.MassSendFormVisible = true
             },
-            onMDClick:function(event){
-                if (event.target.localName=="a"){
-                    this.callback(this.userinputNote,0,event.target.attributes.href.value)
+            onMDClick: function (event) {
+                if (event.target.localName == "a") {
+                    this.callback(this.userinputNote, 0, event.target.attributes.href.value)
                     event.preventDefault()
                 }
 
@@ -482,47 +488,47 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
                 }
                 app.send("findhistory", vm.historypos - 1)
             },
-            onHUDClick:function(e){
-                app.send("hudclick",{X:e.offsetX/e.target.width,Y:e.offsetY/e.target.height})
+            onHUDClick: function (e) {
+                app.send("hudclick", { X: e.offsetX / e.target.width, Y: e.offsetY / e.target.height })
             },
-            doFocus:function(){
+            doFocus: function () {
                 let input = document.getElementById("mud-input")
-                if (input) { input.focus() }                
+                if (input) { input.focus() }
             },
-            onClientDragStart:function(e){
-                 e.dataTransfer.setData("clientindex", e.target.dataset.index);
+            onClientDragStart: function (e) {
+                e.dataTransfer.setData("clientindex", e.target.dataset.index);
             },
-            onClientDrop:function(e){
-                if (!isNaN(e.dataTransfer.getData("clientindex"))){
-                    let from=e.dataTransfer.getData("clientindex")-0
-                    for(var i=0;i<e.path.length;i++){
-                        if (e.path[i].dataset["index"]!=undefined){
+            onClientDrop: function (e) {
+                if (!isNaN(e.dataTransfer.getData("clientindex"))) {
+                    let from = e.dataTransfer.getData("clientindex") - 0
+                    for (var i = 0; i < e.path.length; i++) {
+                        if (e.path[i].dataset["index"] != undefined) {
                             e.preventDefault()
-                            let to=e.path[i].dataset["index"]-0
-                            if (from!=to){
-                                vm.doSwipClient(from,to)
+                            let to = e.path[i].dataset["index"] - 0
+                            if (from != to) {
+                                vm.doSwipClient(from, to)
                             }
                             return
                         }
                     }
                 }
             },
-            doSwipClient:function(from,to){
-                let clients=vm.clients
-                if (from<0||to<0||from>=clients.length||to>=clients.length){
+            doSwipClient: function (from, to) {
+                let clients = vm.clients
+                if (from < 0 || to < 0 || from >= clients.length || to >= clients.length) {
                     return
                 }
-                let order=[]
-                for(var i=0;i<clients.length;i++){
+                let order = []
+                for (var i = 0; i < clients.length; i++) {
                     order.push(clients[i].ID)
                 }
-                let fromid=order[from]
-                order[from]=order[to]
-                order[to]=fromid
-                app.send("sortclients",order)
+                let fromid = order[from]
+                order[from] = order[to]
+                order[to] = fromid
+                app.send("sortclients", order)
             },
-            onClientDargOver:function(e){
-                if (e.dataTransfer.types.includes("clientindex")){
+            onClientDargOver: function (e) {
+                if (e.dataTransfer.types.includes("clientindex")) {
                     e.preventDefault()
                 }
             }

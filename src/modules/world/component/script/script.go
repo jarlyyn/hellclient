@@ -332,6 +332,16 @@ func (s *Script) Assist(b *bus.Bus) {
 		e.OnAssist(b, onAssist)
 	}
 }
+func (s *Script) KeyUp(b *bus.Bus, key string) {
+	e := s.getEngine()
+	if e != nil {
+		go func() {
+			s.SetCreator("KeyUp", key)
+			e.OnKeyUp(b, key)
+		}()
+	}
+
+}
 
 func (s *Script) SendCallback(b *bus.Bus, cb *world.Callback) {
 	e := s.getEngine()
@@ -403,6 +413,7 @@ func (s *Script) HandleBuffer(b *bus.Bus, data []byte) bool {
 	s.SetCreator("buffer", "")
 	return e.OnBuffer(b, data)
 }
+
 func (s *Script) HandleSubneg(b *bus.Bus, data []byte) bool {
 	if len(data) < 2 {
 		return false
@@ -456,6 +467,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.DoSendTriggerToScript = b.WrapHandleTrigger(s.SendTrigger)
 	b.DoSendBroadcastToScript = b.WrapHandleBroadcast(s.SendBroadcast)
 	b.DoSendCallbackToScript = b.WrapHandleCallback(s.SendCallback)
+	b.DoSendKeyUpToScript = b.WrapHandleString(s.KeyUp)
 	b.DoSendResponseToScript = b.WrapHandleResponse(s.SendResponse)
 	b.DoSendHUDClickToScript = b.WrapHandleClick(s.SendHUDClick)
 	b.DoReloadPermissions = b.Wrap(s.ReloadPermissions)
