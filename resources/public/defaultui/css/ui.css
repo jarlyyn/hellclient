@@ -139,6 +139,7 @@ ul#lines {
     width:32px;
     line-height: 32px;
     text-align: center;
+    padding-left: 1em;
 }
 #footer-home{
     position: relative;
