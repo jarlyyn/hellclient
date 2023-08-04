@@ -203,14 +203,8 @@ func (i *Info) GetLine(idx int) *world.Line {
 func (i *Info) SetPriority(b *bus.Bus, priority int) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
-	var changed bool
-	if i.Priority != priority {
-		changed = true
-	}
 	i.Priority = priority
-	if changed {
-		go i.RefreshClientInfo(b)
-	}
+	go i.RefreshClientInfo(b)
 }
 func (i *Info) GetPriority() int {
 	i.Lock.Lock()

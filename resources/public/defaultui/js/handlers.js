@@ -48,14 +48,14 @@ define(function (require) {
         for (var i = 0; i < vm.clients.length; i++) {
             if (clientinfo.ID == vm.clients[i].ID) {
                 vm.clients.splice(i,1,clientinfo)
+                break
             }
-            break
         }
         for (var i = 0; i < vm.info.length; i++) {
             if (clientinfo.ID == vm.info[i].ID) {
                 vm.info.splice(i,1,clientinfo)
+                break
             }
-            break
         }
     }
 
