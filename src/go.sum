@@ -69,8 +69,8 @@ github.com/herb-go/notification v0.0.0-20210302124907-803885c438c3 h1:8vvRbv2DkZ
 github.com/herb-go/notification v0.0.0-20210302124907-803885c438c3/go.mod h1:1Zzsrc5tv4WvRtSB0hiYayGrMc3GTr+JfhKpPIyLnuM=
 github.com/herb-go/notification-drivers v0.0.0-20210822103310-c7c872299d2b h1:+AEe/q6ZX36FqMfJtQlLorUumIFtLAF3YiaCRcFW5Yo=
 github.com/herb-go/notification-drivers v0.0.0-20210822103310-c7c872299d2b/go.mod h1:kGEy5FkpvYdZ1M21pLXV+T9BXE4eFmQCMUqVW9b1hfg=
-github.com/herb-go/plugins v0.0.0-20230711110843-e87935876db3 h1:n2IaseAC2z0yBEK0m5M6X719voAljV26QHXfQ8xESYc=
-github.com/herb-go/plugins v0.0.0-20230711110843-e87935876db3/go.mod h1:Lxw+Z7RJxXekZEebNe5IVEkrIp94kET9tn7Blqe6v9w=
+github.com/herb-go/plugins v0.0.0-20230807103451-7b70c5df1a20 h1:zRzXP0Qo5xzssNx7FcB9R4aFHwy1OXg17kygcHPA/10=
+github.com/herb-go/plugins v0.0.0-20230807103451-7b70c5df1a20/go.mod h1:Lxw+Z7RJxXekZEebNe5IVEkrIp94kET9tn7Blqe6v9w=
 github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531 h1:api8pHgzqqq99X56e+80gP06jd54ARx562YoGrmRMYQ=
 github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531/go.mod h1:Anvh+YXng5fWGXy9Y6oWcTUUYQlXHzgeVh/0as237EM=
 github.com/herb-go/util v0.0.0-20230321163403-6a757b251968 h1:/yee8KpavOOQbKwJY3jhYPebBapXvH985+KzAl9Ljo8=

@@ -24,7 +24,7 @@ func initModules() {
 	//Put Your own init code here.
 }
 
-//Main app run func.
+// Main app run func.
 var run = func() {
 	genesis.Start()
 	util.OnQuit(genesis.Stop)
@@ -35,7 +35,7 @@ var run = func() {
 
 }
 
-//Init init app
+// Init init app
 func Init() {
 	defer util.RecoverAndExit()
 	util.ApplicationLock.Lock()
