@@ -2,18 +2,18 @@ package forms
 
 import (
 	"encoding/json"
-	"hellclient/modules/userpassword"
-	"hellclient/modules/world/titan"
+	"modules/userpassword"
+	"modules/world/titan"
 	"net/http"
 
 	"github.com/herb-go/herb/ui"
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
-//UpdatePasswordFormFieldLabels form field labels map.
+// UpdatePasswordFormFieldLabels form field labels map.
 var UpdatePasswordFormFieldLabels = map[string]string{}
 
-//UpdatePasswordForm form struct for create game
+// UpdatePasswordForm form struct for create game
 type UpdatePasswordForm struct {
 	formdata.Form
 	Username       string
@@ -21,10 +21,10 @@ type UpdatePasswordForm struct {
 	RepeatPassword string
 }
 
-//UpdatePasswordFormID form id of form create timer
+// UpdatePasswordFormID form id of form create timer
 const UpdatePasswordFormID = "formUpdatePassword"
 
-//NewUpdatePasswordForm create new create game form
+// NewUpdatePasswordForm create new create game form
 func NewUpdatePasswordForm() *UpdatePasswordForm {
 	form := &UpdatePasswordForm{}
 	form.SetComponentLabels(ui.MapLabels(UpdatePasswordFormFieldLabels))
@@ -35,7 +35,7 @@ func (f *UpdatePasswordForm) ComponentID() string {
 	return UpdatePasswordFormID
 }
 
-//Validate Validate form and return any error if raised.
+// Validate Validate form and return any error if raised.
 func (f *UpdatePasswordForm) Validate() error {
 	f.ValidateFieldf(f.Username != "", "Username", "用户名为空")
 	f.ValidateFieldf(f.Password != "", "Password", "密码为空")
@@ -46,7 +46,7 @@ func (f *UpdatePasswordForm) Validate() error {
 	return nil
 }
 
-//InitWithRequest init  create timer form  with http request.
+// InitWithRequest init  create timer form  with http request.
 func (f *UpdatePasswordForm) InitWithRequest(r *http.Request) error {
 	//Put your request form code here.
 	//such as get current user id or ip address.

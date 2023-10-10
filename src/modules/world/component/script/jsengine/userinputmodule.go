@@ -2,8 +2,8 @@ package jsengine
 
 import (
 	"context"
-	"hellclient/modules/world/bus"
-	"hellclient/modules/world/component/script/userinput"
+	"modules/world/bus"
+	"modules/world/component/script/userinput"
 	"net/url"
 
 	"github.com/dop251/goja"

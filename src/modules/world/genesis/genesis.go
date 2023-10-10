@@ -1,9 +1,9 @@
 package genesis
 
 import (
-	"hellclient/modules/world/messenger"
-	"hellclient/modules/world/prophet"
-	"hellclient/modules/world/titan"
+	"modules/world/messenger"
+	"modules/world/prophet"
+	"modules/world/titan"
 )
 
 func Start() {

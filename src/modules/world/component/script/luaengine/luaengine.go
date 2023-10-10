@@ -1,8 +1,8 @@
 package luaengine
 
 import (
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
+	"modules/world"
+	"modules/world/bus"
 	"sync"
 
 	"github.com/herb-go/herbplugin"

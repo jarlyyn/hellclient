@@ -2,8 +2,8 @@ package info
 
 import (
 	"container/ring"
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
+	"modules/world"
+	"modules/world/bus"
 	"sync"
 	"time"
 )

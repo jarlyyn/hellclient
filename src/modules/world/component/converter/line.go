@@ -1,7 +1,7 @@
 package converter
 
 import (
-	"hellclient/modules/world"
+	"modules/world"
 
 	"github.com/jarlyyn/ansi"
 )

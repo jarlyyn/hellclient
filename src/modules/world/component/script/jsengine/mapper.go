@@ -3,8 +3,8 @@ package jsengine
 import (
 	"context"
 	"errors"
-	"hellclient/modules/mapper"
-	"hellclient/modules/world/bus"
+	"modules/mapper"
+	"modules/world/bus"
 
 	"github.com/dop251/goja"
 

@@ -1,10 +1,10 @@
 package test
 
 import (
-	_ "hellclient/modules" //modules init
-	"hellclient/modules/app"
-	_ "hellclient/modules/drivers" //drivers
-	"hellclient/modules/overseers"
+	_ "modules" //modules init
+	"modules/app"
+	_ "modules/drivers" //drivers
+	"modules/overseers"
 	"path/filepath"
 
 	"github.com/herb-go/util"
@@ -25,7 +25,7 @@ func initModules() {
 	//Put Your own init code here.
 }
 
-//Init init app config and modules
+// Init init app config and modules
 func Init() {
 	util.ApplicationLock.Lock()
 	defer util.ApplicationLock.Unlock()
@@ -45,7 +45,7 @@ func Init() {
 	overseers.MustTrainWorkers()
 }
 
-//Run run app
+// Run run app
 func Run() {
 	//Put your run code here
 	util.WaitingQuit()

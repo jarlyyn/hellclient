@@ -1,8 +1,8 @@
 package hud
 
 import (
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
+	"modules/world"
+	"modules/world/bus"
 	"sync"
 )
 

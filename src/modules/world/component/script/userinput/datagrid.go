@@ -1,6 +1,6 @@
 package userinput
 
-import "hellclient/modules/world/bus"
+import "modules/world/bus"
 
 type Datagrid struct {
 	Title    string

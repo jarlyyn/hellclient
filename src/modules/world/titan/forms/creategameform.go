@@ -2,15 +2,15 @@ package forms
 
 import (
 	"encoding/json"
-	"hellclient/modules/world"
-	"hellclient/modules/world/titan"
+	"modules/world"
+	"modules/world/titan"
 	"net/http"
 
 	"github.com/herb-go/herb/ui"
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
-//CreateGameFormFieldLabels form field labels map.
+// CreateGameFormFieldLabels form field labels map.
 var CreateGameFormFieldLabels = map[string]string{
 	"ID":      "名称",
 	"Host":    "网址",
@@ -18,7 +18,7 @@ var CreateGameFormFieldLabels = map[string]string{
 	"Charset": "字符编码",
 }
 
-//CreateGameForm form struct for create game
+// CreateGameForm form struct for create game
 type CreateGameForm struct {
 	formdata.Form
 	ID      string
@@ -27,10 +27,10 @@ type CreateGameForm struct {
 	Charset string
 }
 
-//CreateGameFormID form id of form create game
+// CreateGameFormID form id of form create game
 const CreateGameFormID = "formcreategame"
 
-//NewCreateGameForm create new create game form
+// NewCreateGameForm create new create game form
 func NewCreateGameForm() *CreateGameForm {
 	form := &CreateGameForm{}
 	form.SetComponentLabels(ui.MapLabels(CreateGameFormFieldLabels))
@@ -41,7 +41,7 @@ func (f *CreateGameForm) ComponentID() string {
 	return CreateGameFormID
 }
 
-//Validate Validate form and return any error if raised.
+// Validate Validate form and return any error if raised.
 func (f *CreateGameForm) Validate() error {
 	f.ValidateFieldf(len(f.ID) > 2, "ID", "名称至少需要2个字符")
 	f.ValidateFieldf(len(f.ID) < 64, "ID", "名称不能超过64个字符")
@@ -60,7 +60,7 @@ func (f *CreateGameForm) Validate() error {
 	return nil
 }
 
-//InitWithRequest init  create game form  with http request.
+// InitWithRequest init  create game form  with http request.
 func (f *CreateGameForm) InitWithRequest(r *http.Request) error {
 	//Put your request form code here.
 	//such as get current user id or ip address.

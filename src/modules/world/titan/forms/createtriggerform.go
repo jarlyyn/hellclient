@@ -2,18 +2,18 @@ package forms
 
 import (
 	"encoding/json"
-	"hellclient/modules/world"
-	"hellclient/modules/world/titan"
+	"modules/world"
+	"modules/world/titan"
 	"net/http"
 
 	"github.com/herb-go/herb/ui"
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
-//CreateTriggerFormFieldLabels form field labels map.
+// CreateTriggerFormFieldLabels form field labels map.
 var CreateTriggerFormFieldLabels = map[string]string{}
 
-//CreateTriggerForm form struct for create game
+// CreateTriggerForm form struct for create game
 type CreateTriggerForm struct {
 	formdata.Form
 	World             string
@@ -44,10 +44,10 @@ type CreateTriggerForm struct {
 	WildcardLowerCase bool
 }
 
-//CreateTriggerFormID form id of form create trigger
+// CreateTriggerFormID form id of form create trigger
 const CreateTriggerFormID = "formcreatetrigger"
 
-//NewCreateTriggerForm create new create game form
+// NewCreateTriggerForm create new create game form
 func NewCreateTriggerForm() *CreateTriggerForm {
 	form := &CreateTriggerForm{}
 	form.SetComponentLabels(ui.MapLabels(CreateTriggerFormFieldLabels))
@@ -58,7 +58,7 @@ func (f *CreateTriggerForm) ComponentID() string {
 	return CreateTriggerFormID
 }
 
-//Validate Validate form and return any error if raised.
+// Validate Validate form and return any error if raised.
 func (f *CreateTriggerForm) Validate() error {
 	f.ValidateFieldf(f.SendTo >= world.SendToMin && f.SendTo <= world.SendToMax, "SendTo", "发送到无效")
 	f.ValidateFieldf(f.Match != "", "Match", "匹配无效")
@@ -68,7 +68,7 @@ func (f *CreateTriggerForm) Validate() error {
 	return nil
 }
 
-//InitWithRequest init  create trigger form  with http request.
+// InitWithRequest init  create trigger form  with http request.
 func (f *CreateTriggerForm) InitWithRequest(r *http.Request) error {
 	//Put your request form code here.
 	//such as get current user id or ip address.

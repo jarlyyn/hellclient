@@ -1,13 +1,13 @@
 package userpassword
 
 import (
-	"hellclient/modules/persistdata"
+	"modules/persistdata"
 
 	"github.com/herb-go/herb/persist"
 	"github.com/herb-go/util"
 )
 
-//ModuleName module name
+// ModuleName module name
 const ModuleName = "900userpassword"
 
 func init() {

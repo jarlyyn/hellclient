@@ -1,5 +1,10 @@
 package modules
 
-import _ "hellclient/modules/intro"    //intro modules
-import _ "hellclient/modules/loggers"  //Logger modules
-import _ "hellclient/modules/uiserver" //uiserver modules
+import (
+	_ "modules/intro" //intro modules
+	_ "modules/loggers"
+	//Logger modules
+	_ "modules/uiserver"
+)
+
+//uiserver modules

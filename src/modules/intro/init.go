@@ -2,12 +2,12 @@ package intro
 
 import (
 	"fmt"
-	"hellclient/modules/app"
+	"modules/app"
 
 	"github.com/herb-go/util"
 )
 
-//ModuleName module name
+// ModuleName module name
 const ModuleName = "z99intro"
 
 func init() {

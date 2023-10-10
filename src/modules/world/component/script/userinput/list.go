@@ -1,7 +1,7 @@
 package userinput
 
 import (
-	"hellclient/modules/world/bus"
+	"modules/world/bus"
 )
 
 type List struct {

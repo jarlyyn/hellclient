@@ -2,7 +2,7 @@ package prophet
 
 import (
 	"encoding/json"
-	"hellclient/modules/world/titan"
+	"modules/world/titan"
 	"net/http"
 	"sync"
 	"sync/atomic"

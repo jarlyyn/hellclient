@@ -2,7 +2,7 @@ package jsengine
 
 import (
 	"context"
-	"hellclient/modules/world/bus"
+	"modules/world/bus"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/herbplugin/jsplugin"

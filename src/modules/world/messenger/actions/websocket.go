@@ -1,7 +1,7 @@
 package actions
 
 import (
-	"hellclient/modules/world/messenger"
+	"modules/world/messenger"
 	"net/http"
 )
 

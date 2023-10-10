@@ -2,8 +2,8 @@ package config
 
 import (
 	"bytes"
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
+	"modules/world"
+	"modules/world/bus"
 	"sort"
 	"sync"
 	"time"

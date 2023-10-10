@@ -1,8 +1,8 @@
 package script
 
 import (
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
+	"modules/world"
+	"modules/world/bus"
 )
 
 type Engine interface {

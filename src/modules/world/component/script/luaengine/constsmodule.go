@@ -2,7 +2,7 @@ package luaengine
 
 import (
 	"context"
-	"hellclient/modules/world"
+	"modules/world"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/herbplugin/lua51plugin"

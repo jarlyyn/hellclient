@@ -2,8 +2,8 @@ package luaengine
 
 import (
 	"context"
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
+	"modules/world"
+	"modules/world/bus"
 
 	lua "github.com/yuin/gopher-lua"
 

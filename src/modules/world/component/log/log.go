@@ -1,9 +1,9 @@
 package log
 
 import (
-	"hellclient/modules/app"
-	"hellclient/modules/world/bus"
 	"log"
+	"modules/app"
+	"modules/world/bus"
 	"os"
 	"path/filepath"
 	"sync"

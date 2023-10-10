@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"hellclient/modules/world/bus"
+	"modules/world/bus"
 	"os"
 	"path/filepath"
 	"strings"

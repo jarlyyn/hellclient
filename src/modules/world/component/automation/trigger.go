@@ -1,8 +1,8 @@
 package automation
 
 import (
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
+	"modules/world"
+	"modules/world/bus"
 	"strconv"
 	"strings"
 	"sync"

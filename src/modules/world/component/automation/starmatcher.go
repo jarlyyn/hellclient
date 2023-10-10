@@ -1,7 +1,7 @@
 package automation
 
 import (
-	"hellclient/modules/world"
+	"modules/world"
 
 	"github.com/herb-go/misc/starpattern"
 )

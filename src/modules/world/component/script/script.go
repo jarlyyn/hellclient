@@ -3,11 +3,11 @@ package script
 import (
 	"bytes"
 	"fmt"
-	"hellclient/modules/mapper"
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
-	"hellclient/modules/world/component/script/jsengine"
-	"hellclient/modules/world/component/script/luaengine"
+	"modules/mapper"
+	"modules/world"
+	"modules/world/bus"
+	"modules/world/component/script/jsengine"
+	"modules/world/component/script/luaengine"
 	"os"
 	"path"
 	"path/filepath"
@@ -187,6 +187,9 @@ func (s *Script) unload(b *bus.Bus) {
 	b.DoDeleteTimerByType(false)
 	b.DoDeleteAliasByType(false)
 	b.DoDeleteTriggerByType(false)
+	b.DoDeleteTemporaryTimers()
+	b.DoDeleteTemporaryAliases()
+	b.DoDeleteTemporaryTriggers()
 	s.Data = nil
 	s.engine = nil
 }

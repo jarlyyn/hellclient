@@ -2,18 +2,18 @@ package forms
 
 import (
 	"encoding/json"
-	"hellclient/modules/world"
-	"hellclient/modules/world/titan"
+	"modules/world"
+	"modules/world/titan"
 	"net/http"
 
 	"github.com/herb-go/herb/ui"
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
-//CreateAliasFormFieldLabels form field labels map.
+// CreateAliasFormFieldLabels form field labels map.
 var CreateAliasFormFieldLabels = map[string]string{}
 
-//CreateAliasForm form struct for create game
+// CreateAliasForm form struct for create game
 type CreateAliasForm struct {
 	formdata.Form
 	World            string
@@ -40,10 +40,10 @@ type CreateAliasForm struct {
 	OmitFromOutput   bool
 }
 
-//CreateAliasFormID form id of form create alias
+// CreateAliasFormID form id of form create alias
 const CreateAliasFormID = "formcreatealias"
 
-//NewCreateAliasForm create new create game form
+// NewCreateAliasForm create new create game form
 func NewCreateAliasForm() *CreateAliasForm {
 	form := &CreateAliasForm{}
 	form.SetComponentLabels(ui.MapLabels(CreateAliasFormFieldLabels))
@@ -54,7 +54,7 @@ func (f *CreateAliasForm) ComponentID() string {
 	return CreateAliasFormID
 }
 
-//Validate Validate form and return any error if raised.
+// Validate Validate form and return any error if raised.
 func (f *CreateAliasForm) Validate() error {
 	f.ValidateFieldf(f.SendTo >= world.SendToMin && f.SendTo <= world.SendToMax, "SendTo", "发送到无效")
 	f.ValidateFieldf(f.Match != "", "Match", "别名无效")
@@ -64,7 +64,7 @@ func (f *CreateAliasForm) Validate() error {
 	return nil
 }
 
-//InitWithRequest init  create alias form  with http request.
+// InitWithRequest init  create alias form  with http request.
 func (f *CreateAliasForm) InitWithRequest(r *http.Request) error {
 	//Put your request form code here.
 	//such as get current user id or ip address.

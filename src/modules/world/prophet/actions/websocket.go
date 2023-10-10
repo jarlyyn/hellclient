@@ -1,7 +1,7 @@
 package actions
 
 import (
-	"hellclient/modules/world/prophet"
+	"modules/world/prophet"
 	"net/http"
 
 	"github.com/gorilla/websocket"

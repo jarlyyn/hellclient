@@ -2,14 +2,14 @@ package forms
 
 import (
 	"encoding/json"
-	"hellclient/modules/world/titan"
+	"modules/world/titan"
 	"net/http"
 
 	"github.com/herb-go/herb/ui"
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
-//UpdateGameFormFieldLabels form field labels map.
+// UpdateGameFormFieldLabels form field labels map.
 var UpdateGameFormFieldLabels = map[string]string{
 	"ID":      "名称",
 	"Host":    "网址",
@@ -17,7 +17,7 @@ var UpdateGameFormFieldLabels = map[string]string{
 	"Charset": "字符编码",
 }
 
-//UpdateGameForm form struct for update game
+// UpdateGameForm form struct for update game
 type UpdateGameForm struct {
 	formdata.Form
 	Name                  string
@@ -33,10 +33,10 @@ type UpdateGameForm struct {
 	ModEnabled            bool
 }
 
-//UpdateGameFormID form id of form update game
+// UpdateGameFormID form id of form update game
 const UpdateGameFormID = "formupdategame"
 
-//NewUpdateGameForm create new update game form
+// NewUpdateGameForm create new update game form
 func NewUpdateGameForm() *UpdateGameForm {
 	form := &UpdateGameForm{}
 	form.SetComponentLabels(ui.MapLabels(UpdateGameFormFieldLabels))
@@ -47,7 +47,7 @@ func (f *UpdateGameForm) ComponentID() string {
 	return UpdateGameFormID
 }
 
-//Validate Validate form and return any error if raised.
+// Validate Validate form and return any error if raised.
 func (f *UpdateGameForm) Validate() error {
 
 	f.ValidateFieldf(f.Host != "", "Host", "网址不能为空")
@@ -63,7 +63,7 @@ func (f *UpdateGameForm) Validate() error {
 	return nil
 }
 
-//InitWithRequest init  update game form  with http request.
+// InitWithRequest init  update game form  with http request.
 func (f *UpdateGameForm) InitWithRequest(r *http.Request) error {
 	//Put your request form code here.
 	//such as get current user id or ip address.

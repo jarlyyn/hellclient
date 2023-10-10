@@ -1,7 +1,7 @@
 package titan
 
 import (
-	"hellclient/modules/app"
+	"modules/app"
 	"net/http"
 	"os"
 

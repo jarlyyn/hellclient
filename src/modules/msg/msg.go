@@ -1,7 +1,7 @@
 package msg
 
 import (
-	"hellclient/modules/world"
+	"modules/world"
 	"strconv"
 
 	"github.com/herb-go/connections/room/message"

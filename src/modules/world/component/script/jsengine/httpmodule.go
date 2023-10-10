@@ -2,8 +2,8 @@ package jsengine
 
 import (
 	"context"
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
+	"modules/world"
+	"modules/world/bus"
 
 	"github.com/dop251/goja"
 	"github.com/herb-go/herbplugin"

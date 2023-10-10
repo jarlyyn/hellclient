@@ -37,3 +37,6 @@ node_modules
 !/src/vendor/modules/*
 src/__debug_bin
 src/__debug*
+
+go.work
+go.work.sum

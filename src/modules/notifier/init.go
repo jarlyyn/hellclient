@@ -3,14 +3,14 @@ package notifier
 import (
 	"fmt"
 	"html"
-	"hellclient/modules/app"
+	"modules/app"
 
 	"github.com/herb-go/notification"
 	"github.com/herb-go/notification-drivers/delivery/emaildelivery"
 	"github.com/herb-go/util"
 )
 
-//ModuleName module name
+// ModuleName module name
 const ModuleName = "900notifier"
 
 type Notifier struct {

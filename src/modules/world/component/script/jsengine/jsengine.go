@@ -3,8 +3,8 @@ package jsengine
 import (
 	"errors"
 	"fmt"
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
+	"modules/world"
+	"modules/world/bus"
 	"strconv"
 	"sync"
 

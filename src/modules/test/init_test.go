@@ -1,7 +1,7 @@
 package test
 
 import (
-	"hellclient/modules/app"
+	"modules/app"
 	"os"
 	"testing"
 )

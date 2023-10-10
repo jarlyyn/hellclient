@@ -2,9 +2,9 @@ package conn
 
 import (
 	"container/list"
-	"hellclient/modules/app"
-	"hellclient/modules/world/bus"
 	"io"
+	"modules/app"
+	"modules/world/bus"
 	"net"
 	"net/url"
 	"strings"
@@ -25,7 +25,7 @@ const TerminalType = "VT100"
 const MTTS = "MTTS 7"
 const DefaultDebounceDuration = 200 * time.Millisecond
 
-//Conn :mud conn
+// Conn :mud conn
 type Conn struct {
 	telnet      *telnet.Conn
 	c           chan int
@@ -76,7 +76,7 @@ func (conn *Conn) Stop(b *bus.Bus) {
 	conn.Close(b)
 }
 
-//Connect :connect to mud
+// Connect :connect to mud
 func (conn *Conn) Connect(bus *bus.Bus) error {
 	conn.RunningLock.Lock()
 	if conn.running == true {
@@ -159,7 +159,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	return nil
 }
 
-//Close :close mud conn
+// Close :close mud conn
 func (conn *Conn) Close(bus *bus.Bus) error {
 	conn.RunningLock.Lock()
 	if conn.running == false {

@@ -1,15 +1,15 @@
 package overseers
 
 import (
-	"hellclient/modules/app"
-	_ "hellclient/modules/hired" //hired workers
+	"modules/app"
+	_ "modules/hired" //hired workers
 
 	"github.com/herb-go/util"
 	"github.com/herb-go/worker"
 )
 
-//MustInitOverseers init overseers.
-//Panic if any error raised
+// MustInitOverseers init overseers.
+// Panic if any error raised
 func MustInitOverseers() {
 	worker.Debug = app.Development.Debug
 	util.Must(app.PresetWorkers.Apply())
@@ -19,7 +19,7 @@ func MustInitOverseers() {
 	util.OnQuit(worker.Stop)
 }
 
-//MustTrainWorkers with workers config
+// MustTrainWorkers with workers config
 func MustTrainWorkers() {
 	util.Must(worker.TrainWorkers())
 }

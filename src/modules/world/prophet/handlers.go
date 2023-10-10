@@ -2,8 +2,8 @@ package prophet
 
 import (
 	"encoding/json"
-	"hellclient/modules/world"
-	"hellclient/modules/world/titan/forms"
+	"modules/world"
+	"modules/world/titan/forms"
 
 	"github.com/herb-go/connections"
 	"github.com/herb-go/connections/command"

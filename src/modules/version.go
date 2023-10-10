@@ -1,3 +1,3 @@
 package modules
 
-import _ "hellclient/modules/version" //version module
+import _ "modules/version" //version module

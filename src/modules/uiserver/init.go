@@ -2,9 +2,9 @@ package uiserver
 
 import (
 	"fmt"
-	"hellclient/modules/app"
-	"hellclient/modules/routers"
-	"hellclient/modules/userpassword"
+	"modules/app"
+	"modules/routers"
+	"modules/userpassword"
 	"net/http"
 	"time"
 
@@ -13,7 +13,7 @@ import (
 	"github.com/herb-go/util/httpserver"
 )
 
-//ModuleName module name
+// ModuleName module name
 const ModuleName = "900uiserver"
 
 const BasicauthRealm = ""

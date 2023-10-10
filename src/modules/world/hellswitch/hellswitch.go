@@ -2,7 +2,7 @@ package hellswitch
 
 import (
 	"encoding/base64"
-	"hellclient/modules/app"
+	"modules/app"
 	"net/http"
 	"net/url"
 	"sync"

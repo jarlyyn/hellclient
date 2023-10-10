@@ -3,8 +3,8 @@ package luaengine
 import (
 	"context"
 	"errors"
-	"hellclient/modules/mapper"
-	"hellclient/modules/world/bus"
+	"modules/mapper"
+	"modules/world/bus"
 
 	lua "github.com/yuin/gopher-lua"
 

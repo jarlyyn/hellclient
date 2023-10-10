@@ -1,7 +1,7 @@
 package userpassword
 
 import (
-	"hellclient/modules/persistdata"
+	"modules/persistdata"
 	"sync/atomic"
 
 	"github.com/herb-go/util"

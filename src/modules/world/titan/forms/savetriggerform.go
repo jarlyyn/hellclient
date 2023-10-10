@@ -2,8 +2,8 @@ package forms
 
 // import (
 // 	"encoding/json"
-// 	"hellclient/modules/services/client"
-// 	"hellclient/modules/services/script"
+// 	"modules/services/client"
+// 	"modules/services/script"
 // 	"net/http"
 // 	"time"
 

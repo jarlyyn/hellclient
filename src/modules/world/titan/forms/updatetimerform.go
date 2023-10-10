@@ -2,18 +2,18 @@ package forms
 
 import (
 	"encoding/json"
-	"hellclient/modules/world"
-	"hellclient/modules/world/titan"
+	"modules/world"
+	"modules/world/titan"
 	"net/http"
 
 	"github.com/herb-go/herb/ui"
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
-//UpdateTimerFormFieldLabels form field labels map.
+// UpdateTimerFormFieldLabels form field labels map.
 var UpdateTimerFormFieldLabels = map[string]string{}
 
-//UpdateTimerForm form struct for create game
+// UpdateTimerForm form struct for create game
 type UpdateTimerForm struct {
 	formdata.Form
 	World                 string
@@ -36,10 +36,10 @@ type UpdateTimerForm struct {
 	OmitFromLog           bool
 }
 
-//UpdateTimerFormID form id of form create timer
+// UpdateTimerFormID form id of form create timer
 const UpdateTimerFormID = "formUpdateTimer"
 
-//NewUpdateTimerForm create new create game form
+// NewUpdateTimerForm create new create game form
 func NewUpdateTimerForm() *UpdateTimerForm {
 	form := &UpdateTimerForm{}
 	form.SetComponentLabels(ui.MapLabels(UpdateTimerFormFieldLabels))
@@ -50,7 +50,7 @@ func (f *UpdateTimerForm) ComponentID() string {
 	return UpdateTimerFormID
 }
 
-//Validate Validate form and return any error if raised.
+// Validate Validate form and return any error if raised.
 func (f *UpdateTimerForm) Validate() error {
 	f.ValidateFieldf(f.ID != "", "ID", "无效的ID")
 	f.ValidateFieldf(f.SendTo >= world.SendToMin && f.SendTo <= world.SendToMax, "SendTo", "发送到无效")
@@ -61,7 +61,7 @@ func (f *UpdateTimerForm) Validate() error {
 	return nil
 }
 
-//InitWithRequest init  create timer form  with http request.
+// InitWithRequest init  create timer form  with http request.
 func (f *UpdateTimerForm) InitWithRequest(r *http.Request) error {
 	//Put your request form code here.
 	//such as get current user id or ip address.

@@ -1,8 +1,8 @@
 package bus
 
 import (
-	"hellclient/modules/mapper"
-	"hellclient/modules/world"
+	"modules/mapper"
+	"modules/world"
 	"time"
 
 	"github.com/herb-go/herbplugin"

@@ -1,7 +1,7 @@
 package loggers
 
 import (
-	"hellclient/modules/app"
+	"modules/app"
 	"os"
 	"os/signal"
 
@@ -10,7 +10,7 @@ import (
 	"github.com/herb-go/util"
 )
 
-//ModuleName module name
+// ModuleName module name
 const ModuleName = "100loggers"
 
 //MyLogger my logger

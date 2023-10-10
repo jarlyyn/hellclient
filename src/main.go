@@ -1,11 +1,11 @@
 package main
 
 import (
-	_ "hellclient/modules"
-	"hellclient/modules/app"
-	_ "hellclient/modules/drivers"
-	"hellclient/modules/overseers"
-	"hellclient/modules/world/genesis"
+	_ "modules"
+	"modules/app"
+	_ "modules/drivers"
+	"modules/overseers"
+	"modules/world/genesis"
 
 	"github.com/herb-go/util"
 	"github.com/herb-go/util/config"

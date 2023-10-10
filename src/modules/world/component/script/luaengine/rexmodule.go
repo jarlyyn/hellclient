@@ -1,10 +1,14 @@
+//go:build !nopcre
 // +build !nopcre
 
 package luaengine
 
+//#cgo LDFLAGS: -lpcre
+import "C"
+
 import (
 	"context"
-	"hellclient/modules/world"
+	"modules/world"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/herbplugin/lua51plugin"

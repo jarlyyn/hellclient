@@ -2,18 +2,18 @@ package forms
 
 import (
 	"encoding/json"
-	"hellclient/modules/world"
-	"hellclient/modules/world/titan"
+	"modules/world"
+	"modules/world/titan"
 	"net/http"
 
 	"github.com/herb-go/herb/ui"
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
-//UpdateTriggerFormFieldLabels form field labels map.
+// UpdateTriggerFormFieldLabels form field labels map.
 var UpdateTriggerFormFieldLabels = map[string]string{}
 
-//UpdateTriggerForm form struct for update game
+// UpdateTriggerForm form struct for update game
 type UpdateTriggerForm struct {
 	formdata.Form
 	World             string
@@ -44,10 +44,10 @@ type UpdateTriggerForm struct {
 	WildcardLowerCase bool
 }
 
-//UpdateTriggerFormID form id of form update trigger
+// UpdateTriggerFormID form id of form update trigger
 const UpdateTriggerFormID = "formupdatetrigger"
 
-//NewUpdateTriggerForm update new update game form
+// NewUpdateTriggerForm update new update game form
 func NewUpdateTriggerForm() *UpdateTriggerForm {
 	form := &UpdateTriggerForm{}
 	form.SetComponentLabels(ui.MapLabels(UpdateTriggerFormFieldLabels))
@@ -58,7 +58,7 @@ func (f *UpdateTriggerForm) ComponentID() string {
 	return UpdateTriggerFormID
 }
 
-//Validate Validate form and return any error if raised.
+// Validate Validate form and return any error if raised.
 func (f *UpdateTriggerForm) Validate() error {
 	f.ValidateFieldf(f.SendTo >= world.SendToMin && f.SendTo <= world.SendToMax, "SendTo", "发送到无效")
 	f.ValidateFieldf(f.Match != "", "Match", "匹配无效")
@@ -68,7 +68,7 @@ func (f *UpdateTriggerForm) Validate() error {
 	return nil
 }
 
-//InitWithRequest init  update trigger form  with http request.
+// InitWithRequest init  update trigger form  with http request.
 func (f *UpdateTriggerForm) InitWithRequest(r *http.Request) error {
 	//Put your request form code here.
 	//such as get current user id or ip address.

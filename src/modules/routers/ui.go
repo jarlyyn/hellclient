@@ -1,10 +1,10 @@
 package routers
 
 import (
-	messengeractions "hellclient/modules/world/messenger/actions"
-	prophetactions "hellclient/modules/world/prophet/actions"
+	messengeractions "modules/world/messenger/actions"
+	prophetactions "modules/world/prophet/actions"
 
-	"hellclient/modules/world/titan"
+	"modules/world/titan"
 	"runtime"
 	"time"
 
@@ -17,12 +17,12 @@ import (
 	"github.com/herb-go/util"
 )
 
-//UIMiddlewares middlewares which should be used on router.
+// UIMiddlewares middlewares which should be used on router.
 var UIMiddlewares = func() middleware.Middlewares {
 	return middleware.Middlewares{}
 }
 
-//RouterUIFactory ui router factory.
+// RouterUIFactory ui router factory.
 var RouterUIFactory = router.NewFactory(func() router.Router {
 	var Router = muxrouter.New()
 	Router.StripPrefix("/public").

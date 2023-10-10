@@ -1,12 +1,12 @@
 package forms
 
 import (
-	"hellclient/modules/world"
+	"modules/world"
 
 	"github.com/herb-go/herb/ui/validator/formdata"
 )
 
-//RequiredParamsForm form struct for update game
+// RequiredParamsForm form struct for update game
 type RequiredParamsForm struct {
 	formdata.Form
 	Current        string

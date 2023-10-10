@@ -2,9 +2,9 @@ package jsengine
 
 import (
 	"context"
-	"hellclient/modules/world"
-	"hellclient/modules/world/bus"
-	"hellclient/modules/world/component/script/api"
+	"modules/world"
+	"modules/world/bus"
+	"modules/world/component/script/api"
 	"strconv"
 	"strings"
 
