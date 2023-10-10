@@ -50,7 +50,12 @@ func init() {
 		s.ReadTimeout = ReadTimeout
 		s.Addr = app.System.Addr
 		s.Handler = a
-		go s.ListenAndServe()
+		go func() {
+			err := s.ListenAndServe()
+			if err != nil || err != http.ErrServerClosed {
+				panic(err)
+			}
+		}()
 		util.OnQuitAndLogError(s.Close)
 		util.InitOrderByName(ModuleName)
 	})
