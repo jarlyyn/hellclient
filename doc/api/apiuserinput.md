@@ -203,7 +203,7 @@ Note (script string, title string, body string, type string) string
 * script 回调脚本
 * title 标题
 * body 正文，类型取决于type
-* type  征文类型，可选值为text,md,output,分别为纯文本格式，Markdown格式，output格式
+* type  正文类型，可选值为text,md,output,分别为纯文本格式，Markdown格式，output格式
 
 ### 回调函数
 

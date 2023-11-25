@@ -49,7 +49,7 @@ define(function (require) {
                 vm.callback(data,-1,"")
             }
           }).then(({ value }) => {
-            vm.callback(data,0,value)
+            vm.callback(data,0,"")
           }).catch(() => {
           });
     }
@@ -65,7 +65,7 @@ define(function (require) {
                 vm.callback(data,-1,"")
             }
           }).then(({ value }) => {
-            vm.callback(data,0,value)
+            vm.callback(data,0,"")
           }).catch(() => {
           });
     }
