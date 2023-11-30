@@ -59,6 +59,8 @@ type WorldData struct {
 	Triggers              []*Trigger
 	Timers                []*Timer
 	Aliases               []*Alias
+	//api 23.11.30
+	AutoSave bool
 }
 
 func (d *WorldData) ConvertSettings(id string) *WorldSettings {
@@ -76,6 +78,7 @@ func (d *WorldData) ConvertSettings(id string) *WorldSettings {
 		settings.ShowBroadcast = d.ShowBroadcast
 		settings.ShowSubneg = d.ShowSubneg
 		settings.ModEnabled = d.ModEnabled
+		settings.AutoSave = d.AutoSave
 	}
 	return settings
 }
@@ -92,6 +95,8 @@ type WorldSettings struct {
 	ShowBroadcast         bool
 	ShowSubneg            bool
 	ModEnabled            bool
+	//api 23.11.30
+	AutoSave bool
 }
 
 func NewWorldData() *WorldData {

@@ -309,7 +309,7 @@
 * ResetTimers <兼容>
 * ReverseSpeedwalk <不兼容>
 * RGBColourToName <不兼容>
-* Save <待定>
+* Save <部分兼容>
 * SaveNotepad <不兼容>
 * SaveState <不兼容>
 * SelectCommand <不兼容>

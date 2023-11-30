@@ -31,6 +31,7 @@ type UpdateGameForm struct {
 	ShowBroadcast         bool
 	ShowSubneg            bool
 	ModEnabled            bool
+	AutoSave              bool
 }
 
 // UpdateGameFormID form id of form update game
@@ -101,6 +102,7 @@ func UpdateGame(t *titan.Titan, data []byte) {
 	w.SetShowSubneg(form.ShowSubneg)
 	w.SetModEnabled(form.ModEnabled)
 	w.SetProxy(form.Proxy)
+	w.SetAutoSave(form.AutoSave)
 	t.Locker.Unlock()
 	go func() {
 		t.OnUpdateSuccess(form.ID)

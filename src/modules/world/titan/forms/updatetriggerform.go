@@ -128,9 +128,10 @@ func UpdateTrigger(t *titan.Titan, data []byte) {
 	}
 	go func() {
 		t.OnUpdateTriggerSuccess(form.World, trigger.ID)
-		t.HandleCmdTriggers(form.World, true)
-		t.HandleCmdTriggers(form.World, false)
-
+		t.HandleCmdTriggers(form.World, form.ByUser)
+		if form.ByUser {
+			go t.AutoSaveWorld(form.World)
+		}
 	}()
 
 }

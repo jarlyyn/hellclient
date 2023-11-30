@@ -121,9 +121,10 @@ func UpdateAlias(t *titan.Titan, data []byte) {
 	}
 	go func() {
 		t.OnUpdateAliasSuccess(form.World, alias.ID)
-		t.HandleCmdAliases(form.World, true)
-		t.HandleCmdAliases(form.World, false)
-
+		t.HandleCmdAliases(form.World, form.ByUser)
+		if form.ByUser {
+			go t.AutoSaveWorld(form.World)
+		}
 	}()
 
 }

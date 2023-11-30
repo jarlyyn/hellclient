@@ -1519,3 +1519,8 @@ func (a *API) GetSummary() string {
 	}
 	return string(data)
 }
+
+func (a *API) Save() bool {
+	a.Bus.RaiseSaveEvent()
+	return true
+}

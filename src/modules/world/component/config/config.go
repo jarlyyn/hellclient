@@ -269,6 +269,16 @@ func (c *Config) GetModEnabled() bool {
 	defer c.Locker.Unlock()
 	return c.Data.ModEnabled
 }
+func (c *Config) SetAutoSave(s bool) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.AutoSave = s
+}
+func (c *Config) GetAutoSave() bool {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.AutoSave
+}
 func (c *Config) OnReady(b *bus.Bus) {
 	c.ReadyAt = time.Now().Unix()
 }
@@ -312,6 +322,9 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetShowSubneg = c.SetShowSubneg
 	b.GetModEnabled = c.GetModEnabled
 	b.SetModEnabled = c.SetModEnabled
+	b.GetAutoSave = c.GetAutoSave
+	b.SetAutoSave = c.SetAutoSave
+
 	b.GetPosition = c.GetPosition
 	b.SetPosition = c.SetPosition
 	b.BindInitEvent(b, c.OnReady)

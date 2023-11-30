@@ -6,6 +6,7 @@ import (
 
 	"github.com/herb-go/connections/room/message"
 	"github.com/herb-go/herb/ui/validator"
+	herbversion "github.com/herb-go/misc/version"
 )
 
 const MsgTypeConnected = "connected"
@@ -56,6 +57,8 @@ const MsgTypeScriptMessage = "scriptMessage"
 const MsgTypeSwitchStatusMessage = "switchStatus"
 
 const MsgTypeVersionMessage = "version"
+
+const MsgTypeAPIVersionMessage = "apiversion"
 
 const MsgTypeWorldSettingsMessage = "worldSettings"
 
@@ -224,6 +227,9 @@ func PublishSwitchStatusMessage(p Publisher, status int) {
 
 func PublishVersionMessage(p Publisher, version string) {
 	p.Publish(New(MsgTypeVersionMessage, "", version))
+}
+func PublishAPIVersionMessage(p Publisher, version *herbversion.DateVersion) {
+	p.Publish(New(MsgTypeAPIVersionMessage, "", version))
 }
 
 func PublishWorldSettingsMessage(p Publisher, world string, settings *world.WorldSettings) {

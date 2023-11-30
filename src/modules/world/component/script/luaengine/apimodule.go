@@ -248,6 +248,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("GetPriority", l.NewFunction(a.GetPriority))
 	l.SetGlobal("SetSummary", l.NewFunction(a.SetSummary))
 	l.SetGlobal("GetSummary", l.NewFunction(a.GetSummary))
+	l.SetGlobal("Save", l.NewFunction(a.Save))
 
 }
 
@@ -1573,6 +1574,10 @@ func (a *luaapi) GetSummary(L *lua.LState) int {
 	return 1
 }
 
+func (a *luaapi) Save(L *lua.LState) int {
+	L.Push(lua.LBool(a.API.Save()))
+	return 1
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

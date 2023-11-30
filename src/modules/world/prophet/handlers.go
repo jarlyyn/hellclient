@@ -193,11 +193,15 @@ func (p *Prophet) onCmdDeleteTimer(conn connections.OutputConnection, cmd comman
 	if len(msg) < 2 {
 		return nil
 	}
-	p.Titan.HandleCmdDeleteTimer(msg[0], msg[1])
-	p.Titan.HandleCmdTimers(msg[0], false)
-	p.Titan.HandleCmdTimers(msg[0], true)
+	itemtype := p.Titan.GetTimerType(msg[0], msg[1])
+	if itemtype != nil {
+		p.Titan.HandleCmdDeleteTimer(msg[0], msg[1])
+		p.Titan.HandleCmdTimers(msg[0], *itemtype)
+		if *itemtype {
+			go p.Titan.AutoSaveWorld(msg[0])
+		}
+	}
 	return nil
-
 }
 func (p *Prophet) onCmdLoadTimer(conn connections.OutputConnection, cmd command.Command) error {
 	var msg []string
@@ -239,9 +243,14 @@ func (p *Prophet) onCmdDeleteAlias(conn connections.OutputConnection, cmd comman
 	if len(msg) < 2 {
 		return nil
 	}
-	p.Titan.HandleCmdDeleteAlias(msg[0], msg[1])
-	p.Titan.HandleCmdAliases(msg[0], false)
-	p.Titan.HandleCmdAliases(msg[0], true)
+	itemtype := p.Titan.GetAliasType(msg[0], msg[1])
+	if itemtype != nil {
+		p.Titan.HandleCmdDeleteAlias(msg[0], msg[1])
+		p.Titan.HandleCmdAliases(msg[0], *itemtype)
+		if *itemtype {
+			go p.Titan.AutoSaveWorld(msg[0])
+		}
+	}
 	return nil
 
 }
@@ -284,9 +293,14 @@ func (p *Prophet) onCmdDeleteTrigger(conn connections.OutputConnection, cmd comm
 	if len(msg) < 2 {
 		return nil
 	}
-	p.Titan.HandleCmdDeleteTrigger(msg[0], msg[1])
-	p.Titan.HandleCmdTriggers(msg[0], false)
-	p.Titan.HandleCmdTriggers(msg[0], true)
+	itemtype := p.Titan.GetTriggerType(msg[0], msg[1])
+	if itemtype != nil {
+		p.Titan.HandleCmdDeleteTrigger(msg[0], msg[1])
+		p.Titan.HandleCmdTriggers(msg[0], *itemtype)
+		if *itemtype {
+			go p.Titan.AutoSaveWorld(msg[0])
+		}
+	}
 	return nil
 
 }

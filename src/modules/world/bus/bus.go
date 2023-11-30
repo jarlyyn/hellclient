@@ -31,6 +31,8 @@ type Bus struct {
 	SetShowSubneg             func(bool)
 	GetModEnabled             func() bool
 	SetModEnabled             func(bool)
+	GetAutoSave               func() bool
+	SetAutoSave               func(bool)
 	GetCommandStackCharacter  func() string
 	SetCommandStackCharacter  func(string)
 	GetScriptPrefix           func() string
@@ -237,6 +239,7 @@ type Bus struct {
 	HUDUpdateEvent         busevent.Event
 	HUDContentEvent        busevent.Event
 	ClientInfoEvent        busevent.Event
+	SaveEvent              busevent.Event
 }
 
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
@@ -630,6 +633,17 @@ func (b *Bus) BindClientInfoEvent(id interface{}, fn func(b *Bus, info *world.Cl
 		id,
 		func(data interface{}) {
 			fn(b, data.(*world.ClientInfo))
+		},
+	)
+}
+func (b *Bus) RaiseSaveEvent() {
+	b.SaveEvent.Raise(nil)
+}
+func (b *Bus) BindSaveEvent(id interface{}, fn func(b *Bus)) {
+	b.SaveEvent.BindAs(
+		id,
+		func(data interface{}) {
+			fn(b)
 		},
 	)
 }

@@ -110,5 +110,8 @@ func CreateTimer(t *titan.Titan, data []byte) {
 	go func() {
 		t.OnCreateTimerSuccess(form.World, timer.ID)
 		t.HandleCmdTimers(form.World, form.ByUser)
+		if form.ByUser {
+			go t.AutoSaveWorld(form.World)
+		}
 	}()
 }

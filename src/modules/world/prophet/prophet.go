@@ -194,6 +194,7 @@ func (p *Prophet) OnOpen(conn connections.OutputConnection) {
 	if crid != "" {
 		r.Join(crid)
 	}
+	p.Titan.ExecAPIversion()
 	p.Titan.ExecClients()
 	p.Titan.ExecSwitchStatus()
 	p.onCurrent(crid)

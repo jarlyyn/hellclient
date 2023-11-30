@@ -117,5 +117,8 @@ func CreateAlias(t *titan.Titan, data []byte) {
 	go func() {
 		t.OnCreateAliasSuccess(form.World, alias.ID)
 		t.HandleCmdAliases(form.World, form.ByUser)
+		if form.ByUser {
+			go t.AutoSaveWorld(form.World)
+		}
 	}()
 }

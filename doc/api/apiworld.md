@@ -260,3 +260,36 @@ DeleteGroup ("groupname")
 ### 返回值
 
 删除的元素的数量
+
+## Save
+
+保存游戏
+
+版本 23.11.30后加入
+
+对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=save
+
+
+### 原型
+```
+Save() bool
+```
+
+### 描述
+
+保存游戏
+
+### 代码范例
+
+Javascript:
+```
+world.Save();
+```
+Lua:
+```
+Save ()
+```
+
+### 返回值
+
+固定为 true

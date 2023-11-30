@@ -17,6 +17,7 @@ var UpdateTimerFormFieldLabels = map[string]string{}
 type UpdateTimerForm struct {
 	formdata.Form
 	World                 string
+	ByUser                bool
 	ID                    string
 	Hour                  int
 	Minute                int
@@ -115,8 +116,9 @@ func UpdateTimer(t *titan.Titan, data []byte) {
 	}
 	go func() {
 		t.OnUpdateTimerSuccess(form.World, timer.ID)
-		t.HandleCmdTimers(form.World, true)
-		t.HandleCmdTimers(form.World, false)
-
+		t.HandleCmdTimers(form.World, form.ByUser)
+		if form.ByUser {
+			go t.AutoSaveWorld(form.World)
+		}
 	}()
 }

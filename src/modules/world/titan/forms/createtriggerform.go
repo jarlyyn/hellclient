@@ -123,5 +123,8 @@ func CreateTrigger(t *titan.Titan, data []byte) {
 	go func() {
 		t.OnCreateTriggerSuccess(form.World, trigger.ID)
 		t.HandleCmdTriggers(form.World, form.ByUser)
+		if form.ByUser {
+			go t.AutoSaveWorld(form.World)
+		}
 	}()
 }

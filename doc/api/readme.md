@@ -64,6 +64,9 @@
 * [WorldAddress 获取游戏网络地址](apiworld.md#WorldAddress)
 * [WorldPort 获取游戏网络端口](apiworld.md#WorldPort)
 * [DeleteGroup 按组删除元素](apiworld.md#DeleteGroup)
+* [Save 保存](apiworld.md#Save)
+
+
 ## 发送接口
 * [print 打印](apisend.md#print)
 * [Note 显示](apisend.md#Note)

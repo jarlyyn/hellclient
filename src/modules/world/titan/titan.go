@@ -341,6 +341,9 @@ func (t *Titan) HandleCmdDefaultCharset() {
 	go msg.PublishDefaultCharsetMessage(t, app.System.DefaultCharset)
 }
 
+func (t *Titan) ExecAPIversion() {
+	msg.PublishAPIVersionMessage(t, version.Version)
+}
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
 	defer t.Locker.RUnlock()
@@ -362,7 +365,9 @@ func (t *Titan) GetMaxLines() int {
 func (t *Titan) GetMaxRecent() int {
 	return t.MaxRecent
 }
-
+func (t *Titan) onSave(b *bus.Bus) {
+	t.SaveWorld(b.ID)
+}
 func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindConnectedEvent(t, t.onConnected)
 	b.BindDisconnectedEvent(t, t.onDisconnected)
@@ -377,6 +382,8 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindHUDContentEvent(t, t.onHUDContent)
 	b.BindHUDUpdateEvent(t, t.onHUDUpdate)
 	b.BindClientInfoEvent(t, t.onClientInfo)
+	b.BindSaveEvent(t, t.onSave)
+
 	b.GetScriptPath = t.GetScriptPath
 	b.GetModPath = t.GetModPath
 
@@ -481,9 +488,25 @@ func (t *Titan) HandleCmdAliases(id string, byuser bool) {
 func (t *Titan) HandleCmdDeleteAlias(world string, id string) {
 	w := t.World(world)
 	if w != nil {
+		itemtype := t.GetAliasType(world, id)
 		w.DoDeleteAlias(id)
+		if itemtype != nil && *itemtype {
+			go t.AutoSaveWorld(id)
+		}
 	}
 }
+func (t *Titan) GetAliasType(world string, id string) *bool {
+	w := t.World(world)
+	if w != nil {
+		alias := w.GetAlias(id)
+		if alias != nil {
+			result := alias.ByUser()
+			return &result
+		}
+	}
+	return nil
+}
+
 func (t *Titan) HandleCmdLoadAlias(world string, id string) {
 	w := t.World(world)
 	if w != nil {
@@ -537,9 +560,25 @@ func (t *Titan) HandleCmdTriggers(id string, byuser bool) {
 func (t *Titan) HandleCmdDeleteTrigger(world string, id string) {
 	w := t.World(world)
 	if w != nil {
+		itemtype := t.GetTriggerType(world, id)
 		w.DoDeleteTrigger(id)
+		if itemtype != nil && *itemtype {
+			go t.AutoSaveWorld(id)
+		}
 	}
 }
+func (t *Titan) GetTriggerType(world string, id string) *bool {
+	w := t.World(world)
+	if w != nil {
+		trigger := w.GetTrigger(id)
+		if trigger != nil {
+			result := trigger.ByUser()
+			return &result
+		}
+	}
+	return nil
+}
+
 func (t *Titan) HandleCmdLoadTrigger(world string, id string) {
 	w := t.World(world)
 	if w != nil {
@@ -595,8 +634,24 @@ func (t *Titan) HandleCmdTimers(id string, byuser bool) {
 func (t *Titan) HandleCmdDeleteTimer(world string, id string) {
 	w := t.World(world)
 	if w != nil {
+		itemtype := t.GetTimerType(world, id)
 		w.DoDeleteTimer(id)
+		if itemtype != nil && *itemtype {
+			go t.AutoSaveWorld(id)
+		}
+
 	}
+}
+func (t *Titan) GetTimerType(world string, id string) *bool {
+	w := t.World(world)
+	if w != nil {
+		timer := w.GetTimer(id)
+		if timer != nil {
+			result := timer.ByUser()
+			return &result
+		}
+	}
+	return nil
 }
 func (t *Titan) HandleCmdLoadTimer(world string, id string) {
 	w := t.World(world)
@@ -775,11 +830,12 @@ func (t *Titan) CloseWorld(id string) {
 	delete(t.Worlds, id)
 	t.DestoryBus(w)
 }
-func (t *Titan) SaveWorld(id string) error {
-	t.Locker.Lock()
-	defer t.Locker.Unlock()
+func (t *Titan) saveWorld(id string, isautosave bool) error {
 	w := t.Worlds[id]
 	if w == nil {
+		return nil
+	}
+	if isautosave && !w.GetAutoSave() {
 		return nil
 	}
 	data, err := w.DoEncode()
@@ -787,6 +843,18 @@ func (t *Titan) SaveWorld(id string) error {
 		return err
 	}
 	return os.WriteFile(t.GetWorldPath(id), data, util.DefaultFileMode)
+}
+
+func (t *Titan) SaveWorld(id string) error {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	return t.saveWorld(id, false)
+}
+func (t *Titan) AutoSaveWorld(id string) error {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+
+	return t.saveWorld(id, true)
 }
 func (t *Titan) OpenWorld(id string) (bool, error) {
 	t.Locker.Lock()
@@ -830,6 +898,7 @@ func (t *Titan) HandleCmdDeleteParam(id string, name string) {
 		return
 	}
 	t.Worlds[id].DeleteParam(name)
+	go t.AutoSaveWorld(id)
 	msg.PublishParamDeleted(t, id, name)
 	go t.HandleCmdParams(id)
 
@@ -842,6 +911,7 @@ func (t *Titan) HandleCmdUpdateParam(id string, name string, value string) {
 	}
 	t.Worlds[id].SetParam(name, value)
 	msg.PublishParamUpdated(t, id, name)
+	go t.AutoSaveWorld(id)
 	go t.HandleCmdParams(id)
 
 }
@@ -853,6 +923,7 @@ func (t *Titan) HandleCmdUpdateParamComment(id string, name string, value string
 	}
 	t.Worlds[id].SetParamComment(name, value)
 	msg.PublishParamUpdated(t, id, name)
+	go t.AutoSaveWorld(id)
 	go t.HandleCmdParams(id)
 
 }

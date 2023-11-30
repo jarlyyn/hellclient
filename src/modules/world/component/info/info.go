@@ -10,7 +10,7 @@ import (
 
 type Info struct {
 	Lines      *ring.Ring
-	History    *ring.Ring
+	History    []string
 	Recent     *ring.Ring
 	Prompt     *world.Line
 	Lock       sync.RWMutex
@@ -50,7 +50,7 @@ func (i *Info) DeleteLines(b *bus.Bus, count int) {
 }
 func (i *Info) Init(b *bus.Bus) {
 	i.Lines = ring.New(b.GetMaxLines())
-	i.History = ring.New(b.GetMaxHistory())
+	i.History = make([]string, b.GetMaxHistory())
 	i.Recent = ring.New(b.GetMaxRecent())
 }
 func (i *Info) ClientInfo(b *bus.Bus) *world.ClientInfo {
@@ -115,8 +115,18 @@ func (i *Info) GetLineCount() int {
 func (i *Info) AddHistory(b *bus.Bus, cmd string) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
-	i.History.Value = cmd
-	i.History = i.History.Next()
+	limit := b.GetMaxHistory()
+	newhistory := make([]string, limit+1)
+	for _, v := range i.History {
+		if v != cmd {
+			newhistory = append(newhistory, v)
+		}
+	}
+	newhistory = append(newhistory, cmd)
+	if len(newhistory) > limit {
+		newhistory = newhistory[len(newhistory)-limit:]
+	}
+	i.History = newhistory
 	i.CurrentHistories(b)
 }
 func (i *Info) GetRecentLines(count int) []*world.Line {
@@ -154,14 +164,7 @@ func (i *Info) GetLastActive() int64 {
 	return i.LastActive
 }
 func (i *Info) getHistories() []string {
-	var result = make([]string, 0, i.History.Len())
-	i.History.Do(func(x interface{}) {
-		data, ok := x.(string)
-		if ok {
-			result = append(result, data)
-		}
-	})
-	return result
+	return append([]string{}, i.History...)
 }
 func (i *Info) GetHistories(b *bus.Bus) []string {
 	i.Lock.Lock()
@@ -172,7 +175,7 @@ func (i *Info) GetHistories(b *bus.Bus) []string {
 func (i *Info) FlushHistories(b *bus.Bus) {
 	i.Lock.Lock()
 	defer i.Lock.Unlock()
-	i.History = ring.New(b.GetMaxHistory())
+	i.History = make([]string, b.GetMaxHistory())
 	i.CurrentHistories(b)
 }
 func (i *Info) CurrentHistories(b *bus.Bus) {
