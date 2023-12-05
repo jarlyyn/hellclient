@@ -1107,7 +1107,7 @@ func (t *Titan) OnResponse(msg *world.Message) {
 func (t *Titan) OnBatchCommandMessage(msg *world.Message) {
 	bc := world.NewBatchCommand()
 	err := json.Unmarshal([]byte(msg.Data), bc)
-	if err != nil {
+	if err == nil {
 		t.HandleBatchCommand(bc)
 	}
 }
