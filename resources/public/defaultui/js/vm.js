@@ -123,6 +123,12 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             13: "立刻发送",
             14: "脚本(过滤后)",
         },
+        BatchCommandScripts:[],
+        BatchCommandFormVisible:false,
+        BatchCommandForm:{
+            Scripts:[],
+            Command:'',
+        }
     }
     var vm = new Vue({
         el: "#app",

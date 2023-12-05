@@ -61,5 +61,6 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("hudcontent", p.newRoomAdapter("hudcontent"))
 	adapter.Register("hudupdate", p.newRoomAdapter("hudupdate"))
 	adapter.Register("clientinfo", p.newConsoleAdapter("clientinfo"))
+	adapter.Register("batchcommandscripts", p.newUserAdapter("batchcommandscripts"))
 
 }

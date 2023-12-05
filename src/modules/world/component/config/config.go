@@ -279,6 +279,17 @@ func (c *Config) GetAutoSave() bool {
 	defer c.Locker.Unlock()
 	return c.Data.AutoSave
 }
+func (c *Config) SetIgnoreBatchCommand(s bool) {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	c.Data.IgnoreBatchCommand = s
+}
+func (c *Config) GetIgnoreBatchCommand() bool {
+	c.Locker.Lock()
+	defer c.Locker.Unlock()
+	return c.Data.IgnoreBatchCommand
+}
+
 func (c *Config) OnReady(b *bus.Bus) {
 	c.ReadyAt = time.Now().Unix()
 }
@@ -324,6 +335,8 @@ func (c *Config) InstallTo(b *bus.Bus) {
 	b.SetModEnabled = c.SetModEnabled
 	b.GetAutoSave = c.GetAutoSave
 	b.SetAutoSave = c.SetAutoSave
+	b.GetIgnoreBatchCommand = c.GetIgnoreBatchCommand
+	b.SetIgnoreBatchCommand = c.SetIgnoreBatchCommand
 
 	b.GetPosition = c.GetPosition
 	b.SetPosition = c.SetPosition

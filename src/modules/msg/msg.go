@@ -82,6 +82,7 @@ const MsgTypeHUDUpdate = "hudupdate"
 const MsgTypeHUDContent = "hudcontent"
 
 const MsgTypeClientInfo = "clientinfo"
+const MsgTypeBatchCommandScripts = "batchcommandscripts"
 
 type Publisher interface {
 	Publish(msg *message.Message)
@@ -277,4 +278,7 @@ func PublishHUDContent(p Publisher, world string, lines []*world.Line) {
 }
 func PublishClientInfo(p Publisher, world string, info *world.ClientInfo) {
 	p.Publish(New(MsgTypeClientInfo, world, info))
+}
+func PublishBatchCommandScripts(p Publisher, scripts *world.BatchCommandScripts) {
+	p.Publish(New(MsgTypeBatchCommandScripts, "", scripts))
 }

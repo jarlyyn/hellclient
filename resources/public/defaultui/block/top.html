@@ -16,6 +16,10 @@
             <el-tooltip id="about-button" class="item" effect="light" content="关于" placement="bottom">
                 <el-button @click="onButton('about')" size="mini" icon="el-icon-info"></el-button>
             </el-tooltip>
+            <el-tooltip id="batchcommand-button" class="item" effect="light" content="批量指令" placement="bottom">
+                <el-button @click="onButton('batchcommand')" size="mini" icon="el-icon-s-order"></el-button>
+            </el-tooltip>
+
         </el-button-group>
 
         <span v-if="clients.length && current && info[current]" @click="statusVisible = true"

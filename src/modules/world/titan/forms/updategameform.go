@@ -32,6 +32,7 @@ type UpdateGameForm struct {
 	ShowSubneg            bool
 	ModEnabled            bool
 	AutoSave              bool
+	IgnoreBatchCommand    bool
 }
 
 // UpdateGameFormID form id of form update game
@@ -103,6 +104,7 @@ func UpdateGame(t *titan.Titan, data []byte) {
 	w.SetModEnabled(form.ModEnabled)
 	w.SetProxy(form.Proxy)
 	w.SetAutoSave(form.AutoSave)
+	w.SetIgnoreBatchCommand(form.IgnoreBatchCommand)
 	t.Locker.Unlock()
 	go func() {
 		t.OnUpdateSuccess(form.ID)

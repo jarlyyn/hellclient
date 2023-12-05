@@ -60,7 +60,8 @@ type WorldData struct {
 	Timers                []*Timer
 	Aliases               []*Alias
 	//api 23.11.30
-	AutoSave bool
+	AutoSave           bool
+	IgnoreBatchCommand bool
 }
 
 func (d *WorldData) ConvertSettings(id string) *WorldSettings {
@@ -79,6 +80,7 @@ func (d *WorldData) ConvertSettings(id string) *WorldSettings {
 		settings.ShowSubneg = d.ShowSubneg
 		settings.ModEnabled = d.ModEnabled
 		settings.AutoSave = d.AutoSave
+		settings.IgnoreBatchCommand = d.IgnoreBatchCommand
 	}
 	return settings
 }
@@ -96,7 +98,8 @@ type WorldSettings struct {
 	ShowSubneg            bool
 	ModEnabled            bool
 	//api 23.11.30
-	AutoSave bool
+	AutoSave           bool
+	IgnoreBatchCommand bool
 }
 
 func NewWorldData() *WorldData {

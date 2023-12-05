@@ -35,6 +35,9 @@
     <el-form-item label="自动保存">
       <el-checkbox v-model="worldsettingsUpdateForm.AutoSave">启用</el-checkbox>
     </el-form-item>
+    <el-form-item label="跳过批量指令">
+      <el-checkbox v-model="worldsettingsUpdateForm.IgnoreBatchCommand">启用</el-checkbox>
+    </el-form-item>
 
     <el-form-item label="调试广播信息">
       <el-checkbox v-model="worldsettingsUpdateForm.ShowBroadcast">显示</el-checkbox>

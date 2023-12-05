@@ -265,5 +265,18 @@ define(function (require) {
             input.selectionEnd = vm.cmd.length
         }, 1)
     }
+    handlers.batchcommandscripts=function(data){
+        vm.BatchCommandScripts=data.Scripts;
+        vm.BatchCommandForm.Scripts=[]
+        var item={label:'所有游戏',key:'',value:false}
+        vm.BatchCommandForm.Scripts.push(item)
+        for (var script in vm.BatchCommandScripts){
+            var scriptitem={label:vm.BatchCommandScripts[script],key:vm.BatchCommandScripts[script],value:false};
+            vm.BatchCommandForm.Scripts.push(scriptitem)
+        }
+        vm.BatchCommandForm.Command=''
+        vm.BatchCommandFormVisible=true;
+
+    }
 
 })

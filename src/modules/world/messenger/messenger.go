@@ -69,7 +69,15 @@ func (m *Messenger) OnMessage(msg *connections.Message) {
 		logger.Debug(err.Error())
 		return
 	}
-	m.Titan.OnResponse(data)
+	switch data.Command {
+	case world.MessageCommandResponse:
+		m.Titan.OnResponse(data)
+		break
+	case world.MessageCommandBatchCommand:
+		m.Titan.OnBatchCommandMessage(data)
+		break
+	}
+
 }
 
 // OnError called when onconnection error raised.

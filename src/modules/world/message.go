@@ -6,11 +6,15 @@ import (
 	"github.com/herb-go/uniqueid"
 )
 
+const MessageCommandResponse = 0
+const MessageCommandBatchCommand = 1
+
 type Message struct {
-	World string
-	ID    string
-	Type  string
-	Data  string
+	World   string
+	ID      string
+	Type    string
+	Data    string
+	Command int
 }
 
 func (m *Message) Desc() string {

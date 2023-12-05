@@ -316,8 +316,19 @@ define(function (require) {
         vm.scriptsettingsUpdateForm.ID = vm.current
         send("updateScriptSettings", vm.scriptsettingsUpdateForm);
     }
-
-
+    onButton.batchcommand=function(){
+        send("batchcommandscripts");
+    }
+    onButton.batchcommandsend=function(){
+        var result=[]
+        for (var i=0;i<vm.BatchCommandForm.Scripts.length;i++){
+            if (vm.BatchCommandForm.Scripts[i].value){
+            result.push(vm.BatchCommandForm.Scripts[i].key)
+            }
+        }
+        send('batchcommand',{Scripts:result,Command:vm.BatchCommandForm.Command});
+        vm.BatchCommandFormVisible=false;
+    }
     onButton.requiredParams = function () {
         vm.requiredParams = null;
         app.send("requiredParams", vm.current)

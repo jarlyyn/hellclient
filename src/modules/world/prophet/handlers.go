@@ -523,6 +523,19 @@ func (p *Prophet) onCmdKeyUp(conn connections.OutputConnection, cmd command.Comm
 	p.Titan.HandleCmdKeyUp(id, msg)
 	return nil
 }
+func (p *Prophet) onCmdBatchCommand(conn connections.OutputConnection, cmd command.Command) error {
+	var msg = world.NewBatchCommand()
+	if json.Unmarshal(cmd.Data(), &msg) != nil {
+		return nil
+	}
+	p.Titan.HandleBatchCommand(msg)
+	return nil
+}
+func (p *Prophet) onCmdBatchCommandScripts(conn connections.OutputConnection, cmd command.Command) error {
+	p.Titan.HandleCmdBatchCommandScripts()
+	return nil
+}
+
 func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("change", p.onCmdChange)
 	handlers.Register("connect", p.onCmdConnect)
@@ -586,5 +599,7 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("hudclick", p.onCmdHUDClick)
 	handlers.Register("sortclients", p.onCmdSortClients)
 	handlers.Register("keyup", p.onCmdKeyUp)
+	handlers.Register("batchcommand", p.onCmdBatchCommand)
+	handlers.Register("batchcommandscripts", p.onCmdBatchCommandScripts)
 
 }

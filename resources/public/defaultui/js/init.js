@@ -41,6 +41,7 @@ requirejs.config({
         "html-masssendform":"/public/defaultui/block/masssendform.html",
         "html-userpasswordform":"/public/defaultui/block/userpasswordform.html",
         "html-dashboard":"/public/defaultui/block/dashboard.html",
+        "html-batchcommand":"/public/defaultui/block/batchcommand.html",
         "main":"/public/defaultui/js/main"
     },
 });
@@ -123,6 +124,9 @@ define(function (require) {
 
     var htmluserdashboard=require("text!html-dashboard");
     document.getElementById("dashboard").innerHTML=htmluserdashboard;    
+
+    var htmlbatchcommand=require("text!html-batchcommand");
+    document.getElementById("batchcommand").innerHTML=htmlbatchcommand;    
 
     var htmlalllines=require("text!html-alllines");
 

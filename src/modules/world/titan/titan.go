@@ -2,6 +2,7 @@ package titan
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"modules/app"
 	"modules/msg"
@@ -1037,6 +1038,23 @@ func (t *Titan) HandleCmdUpdateRequiredParams(id string, p []*world.RequiredPara
 	}
 	msg.PublishRequiredParamsMessage(t, id, data.RequiredParams)
 }
+
+func (t *Titan) HandleCmdBatchCommandScripts() {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	result := []string{}
+	resultmap := map[string]bool{}
+	for _, w := range t.Worlds {
+		sid := w.GetScriptID()
+		if !resultmap[sid] {
+			resultmap[sid] = true
+			result = append(result, sid)
+		}
+	}
+	bcs := world.NewBatchCommandScripts()
+	bcs.Scripts = result
+	msg.PublishBatchCommandScripts(t, bcs)
+}
 func (t *Titan) NewScript(id string, scripttype string) error {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
@@ -1086,6 +1104,30 @@ func (t *Titan) OnResponse(msg *world.Message) {
 		w.DoSendResponseToScript(msg)
 	}
 }
+func (t *Titan) OnBatchCommandMessage(msg *world.Message) {
+	bc := world.NewBatchCommand()
+	err := json.Unmarshal([]byte(msg.Data), bc)
+	if err != nil {
+		t.HandleBatchCommand(bc)
+	}
+}
+
+func (t *Titan) HandleBatchCommand(bc *world.BatchCommand) {
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	for _, w := range t.Worlds {
+		if !w.GetIgnoreBatchCommand() {
+			scriptid := w.GetScriptID()
+			for _, bcsid := range bc.Scripts {
+				if bcsid == "" || bcsid == scriptid {
+					go w.DoExecute(bc.Command)
+					continue
+				}
+			}
+		}
+	}
+}
+
 func (t *Titan) OnGlobalMessage(msg []byte) {
 	var data = bytes.SplitN(msg, GlobalMessageSep, 3)
 	switch string(data[0]) {

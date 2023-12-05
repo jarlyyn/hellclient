@@ -1,0 +1,26 @@
+
+
+<el-drawer v-if="BatchCommandForm" title="批量指令" :visible.sync="BatchCommandFormVisible" size="80%"
+direction="btt">
+<div id="batchcommand">
+  <div class="desc">
+    <p>批量给多个游戏发送指令。指定脚本，未设置忽略批量命令的游戏都会输入下面指令</p>
+  </div>
+  <el-form>
+    <el-form-item label="选择脚本">
+      <el-checkbox  v-for='script in BatchCommandForm.Scripts' v-model="script.value">[{{script.label}}]</el-checkbox>
+    </el-form-item>
+  </el-form>
+  <div class="data">
+    <textarea
+    placeholder="请输入你需要批量发送的指令"
+    v-model="BatchCommandForm.Command">
+    </textarea>
+  </div>
+    <div slot="footer" class="userinput-list-mutli-footer">
+      <el-button type="primary" @click="onButton('batchcommandsend')">发送</el-button>
+    </div>
+  </div>
+  </template>
+</div>
+</el-drawer>

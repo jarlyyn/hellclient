@@ -33,6 +33,8 @@ type Bus struct {
 	SetModEnabled             func(bool)
 	GetAutoSave               func() bool
 	SetAutoSave               func(bool)
+	GetIgnoreBatchCommand     func() bool
+	SetIgnoreBatchCommand     func(bool)
 	GetCommandStackCharacter  func() string
 	SetCommandStackCharacter  func(string)
 	GetScriptPrefix           func() string

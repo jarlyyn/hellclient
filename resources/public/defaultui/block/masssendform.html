@@ -1,6 +1,6 @@
 
 
-<el-drawer v-if="MassSendForm" title="批量输入" :visible.sync="MassSendFormVisible" size="80%"
+<el-drawer v-if="MassSendForm" title="多行输入" :visible.sync="MassSendFormVisible" size="80%"
 direction="btt">
 <div id="masssend">
   <div class="desc">
@@ -8,7 +8,7 @@ direction="btt">
   </div>
   <div class="data">
     <textarea
-    placeholder="请输入你需要批量发送的数据"
+    placeholder="请输入你需要多行发送的数据"
     v-model="MassSendForm.Value">
     </textarea>
   </div>

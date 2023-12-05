@@ -56,6 +56,8 @@
     <div id="visualprompt"></div>
     <div id="masssendform"></div>
     <div id="userpasswordform"></div>
+    <div id="batchcommand"></div>
+
     <el-dialog v-if="clients.length && current && info[current]" :title="'游戏'+current+ '@' +info[current].HostPort+'状态'"
       :visible.sync="statusVisible" width="80%">
       <div>
@@ -87,7 +89,7 @@
           <el-tooltip slot="prepend" effect="light" content="助理" placement="top">
             <el-button icon="el-icon-user" @click="assist"></el-button>
           </el-tooltip>
-          <el-tooltip slot="append" effect="light" content="批量发送" placement="top">
+          <el-tooltip slot="append" effect="light" content="多行发送" placement="top">
             <el-button icon="el-icon-box" @click="masssend"></el-button>
           </el-tooltip>
         </el-input>
