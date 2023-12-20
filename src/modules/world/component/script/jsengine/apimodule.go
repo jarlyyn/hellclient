@@ -1172,7 +1172,14 @@ func (a *jsapi) Broadcast(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return nil
 }
 func (a *jsapi) Notify(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	a.API.Notify(call.Argument(0).String(), call.Argument(1).String())
+	var link *string
+	if call.Argument(2) == goja.Null() {
+		link = nil
+	} else {
+		data := call.Argument(2).String()
+		link = &data
+	}
+	a.API.Notify(call.Argument(0).String(), call.Argument(1).String(), link)
 	return nil
 }
 func (a *jsapi) GetGlobalOption(call goja.FunctionCall, r *goja.Runtime) goja.Value {

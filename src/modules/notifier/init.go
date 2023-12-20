@@ -18,7 +18,7 @@ type Notifier struct {
 	SMTP *emaildelivery.SMTP
 }
 
-func (n *Notifier) WorldNotify(world string, title string, body string) {
+func (n *Notifier) WorldNotify(world string, title string, body string, link *string) {
 	if n.SMTP == nil || n.SMTP.Host == "" || n.SMTP.To == "" {
 		return
 	}
@@ -30,8 +30,12 @@ func (n *Notifier) WorldNotify(world string, title string, body string) {
 	}
 	m.Subject = title
 	content := ""
-	if n.URL != "" {
-		content = fmt.Sprintf("<a href='%s#%s'>%s:</a>", n.URL, world, html.EscapeString(world))
+	var linkurl string = n.URL
+	if link != nil {
+		linkurl = *link
+	}
+	if linkurl != "" {
+		content = fmt.Sprintf("<a href='%s#%s'>%s:</a>", linkurl, world, html.EscapeString(world))
 	} else {
 		content = fmt.Sprintf("%s:", world)
 	}

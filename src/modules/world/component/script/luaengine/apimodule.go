@@ -1355,7 +1355,14 @@ func (a *luaapi) Broadcast(L *lua.LState) int {
 	return 0
 }
 func (a *luaapi) Notify(L *lua.LState) int {
-	a.API.Notify(L.ToString(1), L.ToString(2))
+	var link *string
+	if L.Get(3) == lua.LNil {
+		link = nil
+	} else {
+		data := L.ToString(3)
+		link = &data
+	}
+	a.API.Notify(L.ToString(1), L.ToString(2), link)
 	return 0
 }
 func (a *luaapi) Request(L *lua.LState) int {

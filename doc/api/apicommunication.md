@@ -41,7 +41,7 @@ Broadcast("found npc 1104",true)
 
 ### 原型
 
-* Notify(title string, body string)
+* Notify(title string, body string,link *string)
 
 ### 描述
 
@@ -49,17 +49,17 @@ Broadcast("found npc 1104",true)
 
 * title 通知标题
 * body 通知内容
-
+* link 链接 可选
 ### 代码范例
 
 Javascript
 ```
-world.Notify("ID挂了","被NPC xxx 杀死了")
+world.Notify("ID挂了","被NPC xxx 杀死了",'http://www.google.com')
 ```
 
 Lua
 ```
-Notify("ID挂了","被NPC xxx 杀死了")
+Notify("ID挂了","被NPC xxx 杀死了",'http://www.google.com')
 ```
 
 ### 返回值

@@ -1164,8 +1164,8 @@ func (a *API) Broadcast(msg string, gloabl bool) {
 	}
 }
 
-func (a *API) Notify(title string, body string) {
-	notifier.DefaultNotifier.WorldNotify(a.Bus.ID, title, body)
+func (a *API) Notify(title string, body string, link *string) {
+	notifier.DefaultNotifier.WorldNotify(a.Bus.ID, title, body, link)
 }
 
 func (a *API) CheckPermissions(p []string) bool {
