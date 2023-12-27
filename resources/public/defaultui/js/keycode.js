@@ -37,7 +37,7 @@ define(function (require) {
     }
     document.addEventListener("keyup", function (event) {
         switch (event.code) {
-            case "Escape":
+            case "Backspace":
                 if (!event.ctrlKey) {
                     return
                 }

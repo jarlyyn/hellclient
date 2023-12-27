@@ -297,7 +297,11 @@ html body .el-table .game-list-not-running {
 #userinput-list-body span.intro {
     white-space: pre-wrap;
 }
-
+.notopended-id{
+    color:#333333;
+    cursor: pointer;
+    font-weight: bold;
+}
 .userinput-list-mutli-footer {
     margin-top: 0.5em;
     text-align: right;
