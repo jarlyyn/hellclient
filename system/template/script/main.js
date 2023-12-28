@@ -1,29 +1,29 @@
-onOpen=function (){
+var onOpen=function (){
 
 }
 
-onClose=function (){
+var onClose=function (){
 
 }
 
-onConnected=function (){
+var onConnected=function (){
 
 }
 
-onDisconnected=function (){
+var onDisconnected=function (){
 
 }
 
-onAssist=function(){
+var onAssist=function(){
 
 }
 
-onBroadcast=function(msg,global,channel,global){
+var onBroadcast=function(msg,global,channel){
     
 }
-onResponse=function(type,id,data){
+var onResponse=function(type,id,data){
     
 }
-onkeyup=function(key){
+var onkeyup=function(key){
 
 }

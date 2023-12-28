@@ -13,7 +13,7 @@ end
 onAssist=function()
 end
 
-onBroadcast=function(msg,global,channel,global)
+onBroadcast=function(msg,global,channel)
 end
 
 onResponse=function(type,id,data)
