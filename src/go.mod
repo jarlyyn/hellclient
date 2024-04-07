@@ -9,17 +9,17 @@ require (
 	github.com/herb-go/herbplugin v0.0.0-20210927153142-18e76e96c0cd
 	github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531
 	github.com/herb-go/util v0.0.0-20230321163403-6a757b251968
-	golang.org/x/net v0.16.0
+	golang.org/x/net v0.22.0
 	modules v0.0.0-00010101000000-000000000000
 )
 
 require (
 	github.com/dlclark/regexp2 v1.10.0 // indirect
-	github.com/dop251/goja v0.0.0-20230707174833-636fdf960de1 // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/dop251/goja v0.0.0-20240220182346-e401ed450204 // indirect
+	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.3+incompatible // indirect
 	github.com/google/pprof v0.0.0-20230926050212-f7f687d19a98 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/gorilla/websocket v1.5.1 // indirect
 	github.com/herb-go/connections v0.0.0-20230223155109-0db0fbe9c7e0 // indirect
 	github.com/herb-go/datasource v0.0.0-20211122123843-a3546acd0d8d // indirect
 	github.com/herb-go/datasource-drivers v0.0.0-20201011165914-7717acb90545 // indirect
@@ -43,8 +43,8 @@ require (
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible // indirect
 	github.com/robertkrimen/otto v0.2.1 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
-	github.com/yuin/gopher-lua v1.1.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
-	golang.org/x/text v0.13.0 // indirect
+	github.com/yuin/gopher-lua v1.1.1 // indirect
+	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 )
