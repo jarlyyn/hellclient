@@ -167,11 +167,13 @@ func (m *Metronome) append(rawcmds []*world.Command, grouped bool) {
 }
 func (m *Metronome) clean() {
 	t := time.Now()
-	for e := m.sent.Front(); e != nil; e = e.Next() {
+	e := m.sent.Front()
+	for e != nil {
 		sent := e.Value.(*time.Time)
 		if t.Sub(*sent) > m.gettick() {
 			m.sent.Remove(e)
 		}
+		e = e.Next()
 	}
 }
 func (m *Metronome) Play(bus *bus.Bus) {
