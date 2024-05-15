@@ -81,8 +81,8 @@ func (m *Mapper) Tags() []string {
 	}
 	return result
 }
-func (m *Mapper) WalkAll(targets []string, fly bool, max_distance int) *WalkAllResult {
-	a := NewWalkAll()
+func (m *Mapper) WalkAll(targets []string, fly bool, max_distance int, option *Option) *WalkAllResult {
+	a := NewWalkAll(option)
 	a.rooms = m.rooms
 	a.tags = m.tags
 	a.fly = m.fly
@@ -93,10 +93,10 @@ func (m *Mapper) WalkAll(targets []string, fly bool, max_distance int) *WalkAllR
 	}
 	return a.Start()
 }
-func (m *Mapper) GetPath(from string, fly bool, to []string) []*Step {
+func (m *Mapper) GetPath(from string, fly bool, to []string, option *Option) []*Step {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	w := m.newWalking()
+	w := m.newWalking(option)
 	w.from = from
 	w.to = to
 	if !fly {
@@ -104,8 +104,8 @@ func (m *Mapper) GetPath(from string, fly bool, to []string) []*Step {
 	}
 	return w.Walk()
 }
-func (m *Mapper) newWalking() *Walking {
-	walking := NewWalking()
+func (m *Mapper) newWalking(option *Option) *Walking {
+	walking := NewWalking(option)
 	walking.rooms = m.rooms
 	walking.tags = m.tags
 	walking.fly = m.fly

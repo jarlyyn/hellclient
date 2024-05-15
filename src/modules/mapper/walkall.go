@@ -6,8 +6,10 @@ type WalkAllResult struct {
 	NotWalked []string
 }
 
-var NewWalkAll = func() *WalkAll {
-	return &WalkAll{}
+var NewWalkAll = func(option *Option) *WalkAll {
+	return &WalkAll{
+		option: option,
+	}
 }
 
 type WalkAll struct {
@@ -16,6 +18,7 @@ type WalkAll struct {
 	rooms       *Rooms
 	tags        map[string]bool
 	fly         []*Path
+	option      *Option
 }
 
 func (a *WalkAll) Walk(fr string, to []string) []*Step {
@@ -26,7 +29,7 @@ func (a *WalkAll) Walk(fr string, to []string) []*Step {
 	return w.Walk()
 }
 func (a *WalkAll) newWalking() *Walking {
-	walking := NewWalking()
+	walking := NewWalking(a.option)
 	walking.rooms = a.rooms
 	walking.tags = a.tags
 	walking.fly = a.fly

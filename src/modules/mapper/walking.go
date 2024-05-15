@@ -37,6 +37,8 @@ type Walking struct {
 	fly         []*Path
 	walked      map[string]*Step
 	forwading   *list.List
+	blacklist   map[string]bool
+	whitelist   map[string]bool
 	maxdistance int
 }
 
@@ -59,7 +61,13 @@ func (w *Walking) step(p *Path) *Step {
 	}
 }
 
-func (w *Walking) validateTags(p *Path) bool {
+func (w *Walking) validateExit(p *Path) bool {
+	if w.blacklist[p.To] {
+		return false
+	}
+	if len(w.whitelist) > 0 && !w.whitelist[p.To] {
+		return false
+	}
 	return ValidateTags(w.tags, p)
 }
 func (w *Walking) Walk() []*Step {
@@ -74,20 +82,20 @@ func (w *Walking) Walk() []*Step {
 	w.walked[w.from] = EmptyStep
 	if room != nil {
 		for _, v := range room.Exits {
-			if w.walked[v.To] == nil && w.validateTags(v) {
+			if w.walked[v.To] == nil && w.validateExit(v) {
 				w.forwading.PushBack(w.step(v))
 			}
 		}
 	}
 	if texits != nil {
 		for _, v := range texits {
-			if w.walked[v.To] == nil && w.validateTags(v) {
+			if w.walked[v.To] == nil && w.validateExit(v) {
 				w.forwading.PushBack(w.step(v))
 			}
 		}
 	}
 	for _, v := range w.fly {
-		if w.walked[v.To] == nil && w.validateTags(v) {
+		if w.walked[v.To] == nil && w.validateExit(v) {
 			w.forwading.PushBack(w.FlyStep(v))
 		}
 	}
@@ -142,14 +150,14 @@ Matching:
 			}
 			if room != nil {
 				for _, exit := range room.Exits {
-					if w.walked[exit.To] == nil && w.validateTags(exit) {
+					if w.walked[exit.To] == nil && w.validateExit(exit) {
 						newExits.PushBack(w.step(exit))
 					}
 				}
 			}
 			if texits != nil {
 				for _, exit := range texits {
-					if w.walked[exit.To] == nil && w.validateTags(exit) {
+					if w.walked[exit.To] == nil && w.validateExit(exit) {
 						newExits.PushBack(w.step(exit))
 					}
 				}
@@ -187,12 +195,23 @@ Matching:
 	return steps
 }
 
-func NewWalking() *Walking {
-	return &Walking{
+func NewWalking(option *Option) *Walking {
+	walking := &Walking{
 		tags:      map[string]bool{},
 		to:        []string{},
 		fly:       []*Path{},
 		walked:    map[string]*Step{},
 		forwading: list.New(),
+		blacklist: map[string]bool{},
+		whitelist: map[string]bool{},
 	}
+	if option != nil {
+		for _, v := range option.Blacklist {
+			walking.blacklist[v] = true
+		}
+		for _, v := range option.Whitelist {
+			walking.whitelist[v] = true
+		}
+	}
+	return walking
 }

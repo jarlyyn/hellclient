@@ -169,7 +169,14 @@ func (m *JsMapper) WalkAll(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	}
 	fly := int(call.Argument(1).ToInteger())
 	maxdistance := int(call.Argument(2).ToInteger())
-	result := m.mapper.WalkAll(targets, fly != 0, maxdistance)
+	option := call.Argument(3).ToObject(r)
+	var opt *mapper.Option
+	if option != nil {
+		opt = mapper.NewOption()
+		_ = r.ExportTo(option.Get("blacklist"), &opt.Blacklist)
+		_ = r.ExportTo(option.Get("blacklist"), &opt.Whitelist)
+	}
+	result := m.mapper.WalkAll(targets, fly != 0, maxdistance, opt)
 	jsresult := &JsWalkAllResult{result: result}
 	return jsresult.Convert(r)
 }
@@ -184,7 +191,23 @@ func (m *JsMapper) GetPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	if err != nil {
 		return nil
 	}
-	steps := m.mapper.GetPath(from, fly != 0, to)
+	var opt *mapper.Option
+	jso := call.Argument(3)
+	if !jso.Equals(goja.Null()) {
+		option := jso.ToObject(r)
+		if option != nil {
+			opt = mapper.NewOption()
+			jbl := option.Get("blacklist")
+			if jbl != nil {
+				_ = r.ExportTo(jbl, &opt.Blacklist)
+			}
+			jwl := option.Get("whitelist")
+			if jwl != nil {
+				_ = r.ExportTo(jwl, &opt.Whitelist)
+			}
+		}
+	}
+	steps := m.mapper.GetPath(from, fly != 0, to, opt)
 	if steps == nil {
 		return nil
 	}

@@ -12,6 +12,31 @@ import (
 	"github.com/herb-go/herbplugin/lua51plugin"
 )
 
+type LuaWalkAllResult struct {
+	result *mapper.WalkAllResult
+}
+
+func (result *LuaWalkAllResult) Convert(L *lua.LState) lua.LValue {
+	t := L.NewTable()
+	steps := L.NewTable()
+	for _, v := range result.result.Steps {
+		s := &LuaStep{step: v}
+		steps.Append(s.Convert(L))
+	}
+	walked := L.NewTable()
+	for _, v := range result.result.Walked {
+		walked.Append(lua.LString(v))
+	}
+	notwalked := L.NewTable()
+	for _, v := range result.result.NotWalked {
+		notwalked.Append(lua.LString(v))
+	}
+	t.RawSetString("steps", steps)
+	t.RawSetString("walked", walked)
+	t.RawSetString("notwalked", notwalked)
+	return t
+}
+
 func ConvertLuaPath(v lua.LValue) *LuaPath {
 	if v.Type() != lua.LTTable {
 		return nil
@@ -168,6 +193,42 @@ func (m *LuaMapper) Tags(L *lua.LState) int {
 	L.Push(t)
 	return 1
 }
+func (m *LuaMapper) toOption(L *lua.LState, option *lua.LTable) *mapper.Option {
+	var opt *mapper.Option
+	if option != nil {
+		opt = mapper.NewOption()
+		lblacklist, ok := option.RawGetString("blacklist").(*lua.LTable)
+		if ok {
+			lblacklist.ForEach(func(l1, l2 lua.LValue) {
+				opt.Blacklist = append(opt.Blacklist, l2.String())
+			})
+		}
+		lwhitelist, ok := option.RawGetString("whitelist").(*lua.LTable)
+		if ok {
+			lwhitelist.ForEach(func(l1, l2 lua.LValue) {
+				opt.Whitelist = append(opt.Whitelist, l2.String())
+			})
+		}
+	}
+	return opt
+}
+func (m *LuaMapper) WalkAll(L *lua.LState) int {
+	_ = L.Get(1) //self
+	targets := []string{}
+	ltargets := L.ToTable(2)
+	ltargets.ForEach(func(l1, l2 lua.LValue) {
+		targets = append(targets, l2.String())
+	})
+	fly := L.ToInt(3)
+	maxdistance := L.ToInt(4)
+	option := L.CheckTable(5)
+	opt := m.toOption(L, option)
+	result := m.mapper.WalkAll(targets, fly != 0, maxdistance, opt)
+	luaresult := &LuaWalkAllResult{result: result}
+	L.Push(luaresult.Convert(L))
+	return 1
+}
+
 func (m *LuaMapper) GetPath(L *lua.LState) int {
 	_ = L.Get(1) //self
 	from := L.ToString(2)
@@ -177,7 +238,9 @@ func (m *LuaMapper) GetPath(L *lua.LState) int {
 	for i := 3; i < count; i++ {
 		to = append(to, L.ToString(i+1))
 	}
-	steps := m.mapper.GetPath(from, fly != 0, to)
+	option := L.CheckTable(5)
+	opt := m.toOption(L, option)
+	steps := m.mapper.GetPath(from, fly != 0, to, opt)
 	if steps == nil {
 		L.Push(lua.LNil)
 		return 1
