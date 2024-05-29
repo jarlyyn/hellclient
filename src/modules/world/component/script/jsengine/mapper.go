@@ -169,7 +169,11 @@ func (m *JsMapper) WalkAll(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	}
 	fly := int(call.Argument(1).ToInteger())
 	maxdistance := int(call.Argument(2).ToInteger())
-	option := call.Argument(3).ToObject(r)
+	v := call.Argument(3)
+	var option *goja.Object
+	if v.SameAs(goja.Null()) {
+		option = call.Argument(3).ToObject(r)
+	}
 	var opt *mapper.Option
 	if option != nil {
 		opt = mapper.NewOption()
