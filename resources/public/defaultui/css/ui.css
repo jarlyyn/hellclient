@@ -57,7 +57,26 @@ ul#lines {
     padding-top: 110px;
     padding-left: 0;
 }
-
+#history-suggestion{
+    position: fixed;
+    bottom:32px;
+    width:100%;
+    z-index: 1;
+    background-color: #eeeeeeee;
+    color:black
+}
+#history-suggestion ul{
+    padding:0.5em 10em
+}
+#history-suggestion li{
+    cursor: pointer;
+    font-size:16px;
+    line-height: 26px;
+}
+#history-suggestion li:hover{
+    background: #333333;
+    color:white;
+}
 #footer {
     position: fixed;
     bottom: 0;

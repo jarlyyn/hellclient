@@ -20,6 +20,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
         currenttab: "",
         status: "",
         history: [],
+        suggestion: [],
         createFail: [],
         cmd: "",
         info: {},
@@ -123,11 +124,11 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             13: "立刻发送",
             14: "脚本(过滤后)",
         },
-        BatchCommandScripts:[],
-        BatchCommandFormVisible:false,
-        BatchCommandForm:{
-            Scripts:[],
-            Command:'',
+        BatchCommandScripts: [],
+        BatchCommandFormVisible: false,
+        BatchCommandForm: {
+            Scripts: [],
+            Command: '',
         }
     }
     var vm = new Vue({
@@ -141,15 +142,43 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             "avatar": avatar,
         },
         methods: {
-            onKeyUp:function(event){
+            onEsc:function(){
+                vm.suggestion=[]
+            },
+            onKeyUp: function (event) {
                 app.KeyUp(event)
             },
             onInputKeyDown: function (event) {
                 app.onInputKeyDown(event)
             },
+            hideSuggestion:function(){
+                vm.suggestion=[]
+            },
+            onSuggest:function(event){
+                document.getElementById("user-input").getElementsByTagName("input")[0].value=event
+                document.getElementById("user-input").getElementsByTagName("input")[0].select()
+                vm.suggestion=[]
+            },
+            onInputChange: function () {
+                if (vm.history) {
+                    vm.suggestion = []
+                    var val = document.getElementById("user-input").getElementsByTagName("input")[0].value
+                    if (val) {
+                        vm.history.forEach(function (data) {
+                            if (data.indexOf(val) > -1) {
+                                vm.suggestion.push(data)
+                            }
+                        })
+                        if (vm.suggestion.length > 5) {
+                            vm.suggestion = vm.suggestion.slice(-10)
+                        }
+                    }
+                }
+            },
             send: function () {
                 app.send("send", this.cmd)
                 vm.historypos = 0
+                vm.suggestion = []
                 document.getElementById("user-input").getElementsByTagName("input")[0].select()
             },
             domasssend: function () {

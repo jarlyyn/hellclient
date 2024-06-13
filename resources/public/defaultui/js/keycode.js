@@ -24,13 +24,15 @@ define(function (require) {
 
         }
     }
-    let isDialogEvent=function(event){
-        if (document.querySelector("body.el-popup-parent--hidden")){
+    let isDialogEvent = function (event) {
+        if (document.querySelector("body.el-popup-parent--hidden")) {
             return true
         }
-        for (var i=0;i<event.path.length;i++){
-            if (event.path[i].className=="el-dialog__wrapper"){
-                return true
+        if (event.path) {
+            for (var i = 0; i < event.path.length; i++) {
+                if (event.path[i].className == "el-dialog__wrapper") {
+                    return true
+                }
             }
         }
         return false
@@ -53,7 +55,7 @@ define(function (require) {
             case "Digit7":
             case "Digit8":
             case "Digit9":
-                if (isDialogEvent(event)){
+                if (isDialogEvent(event)) {
                     return
                 }
                 if (vm.current == "") {
