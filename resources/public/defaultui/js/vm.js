@@ -105,6 +105,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
         visualPrompt: null,
         visualPromptVisible: false,
         historypos: -1,
+        lastinput:"",
         usesrpasswordForm: null,
         usesrpasswordFormVisible: false,
         sendto: {
@@ -153,13 +154,55 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             },
             hideSuggestion:function(){
                 vm.suggestion=[]
+                vm.historypos=0
+            },
+            selectAll:function(){
+                vm.$nextTick(function(){
+                    var dom=document.getElementById("user-input").getElementsByTagName("input")[0]
+                    dom.select();
+                })
+            },
+            onFindHistory:function(){
+
+                if (vm.historypos==0){
+                    vm.cmd = vm.lastinput
+                    vm.selectAll();
+                    return
+                }
+                if (vm.historypos<=vm.suggestion.length){
+                    vm.cmd=vm.suggestion[vm.suggestion.length-vm.historypos]
+                    vm.selectAll();
+                    return
+                }
+                var history=vm.history[vm.history.length-(vm.historypos-vm.suggestion.length)]
+                if (history){
+                    vm.cmd=history
+                    vm.selectAll();
+                }
+            },
+            onUp: function () {
+                vm.historypos=vm.historypos+1
+                if (vm.historypos>(vm.history.length+vm.suggestion.length)){
+                    vm.historypos=0
+                }
+                vm.onFindHistory()
+            },
+            onDown: function () {
+                vm.historypos=vm.historypos-1
+                if (vm.historypos <= 0) {
+                    vm.historypos = 0
+                }
+                vm.onFindHistory()
             },
             onSuggest:function(event){
-                document.getElementById("user-input").getElementsByTagName("input")[0].value=event
-                document.getElementById("user-input").getElementsByTagName("input")[0].select()
+                vm.cmd=event
+                vm.selectAll();
                 vm.suggestion=[]
             },
             onInputChange: function () {
+                vm.historypos=0
+                var val = document.getElementById("user-input").getElementsByTagName("input")[0].value
+                vm.lastinput=val
                 if (vm.history) {
                     vm.suggestion = []
                     var val = document.getElementById("user-input").getElementsByTagName("input")[0].value
@@ -179,7 +222,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
                 app.send("send", this.cmd)
                 vm.historypos = 0
                 vm.suggestion = []
-                document.getElementById("user-input").getElementsByTagName("input")[0].select()
+                vm.selectAll();
+                vm.lastinput=""
             },
             domasssend: function () {
                 if (vm.MassSendForm) {
@@ -511,17 +555,6 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
                     }
                     vm.callback(data, 0, "")
                 }
-            },
-            onUp: function () {
-                app.send("findhistory", vm.historypos + 1)
-            },
-            onDown: function () {
-                if (vm.historypos <= 0) {
-                    vm.historypos = -1
-                    vm.cmd = ""
-                    return
-                }
-                app.send("findhistory", vm.historypos - 1)
             },
             onHUDClick: function (e) {
                 app.send("hudclick", { X: e.offsetX / e.target.width, Y: e.offsetY / e.target.height })

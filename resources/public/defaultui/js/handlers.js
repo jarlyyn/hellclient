@@ -135,7 +135,12 @@ define(function (require) {
         vm.status = data;
     }
     handlers.history = function (data) {
-        vm.history = data;
+        vm.history=[]
+        data.forEach(function (cmd) {
+            if (cmd!=""){
+                vm.history.push(cmd)
+            }
+        })
     }
     handlers.usertimers = function (data) {
         vm.usertimerlist = data
