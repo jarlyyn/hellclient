@@ -512,3 +512,32 @@ Note(Decrypt("ziLol5II2WEF4yAeQCf2HMrRDdWMu+Afp1u2ysVSgck=","key"))
 ### 返回值
 * 解密成功返回字符串
 * 解密失败返回空
+
+## Milliseconds
+
+返回毫秒unit时间戳
+
+### 原型
+```
+Milliseconds() int64
+```
+
+### 描述
+
+返回毫秒为单位的unit时间戳。
+
+### 范例代码
+
+Javascript
+```
+world.Note(world.Milliseconds())
+```
+
+Lua
+```
+Note(Milliseconds())
+```
+
+### 返回值
+
+数值

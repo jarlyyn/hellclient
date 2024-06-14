@@ -252,11 +252,6 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 
 }
 
-func (a *luaapi) Milliseconds(L *lua.LState) int {
-	ts := time.Now().UnixNano() / int64(time.Millisecond)
-	L.Push(lua.LNumber(ts))
-	return 1
-}
 func (a *luaapi) Print(L *lua.LState) int {
 	a.API.Note(a.combine(L))
 	return 0
@@ -1583,6 +1578,10 @@ func (a *luaapi) GetSummary(L *lua.LState) int {
 
 func (a *luaapi) Save(L *lua.LState) int {
 	L.Push(lua.LBool(a.API.Save()))
+	return 1
+}
+func (a *luaapi) Milliseconds(L *lua.LState) int {
+	L.Push(lua.LNumber(a.API.Milliseconds()))
 	return 1
 }
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {

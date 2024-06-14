@@ -111,9 +111,9 @@
 * [FromUTF8 转换自UTF8字符串](apimisc.md#FromUTF8)
 * [Encrypt 加密字符串](apimisc.md#Encrypt)
 * [Decrypt 解密字符串](apimisc.md#Decrypt)
-
+* [Milliseconds 毫秒时间戳](apimisc.md#Milliseconds)
+  
 ## 连接管理
-
 * [Connect 连接](apiconnect.md#Connect)
 * [IsConnected 判断接连状态](apiconnect.md#IsConnected)
 * [Disconnect 断开连接](apiconnect.md#Disconnect)

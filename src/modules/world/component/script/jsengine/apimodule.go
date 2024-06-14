@@ -284,6 +284,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "SetSummary", a.SetSummary)
 	AppendToWorld(jp.Runtime, world, "GetSummary", a.GetSummary)
 	AppendToWorld(jp.Runtime, world, "Save", a.Save)
+	AppendToWorld(jp.Runtime, world, "Milliseconds", a.Milliseconds)
 }
 
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1387,6 +1388,10 @@ func (a *jsapi) GetSummary(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (a *jsapi) Save(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.Save())
 }
+func (a *jsapi) Milliseconds(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.Milliseconds())
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

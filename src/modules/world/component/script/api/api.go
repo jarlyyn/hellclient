@@ -17,6 +17,7 @@ import (
 	"strconv"
 	"strings"
 	"sync/atomic"
+	"time"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/herbsecurity/secret/encrypt/aesencrypt"
@@ -1523,4 +1524,8 @@ func (a *API) GetSummary() string {
 func (a *API) Save() bool {
 	a.Bus.RaiseSaveEvent()
 	return true
+}
+
+func (a *API) Milliseconds() int64 {
+	return time.Now().UnixMilli()
 }
