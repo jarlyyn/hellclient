@@ -10,7 +10,9 @@ define(function (require) {
         vm.current = data
         vm.currenttab = data
         canvas.Clean()
-        vm.historypos = -1
+        vm.historypos = 0
+        vm.suggestion=[]
+        vm.history=[]
         if (data) {
             setTimeout(() => {
                 let input = document.getElementById("mud-input")
@@ -136,11 +138,13 @@ define(function (require) {
     }
     handlers.history = function (data) {
         vm.history=[]
+        vm.historypos=0
         data.forEach(function (cmd) {
             if (cmd!=""){
                 vm.history.push(cmd)
             }
         })
+        vm.suggestion=[]
     }
     handlers.usertimers = function (data) {
         vm.usertimerlist = data

@@ -104,8 +104,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
         AuthorizedVisible: false,
         visualPrompt: null,
         visualPromptVisible: false,
-        historypos: -1,
-        lastinput:"",
+        historypos: 0,
+        lastinput: "",
         usesrpasswordForm: null,
         usesrpasswordFormVisible: false,
         sendto: {
@@ -143,8 +143,8 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             "avatar": avatar,
         },
         methods: {
-            onEsc:function(){
-                vm.suggestion=[]
+            onEsc: function () {
+                vm.suggestion = []
             },
             onKeyUp: function (event) {
                 app.KeyUp(event)
@@ -152,67 +152,66 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
             onInputKeyDown: function (event) {
                 app.onInputKeyDown(event)
             },
-            hideSuggestion:function(){
-                vm.suggestion=[]
-                vm.historypos=0
+            hideSuggestion: function () {
+                vm.suggestion = []
+                vm.historypos = 0
             },
-            selectAll:function(){
-                vm.$nextTick(function(){
-                    var dom=document.getElementById("user-input").getElementsByTagName("input")[0]
+            selectAll: function () {
+                vm.$nextTick(function () {
+                    var dom = document.getElementById("user-input").getElementsByTagName("input")[0]
                     dom.select();
                 })
             },
-            onFindHistory:function(){
+            onFindHistory: function () {
 
-                if (vm.historypos==0){
+                if (vm.historypos == 0) {
                     vm.cmd = vm.lastinput
                     vm.selectAll();
                     return
                 }
-                if (vm.historypos<=vm.suggestion.length){
-                    vm.cmd=vm.suggestion[vm.suggestion.length-vm.historypos]
+                if (vm.historypos <= vm.suggestion.length) {
+                    vm.cmd = vm.suggestion[vm.suggestion.length - vm.historypos]
                     vm.selectAll();
                     return
                 }
-                var history=vm.history[vm.history.length-(vm.historypos-vm.suggestion.length)]
-                if (history){
-                    vm.cmd=history
+                if (vm.historypos <= vm.history.length + vm.suggestion.length) {
+                    var history = vm.history[vm.history.length - (vm.historypos - vm.suggestion.length)]
+                    vm.cmd = history
                     vm.selectAll();
                 }
             },
             onUp: function () {
-                vm.historypos=vm.historypos+1
-                if (vm.historypos>(vm.history.length+vm.suggestion.length)){
-                    vm.historypos=0
-                }
-                vm.onFindHistory()
-            },
-            onDown: function () {
-                vm.historypos=vm.historypos-1
-                if (vm.historypos <= 0) {
+                vm.historypos = vm.historypos + 1
+                if (vm.historypos > (vm.history.length + vm.suggestion.length)) {
                     vm.historypos = 0
                 }
                 vm.onFindHistory()
             },
-            onSuggest:function(event){
-                vm.cmd=event
+            onDown: function () {
+                vm.historypos = vm.historypos - 1
+                if (vm.historypos < 0) {
+                    vm.historypos = 0
+                }
+                vm.onFindHistory()
+            },
+            onSuggest: function (event) {
+                vm.cmd = event
                 vm.selectAll();
-                vm.suggestion=[]
+                vm.suggestion = []
             },
             onInputChange: function () {
-                vm.historypos=0
+                vm.historypos = 0
                 var val = document.getElementById("user-input").getElementsByTagName("input")[0].value
-                vm.lastinput=val
+                vm.lastinput = val
+                vm.suggestion = []
                 if (vm.history) {
-                    vm.suggestion = []
-                    var val = document.getElementById("user-input").getElementsByTagName("input")[0].value
                     if (val) {
                         vm.history.forEach(function (data) {
                             if (data.indexOf(val) > -1) {
                                 vm.suggestion.push(data)
                             }
                         })
-                        if (vm.suggestion.length > 5) {
+                        if (vm.suggestion.length > 10) {
                             vm.suggestion = vm.suggestion.slice(-10)
                         }
                     }
@@ -223,7 +222,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
                 vm.historypos = 0
                 vm.suggestion = []
                 vm.selectAll();
-                vm.lastinput=""
+                vm.lastinput = ""
             },
             domasssend: function () {
                 if (vm.MassSendForm) {
