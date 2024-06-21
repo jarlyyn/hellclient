@@ -23,7 +23,7 @@ require (
 	github.com/herb-go/util v0.0.0-20230321163403-6a757b251968
 	github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73
 	github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce
-	github.com/jarlyyn/golang-pkg-pcre v0.0.0-20220728174224-9ac525e8dd72
+	github.com/jarlyyn/golang-pkg-pcre v0.0.0-20240621170938-332279f3b0ba
 	github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a
 	github.com/satori/go.uuid v1.2.0
 	github.com/yuin/gopher-lua v1.1.1
