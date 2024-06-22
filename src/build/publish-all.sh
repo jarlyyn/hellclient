@@ -49,8 +49,10 @@ upx -9 $1/bin/$winbinname
 # cp -rpf ../../bin/$macbinname $1/bin/$macbinname
 # echo "upx mac"
 # upx -9 $1/bin/$macbinname
-# cp -rpf ../../bin/$mclconvertorname $1/bin/$mclconvertorname
-# cp -rpf ../../bin/$winmclconvertorname $1/bin/$winmclconvertorname
+cp -rpf ../../bin/$mclconvertorname $1/bin/$mclconvertorname
+upx -9 $1/bin/$mclconvertorname
+cp -rpf ../../bin/$winmclconvertorname $1/bin/$winmclconvertorname
+upx -9 $1/bin/$winmclconvertorname
 # cp -rpf ../../bin/$macmclconvertorname $1/bin/$macmclconvertorname
 cp -rpf ../../$winpcredll $1/bin/libpcre-1.dll
 echo "Copying system files."

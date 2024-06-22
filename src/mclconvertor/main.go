@@ -49,6 +49,7 @@ func ConvertScript() {
 	args := flag.Args()
 	if len(args) != 1 {
 		fmt.Println("usage: mclconvertor MCLFILENAME ")
+		os.Exit(0)
 	}
 	filename := args[0]
 	data, err := os.ReadFile(filename)
