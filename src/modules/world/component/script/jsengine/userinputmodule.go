@@ -259,6 +259,10 @@ func (u *Userinput) Note(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	ui := userinput.SendNote(u.bus, call.Argument(0).String(), call.Argument(1).String(), call.Argument(2).String(), call.Argument(3).String())
 	return r.ToValue(ui.ID)
 }
+func (u *Userinput) Custom(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	ui := userinput.SendCustom(u.bus, call.Argument(0).String(), call.Argument(1).String())
+	return r.ToValue(ui.ID)
+}
 func (u *Userinput) Convert(r *goja.Runtime) goja.Value {
 	obj := r.NewObject()
 	obj.Set("prompt", u.Prompt)
@@ -279,7 +283,8 @@ func (u *Userinput) Convert(r *goja.Runtime) goja.Value {
 	obj.Set("NewVisualPrompt", u.NewVisualPrompt)
 	obj.Set("hideall", u.HideAll)
 	obj.Set("HideAll", u.HideAll)
-
+	obj.Set("Custom", u.Custom)
+	obj.Set("custom", u.Custom)
 	return obj
 }
 func NewUserinputModule(b *bus.Bus) *herbplugin.Module {

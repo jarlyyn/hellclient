@@ -236,6 +236,7 @@
 * [Userinput.Alert 用户提示](apiuserinput.md#UserinputAlert)
 * [Userinput.Popup 弹框提示](apiuserinput.md#UserinputPopup)
 * [Userinput.Note 弹出文本](apiuserinput.md#UserinputNote)
+* [Userinput.Custom 自定义事件](apiuserinput.md#Custom)
 * [Userinput.NewList 新建列表](apiuserinput.md#UserinputNewList)
 * [Userinput.NewDatagrid 新建数据表格](apiuserinput.md#Userinputnewdatagrid)
 * [Userinput.NewVisualPrompt 新建可视化输入](apiuserinput.md#UserinputNewVisualPrompt)

@@ -198,7 +198,7 @@ Note (script string, title string, body string, type string) string
 
 ### 描述
 
-弹窗请求用户输入
+弹窗显示
 
 * script 回调脚本
 * title 标题
@@ -219,6 +219,43 @@ Userinput.Note("handlenote","Title","# md content [a](href)","md")
 Lua
 ```
 Userinput:Note("handlenote","Title","# md content [a](href)"","md")
+```
+
+### 返回值
+
+唯一id
+
+## Userinput.Custom
+
+显示文本
+
+### 原型
+```
+Custom (script string, value string) string
+```
+
+### 描述
+
+预留自定义数据，由具体连接客户端处理
+
+* script 回调脚本
+* value 值
+
+### 回调函数
+
+* code 成功非0
+* 其他由具体客户端决定
+
+### 代码范例
+
+Javascript
+```
+Userinput.Custom("Mydata")
+```
+
+Lua
+```
+Userinput:Custom("Mydata")
 ```
 
 ### 返回值

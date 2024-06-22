@@ -286,6 +286,12 @@ func (u *Userinput) Note(L *lua.LState) int {
 	L.Push(lua.LString(ui.ID))
 	return 1
 }
+func (u *Userinput) Custom(L *lua.LState) int {
+	_ = L.Get(1) //this
+	ui := userinput.SendCustom(u.bus, L.ToString(2), L.ToString(3))
+	L.Push(lua.LString(ui.ID))
+	return 1
+}
 func (u *Userinput) Convert(L *lua.LState) lua.LValue {
 	t := L.NewTable()
 	t.RawSetString("prompt", L.NewFunction(u.Prompt))
@@ -298,6 +304,7 @@ func (u *Userinput) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("newdatagrid", L.NewFunction(u.NewDatagrid))
 	t.RawSetString("newvisualprompt", L.NewFunction(u.NewVisualPrompt))
 	t.RawSetString("hideall", L.NewFunction(u.HideAll))
+	t.RawSetString("custom", L.NewFunction(u.Custom))
 
 	t.RawSetString("Prompt", L.NewFunction(u.Prompt))
 	t.RawSetString("Confirm", L.NewFunction(u.Confirm))
@@ -309,6 +316,8 @@ func (u *Userinput) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("NewDatagrid", L.NewFunction(u.NewDatagrid))
 	t.RawSetString("NewVisualPrompt", L.NewFunction(u.NewVisualPrompt))
 	t.RawSetString("HideAll", L.NewFunction(u.HideAll))
+	t.RawSetString("Custom", L.NewFunction(u.Custom))
+
 	return t
 }
 func NewUserinputModule(b *bus.Bus) *herbplugin.Module {

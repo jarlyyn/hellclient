@@ -76,3 +76,10 @@ func HideAll(b *bus.Bus) {
 	ui := CreateUserInput(NameHideall, "", nil)
 	b.RaiseScriptMessageEvent(ui)
 }
+
+func SendCustom(b *bus.Bus, script string, value string) *Userinput {
+	data := value
+	ui := CreateUserInput(NameCustom, script, data)
+	b.RaiseScriptMessageEvent(ui)
+	return ui
+}
