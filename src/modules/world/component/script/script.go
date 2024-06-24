@@ -410,13 +410,13 @@ func (s *Script) HandleFocus(b *bus.Bus) {
 	s.SetCreator("focus", "")
 	e.OnFocus(b)
 }
-func (s *Script) HandleLostFocus(b *bus.Bus) {
+func (s *Script) HandleLoseFocus(b *bus.Bus) {
 	e := s.getEngine()
 	if e == nil {
 		return
 	}
-	s.SetCreator("lostfocus", "")
-	e.OnLostFocus(b)
+	s.SetCreator("losefocus", "")
+	e.OnLoseFocus(b)
 }
 func (s *Script) HandleBuffer(b *bus.Bus, data []byte) bool {
 	e := s.getEngine()
@@ -497,7 +497,7 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.HandleBuffer = b.WrapHandleBytesForBool(s.HandleBuffer)
 	b.HandleSubneg = b.WrapHandleBytesForBool(s.HandleSubneg)
 	b.HandleFocus = b.Wrap(s.HandleFocus)
-	b.HandleLostFocus = b.Wrap(s.HandleLostFocus)
+	b.HandleLoseFocus = b.Wrap(s.HandleLoseFocus)
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)

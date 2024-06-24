@@ -203,7 +203,7 @@ func (p *Prophet) OnOpen(conn connections.OutputConnection) {
 
 }
 func (p *Prophet) onLeave(roomid string) {
-	p.Titan.LostFocus(roomid)
+	p.Titan.LoseFocus(roomid)
 }
 func (p *Prophet) onCurrent(roomid string) {
 	p.Titan.Focus(roomid)

@@ -96,7 +96,7 @@ func UpdateScript(t *titan.Titan, data []byte) {
 	sd.OnBufferMin = form.OnBufferMin
 	sd.OnSubneg = form.OnSubneg
 	sd.OnFocus = form.OnFocus
-	sd.OnLostFocus = form.OnLostFocus
+	sd.OnLoseFocus = form.OnLoseFocus
 	t.Locker.Unlock()
 	go func() {
 		t.OnUpdateScriptSuccess(form.ID)

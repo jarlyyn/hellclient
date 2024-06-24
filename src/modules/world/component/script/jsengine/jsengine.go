@@ -47,7 +47,7 @@ type JsEngine struct {
 	onBufferMin  int
 	onBufferMax  int
 	onFocus      string
-	onLostFocus  string
+	onLoseFocus  string
 	onKeyUp      string
 }
 
@@ -71,7 +71,7 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 	e.onBufferMax = data.OnBufferMax
 	e.onBufferMin = data.OnBufferMin
 	e.onFocus = data.OnFocus
-	e.onLostFocus = data.OnLostFocus
+	e.onLoseFocus = data.OnLoseFocus
 	e.onKeyUp = data.OnKeyUp
 	err := util.Catch(func() {
 		newJsInitializer(b).MustApplyInitializer(e.Plugin)
@@ -255,14 +255,14 @@ func (e *JsEngine) OnFocus(b *bus.Bus) {
 	e.Locker.Unlock()
 	e.Call(b, e.onFocus)
 }
-func (e *JsEngine) OnLostFocus(b *bus.Bus) {
+func (e *JsEngine) OnLoseFocus(b *bus.Bus) {
 	e.Locker.Lock()
-	if e.Plugin.Runtime == nil || e.onLostFocus == "" {
+	if e.Plugin.Runtime == nil || e.onLoseFocus == "" {
 		e.Locker.Unlock()
 		return
 	}
 	e.Locker.Unlock()
-	e.Call(b, e.onLostFocus)
+	e.Call(b, e.onLoseFocus)
 }
 func (e *JsEngine) OnKeyUp(b *bus.Bus, key string) {
 	e.Locker.Lock()

@@ -226,10 +226,10 @@ func (t *Titan) Focus(id string) {
 		w.HandleFocus()
 	}
 }
-func (t *Titan) LostFocus(id string) {
+func (t *Titan) LoseFocus(id string) {
 	w := t.World(id)
 	if w != nil {
-		w.HandleLostFocus()
+		w.HandleLoseFocus()
 	}
 }
 func (t *Titan) HandleCmdHUDContent(id string) {

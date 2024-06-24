@@ -109,7 +109,7 @@ type Bus struct {
 	HandleBuffer            func([]byte) bool
 	HandleSubneg            func([]byte) bool
 	HandleFocus             func()
-	HandleLostFocus         func()
+	HandleLoseFocus         func()
 	DoSendTimerToScript     func(*world.Timer)
 	DoDeleteTimer           func(string) bool
 	DoDeleteTimerByName     func(string) bool

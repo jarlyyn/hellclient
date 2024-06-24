@@ -185,6 +185,8 @@ func (t *MclTriggers) Convert() []*Trigger {
 type MclWorld struct {
 	OnWorldConnect        string `xml:"on_world_connect,attr"`
 	OnWorldDisconnect     string `xml:"on_world_disconnect,attr"`
+	OnWorldGetFocus       string `xml:"on_world_get_focus,attr"`
+	OnWorldLoseFocus      string `xml:"on_world_lose_focus,attr"`
 	Site                  string `xml:"site,attr"`
 	Port                  string `xml:"port,attr"`
 	Name                  string `xml:"name,attr"`
@@ -204,6 +206,8 @@ func (m *Mcl) ToScriptData() *ScriptData {
 	data := &ScriptData{}
 	data.OnConnect = m.World.OnWorldConnect
 	data.OnDisconnect = m.World.OnWorldDisconnect
+	data.OnFocus = m.World.OnWorldGetFocus
+	data.OnLoseFocus = m.World.OnWorldLoseFocus
 	data.Type = strings.ToLower(m.World.ScriptLanguage)
 	data.Triggers = m.Triggers.Convert()
 	data.Aliases = m.Aliases.Convert()

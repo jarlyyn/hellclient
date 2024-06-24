@@ -90,6 +90,8 @@ type ScriptData struct {
 	OnClose        string
 	OnConnect      string
 	OnDisconnect   string
+	OnFocus        string
+	OnLoseFocus    string
 	Triggers       []*Trigger
 	Timers         []*Timer
 	Aliases        []*Alias

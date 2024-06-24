@@ -305,7 +305,7 @@ define(function (require) {
             OnBufferMax: vm.scriptSettings.OnBufferMax,
             OnSubneg: vm.scriptSettings.OnSubneg,
             OnFocus:vm.scriptSettings.OnFocus,
-            OnLostFocus:vm.scriptSettings.OnLostFocus,
+            OnLoseFocus:vm.scriptSettings.OnLoseFocus,
         }
         vm.scriptsettingsUpdateFormVisible = true
     }
