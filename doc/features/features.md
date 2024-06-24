@@ -36,6 +36,8 @@ Hellclient通过使用[gopher-lua库](github.com/yuin/gopher-lua)提供了Lua 5.
 
 ## 用户授权
 
+进行部分敏感操作时(主要是网络请求)，会需要对请求地址进行授权，只有授权后才能访问响应地址。
+
 ## HTTP组件
 
 出于安全目的以及技术实现的方式，hellclient不支持传统的mushclient调用系统服务的功能\(lua潜入dll/jscript嵌入Activex对象\)

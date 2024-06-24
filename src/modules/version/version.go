@@ -6,7 +6,7 @@ import (
 	"github.com/herb-go/misc/version"
 )
 
-const Major = 0
+const Major = 1
 const Year = 2024
 const Month = 06
 const Day = 23

@@ -288,7 +288,7 @@ func (u *Userinput) Note(L *lua.LState) int {
 }
 func (u *Userinput) Custom(L *lua.LState) int {
 	_ = L.Get(1) //this
-	ui := userinput.SendCustom(u.bus, L.ToString(2), L.ToString(3))
+	ui := userinput.SendCustom(u.bus, L.ToString(2), L.ToString(3), L.ToString(4))
 	L.Push(lua.LString(ui.ID))
 	return 1
 }

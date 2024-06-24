@@ -77,8 +77,11 @@ func HideAll(b *bus.Bus) {
 	b.RaiseScriptMessageEvent(ui)
 }
 
-func SendCustom(b *bus.Bus, script string, value string) *Userinput {
-	data := value
+func SendCustom(b *bus.Bus, script string, customtype string, value string) *Userinput {
+	data := map[string]interface{}{
+		"Type":  customtype,
+		"Value": value,
+	}
 	ui := CreateUserInput(NameCustom, script, data)
 	b.RaiseScriptMessageEvent(ui)
 	return ui

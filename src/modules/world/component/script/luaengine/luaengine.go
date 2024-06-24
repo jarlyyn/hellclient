@@ -44,6 +44,7 @@ type LuaEngine struct {
 	onSubneg     string
 	onBuffer     string
 	onFocus      string
+	onLostFocus  string
 	onKeyUp      string
 	onBufferMin  int
 	onBufferMax  int
@@ -70,6 +71,7 @@ func (e *LuaEngine) Open(b *bus.Bus) error {
 	e.onBufferMax = data.OnBufferMax
 	e.onKeyUp = data.OnKeyUp
 	e.onFocus = data.OnFocus
+	e.onLostFocus = data.OnLostFocus
 	err := util.Catch(func() {
 		newLuaInitializer(b).MustApplyInitializer(e.Plugin)
 	})
@@ -248,11 +250,21 @@ func (e *LuaEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
 }
 func (e *LuaEngine) OnFocus(b *bus.Bus) {
 	e.Locker.Lock()
-	if e.Plugin.LState == nil || e.onSubneg == "" {
+	if e.Plugin.LState == nil || e.onFocus == "" {
 		e.Locker.Unlock()
 		return
 	}
-	fn := e.Plugin.LState.GetGlobal(e.onSubneg)
+	fn := e.Plugin.LState.GetGlobal(e.onFocus)
+	e.Locker.Unlock()
+	e.Call(b, fn)
+}
+func (e *LuaEngine) OnLostFocus(b *bus.Bus) {
+	e.Locker.Lock()
+	if e.Plugin.LState == nil || e.onLostFocus == "" {
+		e.Locker.Unlock()
+		return
+	}
+	fn := e.Plugin.LState.GetGlobal(e.onLostFocus)
 	e.Locker.Unlock()
 	e.Call(b, fn)
 }

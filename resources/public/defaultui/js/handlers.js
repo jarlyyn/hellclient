@@ -66,6 +66,7 @@ define(function (require) {
     }
     handlers.lines = function (data) {
         // var lines=[]
+        canvas.Clean()
         data.forEach(function (element) {
             // lines.push(element)
             canvas.Drawline(element)

@@ -12,7 +12,19 @@ Hellclient是一款支持Lua脚本和Javascript脚本的，采用B/S(浏览器/�
 
 所以hellclient的机器人主体概念和mushclient一致，触发器/计时器/别名等大部分属性和mushclient一致，部分API接口与mushclient一致 [查看mushclient接口兼容性](doc/api/mush.md)
 
-mushclient是mud活跃时代的一款非常接触，优秀的客户端。
+mushclient是mud活跃时代的一款非常杰出，优秀的客户端。
+
+## 界面
+
+Hellclient本身是通过B/S架构提供操作控制的。
+
+为了方便 多客户端管理/移动使用/操作体验/通知，也提供了跨平台的管理界面Hellclient UI。
+
+Github地址为:[https://github.com/hellclient-scripts/hellclientui](https://github.com/hellclient-scripts/hellclientui)
+
+提供了Windows/Linux/Android/Ios的客户端，以及Mac OS x 的实验性支持。
+
+如有需要可以进行安装使用
 
 ## 特性
 

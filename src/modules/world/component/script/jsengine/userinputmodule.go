@@ -260,7 +260,7 @@ func (u *Userinput) Note(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(ui.ID)
 }
 func (u *Userinput) Custom(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	ui := userinput.SendCustom(u.bus, call.Argument(0).String(), call.Argument(1).String())
+	ui := userinput.SendCustom(u.bus, call.Argument(0).String(), call.Argument(1).String(), call.Argument(1).String())
 	return r.ToValue(ui.ID)
 }
 func (u *Userinput) Convert(r *goja.Runtime) goja.Value {

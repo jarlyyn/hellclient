@@ -126,6 +126,7 @@ func (p *Prophet) Change(roomid string) {
 		if v != nil {
 			crid := v.(string)
 			if crid != "" {
+				p.onLeave(crid)
 				location.Leave(crid)
 			}
 			location.Join(roomid)
@@ -201,7 +202,9 @@ func (p *Prophet) OnOpen(conn connections.OutputConnection) {
 	ctx.Data.Store("rooms", r)
 
 }
-
+func (p *Prophet) onLeave(roomid string) {
+	p.Titan.LostFocus(roomid)
+}
 func (p *Prophet) onCurrent(roomid string) {
 	p.Titan.Focus(roomid)
 	p.Titan.HandleCmdLines(roomid)

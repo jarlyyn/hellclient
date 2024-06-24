@@ -49,3 +49,11 @@ mush的mcl本身并不指定编码，是根据系统编码走的,而hellclient�
 其他的就是部分不兼容或者没实现的接口了。
 
 由于机制不同，又是黑箱开发的接口，可能有部分接口表现不一致，这可以联系我看看是否能调成和mush一致的接口
+
+## (四)功能限制
+
+由于设计上的理念问题，以下Mush功能无法在Hellclient中实现
+
+* Lua加载dll,可能需要通过[request/response机制](../features/requestresponse.md重写
+* Sqlite功能
+* Plugin功能

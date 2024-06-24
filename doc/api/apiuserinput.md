@@ -231,7 +231,7 @@ Userinput:Note("handlenote","Title","# md content [a](href)"","md")
 
 ### 原型
 ```
-Custom (script string, value string) string
+Custom (script string, value type,value string) string
 ```
 
 ### 描述
@@ -250,12 +250,12 @@ Custom (script string, value string) string
 
 Javascript
 ```
-Userinput.Custom("Mydata")
+Userinput.Custom("MyScript","MyType","Mydata")
 ```
 
 Lua
 ```
-Userinput:Custom("Mydata")
+Userinput:Custom("MyScript","MyType","Mydata")
 ```
 
 ### 返回值
