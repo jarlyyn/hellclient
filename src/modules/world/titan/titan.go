@@ -773,9 +773,19 @@ func (t *Titan) ListNotOpened() ([]*world.WorldFile, error) {
 			if err != nil {
 				return nil, err
 			}
+			configdata := world.NewWorldData()
+			data, err := os.ReadFile(t.GetWorldPath(id))
+			if err != nil {
+				continue
+			}
+			err = toml.Unmarshal(data, configdata)
+			if err != nil {
+				continue
+			}
 			ut := app.Time.Datetime(i.ModTime())
 			result = append(result, &world.WorldFile{
 				ID:          id,
+				Name:        configdata.Name,
 				LastUpdated: ut,
 			})
 		}
