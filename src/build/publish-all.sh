@@ -3,10 +3,12 @@
 #settings
 binname="hellclient"
 buildername="build-linux.sh"
+mclconvertorname="mclconvertor"
 
 winbinname="hellclient.exe"
 winbuildername="build-win.sh"
 winpcredll="./lib/pcre/libpcre.dll"
+winmclconvertorname="mclconvertor.exe"
 
 
 macbinname="hellclient-mac"

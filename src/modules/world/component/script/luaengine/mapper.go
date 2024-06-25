@@ -238,7 +238,7 @@ func (m *LuaMapper) GetPath(L *lua.LState) int {
 	for i := 3; i < count; i++ {
 		to = append(to, L.ToString(i+1))
 	}
-	option := L.CheckTable(5)
+	option := L.ToTable(5)
 	opt := m.toOption(L, option)
 	steps := m.mapper.GetPath(from, fly != 0, to, opt)
 	if steps == nil {
