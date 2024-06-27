@@ -14,6 +14,15 @@ Hellclient是一款支持Lua脚本和Javascript脚本的，采用B/S(浏览器/�
 
 mushclient是mud活跃时代的一款非常杰出，优秀的客户端。
 
+## 系统支持
+
+当前的hellclient ui的系统支持为
+
+* windows 7 sp2/windows 2008 +
+* centos 7/debian 10 +
+
+服务器自启动，Linux可以使用systemd,参考 [/system/system.d/hellclient.service](/system/system.d/hellclient.service),注意调整user,windows建议使用NSSM[https://nssm.cc/](https://nssm.cc/)。
+
 ## 界面
 
 Hellclient本身是通过B/S架构提供操作控制的。

@@ -54,6 +54,6 @@ mush的mcl本身并不指定编码，是根据系统编码走的,而hellclient�
 
 由于设计上的理念问题，以下Mush功能无法在Hellclient中实现
 
-* Lua加载dll,可能需要通过[request/response机制](../features/requestresponse.md重写
-* Sqlite功能
+* Lua加载dll,可能需要通过[request/response机制](../features/requestresponse.md)重写
+* sqlite功能
 * Plugin功能
