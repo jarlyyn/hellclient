@@ -34,6 +34,22 @@ Hellclient通过使用[gopher-lua库](github.com/yuin/gopher-lua)提供了Lua 5.
 
 为了安全性，Hellclient对lua的功能进行了部分裁剪
 
+具体如下
+```lua
+	os.remove=nil
+	os.rename=nil
+	os.execute=nil
+	os.getenv=nil
+	os.setenv=nil
+	os.tmpname=nil
+	os.exit=nil
+	os.setlocale=nil
+	io=nil
+	dofile=nil
+	loadfile=nil
+	load=nil
+```
+
 ## 用户授权
 
 进行部分敏感操作时(主要是网络请求)，会需要对请求地址进行授权，只有授权后才能访问响应地址。

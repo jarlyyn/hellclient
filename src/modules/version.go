@@ -1,3 +1,5 @@
 package modules
 
-import _ "modules/version" //version module
+import (
+	_ "modules/versionapi"
+)

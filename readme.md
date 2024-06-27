@@ -42,7 +42,7 @@ Hellclient拥有以下特性
 
 * [快速开始](doc/quickstart/quickstart.md)
 * [接口文档](doc/api/readme.md)
-
+* [开发说明](doc/develop/readme.md)
 ### 脚本范例
 
 * [Helllua](https://github.com/hellclient-scripts/helllua) 原Mushclient机器人移植

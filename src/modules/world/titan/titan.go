@@ -6,7 +6,7 @@ import (
 	"errors"
 	"modules/app"
 	"modules/msg"
-	"modules/version"
+	"modules/versionapi"
 	"modules/world"
 	"modules/world/bus"
 	"modules/world/component"
@@ -337,7 +337,7 @@ func (t *Titan) HandleCmdAssist(id string) {
 	}
 }
 func (t *Titan) HandleCmdAbout() {
-	go msg.PublishVersionMessage(t, version.Version.FullVersionCode())
+	go msg.PublishVersionMessage(t, versionapi.Version.FullVersionCode())
 }
 func (t *Titan) HandleCmdDefaultServer() {
 	go msg.PublishDefaultServerMessage(t, app.System.DefaultServer)
@@ -348,7 +348,7 @@ func (t *Titan) HandleCmdDefaultCharset() {
 }
 
 func (t *Titan) ExecAPIversion() {
-	msg.PublishAPIVersionMessage(t, version.Version)
+	msg.PublishAPIVersionMessage(t, versionapi.Version)
 }
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()
