@@ -76,6 +76,14 @@ type Step struct {
 
 飞行列表,就是一个路径列表，用于只带那些从所有房间都可以进入的路径，不依附于特定房间
 
+### option
+
+用于 getpath和walk all的参数,格式为一个object/table，用于指定行走时的特殊选项。
+
+* whitelist: 白名单列表，字符串数组。白名单列表不为空时，会限制只在白名单给定的房间内寻找。一般用于只能在某个区域里行走。
+* blacklist:黑名单列表，字符串数组。黑名单列表不为空时，行走会路过黑名单内的房间。
+
+
 ## Mapper.Reset
 
 重置地图
@@ -291,7 +299,7 @@ Note(Mapper:Tags)
 
 ### 原型
 ```
-GetPath(from string, fly bool, to []string) []*Step
+GetPath(from string, fly bool, to []string , option *Option) []*Step
 ```
 ### 描述
 
@@ -300,6 +308,7 @@ GetPath(from string, fly bool, to []string) []*Step
 * from 起点位置
 * fly 是否使用flylist(0为false)
 * to 重点列表
+* option 路径选项，可为空
 
 返回值为Step对象的列表
 
@@ -332,6 +341,61 @@ end
 ### 返回值
 
 见描述
+
+## Mapper.WalkAll
+
+获取路过所有给到目标的路径(目前实现为多次行走)
+
+### 原型
+```
+WalkAll(targets []string, fly bool, max_distance int, option *Option) []*Step
+```
+### 描述
+
+路过所有给到目标的路径
+
+* targets 字符串列表,第一个为起点，当目标数量小于2时会返回空结果
+* fly 是否使用flylist(0为false)
+* max_distance 最大距离，为0则无效
+* option 路径选项，可为空
+
+返回值为包含Step的对象
+
+* Steps     路径列表，同GetPath
+* Walked    路过的房间id列表
+* NotWalked 没路过的房间id列表
+
+
+找不到路径返回空
+
+### 代码范例
+
+Javascript
+```
+var result=Mapper.WalkAll(["from","to1","to2"],true,0)
+result.Steps.forEach(function (step) {
+    world.Note(step.from) //起点
+    world.Note(step.to) //目的地
+    world.Note(step.delay) //延迟
+    world.Note(step.command) //指令
+})
+```
+
+Lua
+```
+local result=Mapper:WalkAll({"from","to1","to2"},true,0)
+for k, step in pairs(result.Steps) do
+    Note(step.from) -起点
+    Note(step.to) -目的地
+    Note(step.delay) -延迟
+    Note(step.command) -指令
+end
+```
+
+### 返回值
+
+见描述
+
 
 ## Mapper.AddPath
 

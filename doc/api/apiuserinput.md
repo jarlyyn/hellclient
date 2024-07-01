@@ -1037,11 +1037,23 @@ SetMediaType(t string)
 
 ### 描述
 
-设置可视化输入的媒体类型，暂时只支持image，output和text
+设置可视化输入的媒体类型，暂时只支持image，base64slide,output和text
 
 默认为image
 
 output需要将url设置为DumpOutput的返回值(JSON格式的Line数组)
+
+base64需要将url设置为 | 分割的，带格式头的 base64图片，如 "data:image/jpeg;base64,"
+
+如
+
+```Javascript
+ let data = Binary.Base64Encode(App.Core.CaptchaReq.ResponseBodyArrayBuffer())
+ App.Core.CaptchaImages.push("data:image/jpeg;base64, " + data)
+ let vp = Userinput.newvisualprompt("验证码", intro, App.Core.CaptchaImages.join("|"))
+ vp.SetMediaType("base64slide")
+ vp.publish("App.Core.OnCaptchaSubmit")
+```
 
 ### 代码范例
 
