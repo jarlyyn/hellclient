@@ -171,14 +171,20 @@ func (m *JsMapper) WalkAll(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	maxdistance := int(call.Argument(2).ToInteger())
 	v := call.Argument(3)
 	var option *goja.Object
-	if v.SameAs(goja.Null()) {
+	if !v.Equals(goja.Null()) {
 		option = call.Argument(3).ToObject(r)
 	}
 	var opt *mapper.Option
 	if option != nil {
 		opt = mapper.NewOption()
-		_ = r.ExportTo(option.Get("blacklist"), &opt.Blacklist)
-		_ = r.ExportTo(option.Get("blacklist"), &opt.Whitelist)
+		blacklist := option.Get("blacklist")
+		if blacklist != nil {
+			_ = r.ExportTo(blacklist, &opt.Blacklist)
+		}
+		whitelist := option.Get("whitelist")
+		if whitelist != nil {
+			_ = r.ExportTo(whitelist, &opt.Whitelist)
+		}
 	}
 	result := m.mapper.WalkAll(targets, fly != 0, maxdistance, opt)
 	jsresult := &JsWalkAllResult{result: result}

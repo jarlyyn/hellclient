@@ -221,7 +221,7 @@ func (m *LuaMapper) WalkAll(L *lua.LState) int {
 	})
 	fly := L.ToInt(3)
 	maxdistance := L.ToInt(4)
-	option := L.CheckTable(5)
+	option := L.ToTable(5)
 	opt := m.toOption(L, option)
 	result := m.mapper.WalkAll(targets, fly != 0, maxdistance, opt)
 	luaresult := &LuaWalkAllResult{result: result}
