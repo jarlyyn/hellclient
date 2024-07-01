@@ -51,6 +51,7 @@ Hellclient拥有以下特性
 
 * [快速开始](doc/quickstart/quickstart.md)
 * [接口文档](doc/api/readme.md)
+* [事件处理函数](doc/features/event.md)
 * [开发说明](doc/develop/readme.md)
 ### 脚本范例
 
