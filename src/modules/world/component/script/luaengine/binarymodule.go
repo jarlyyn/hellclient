@@ -10,7 +10,7 @@ import (
 )
 
 func NewBinaryModule(b *bus.Bus) *herbplugin.Module {
-	return herbplugin.CreateModule("http",
+	return herbplugin.CreateModule("binary",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
 			luapluing := plugin.(lua51plugin.LuaPluginLoader).LoadLuaPlugin()
 			l := luapluing.LState

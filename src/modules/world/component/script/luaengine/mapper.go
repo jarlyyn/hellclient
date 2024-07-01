@@ -406,7 +406,8 @@ func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("FlyList", L.NewFunction(m.FlyList))
 	t.RawSetString("setflylist", L.NewFunction(m.SetFlyList))
 	t.RawSetString("SetFlyList", L.NewFunction(m.SetFlyList))
-
+	t.RawSetString("walkall", L.NewFunction(m.WalkAll))
+	t.RawSetString("WalkAll", L.NewFunction(m.WalkAll))
 	return t
 }
 func NewMapperModule(b *bus.Bus) *herbplugin.Module {
