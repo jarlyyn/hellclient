@@ -92,4 +92,16 @@ Switch服务器是一个Basic验证的Websocket广播服务器
 
 通过基于Websocket的接口进行功能扩展
 
-详见[文档](./requestresponse)
+详见[文档](./requestresponse.md)
+
+## 事件处理函数
+
+在服务器端发生特定事件时的对应处理函数
+
+详见[文档](./event.md)
+
+## 回调机制
+
+回调机制是用于处理异步操作的一个通过用机制。
+
+详见[文档](./callback.md.md)
