@@ -209,6 +209,19 @@ func (m *LuaMapper) toOption(L *lua.LState, option *lua.LTable) *mapper.Option {
 				opt.Whitelist = append(opt.Whitelist, l2.String())
 			})
 		}
+		lblockedpath, ok := option.RawGetString("blockedpath").(*lua.LTable)
+		if ok {
+			lblockedpath.ForEach(func(l1, l2 lua.LValue) {
+				path := []string{}
+				lpath, ok2 := l2.(*lua.LTable)
+				if ok2 {
+					path = append(path, lpath.String())
+				}
+				if len(path) > 1 {
+					opt.BlockedPath = append(opt.BlockedPath, path)
+				}
+			})
+		}
 	}
 	return opt
 }

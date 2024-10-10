@@ -185,6 +185,10 @@ func (m *JsMapper) WalkAll(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		if whitelist != nil {
 			_ = r.ExportTo(whitelist, &opt.Whitelist)
 		}
+		blockedpath := option.Get("blockedpath")
+		if blockedpath != nil {
+			_ = r.ExportTo(blockedpath, &opt.BlockedPath)
+		}
 	}
 	result := m.mapper.WalkAll(targets, fly != 0, maxdistance, opt)
 	jsresult := &JsWalkAllResult{result: result}

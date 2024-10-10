@@ -39,6 +39,7 @@ type Walking struct {
 	forwading   *list.List
 	blacklist   map[string]bool
 	whitelist   map[string]bool
+	blockedpath map[string]map[string]bool
 	maxdistance int
 }
 
@@ -67,6 +68,12 @@ func (w *Walking) validateExit(p *Path) bool {
 	}
 	if len(w.whitelist) > 0 && !w.whitelist[p.To] {
 		return false
+	}
+	f := w.blockedpath[p.From]
+	if f != nil {
+		if f[p.To] {
+			return false
+		}
 	}
 	return ValidateTags(w.tags, p)
 }
@@ -197,13 +204,14 @@ Matching:
 
 func NewWalking(option *Option) *Walking {
 	walking := &Walking{
-		tags:      map[string]bool{},
-		to:        []string{},
-		fly:       []*Path{},
-		walked:    map[string]*Step{},
-		forwading: list.New(),
-		blacklist: map[string]bool{},
-		whitelist: map[string]bool{},
+		tags:        map[string]bool{},
+		to:          []string{},
+		fly:         []*Path{},
+		walked:      map[string]*Step{},
+		forwading:   list.New(),
+		blacklist:   map[string]bool{},
+		whitelist:   map[string]bool{},
+		blockedpath: map[string]map[string]bool{},
 	}
 	if option != nil {
 		for _, v := range option.Blacklist {
@@ -211,6 +219,16 @@ func NewWalking(option *Option) *Walking {
 		}
 		for _, v := range option.Whitelist {
 			walking.whitelist[v] = true
+		}
+		for _, v := range option.BlockedPath {
+			if len(v) == 2 {
+				f := walking.blockedpath[v[0]]
+				if f == nil {
+					f = map[string]bool{}
+					walking.blockedpath[v[0]] = f
+				}
+				f[v[1]] = true
+			}
 		}
 	}
 	return walking

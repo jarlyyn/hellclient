@@ -10,7 +10,7 @@
 
 ### 原型
 ```
-AddTrigger(triggerName string, match string, responseText string, flags int, colour int, wildcard int, soundFileName string, scriptName string) int {
+AddTrigger(triggerName string, match string, responseText string, flags int, colour int, wildcard int, soundFileName string, scriptName string) int
 ```
 
 ### 描述
