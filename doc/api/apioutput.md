@@ -633,3 +633,31 @@ SimulateOutput(output)
 ### 返回值
 
 无
+
+## OmitOutput
+
+屏蔽当前行显示。设置最后以行的OmitOutput为true，一般用于触发过滤输出
+
+版本 1.2024-10-11 引入
+
+### 原型
+
+```go
+OmitOutput()
+```
+### 描述
+
+屏蔽当前行显示
+
+### 代码范例
+
+Javascript
+```
+OmitOutput()
+```
+
+Lua
+```
+OmitOutput()
+```
+

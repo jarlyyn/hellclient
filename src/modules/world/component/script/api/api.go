@@ -40,6 +40,9 @@ func (a *API) Version() string {
 func (a *API) Note(cmd string) {
 	a.Bus.DoPrint(cmd)
 }
+func (a *API) PrintSystem(msg string) {
+	a.Bus.DoPrintSystem(msg)
+}
 func (a *API) SendImmediate(message string) int {
 	cmd := world.CreateCommand(message)
 	cmd.Creator, cmd.CreatorType = a.Bus.GetScriptCaller()
@@ -1528,4 +1531,7 @@ func (a *API) Save() bool {
 
 func (a *API) Milliseconds() int64 {
 	return time.Now().UnixMilli()
+}
+func (a *API) OmitOutput() {
+	a.Bus.DoOmitOutput()
 }

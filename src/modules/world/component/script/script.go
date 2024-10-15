@@ -183,6 +183,8 @@ func (s *Script) unload(b *bus.Bus) {
 		s.engine.Close(b)
 	}
 	s.Mapper.Reset()
+	b.SetSummary([]*world.Line{})
+	b.SetStatus("")
 	b.SetHUDSize(0)
 	s.SetCreator("", "")
 	b.DoDeleteTimerByType(false)

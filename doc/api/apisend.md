@@ -63,6 +63,38 @@ Lua
 Note ("This monster is worth avoiding!")
 ```
 
+## PrintSystem
+
+模拟系统打印，一般用于Catch后打印错误
+
+版本 1.2024-10-11 引入
+
+### 原型
+
+```
+PrintSystem(cmd string)
+```
+### 描述
+
+打印显示传入的参数
+
+### Lua注意事项
+
+多个参数会以空格拼接发送
+
+### 代码范例
+
+Javascript
+```
+world.PrintSystem("This monster is worth avoiding!");
+```
+
+Lua
+```
+PrintSystem ("This monster is worth avoiding!")
+```
+
+
 ## SendImmediate
 
 立即发送

@@ -285,6 +285,10 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "GetSummary", a.GetSummary)
 	AppendToWorld(jp.Runtime, world, "Save", a.Save)
 	AppendToWorld(jp.Runtime, world, "Milliseconds", a.Milliseconds)
+
+	AppendToWorld(jp.Runtime, world, "OmitOutput", a.OmitOutput)
+	AppendToWorld(jp.Runtime, world, "PrintSystem", a.PrintSystem)
+
 }
 
 func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -295,6 +299,7 @@ func (a *jsapi) Print(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	a.API.Note(strings.Join(msg, " "))
 	return goja.Null()
 }
+
 func (a *jsapi) Request(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	msgtype := call.Argument(0).String()
 	msg := call.Argument(1).String()
@@ -304,6 +309,11 @@ func (a *jsapi) Request(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (a *jsapi) Note(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	info := call.Argument(0).String()
 	a.API.Note(info)
+	return goja.Null()
+}
+func (a *jsapi) PrintSystem(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	info := call.Argument(0).String()
+	a.API.PrintSystem(info)
 	return goja.Null()
 }
 func (a *jsapi) SendImmediate(call goja.FunctionCall, r *goja.Runtime) goja.Value {
@@ -1392,6 +1402,10 @@ func (a *jsapi) Milliseconds(call goja.FunctionCall, r *goja.Runtime) goja.Value
 	return r.ToValue(a.API.Milliseconds())
 }
 
+func (a *jsapi) OmitOutput(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	a.API.OmitOutput()
+	return nil
+}
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
