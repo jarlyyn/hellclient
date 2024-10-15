@@ -70,6 +70,7 @@
 ## 发送接口
 * [print 打印](apisend.md#print)
 * [Note 显示](apisend.md#Note)
+* [PrintSystem 模拟系统提示](apisend.md#PrintSystem)
 * [SendImmediate 立即发送](apisend.md#SendImmediate)
 * [Send 发送](apisend.md#Send)
 * [SendNoEcho 静默发送](apisend.md#SendNoEcho)
@@ -175,6 +176,7 @@
 * [PrintOutput 格式化输出](apioutput.md#PrintOutput)
 * [Simulate 模拟发送文字](apioutput.md#Simulate)
 * [SimulateOutput 模拟发送输出](apioutput.md#SimulateOutput)
+* [OmitOutput 屏蔽当前行显示](apioutput.md#OmitOutput)
 
 
 ## 通讯接口
