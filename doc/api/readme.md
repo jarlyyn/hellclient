@@ -208,6 +208,7 @@
 * [Mapper.GetRoomName 获取房间名](apimapper.md#MapperGetRoomName)
 * [Mapper.SetRoomName 设置房间](apimapper.md#MapperSetRoomName)
 * [Mapper.ClearRoom 清理房间](apimapper.md#MapperClearRoom)
+* [Mapper.RemoveRoom 清理房间](apimapper.md#MapperRemoveRoom)
 * [Mapper.NewArea 新建区域](apimapper.md#MapperNewArea)
 * [Mapper.GetExits 获取房间出口](apimapper.md#MapperGetExits)
 * [Mapper.FlyList 获取飞行列表](apimapper.md#MapperFlyList)

@@ -444,8 +444,6 @@ AddTemporaryPath(id string, path *Path) bool
 
 添加临时路径。临时路径仅在计算路径和GetExits中使用。
 
-一般用于添加临时迷宫的地图，离开迷宫后通过ResetTemporary重置。
-
 * id 房间id，房间必须存在
 * path 路径对象，用Mapper.newpath创建
 
@@ -628,6 +626,36 @@ Mapper:ClearRoom("new")
 ### 返回值
 
 无
+
+## Mapper.RemoveRoom
+
+删除房间
+
+### 原型
+
+```
+RemoveRoom(id string)
+```
+
+### 描述
+
+删除指定id的房间，一般用于迷宫之类房间的重置
+
+### 代码范例
+
+Javascript
+```
+Mapper.RemoveRoom("new")
+```
+
+Lua
+```
+Mapper:RemoveRoom("new")
+```
+
+### 返回值
+
+布尔值，删除前房间是否存在
 
 ## Mapper.NewArea 
 

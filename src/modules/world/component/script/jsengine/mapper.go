@@ -219,6 +219,10 @@ func (m *JsMapper) GetPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 			if jwl != nil {
 				_ = r.ExportTo(jwl, &opt.Whitelist)
 			}
+			blockedpath := option.Get("blockedpath")
+			if blockedpath != nil {
+				_ = r.ExportTo(blockedpath, &opt.BlockedPath)
+			}
 		}
 	}
 	steps := m.mapper.GetPath(from, fly != 0, to, opt)
@@ -282,6 +286,10 @@ func (m *JsMapper) ClearRoom(call goja.FunctionCall, r *goja.Runtime) goja.Value
 	id := call.Argument(0).String()
 	m.mapper.ClearRoom(id)
 	return nil
+}
+func (m *JsMapper) RemoveRoom(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	id := call.Argument(0).String()
+	return r.ToValue(m.mapper.RemoveRoom(id))
 }
 func (m *JsMapper) NewArea(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	size := int(call.Argument(0).ToInteger())
@@ -352,6 +360,9 @@ func (m *JsMapper) Convert(r *goja.Runtime) goja.Value {
 	t.Set("NewPath", m.NewPath)
 	t.Set("getroomid", m.GetRoomID)
 	t.Set("GetRoomID", m.GetRoomID)
+	t.Set("removeroom", m.RemoveRoom)
+	t.Set("RemoveRoom", m.RemoveRoom)
+
 	t.Set("getroomname", m.GetRoomName)
 	t.Set("GetRoomName", m.GetRoomName)
 	t.Set("setroomname", m.SetRoomName)

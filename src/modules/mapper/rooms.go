@@ -72,7 +72,6 @@ func (r *Rooms) clearRoom(id string) {
 	room.ID = id
 	r.Rooms[id] = room
 }
-
 func (r *Rooms) NewArea(size int) []string {
 	result := []string{}
 	for i := 0; i < size; i++ {

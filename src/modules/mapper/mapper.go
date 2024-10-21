@@ -104,6 +104,16 @@ func (m *Mapper) GetPath(from string, fly bool, to []string, option *Option) []*
 	}
 	return w.Walk()
 }
+func (m *Mapper) RemoveRoom(id string) bool {
+	m.Locker.Lock()
+	defer m.Locker.Unlock()
+
+	if m.rooms.Rooms[id] == nil {
+		return false
+	}
+	delete(m.rooms.Rooms, id)
+	return true
+}
 func (m *Mapper) newWalking(option *Option) *Walking {
 	walking := NewWalking(option)
 	walking.rooms = m.rooms

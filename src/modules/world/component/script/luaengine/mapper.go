@@ -313,6 +313,12 @@ func (m *LuaMapper) GetRoomName(L *lua.LState) int {
 	L.Push(lua.LString(m.mapper.GetRoomName(id)))
 	return 1
 }
+func (m *LuaMapper) RemoveRoom(L *lua.LState) int {
+	_ = L.Get(1) //self
+	id := L.ToString(2)
+	L.Push(lua.LBool((m.mapper.RemoveRoom(id))))
+	return 1
+}
 func (m *LuaMapper) SetRoomName(L *lua.LState) int {
 	_ = L.Get(1) //self
 	id := L.ToString(2)
@@ -405,6 +411,8 @@ func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("GetRoomID", L.NewFunction(m.GetRoomID))
 	t.RawSetString("getroomname", L.NewFunction(m.GetRoomName))
 	t.RawSetString("GetRoomName", L.NewFunction(m.GetRoomName))
+	t.RawSetString("removeroom", L.NewFunction(m.RemoveRoom))
+	t.RawSetString("RemoveRoom", L.NewFunction(m.RemoveRoom))
 	t.RawSetString("setroomname", L.NewFunction(m.SetRoomName))
 	t.RawSetString("SetRoomName", L.NewFunction(m.SetRoomName))
 	t.RawSetString("clearroom", L.NewFunction(m.ClearRoom))
