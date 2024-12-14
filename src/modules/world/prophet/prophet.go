@@ -108,6 +108,9 @@ func (p *Prophet) Location(conn connections.OutputConnection) *room.Location {
 		return nil
 	}
 	v, _ := ctx.Data.Load("rooms")
+	if v == nil {
+		return nil
+	}
 	return v.(*room.Location)
 }
 

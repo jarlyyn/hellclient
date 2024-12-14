@@ -38,8 +38,10 @@ func CreatePangu() {
 		Pangu.MaxLines = DefaultMaxLines
 	}
 	Pangu.MaxRecent = app.System.MaxRecent
-	if Pangu.MaxRecent <= 0 {
+	if Pangu.MaxRecent == 0 {
 		Pangu.MaxRecent = DefaultMaxRecent
+	} else if Pangu.MaxRecent < 0 {
+		Pangu.MaxRecent = 0
 	}
 	Pangu.LinesPerScreen = app.System.LinesPerScreen
 	if Pangu.LinesPerScreen <= 0 {
@@ -49,7 +51,6 @@ func CreatePangu() {
 	os.MkdirAll(Pangu.Scriptpath, util.DefaultFolderMode)
 	os.MkdirAll(Pangu.Logpath, util.DefaultFolderMode)
 	os.MkdirAll(Pangu.Modpath, util.DefaultFolderMode)
-
 }
 
 func NewWebdavServer() http.Handler {
