@@ -101,6 +101,8 @@ PrintSystem ("This monster is worth avoiding!")
 
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=SendImmediate
 
+自1.2024-12-23版后，发送NUL字符串\(\"\x0f\"\),会做任何发送，仅作占位处理。
+
 ### 原型
 ```
 SendImmediate(message string) int
@@ -131,6 +133,9 @@ eOK:发送成功
 发送
 
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=Send
+
+自1.2024-12-23版后，发送NUL字符串\(\"\x0f\"\),会做任何发送，仅作占位处理。
+
 
 ### 原型
 ```
@@ -163,6 +168,9 @@ eOK:发送成功
 
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=SendNoEcho
 
+自1.2024-12-23版后，发送NUL字符串\(\"\x0f\"\),会做任何发送，仅作占位处理。
+
+
 ### 原型
 ```
 SendNoEcho(message string) int
@@ -193,6 +201,9 @@ eOK:发送成功
 高级发送
 
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=SendSpecial
+
+自1.2024-12-23版后，发送NUL字符串\(\"\x0f\"\),会做任何发送，仅作占位处理。
+
 
 ### 原型
 ```
@@ -261,6 +272,9 @@ Execute ("/Debug ('colours') ")  -- execute a script
 队列发送
 
 对应MushclientAPI:https://www.gammon.com.au/scripts/doc.php?function=Queue
+
+自1.2024-12-23版后，发送NUL字符串\(\"\x0f\"\),会做任何发送，仅作占位处理。
+
 
 ### 原型
 ```

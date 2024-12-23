@@ -21,17 +21,19 @@ func (c *Command) Clone() *Command {
 }
 
 func (c *Command) Split(sep string) []*Command {
-	var reuslt = []*Command{}
+	var result = []*Command{}
 	if c == nil || c.Mesasge == "" {
-		return reuslt
+		return result
 	}
 	msgs := strings.Split(c.Mesasge, sep)
 	for _, v := range msgs {
-		cmd := c.Clone()
-		cmd.Mesasge = v
-		reuslt = append(reuslt, cmd)
+		if v != "" {
+			cmd := c.Clone()
+			cmd.Mesasge = v
+			result = append(result, cmd)
+		}
 	}
-	return reuslt
+	return result
 }
 func CreateCommand(message string) *Command {
 	return &Command{

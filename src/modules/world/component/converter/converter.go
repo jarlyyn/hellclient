@@ -59,6 +59,9 @@ func (c *Converter) onError(bus *bus.Bus, err error) bool {
 func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
 	c.SendLock.Lock()
 	defer c.SendLock.Unlock()
+	if cmd.Mesasge == "\x0f" {
+		return
+	}
 	b, err := world.FromUTF8(bus.GetCharset(), []byte(cmd.Mesasge))
 	if err != nil {
 		bus.HandleConverterError(err)

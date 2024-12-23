@@ -200,8 +200,8 @@ func (l *List) SetValues(L *lua.LState) int {
 	l.List.SetValues(v)
 	return 0
 }
-func (l *List) SetMutli(L *lua.LState) int {
-	l.List.SetMutli(L.ToBool(1))
+func (l *List) SetMulti(L *lua.LState) int {
+	l.List.SetMulti(L.ToBool(1))
 	return 0
 }
 
@@ -210,12 +210,14 @@ func (l *List) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("append", L.NewFunction(l.Append))
 	t.RawSetString("publish", L.NewFunction(l.Publish))
 	t.RawSetString("setvalues", L.NewFunction(l.SetValues))
-	t.RawSetString("setmutli", L.NewFunction(l.SetMutli))
+	t.RawSetString("setmulti", L.NewFunction(l.SetMulti))
+	t.RawSetString("setmutli", L.NewFunction(l.SetMulti)) //老API的Typo.保证兼容性
 
 	t.RawSetString("Append", L.NewFunction(l.Append))
 	t.RawSetString("Publish", L.NewFunction(l.Publish))
 	t.RawSetString("SetValues", L.NewFunction(l.SetValues))
-	t.RawSetString("SetMutli", L.NewFunction(l.SetMutli))
+	t.RawSetString("SetMulti", L.NewFunction(l.SetMulti))
+	t.RawSetString("SetMutli", L.NewFunction(l.SetMulti)) //老API的Typo.保证兼容性
 
 	return t
 }

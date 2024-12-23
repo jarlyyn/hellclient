@@ -193,8 +193,8 @@ func (l *List) SetValues(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	l.List.SetValues(v)
 	return nil
 }
-func (l *List) SetMutli(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	l.List.SetMutli(call.Argument(0).ToBoolean())
+func (l *List) SetMulti(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	l.List.SetMulti(call.Argument(0).ToBoolean())
 	return nil
 }
 func (l *List) Convert(r *goja.Runtime) goja.Value {
@@ -203,8 +203,10 @@ func (l *List) Convert(r *goja.Runtime) goja.Value {
 	obj.Set("Append", l.Append)
 	obj.Set("publish", l.Publish)
 	obj.Set("Publish", l.Publish)
-	obj.Set("setmutli", l.SetMutli)
-	obj.Set("SetMutli", l.SetMutli)
+	obj.Set("setmulti", l.SetMulti)
+	obj.Set("SetMulti", l.SetMulti)
+	obj.Set("setmutli", l.SetMulti) //老api的typo,保持兼容性
+	obj.Set("SetMutli", l.SetMulti) //老api的typo,保持兼容性
 	obj.Set("setvalues", l.SetValues)
 	obj.Set("SetValues", l.SetValues)
 	return obj

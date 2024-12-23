@@ -245,7 +245,7 @@
 * [Userinput.NewVisualPrompt 新建可视化输入](apiuserinput.md#UserinputNewVisualPrompt)
 * [Userinput.HideAll 隐藏界面UI](apiuserinput.md#HideAll)
 * [List.Append 列表追加](apiuserinput.md#ListAppend)
-* [List.SetMutli 列表设置多选](apiuserinput.md#ListSetMutli)  
+* [List.SetMulti 列表设置多选](apiuserinput.md#ListSetMulti)  
 * [List.SetValue 列表设置值](apiuserinput.md#ListSetValue)
 * [List.Publish 列表发布](apiuserinput.md#ListPublish) 
 * [Datagrid.Append 数据表格追加数据](apiuserinput.md#DatagridAppend)

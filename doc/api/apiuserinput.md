@@ -420,14 +420,14 @@ list.Append("sword","长剑")
 
 无
 
-## List.SetMutli
+## List.SetMulti
 
 列表设置多选
 
 ### 原型
 
 ```
-SetMutli(mutli bool)
+SetMulti(mutli bool)
 ```
 
 ### 描述
@@ -445,12 +445,12 @@ SetMutli(mutli bool)
 
 Javascript
 ```
-List.SetMutli(true)
+List.SetMulti(true)
 ```
 
 Lua
 ```
-List.SetMutli(true)
+List.SetMulti(true)
 ```
 
 ### 返回值

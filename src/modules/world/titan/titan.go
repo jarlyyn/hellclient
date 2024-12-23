@@ -681,7 +681,7 @@ func (t *Titan) HandleCmdMasssend(id string, msg string) {
 	if w != nil {
 		m := world.CreateCommand(msg)
 		m.History = false
-		w.DoSend(m)
+		w.DoMetronomeSend(m)
 	}
 }
 func (t *Titan) HandleCmdFindHistory(id string, position int) {

@@ -19,7 +19,7 @@ func (l *List) Hide(b *bus.Bus) {
 func (l *List) SetValues(v []string) {
 	l.Values = v
 }
-func (l *List) SetMutli(m bool) {
+func (l *List) SetMulti(m bool) {
 	l.Mutli = m
 }
 func (l *List) Append(key string, value string) {

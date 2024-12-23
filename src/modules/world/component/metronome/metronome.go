@@ -149,8 +149,10 @@ func (m *Metronome) Send(bus *bus.Bus, cmd *world.Command) {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
 	t := time.Now()
-	m.sent.PushBack(&t)
-	bus.DoSend(cmd)
+	for _, v := range cmd.Split("\n") {
+		m.sent.PushBack(&t)
+		bus.DoSend(v)
+	}
 }
 func (m *Metronome) append(rawcmds []*world.Command, grouped bool) {
 	cmds := make([]*world.Command, 0, len(rawcmds))
@@ -274,7 +276,11 @@ func (m *Metronome) InstallTo(b *bus.Bus) {
 func (m *Metronome) Push(b *bus.Bus, cmds []*world.Command, grouped bool) {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	m.append(cmds, grouped)
+	data := []*world.Command{}
+	for _, v := range cmds {
+		data = append(data, v.Split("\n")...)
+	}
+	m.append(data, grouped)
 	go m.play(b)
 }
 func New() *Metronome {
