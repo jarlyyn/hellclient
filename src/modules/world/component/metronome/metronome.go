@@ -148,10 +148,10 @@ func (m *Metronome) fullTick() {
 func (m *Metronome) Send(bus *bus.Bus, cmd *world.Command) {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	t := time.Now()
 	for _, v := range cmd.Split("\n") {
-		m.sent.PushBack(&t)
 		bus.DoSend(v)
+		t := time.Now()
+		m.sent.PushBack(&t)
 	}
 }
 func (m *Metronome) append(rawcmds []*world.Command, grouped bool) {
@@ -200,9 +200,9 @@ func (m *Metronome) play(bus *bus.Bus) {
 		}
 		m.queue.Remove(e)
 		for k := range cmds {
+			bus.DoSend(cmds[k])
 			t := time.Now()
 			m.sent.PushBack(&t)
-			bus.DoSend(cmds[k])
 		}
 	}
 }

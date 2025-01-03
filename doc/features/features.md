@@ -26,7 +26,7 @@ Hellclient 自带一个简单的地图组件
 
 Hellclient通过使用 [goja库](https://github.com/dop251/goja) 提供 ECMAScript 5.1 的兼容
 
-为了兼容部分Mushclient的现存Jscript库，提供了部分兼容代码
+为了兼容部分Mushclient的现存Jscript库，提供了[部分兼容代码](jsfix.md)
 
 ## Lua支持
 

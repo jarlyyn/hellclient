@@ -1,7 +1,6 @@
 package conn
 
 import (
-	"container/list"
 	"io"
 	"modules/app"
 	"modules/world/bus"
@@ -34,7 +33,6 @@ type Conn struct {
 	RunningLock sync.RWMutex
 	BufferLock  sync.RWMutex
 	SendLock    sync.RWMutex
-	sendQueue   *list.List
 	Debounce    *debounce.Debounce
 }
 
@@ -262,47 +260,24 @@ func (conn *Conn) Buffer(bus *bus.Bus) []byte {
 func (conn *Conn) Send(bus *bus.Bus, cmd []byte) {
 	conn.SendLock.Lock()
 	defer conn.SendLock.Unlock()
-	len := conn.sendQueue.Len()
-	conn.sendQueue.PushBack(cmd)
-	if len == 0 {
-		go conn.sendingLoop(bus)
+	conn.send(bus, cmd)
+}
+
+func (conn *Conn) send(bus *bus.Bus, cmd []byte) {
+	if conn.telnet == nil {
+		return
+	}
+	_, err := conn.telnet.Conn.Write(cmd)
+	if err != nil {
+		bus.HandleConnError(err)
 	}
 
 }
-func (conn *Conn) sendingLoop(bus *bus.Bus) {
-	for {
-		conn.SendLock.RLock()
-		len := conn.sendQueue.Len()
-		if len == 0 {
-			conn.SendLock.RUnlock()
-			return
-		}
-		conn.SendLock.RUnlock()
-		conn.sending(bus)
-	}
-}
-func (conn *Conn) sending(bus *bus.Bus) {
-	conn.SendLock.Lock()
-	defer conn.SendLock.Unlock()
-	if conn.telnet == nil {
-		conn.sendQueue = list.New()
-		return
-	}
-	if conn.sendQueue.Len() > 0 {
-		el := conn.sendQueue.Front()
-		conn.sendQueue.Remove(el)
-		_, err := conn.telnet.Conn.Write(el.Value.([]byte))
-		if err != nil {
-			bus.HandleConnError(err)
-		}
-	}
-}
 func New() *Conn {
 	c := &Conn{
-		telnet:    nil,
-		c:         make(chan int),
-		running:   false,
-		sendQueue: list.New(),
+		telnet:  nil,
+		c:       make(chan int),
+		running: false,
 	}
 	return c
 }
