@@ -9,7 +9,7 @@ require (
 	github.com/herb-go/herbplugin v0.0.0-20210927153142-18e76e96c0cd
 	github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531
 	github.com/herb-go/util v0.0.0-20230321163403-6a757b251968
-	golang.org/x/net v0.22.0
+	golang.org/x/net v0.36.0
 	modules v0.0.0-00010101000000-000000000000
 )
 
@@ -44,7 +44,7 @@ require (
 	github.com/robertkrimen/otto v0.2.1 // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/yuin/gopher-lua v1.1.1 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
+	golang.org/x/text v0.22.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 )
