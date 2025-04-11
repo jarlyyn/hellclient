@@ -1,4 +1,5 @@
-// +build nopcre
+//go:build !withpcre
+// +build !withpcre
 
 package luaengine
 
