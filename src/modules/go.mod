@@ -27,8 +27,8 @@ require (
 	github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a
 	github.com/satori/go.uuid v1.2.0
 	github.com/yuin/gopher-lua v1.1.1
-	golang.org/x/net v0.22.0
-	golang.org/x/text v0.14.0
+	golang.org/x/net v0.38.0
+	golang.org/x/text v0.23.0
 )
 
 require (
@@ -43,6 +43,6 @@ require (
 	github.com/herb-go/herbtext-drivers v0.0.0-20210130160355-3de8ebdb8dbe // indirect
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible // indirect
 	github.com/robertkrimen/otto v0.0.0-20211024170158-b87d35c0b86f // indirect
-	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
 	gopkg.in/sourcemap.v1 v1.0.5 // indirect
 )
