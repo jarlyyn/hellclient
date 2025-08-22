@@ -21,6 +21,65 @@ import (
 	"github.com/herb-go/connections/room/message"
 )
 
+type ProphetAdapter struct {
+	prophet *Prophet
+	cmdtype string
+}
+
+func (a *ProphetAdapter) RoomAdapter(m *message.Message) error {
+	var err error
+	if m.Room != "" {
+		data := command.New()
+		data.CommandType = a.cmdtype
+		data.CommandData, err = json.Marshal(m.Data)
+		if err != nil {
+			return err
+		}
+		msg, err := data.Encode()
+		if err != nil {
+			return err
+		}
+		a.prophet.Rooms.Broadcast(m.Room, msg, nil)
+	}
+	return nil
+}
+func (a *ProphetAdapter) ConsoleAdapter(m *message.Message) error {
+	var err error
+	if m.Room != "" {
+		data := command.New()
+		data.CommandType = a.cmdtype
+		data.CommandData, err = json.Marshal(m.Data)
+		if err != nil {
+			return err
+		}
+		msg, err := data.Encode()
+		if err != nil {
+			return err
+		}
+		a.prophet.Rooms.Broadcast(m.Room, msg, nil)
+	}
+	return nil
+
+}
+func (a *ProphetAdapter) UserAdapter(m *message.Message) error {
+	var err error
+	if m.Room == "" {
+		data := command.New()
+		data.CommandType = a.cmdtype
+		data.CommandData, err = json.Marshal(m.Data)
+		if err != nil {
+			return err
+		}
+		msg, err := data.Encode()
+		if err != nil {
+			return err
+		}
+		return a.prophet.sendToUser(msg)
+	}
+	return nil
+
+}
+
 type Prophet struct {
 	Current  atomic.Value
 	Users    *identifier.Map
@@ -33,6 +92,12 @@ type Prophet struct {
 	*contexts.Contexts
 }
 
+func (p *Prophet) newAdapter(cmdtype string) *ProphetAdapter {
+	return &ProphetAdapter{
+		prophet: p,
+		cmdtype: cmdtype,
+	}
+}
 func (p *Prophet) Init(t *titan.Titan) {
 	p.Titan = t
 	t.BindMsgEvent(p, p.Publish)
@@ -42,41 +107,10 @@ func (p *Prophet) Init(t *titan.Titan) {
 	initHandlers(p, p.Handlers)
 }
 func (p *Prophet) newRoomAdapter(cmdtype string) func(m *message.Message) error {
-	return func(m *message.Message) error {
-		var err error
-		if m.Room != "" {
-			data := command.New()
-			data.CommandType = cmdtype
-			data.CommandData, err = json.Marshal(m.Data)
-			if err != nil {
-				return err
-			}
-			msg, err := data.Encode()
-			if err != nil {
-				return err
-			}
-			p.Rooms.Broadcast(m.Room, msg, nil)
-		}
-		return nil
-	}
+	return p.newAdapter(cmdtype).RoomAdapter
 }
 func (p *Prophet) newConsoleAdapter(cmdtype string) func(m *message.Message) error {
-	return func(m *message.Message) error {
-		var err error
-		m.Room = ""
-		data := command.New()
-		data.CommandType = cmdtype
-		data.CommandData, err = json.Marshal(m.Data)
-		if err != nil {
-			return err
-		}
-		msg, err := data.Encode()
-		if err != nil {
-			return err
-		}
-		p.Rooms.Broadcast(m.Room, msg, nil)
-		return nil
-	}
+	return p.newAdapter(cmdtype).ConsoleAdapter
 }
 
 func (p *Prophet) sendToUser(data []byte) error {
@@ -84,23 +118,7 @@ func (p *Prophet) sendToUser(data []byte) error {
 }
 
 func (p *Prophet) newUserAdapter(cmdtype string) func(m *message.Message) error {
-	return func(m *message.Message) error {
-		var err error
-		if m.Room == "" {
-			data := command.New()
-			data.CommandType = cmdtype
-			data.CommandData, err = json.Marshal(m.Data)
-			if err != nil {
-				return err
-			}
-			msg, err := data.Encode()
-			if err != nil {
-				return err
-			}
-			return p.sendToUser(msg)
-		}
-		return nil
-	}
+	return p.newAdapter(cmdtype).UserAdapter
 }
 func (p *Prophet) Location(conn connections.OutputConnection) *room.Location {
 	ctx := p.Context(conn.ID())

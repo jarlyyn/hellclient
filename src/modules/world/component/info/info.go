@@ -54,6 +54,9 @@ func (i *Info) Init(b *bus.Bus) {
 	i.Recent = ring.New(b.GetMaxRecent())
 }
 func (i *Info) ClientInfo(b *bus.Bus) *world.ClientInfo {
+	if b.GetHost == nil {
+		return nil
+	}
 	info := &world.ClientInfo{}
 	info.ID = b.ID
 	info.HostPort = b.GetHost() + ":" + b.GetPort()
@@ -180,6 +183,9 @@ func (i *Info) FlushHistories(b *bus.Bus) {
 }
 func (i *Info) CurrentHistories(b *bus.Bus) {
 	go func() {
+		if b == nil {
+			return
+		}
 		b.RaiseHistoriesEvent(i.getHistories())
 	}()
 }
@@ -226,6 +232,9 @@ func (i *Info) GetSummary() []*world.Line {
 	return i.Summary
 }
 func (i *Info) RefreshClientInfo(b *bus.Bus) {
+	if b == nil {
+		return
+	}
 	b.RaiseClientInfoEvent(i.ClientInfo(b))
 }
 func (i *Info) InstallTo(b *bus.Bus) {

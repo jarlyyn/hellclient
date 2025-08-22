@@ -110,11 +110,15 @@ func (c *Converter) DoPrintSubneg(b *bus.Bus, msg string) {
 }
 
 func (c *Converter) DoPrintSystem(b *bus.Bus, msg string) {
-	c.print(b, world.LineTypeSystem, msg)
+	if b != nil {
+		c.print(b, world.LineTypeSystem, msg)
+	}
 }
 
 func (c *Converter) DoPrint(b *bus.Bus, msg string) {
-	c.print(b, world.LineTypePrint, msg)
+	if b != nil {
+		c.print(b, world.LineTypePrint, msg)
+	}
 }
 func (c *Converter) print(b *bus.Bus, linetype int, msg string) {
 	line := world.NewLine()
@@ -127,6 +131,9 @@ func (c *Converter) print(b *bus.Bus, linetype int, msg string) {
 
 }
 func (c *Converter) ConvertToLine(bus *bus.Bus, msg []byte, onError func(err error) bool) *world.Line {
+	if bus.GetCharset == nil {
+		return nil
+	}
 	charset := bus.GetCharset()
 	l, last := ConvertToLine(c.Last, msg, charset, onError)
 	c.Last = last

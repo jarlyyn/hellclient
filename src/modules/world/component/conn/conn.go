@@ -72,6 +72,7 @@ func (conn *Conn) UpdatePrompt(bus *bus.Bus) {
 }
 func (conn *Conn) Stop(b *bus.Bus) {
 	conn.Close(b)
+	conn.Dispose()
 }
 
 // Connect :connect to mud
@@ -272,6 +273,9 @@ func (conn *Conn) send(bus *bus.Bus, cmd []byte) {
 		bus.HandleConnError(err)
 	}
 
+}
+func (conn *Conn) Dispose() {
+	conn.Debounce.Discard()
 }
 func New() *Conn {
 	c := &Conn{

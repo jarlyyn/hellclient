@@ -245,6 +245,233 @@ type Bus struct {
 	SaveEvent              busevent.Event
 }
 
+func (b *Bus) Dispose() {
+	b.GetMaxHistory = nil
+	b.GetMaxLines = nil
+	b.GetMaxRecent = nil
+	b.GetConnBuffer = nil
+	b.GetConnConnected = nil
+	b.GetHost = nil
+	b.SetHost = nil
+	b.GetPort = nil
+	b.SetPort = nil
+	b.GetProxy = nil
+	b.SetProxy = nil
+	b.GetName = nil
+	b.SetName = nil
+	b.GetShowBroadcast = nil
+	b.SetShowBroadcast = nil
+	b.GetShowSubneg = nil
+	b.SetShowSubneg = nil
+	b.GetModEnabled = nil
+	b.SetModEnabled = nil
+	b.GetAutoSave = nil
+	b.SetAutoSave = nil
+	b.GetIgnoreBatchCommand = nil
+	b.SetIgnoreBatchCommand = nil
+	b.GetCommandStackCharacter = nil
+	b.SetCommandStackCharacter = nil
+	b.GetScriptPrefix = nil
+	b.SetScriptPrefix = nil
+	b.GetStatus = nil
+	b.SetStatus = nil
+	b.GetQueueDelay = nil
+	b.SetQueueDelay = nil
+	b.GetQueue = nil
+	b.GetParam = nil
+	b.GetParams = nil
+	b.SetParam = nil
+	b.DeleteParam = nil
+	b.GetParamComment = nil
+	b.GetParamComments = nil
+	b.SetParamComment = nil
+	b.GetCharset = nil
+	b.SetCharset = nil
+	b.GetReadyAt = nil
+	b.GetPosition = nil
+	b.SetPosition = nil
+	b.GetCurrentLines = nil
+	b.GetPrompt = nil
+	b.GetClientInfo = nil
+	b.GetWorldData = nil
+	b.GetScriptData = nil
+	b.SetPermissions = nil
+	b.GetPermissions = nil
+	b.RequestPermissions = nil
+	b.GetScriptID = nil
+	b.SetScriptID = nil
+	b.GetScriptType = nil
+	b.GetScriptPath = nil
+	b.GetModPath = nil
+	b.GetScriptModPath = nil
+	b.GetLogsPath = nil
+	b.GetScriptHome = nil
+	b.DoLog = nil
+	b.SetTrusted = nil
+	b.GetTrusted = nil
+	b.RequestTrustDomains = nil
+	b.GetPluginOptions = nil
+	b.DoReloadPermissions = nil
+	b.DoSendToConn = nil
+	b.DoSend = nil
+	b.DoSendToQueue = nil
+	b.DoExecute = nil
+	b.DoEncode = nil
+	b.DoDecode = nil
+	b.DoReloadScript = nil
+	b.DoSaveScript = nil
+	b.DoUseScript = nil
+	b.GetRequiredParams = nil
+	b.DoRunScript = nil
+	b.DoPrint = nil
+	b.DoPrintSystem = nil
+	b.DoPrintLocalBroadcastIn = nil
+	b.DoPrintGlobalBroadcastIn = nil
+	b.DoPrintLocalBroadcastOut = nil
+	b.DoPrintGlobalBroadcastOut = nil
+	b.DoPrintSubneg = nil
+	b.DoPrintRequest = nil
+	b.DoPrintResponse = nil
+	b.DoDiscardQueue = nil
+	b.DoLockQueue = nil
+	b.DoOmitOutput = nil
+	b.DoDeleteLines = nil
+	b.GetLineCount = nil
+	b.DoSendHUDClickToScript = nil
+	b.DoSendBroadcastToScript = nil
+	b.HandleBuffer = nil
+	b.HandleSubneg = nil
+	b.HandleFocus = nil
+	b.HandleLoseFocus = nil
+	b.DoSendTimerToScript = nil
+	b.DoDeleteTimer = nil
+	b.DoDeleteTimerByName = nil
+	b.DoDeleteTemporaryTimers = nil
+	b.DoDeleteTimerGroup = nil
+	b.DoEnableTimerByName = nil
+	b.DoEnableTimerGroup = nil
+	b.DoResetNamedTimer = nil
+	b.GetTimer = nil
+	b.GetTimersByType = nil
+	b.DoDeleteTimerByType = nil
+	b.AddTimers = nil
+	b.DoResetTimers = nil
+	b.GetTimerOption = nil
+	b.GetTimerInfo = nil
+	b.SetTimerOption = nil
+	b.HasNamedTimer = nil
+	b.DoListTimerNames = nil
+	b.AddTimer = nil
+	b.DoUpdateTimer = nil
+	b.DoSendAliasToScript = nil
+	b.DoDeleteAlias = nil
+	b.DoDeleteAliasByName = nil
+	b.DoDeleteTemporaryAliases = nil
+	b.DoDeleteAliasGroup = nil
+	b.DoEnableAliasByName = nil
+	b.DoEnableAliasGroup = nil
+	b.GetAlias = nil
+	b.GetAliasesByType = nil
+	b.DoDeleteAliasByType = nil
+	b.AddAliases = nil
+	b.GetAliasOption = nil
+	b.GetAliasInfo = nil
+	b.SetAliasOption = nil
+	b.HasNamedAlias = nil
+	b.DoListAliasNames = nil
+	b.AddAlias = nil
+	b.DoUpdateAlias = nil
+	b.DoDeleteTrigger = nil
+	b.DoDeleteTriggerByName = nil
+	b.DoDeleteTemporaryTriggers = nil
+	b.DoDeleteTriggerGroup = nil
+	b.DoEnableTriggerByName = nil
+	b.DoEnableTriggerGroup = nil
+	b.GetTrigger = nil
+	b.GetTriggersByType = nil
+	b.DoDeleteTriggerByType = nil
+	b.AddTriggers = nil
+	b.GetTriggerOption = nil
+	b.GetTriggerInfo = nil
+	b.SetTriggerOption = nil
+	b.HasNamedTrigger = nil
+	b.DoListTriggerNames = nil
+	b.AddTrigger = nil
+	b.DoUpdateTrigger = nil
+	b.DoSendTriggerToScript = nil
+	b.DoGetTriggerWildcard = nil
+	b.DoSendCallbackToScript = nil
+	b.DoSendKeyUpToScript = nil
+	b.DoAssist = nil
+	b.DoMultiLinesAppend = nil
+	b.DoMultiLinesFlush = nil
+	b.DoMultiLinesLast = nil
+	b.GetLinesInBufferCount = nil
+	b.GetRecentLines = nil
+	b.GetLine = nil
+	b.GetMapper = nil
+	b.GetPriority = nil
+	b.SetPriority = nil
+	b.GetSummary = nil
+	b.SetSummary = nil
+	b.UpdateLastActive = nil
+	b.GetLastActive = nil
+	b.AddHistory = nil
+	b.GetHistories = nil
+	b.FlushHistories = nil
+	b.HandleConnReceive = nil
+	b.HandleConnError = nil
+	b.HandleConnPrompt = nil
+	b.DoConnectServer = nil
+	b.DoCloseServer = nil
+	b.HandleConverterError = nil
+	b.HandleCmdError = nil
+	b.HandleTriggerError = nil
+	b.HandleScriptError = nil
+	b.GetScriptCaller = nil
+	b.DoStopEvaluatingTriggers = nil
+	b.GetMetronomeBeats = nil
+	b.SetMetronomeBeats = nil
+	b.DoResetMetronome = nil
+	b.GetMetronomeSpace = nil
+	b.GetMetronomeQueue = nil
+	b.DoDiscardMetronome = nil
+	b.DoLockMetronomeQueue = nil
+	b.DoFullMetronome = nil
+	b.DoFullTickMetronome = nil
+	b.SetMetronomeInterval = nil
+	b.GetMetronomeInterval = nil
+	b.SetMetronomeTick = nil
+	b.GetMetronomeTick = nil
+	b.DoPushMetronome = nil
+	b.DoMetronomeSend = nil
+	b.DoMetronomeLock = nil
+	b.DoSendResponseToScript = nil
+	b.GetHUDSize = nil
+	b.SetHUDSize = nil
+	b.GetHUDContent = nil
+	b.UpdateHUDContent = nil
+	b.RequestEvent.Flush()
+	b.BroadcastEvent.Flush()
+	b.LineEvent.Flush()
+	b.PromptEvent.Flush()
+	b.ConnectedEvent.Flush()
+	b.DisconnectedEvent.Flush()
+	b.ServerCloseEvent.Flush()
+	b.InitEvent.Flush()
+	b.ReadyEvent.Flush()
+	b.BeforeCloseEvent.Flush()
+	b.CloseEvent.Flush()
+	b.HistoriesEvent.Flush()
+	b.StatusEvent.Flush()
+	b.LinesEvent.Flush()
+	b.QueueDelayUpdatedEvent.Flush()
+	b.ScriptMessageEvent.Flush()
+	b.HUDUpdateEvent.Flush()
+	b.HUDContentEvent.Flush()
+	b.ClientInfoEvent.Flush()
+	b.SaveEvent.Flush()
+}
 func (b *Bus) Wrap(f func(bus *Bus)) func() {
 	return func() {
 		f(b)
@@ -422,15 +649,27 @@ func (b *Bus) WrapHandleAuthorization(f func(b *Bus, a *world.Authorization)) fu
 	}
 }
 
+type lineBinder struct {
+	fn  func(b *Bus, line *world.Line)
+	bus *Bus
+}
+
+func newLineBinder(bus *Bus, fn func(b *Bus, line *world.Line)) *lineBinder {
+	return &lineBinder{
+		bus: bus,
+		fn:  fn,
+	}
+}
+func (b *lineBinder) Exec(data interface{}) {
+	b.fn(b.bus, data.(*world.Line))
+}
 func (b *Bus) RaiseLineEvent(line *world.Line) {
 	b.LineEvent.Raise(line)
 }
 func (b *Bus) BindLineEvent(id interface{}, fn func(b *Bus, line *world.Line)) {
 	b.LineEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b, data.(*world.Line))
-		},
+		newLineBinder(b, fn).Exec,
 	)
 
 }
@@ -441,21 +680,31 @@ func (b *Bus) RaisePromptEvent(line *world.Line) {
 func (b *Bus) BindPromptEvent(id interface{}, fn func(b *Bus, line *world.Line)) {
 	b.PromptEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b, data.(*world.Line))
-		},
+		newLineBinder(b, fn).Exec,
 	)
 }
 
+type binder struct {
+	fn  func(b *Bus)
+	bus *Bus
+}
+
+func newBinder(bus *Bus, fn func(b *Bus)) *binder {
+	return &binder{
+		bus: bus,
+		fn:  fn,
+	}
+}
+func (b *binder) Exec(data interface{}) {
+	b.fn(b.bus)
+}
 func (b *Bus) RaiseConnectedEvent() {
 	b.ConnectedEvent.Raise(nil)
 }
 func (b *Bus) BindConnectedEvent(id interface{}, fn func(b *Bus)) {
 	b.ConnectedEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b)
-		},
+		newBinder(b, fn).Exec,
 	)
 }
 
@@ -465,9 +714,7 @@ func (b *Bus) RaiseDisconnectedEvent() {
 func (b *Bus) BindDisconnectedEvent(id interface{}, fn func(b *Bus)) {
 	b.DisconnectedEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b)
-		},
+		newBinder(b, fn).Exec,
 	)
 }
 func (b *Bus) RaiseCloseEvent() {
@@ -476,9 +723,7 @@ func (b *Bus) RaiseCloseEvent() {
 func (b *Bus) BindCloseEvent(id interface{}, fn func(b *Bus)) {
 	b.CloseEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b)
-		},
+		newBinder(b, fn).Exec,
 	)
 }
 func (b *Bus) RaiseServerCloseEvent() {
@@ -487,9 +732,7 @@ func (b *Bus) RaiseServerCloseEvent() {
 func (b *Bus) BindServerCloseEvent(id interface{}, fn func(b *Bus)) {
 	b.ServerCloseEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b)
-		},
+		newBinder(b, fn).Exec,
 	)
 }
 
@@ -499,9 +742,7 @@ func (b *Bus) RaiseBeforeCloseEvent() {
 func (b *Bus) BindBeforeCloseEvent(id interface{}, fn func(b *Bus)) {
 	b.BeforeCloseEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b)
-		},
+		newBinder(b, fn).Exec,
 	)
 }
 func (b *Bus) RaiseInitEvent() {
@@ -510,9 +751,7 @@ func (b *Bus) RaiseInitEvent() {
 func (b *Bus) BindInitEvent(id interface{}, fn func(b *Bus)) {
 	b.InitEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b)
-		},
+		newBinder(b, fn).Exec,
 	)
 }
 
@@ -522,9 +761,7 @@ func (b *Bus) RaiseReadyEvent() {
 func (b *Bus) BindReadyEvent(id interface{}, fn func(b *Bus)) {
 	b.ReadyEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b)
-		},
+		newBinder(b, fn).Exec,
 	)
 }
 func (b *Bus) RaiseHistoriesEvent(histories []string) {
@@ -589,9 +826,7 @@ func (b *Bus) RaiseQueueDelayUpdatedEvent() {
 func (b *Bus) BindQueueDelayUpdatedEvent(id interface{}, fn func(b *Bus)) {
 	b.QueueDelayUpdatedEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b)
-		},
+		newBinder(b, fn).Exec,
 	)
 }
 
@@ -645,9 +880,7 @@ func (b *Bus) RaiseSaveEvent() {
 func (b *Bus) BindSaveEvent(id interface{}, fn func(b *Bus)) {
 	b.SaveEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(b)
-		},
+		newBinder(b, fn).Exec,
 	)
 }
 

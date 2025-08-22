@@ -462,7 +462,8 @@ func (a *jsapi) DiscardQueue(call goja.FunctionCall, r *goja.Runtime) goja.Value
 	return r.ToValue(a.API.DiscardQueue(call.Argument(0).ToBoolean()))
 }
 func (a *jsapi) LockQueue(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	return r.ToValue(a.API.LockQueue)
+	a.API.LockQueue()
+	return goja.Null()
 }
 func (a *jsapi) GetQueue(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	cmds := a.API.GetQueue()

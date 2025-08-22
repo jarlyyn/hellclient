@@ -7,10 +7,12 @@ import (
 const ScriptTypeNone = ""
 const ScriptTypeLua = "lua"
 const ScriptTypeJavascript = "jscript"
+const ScriptTypeV8 = "v8"
 
 var AvailableScriptTypes = map[string]bool{
 	ScriptTypeJavascript: true,
 	ScriptTypeLua:        true,
+	ScriptTypeV8:         true,
 }
 
 var ScriptTomlTemplates = map[string]string{}
@@ -24,6 +26,10 @@ func initTemplates() {
 	ScriptTomlTemplates[ScriptTypeJavascript] = util.System("template", "script", "jscript.toml")
 	ScriptTemplates[ScriptTypeJavascript] = util.System("template", "script", "main.js")
 	ScriptTargets[ScriptTypeJavascript] = "main.js"
+	ScriptTomlTemplates[ScriptTypeJavascript] = util.System("template", "script", "v8.toml")
+	ScriptTemplates[ScriptTypeJavascript] = util.System("template", "script", "v8.js")
+	ScriptTargets[ScriptTypeJavascript] = "main.js"
+
 }
 
 type ScriptSettings struct {

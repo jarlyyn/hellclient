@@ -230,6 +230,7 @@ func (m *Metronome) Interval() time.Duration {
 }
 func (m *Metronome) startTicker(b *bus.Bus) {
 	m.stopTicker()
+	m.tickerC = make(chan int)
 	go m.nexttick(b)
 }
 func (m *Metronome) nexttick(b *bus.Bus) {

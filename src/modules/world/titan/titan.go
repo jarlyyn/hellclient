@@ -21,6 +21,7 @@ import (
 	"modules/world/component/queue"
 	"modules/world/component/script"
 	"modules/world/hellswitch"
+	"runtime"
 
 	"path"
 	"sort"
@@ -38,6 +39,24 @@ import (
 	"github.com/herb-go/misc/busevent"
 	"github.com/herb-go/util"
 )
+
+type worldEventBinder struct {
+	fn    func(t *Titan, msg *world.Message)
+	titan *Titan
+}
+
+func (b *worldEventBinder) Callback(data interface{}) {
+	b.fn(b.titan, data.(*world.Message))
+}
+
+type messageBinder struct {
+	fn    func(t *Titan, msg *message.Message)
+	titan *Titan
+}
+
+func (b *messageBinder) Callback(data interface{}) {
+	b.fn(b.titan, data.(*message.Message))
+}
 
 type Titan struct {
 	Locker         sync.RWMutex
@@ -76,6 +95,8 @@ func (t *Titan) CreateBus() *bus.Bus {
 func (t *Titan) DestoryBus(b *bus.Bus) {
 	b.RaiseBeforeCloseEvent()
 	b.RaiseCloseEvent()
+	t.RemoveFrom(b)
+	b.Dispose()
 }
 func (t *Titan) find(id string) *bus.Bus {
 	return t.Worlds[id]
@@ -101,9 +122,7 @@ func (t *Titan) NewWorld(id string) *bus.Bus {
 }
 
 func (t *Titan) Publish(msg *message.Message) {
-	go func() {
-		t.msgEvent.Raise(msg)
-	}()
+	go t.msgEvent.Raise(msg)
 }
 
 func (t *Titan) onConnected(b *bus.Bus) {
@@ -111,6 +130,9 @@ func (t *Titan) onConnected(b *bus.Bus) {
 	msg.PublishConnected(t, b.ID)
 }
 func (t *Titan) onDisconnected(b *bus.Bus) {
+	if b == nil || b.DoPrintSystem == nil {
+		return
+	}
 	b.DoPrintSystem(app.Time.Datetime(time.Now()) + "  与服务器断开连接接 ")
 	msg.PublishDisconnected(t, b.ID)
 }
@@ -270,6 +292,7 @@ func (t *Titan) HandleCmdNotOpened() {
 	if err != nil {
 		return
 	}
+	runtime.GC()
 	msg.PublishNotOpened(t, list)
 }
 func (t *Titan) HandleCmdOpen(id string) bool {
@@ -374,6 +397,23 @@ func (t *Titan) GetMaxRecent() int {
 func (t *Titan) onSave(b *bus.Bus) {
 	t.SaveWorld(b.ID)
 }
+func (t *Titan) RemoveFrom(b *bus.Bus) {
+	b.ConnectedEvent.Remove(t)
+	b.DisconnectedEvent.Remove(t)
+	b.LineEvent.Remove(t)
+	b.PromptEvent.Remove(t)
+	b.StatusEvent.Remove(t)
+	b.HistoriesEvent.Remove(t)
+	b.LinesEvent.Remove(t)
+	b.BroadcastEvent.Remove(t)
+	b.RequestEvent.Remove(t)
+	b.ScriptMessageEvent.Remove(t)
+	b.HUDContentEvent.Remove(t)
+	b.HUDUpdateEvent.Remove(t)
+	b.ClientInfoEvent.Remove(t)
+	b.SaveEvent.Remove(t)
+
+}
 func (t *Titan) InstallTo(b *bus.Bus) {
 	b.BindConnectedEvent(t, t.onConnected)
 	b.BindDisconnectedEvent(t, t.onDisconnected)
@@ -416,12 +456,23 @@ func (t *Titan) RequestTrustDomains(b *bus.Bus, a *world.Authorization) {
 func (t *Titan) RaiseRequestEvent(msg *world.Message) {
 	t.requestEvent.Raise(msg)
 }
+func (t *Titan) newWorldEventBinder(fn func(t *Titan, msg *world.Message)) *worldEventBinder {
+	return &worldEventBinder{
+		fn:    fn,
+		titan: t,
+	}
+}
+func (t *Titan) newMessageEventBinder(fn func(t *Titan, msg *message.Message)) *messageBinder {
+	return &messageBinder{
+		fn:    fn,
+		titan: t,
+	}
+}
+
 func (t *Titan) BindRequestEvent(id interface{}, fn func(t *Titan, msg *world.Message)) {
 	t.requestEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(t, data.(*world.Message))
-		},
+		t.newWorldEventBinder(fn).Callback,
 	)
 }
 func (t *Titan) RaiseMsgEvent(msg *message.Message) {
@@ -430,9 +481,7 @@ func (t *Titan) RaiseMsgEvent(msg *message.Message) {
 func (t *Titan) BindMsgEvent(id interface{}, fn func(t *Titan, msg *message.Message)) {
 	t.msgEvent.BindAs(
 		id,
-		func(data interface{}) {
-			fn(t, data.(*message.Message))
-		},
+		t.newMessageEventBinder(fn).Callback,
 	)
 }
 
@@ -788,6 +837,7 @@ func (t *Titan) ListNotOpened() ([]*world.WorldFile, error) {
 				Name:        configdata.Name,
 				LastUpdated: ut,
 			})
+			configdata = nil
 		}
 
 	}
@@ -879,13 +929,18 @@ func (t *Titan) OpenWorld(id string) (bool, error) {
 		return false, nil
 	}
 	b := t.CreateBus()
+	runtime.SetFinalizer(b, func(b *bus.Bus) {
+		print("finalize bus ", b.ID, "\n")
+	})
 	b.ID = id
 	data, err := os.ReadFile(t.GetWorldPath(id))
 	if err != nil {
+		t.DestoryBus(b)
 		return false, err
 	}
 	err = b.DoDecode(data)
 	if err != nil {
+		t.DestoryBus(b)
 		return false, err
 	}
 	t.Worlds[id] = b

@@ -7,6 +7,8 @@ import (
 	"modules/world"
 	"modules/world/bus"
 	"modules/world/component/script/jsengine"
+	"modules/world/component/script/v8engine"
+
 	"modules/world/component/script/luaengine"
 	"os"
 	"path"
@@ -216,7 +218,10 @@ func (s *Script) load(b *bus.Bus) error {
 			s.engine = luaengine.NewLuaEngine()
 		case "jscript":
 			s.engine = jsengine.NewJsEngine()
+		case "v8":
+			s.engine = v8engine.NewJsEngine()
 		}
+
 	}
 	if s.engine != nil {
 		return s.engine.Open(b)
@@ -232,9 +237,7 @@ func (s *Script) Reload(b *bus.Bus) error {
 }
 func (s *Script) ready(b *bus.Bus) {
 	s.Load(b)
-	go func() {
-		b.RaiseStatusEvent(b.GetStatus())
-	}()
+	go b.RaiseStatusEvent(b.GetStatus())
 }
 func (s *Script) beforeClose(b *bus.Bus) {
 	s.Unload(b)
@@ -275,22 +278,22 @@ func (s *Script) SetStatus(b *bus.Bus, val string) {
 	s.Locker.Lock()
 	defer s.Locker.Unlock()
 	s.Status = val
-	go func() {
-		b.RaiseStatusEvent(val)
-	}()
+	go b.RaiseStatusEvent(val)
 }
 
 func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
 	e := s.getEngine()
 	if e != nil {
-		go func() {
-			if timer.Script != "" {
-				s.SetCreator("timer", timer.Script)
-			} else {
-				s.SetCreator("timer", "#"+timer.ID)
-			}
-			e.OnTimer(b, timer)
-		}()
+		// go func() {
+		if timer.Script != "" {
+			s.SetCreator("timer", timer.Script)
+		} else {
+			s.SetCreator("timer", "#"+timer.ID)
+		}
+		s.EngineLocker.Lock()
+		defer s.EngineLocker.Unlock()
+		e.OnTimer(b, timer)
+		// }()
 	}
 }
 func (s *Script) getEngine() Engine {
@@ -301,14 +304,14 @@ func (s *Script) getEngine() Engine {
 func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
 	e := s.getEngine()
 	if e != nil {
-		go func() {
-			if alias.Script != "" {
-				s.SetCreator("alias", alias.Script)
-			} else {
-				s.SetCreator("alias", "#"+alias.ID)
-			}
-			e.OnAlias(b, message, alias, result)
-		}()
+		// go func() {
+		if alias.Script != "" {
+			s.SetCreator("alias", alias.Script)
+		} else {
+			s.SetCreator("alias", "#"+alias.ID)
+		}
+		e.OnAlias(b, message, alias, result)
+		// }()
 	}
 }
 func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigger, result *world.MatchResult) {
@@ -342,10 +345,10 @@ func (s *Script) Assist(b *bus.Bus) {
 func (s *Script) KeyUp(b *bus.Bus, key string) {
 	e := s.getEngine()
 	if e != nil {
-		go func() {
-			s.SetCreator("KeyUp", key)
-			e.OnKeyUp(b, key)
-		}()
+		// go func() {
+		s.SetCreator("KeyUp", key)
+		e.OnKeyUp(b, key)
+		// }()
 	}
 
 }
@@ -448,9 +451,7 @@ func (s *Script) Run(b *bus.Bus, cmd string) {
 	e := s.getEngine()
 	if e != nil {
 		s.SetCreator("run", "")
-		go func() {
-			e.Run(b, cmd)
-		}()
+		e.Run(b, cmd)
 	}
 }
 func (s *Script) GetRequiredParams() []*world.RequiredParam {
