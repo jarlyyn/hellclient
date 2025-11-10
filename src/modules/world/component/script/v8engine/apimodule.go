@@ -238,40 +238,29 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "PrintSystem", a.PrintSystem)
 
 	AppendToWorld(jp.Runtime, world, "V8Debug", a.Debug)
-	AppendToWorld(jp.Runtime, world, "Dummy", a.Dummy)
 	AppendToWorld(jp.Runtime, world, "Snapshot", a.Snapshot)
 	global := jp.Runtime.Global()
 	global.Set("world", world.Consume())
 	global.Release()
 
 }
-func (a *jsapi) Dummy(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-	go func() {
-		a.API.Note("start")
-		for i := 0; i < 1000000; i++ {
-			call.Context().RunScript("Metronome.GetTick()", "").Release()
-		}
-		a.API.Note("done")
-	}()
-	return nil
-}
 func (a *jsapi) Snapshot(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 	p := filepath.Join(a.API.Bus.GetLogsPath(), a.API.Bus.ID+"."+uniqueid.MustGenerateID()+".heapsnapshot")
 	v8go.WriteHeapSnapshot(call.Context().Raw.Isolate(), p)
+	a.API.Note("镜像文件写入" + p)
 	return nil
 }
 
 func (a *jsapi) Debug(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 	debug.FreeOSMemory()
 	v8go.ForceV8GC(call.Context().Raw.Isolate())
-	a.API.Note(strconv.Itoa(call.Context().Raw.RetainedValueCount()))
+	// a.API.Note(strconv.Itoa(call.Context().Raw.RetainedValueCount()))
 	bs, err := json.Marshal(call.Context().Raw.Isolate().GetHeapStatistics())
 	if err != nil {
 		panic(err)
 	}
-	output := call.Context().NewString(string(bs))
-	a.Note(v8js.NewFunctionCallbackInfo(call.Context(), call.Context().NullValue().Consume(), output.Consume()))
-	output.Release()
+	a.API.Note("V8版本:" + v8go.Version())
+	a.API.Note("V8内存统计:" + string(bs))
 	return nil
 }
 func (a *jsapi) Print(call *v8js.FunctionCallbackInfo) *v8js.Consumed {

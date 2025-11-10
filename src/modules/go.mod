@@ -12,21 +12,21 @@ require (
 	github.com/herb-go/herb v0.0.0-20220217124526-724bf7d5e579
 	github.com/herb-go/herb-drivers v0.0.0-20210401170439-32eb00e8f0d5
 	github.com/herb-go/herbconfig v0.0.0-20210201131438-44d8e331b703
-	github.com/herb-go/herbplugin v0.0.0-20250822092205-69f964c932ed
+	github.com/herb-go/herbplugin v0.0.0-20251105104000-ca813dae4fd7
 	github.com/herb-go/herbsecurity v0.0.0-20210518130010-5aca00c8cb23
 	github.com/herb-go/logger v0.0.0-20210115164802-8259bb9dcc90
 	github.com/herb-go/misc v0.0.0-20211126182020-07f86379a857
 	github.com/herb-go/notification v0.0.0-20210302124907-803885c438c3
 	github.com/herb-go/notification-drivers v0.0.0-20210822103310-c7c872299d2b
-	github.com/herb-go/plugins v0.0.0-20250822092055-434cd9fde278
+	github.com/herb-go/plugins v0.0.0-20251105104654-1ad36b135de5
 	github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531
 	github.com/herb-go/util v0.0.0-20230321163403-6a757b251968
-	github.com/herb-go/v8go v0.0.0-20250822091732-eb1a21c90aee
+	github.com/herb-go/v8go v0.0.0-20251105092923-0b0a43b741fc
 	github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73
 	github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce
 	github.com/jarlyyn/golang-pkg-pcre v0.0.0-20240621170938-332279f3b0ba
 	github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a
-	github.com/jarlyyn/v8js v0.0.0-20250822104627-3d5ff3e0dc77
+	github.com/jarlyyn/v8js v0.0.0-20251105105334-f3673ddcdf83
 	github.com/satori/go.uuid v1.2.0
 	github.com/yuin/gopher-lua v1.1.1
 	golang.org/x/net v0.22.0
