@@ -225,7 +225,6 @@ func (e *JsEngine) OnResponse(b *bus.Bus, msg *world.Message) {
 }
 
 func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
-	return false
 	e.Locker.Lock()
 	if e.Plugin.Runtime == nil || e.onBuffer == "" {
 		e.Locker.Unlock()
@@ -239,11 +238,7 @@ func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 	e.Locker.Unlock()
 	var result bool
 	if data != nil {
-		var bytes = make([]*v8js.Consumed, len(data))
-		for k, v := range data {
-			bytes[k] = e.Plugin.Runtime.NewInt32(int32(v)).Consume()
-		}
-		result = e.Call(b, e.onBuffer, e.Plugin.Runtime.NewString(string(data)).Consume(), e.Plugin.Runtime.NewArray(bytes...).Consume())
+		result = e.Call(b, e.onBuffer, e.Plugin.Runtime.NewString(string(data)).Consume(), e.Plugin.Runtime.NewArrayBuffer(data).Consume())
 	} else {
 		result = e.Call(b, e.onBuffer, e.Plugin.Runtime.NullValue().Consume(), e.Plugin.Runtime.NullValue().Consume())
 	}

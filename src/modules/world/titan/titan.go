@@ -929,9 +929,6 @@ func (t *Titan) OpenWorld(id string) (bool, error) {
 		return false, nil
 	}
 	b := t.CreateBus()
-	runtime.SetFinalizer(b, func(b *bus.Bus) {
-		print("finalize bus ", b.ID, "\n")
-	})
 	b.ID = id
 	data, err := os.ReadFile(t.GetWorldPath(id))
 	if err != nil {
