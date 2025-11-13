@@ -26,7 +26,7 @@ require (
 	github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce
 	github.com/jarlyyn/golang-pkg-pcre v0.0.0-20240621170938-332279f3b0ba
 	github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a
-	github.com/jarlyyn/v8js v0.0.0-20251113133005-d7a19a7de3f3
+	github.com/jarlyyn/v8js v0.0.0-20251113182042-e09301c43569
 	github.com/satori/go.uuid v1.2.0
 	github.com/yuin/gopher-lua v1.1.1
 	golang.org/x/net v0.22.0
