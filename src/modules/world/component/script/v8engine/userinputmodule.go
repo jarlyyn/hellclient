@@ -11,67 +11,96 @@ import (
 	"github.com/jarlyyn/v8js/v8plugin"
 )
 
-type VisualPrompt struct {
-	VisualPrompt *userinput.VisualPrompt
-	bus          *bus.Bus
-}
+// type VisualPrompt struct {
+// 	VisualPrompt *userinput.VisualPrompt
+// 	bus          *bus.Bus
+// }
 
-func (p *VisualPrompt) SetMediaType(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	p.VisualPrompt.SetMediaType(call.GetArg(0).String())
+func VisualPromptSetMediaType(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("MediaType", call.GetArg(0))
 	return nil
 }
-func (p *VisualPrompt) SetPortrait(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	p.VisualPrompt.SetPortrait(call.GetArg(0).Boolean())
+func VisualPromptSetPortrait(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("Portrait", call.GetArg(0))
 	return nil
 }
-func (p *VisualPrompt) SetValue(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	p.VisualPrompt.SetValue(call.GetArg(0).String())
+func VisualPromptSetValue(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("Value", call.GetArg(0))
 	return nil
 }
-func (p *VisualPrompt) SetRefreshCallback(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	p.VisualPrompt.SetRefreshCallback(call.GetArg(0).String())
+func VisualPromptSetRefreshCallback(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("RefreshCallback", call.GetArg(0))
 	return nil
 }
-func (p *VisualPrompt) Append(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	p.VisualPrompt.Append(call.GetArg(0).String(), call.GetArg(1).String())
+func VisualPromptAppend(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	items := call.This().Get("Items")
+	items.Get("push").Call(items, call.Context().NewArray(call.GetArg(0), call.GetArg(1)).Consume())
 	return nil
 }
-func (p *VisualPrompt) Publish(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	if p.VisualPrompt.IsURL() {
-		u, err := url.Parse(p.VisualPrompt.Source)
-		if err != nil {
-			panic(err)
+func VisualPromptPublish(b *bus.Bus) func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	return func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+		vp := userinput.CreateVisualPrompt(
+			call.This().Get("Title").String(),
+			call.This().Get("Intro").String(),
+			call.This().Get("Source").String(),
+		)
+		mt := call.This().Get("MediaType")
+		if !mt.IsNullOrUndefined() {
+			vp.MediaType = mt.String()
 		}
-		if !p.bus.GetPluginOptions().MustAuthorizeDomain(u.Host) {
-			panic(herbplugin.NewUnauthorizeDomainError(u.Host))
+		p := call.This().Get("Portrait")
+		if !p.IsNullOrUndefined() {
+			vp.Portrait = p.Boolean()
 		}
+		cb := call.This().Get("RefreshCallback")
+		if !cb.IsNullOrUndefined() {
+			vp.RefreshCallback = cb.String()
+		}
+		items := call.This().Get("Items")
+		if !items.IsNullOrUndefined() {
+			for _, v := range items.Array() {
+				vp.Append(v.GetIdx(0).String(), v.GetIdx(1).String())
+			}
+		}
+		vp.Value = call.This().Get("Value").String()
+		if vp.IsURL() {
+			u, err := url.Parse(vp.Source)
+			if err != nil {
+				panic(err)
+			}
+			if !b.GetPluginOptions().MustAuthorizeDomain(u.Host) {
+				panic(herbplugin.NewUnauthorizeDomainError(u.Host))
+			}
+		}
+		ui := vp.Publish(b, call.GetArg(0).String())
+		return call.Context().NewString(ui.ID).Consume()
 	}
-	ui := p.VisualPrompt.Publish(p.bus, call.GetArg(0).String())
-	return call.Context().NewString(ui.ID).Consume()
-
 }
-func (p *VisualPrompt) Convert(r *v8js.Context) *v8js.JsValue {
+func VisualPromptConvert(r *v8js.Context, ui *Userinput, title string, intro string, source string) *v8js.JsValue {
+	vp := userinput.CreateVisualPrompt(title, intro, source)
 	obj := r.NewObject()
-	obj.Set("setmediatype", r.NewFunction(p.SetMediaType).Consume())
-	obj.Set("SetMediaType", r.NewFunction(p.SetMediaType).Consume())
-	obj.Set("setportrait", r.NewFunction(p.SetPortrait).Consume())
-	obj.Set("SetPortrait", r.NewFunction(p.SetPortrait).Consume())
-	obj.Set("setvalue", r.NewFunction(p.SetValue).Consume())
-	obj.Set("SetValue", r.NewFunction(p.SetValue).Consume())
-	obj.Set("append", r.NewFunction(p.Append).Consume())
-	obj.Set("Append", r.NewFunction(p.Append).Consume())
-	obj.Set("setrefreshcallback", r.NewFunction(p.SetRefreshCallback).Consume())
-	obj.Set("SetRefreshCallback", r.NewFunction(p.SetRefreshCallback).Consume())
-	obj.Set("publish", r.NewFunction(p.Publish).Consume())
-	obj.Set("Publish", r.NewFunction(p.Publish).Consume())
-	return obj
+	obj.Set("Title", r.NewString(vp.Title).Consume())
+	obj.Set("Intro", r.NewString(vp.Intro).Consume())
+	obj.Set("Source", r.NewString(vp.Source).Consume())
+	obj.Set("MediaType", r.NewString(vp.MediaType).Consume())
+	obj.Set("Portrait", r.NewBoolean(vp.Portrait).Consume())
+	obj.Set("Value", r.NewString(vp.Value).Consume())
+	obj.Set("RefreshCallback", r.NewString(vp.RefreshCallback).Consume())
+	obj.Set("Items", r.NewArray().Consume())
 
+	obj.Set("setmediatype", ui.Functions["VisualPromptSetMediaType"].Consume())
+	obj.Set("SetMediaType", ui.Functions["VisualPromptSetMediaType"].Consume())
+	obj.Set("setportrait", ui.Functions["VisualPromptSetPortrait"].Consume())
+	obj.Set("SetPortrait", ui.Functions["VisualPromptSetPortrait"].Consume())
+	obj.Set("setvalue", ui.Functions["VisualPromptSetValue"].Consume())
+	obj.Set("SetValue", ui.Functions["VisualPromptSetValue"].Consume())
+	obj.Set("append", ui.Functions["VisualPromptAppend"].Consume())
+	obj.Set("Append", ui.Functions["VisualPromptAppend"].Consume())
+	obj.Set("setrefreshcallback", ui.Functions["VisualPromptSetRefreshCallback"].Consume())
+	obj.Set("SetRefreshCallback", ui.Functions["VisualPromptSetRefreshCallback"].Consume())
+	obj.Set("publish", ui.Functions["VisualPromptPublish"].Consume())
+	obj.Set("Publish", ui.Functions["VisualPromptPublish"].Consume())
+	return obj
 }
 
 type Datagrid struct {
@@ -79,118 +108,140 @@ type Datagrid struct {
 	bus      *bus.Bus
 }
 
-func (g *Datagrid) SetPage(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.SetPage(int(call.GetArg(0).Integer()))
+func DatagridSetPage(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("Page", call.GetArg(0))
 	return nil
 }
-func (g *Datagrid) GetPage(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	return call.Context().NewInt32(int32(g.Datagrid.GetPage())).Consume()
+func DatagridGetPage(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	return call.This().Get("Page").Consume()
 }
-func (g *Datagrid) SetMaxPage(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.SetMaxPage(int(call.GetArg(0).Integer()))
+func DatagridSetMaxPage(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("MaxPage", call.GetArg(0))
 	return nil
 }
-func (g *Datagrid) SetFilter(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.SetFilter(call.GetArg(0).String())
+func DatagridSetFilter(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("Filter", call.GetArg(0))
 	return nil
 }
-func (g *Datagrid) GetFilter(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	return call.Context().NewString(g.Datagrid.GetFilter()).Consume()
+func DatagridGetFilter(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	return call.This().Get("Filter").Consume()
 }
-func (g *Datagrid) SetOnPage(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.SetOnPage(call.GetArg(0).String())
+func DatagridSetOnPage(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("OnPage", call.GetArg(0))
 	return nil
 }
-func (g *Datagrid) SetOnFilter(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.SetOnFilter(call.GetArg(0).String())
+func DatagridSetOnFilter(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("OnFilter", call.GetArg(0))
 	return nil
 }
-func (g *Datagrid) SetOnDelete(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.SetOnDelete(call.GetArg(0).String())
+func DatagridSetOnDelete(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("OnDelete", call.GetArg(0))
 	return nil
 }
-func (g *Datagrid) SetOnView(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.SetOnView(call.GetArg(0).String())
+func DatagridSetOnView(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("OnView", call.GetArg(0))
 	return nil
 }
-func (g *Datagrid) SetOnSelect(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.SetOnSelect(call.GetArg(0).String())
+func DatagridSetOnSelect(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("OnSelect", call.GetArg(0))
 	return nil
 }
-func (g *Datagrid) SetOnCreate(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.SetOnCreate(call.GetArg(0).String())
+func DatagridSetOnCreate(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("OnCreate", call.GetArg(0))
 	return nil
 }
-func (g *Datagrid) SetOnUpdate(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.SetOnUpdate(call.GetArg(0).String())
+func DatagridSetOnUpdate(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("OnUpdate", call.GetArg(0))
 	return nil
 }
-func (g *Datagrid) ResetItems(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.ResetItems()
+func DatagridResetItems(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("Items", call.Context().NewArray().Consume())
 	return nil
 }
-func (g *Datagrid) Append(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.Append(call.GetArg(0).String(), call.GetArg(1).String())
+func DatagridAppend(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	items := call.This().Get("Items")
+	items.Get("push").Call(items, call.Context().NewArray(call.GetArg(0), call.GetArg(1)).Consume())
 	return nil
 }
-func (g *Datagrid) Publish(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func DatagridPublish(b *bus.Bus) func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	return func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+		g := userinput.CreateDatagrid(
+			call.This().Get("Title").String(),
+			call.This().Get("Intro").String(),
+		)
+		items := call.This().Get("Items")
+		for _, v := range items.Array() {
+			g.Append(v.GetIdx(0).String(), v.GetIdx(1).String())
+		}
+		g.Page = int(call.This().Get("Page").Number())
+		g.MaxPage = int(call.This().Get("MaxPage").Number())
+		g.OnCreate = call.This().Get("OnCreate").String()
+		g.OnView = call.This().Get("OnView").String()
+		g.OnSelect = call.This().Get("OnSelect").String()
+		g.OnUpdate = call.This().Get("OnUpdate").String()
+		g.OnPage = call.This().Get("OnPage").String()
+		g.OnFilter = call.This().Get("OnFilter").String()
+		g.OnDelete = call.This().Get("OnDelete").String()
 
-	ui := g.Datagrid.Publish(g.bus, call.GetArg(0).String())
-	return call.Context().NewString(ui.ID).Consume()
+		ui := g.Publish(b, call.GetArg(0).String())
+		return call.Context().NewString(ui.ID).Consume()
+	}
 }
-func (g *Datagrid) Hide(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	g.Datagrid.Hide(g.bus)
-	return nil
+func DatagridHide(b *bus.Bus) func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	return func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+		(&userinput.Datagrid{}).Hide(b)
+		return nil
+	}
 }
-func (g *Datagrid) Convert(r *v8js.Context) *v8js.JsValue {
+func DatagridConvert(r *v8js.Context, ui *Userinput, title string, intro string) *v8js.JsValue {
+	dg := userinput.CreateDatagrid(title, intro)
 	obj := r.NewObject()
-	obj.Set("append", r.NewFunction(g.Append).Consume())
-	obj.Set("Append", r.NewFunction(g.Append).Consume())
-	obj.Set("publish", r.NewFunction(g.Publish).Consume())
-	obj.Set("Publish", r.NewFunction(g.Publish).Consume())
-	obj.Set("resetitems", r.NewFunction(g.ResetItems).Consume())
-	obj.Set("ResetItems", r.NewFunction(g.ResetItems).Consume())
-	obj.Set("setoncreate", r.NewFunction(g.SetOnCreate).Consume())
-	obj.Set("SetOnCreate", r.NewFunction(g.SetOnCreate).Consume())
-	obj.Set("setonupdate", r.NewFunction(g.SetOnUpdate).Consume())
-	obj.Set("SetOnUpdate", r.NewFunction(g.SetOnUpdate).Consume())
-	obj.Set("setonview", r.NewFunction(g.SetOnView).Consume())
-	obj.Set("SetOnView", r.NewFunction(g.SetOnView).Consume())
-	obj.Set("setonselect", r.NewFunction(g.SetOnSelect).Consume())
-	obj.Set("SetOnSelect", r.NewFunction(g.SetOnSelect).Consume())
-	obj.Set("setondelete", r.NewFunction(g.SetOnDelete).Consume())
-	obj.Set("SetOnDelete", r.NewFunction(g.SetOnDelete).Consume())
-	obj.Set("setonfilter", r.NewFunction(g.SetOnFilter).Consume())
-	obj.Set("SetOnFilter", r.NewFunction(g.SetOnFilter).Consume())
-	obj.Set("setonpage", r.NewFunction(g.SetOnPage).Consume())
-	obj.Set("SetOnPage", r.NewFunction(g.SetOnPage).Consume())
-	obj.Set("setfilter", r.NewFunction(g.SetFilter).Consume())
-	obj.Set("SetFilter", r.NewFunction(g.SetFilter).Consume())
-	obj.Set("getfilter", r.NewFunction(g.GetFilter).Consume())
-	obj.Set("GetFilter", r.NewFunction(g.GetFilter).Consume())
-	obj.Set("setmaxpage", r.NewFunction(g.SetMaxPage).Consume())
-	obj.Set("SetMaxPage", r.NewFunction(g.SetMaxPage).Consume())
-	obj.Set("setpage", r.NewFunction(g.SetPage).Consume())
-	obj.Set("SetPage", r.NewFunction(g.SetPage).Consume())
-	obj.Set("getpage", r.NewFunction(g.GetPage).Consume())
-	obj.Set("GetPage", r.NewFunction(g.GetPage).Consume())
-	obj.Set("hide", r.NewFunction(g.Hide).Consume())
-	obj.Set("Hide", r.NewFunction(g.Hide).Consume())
+	obj.Set("Title", r.NewString(dg.Title).Consume())
+	obj.Set("Intro", r.NewString(dg.Intro).Consume())
+	obj.Set("Items", r.NewArray().Consume())
+	obj.Set("Page", r.NewNumber(float64(dg.Page)).Consume())
+	obj.Set("MaxPage", r.NewNumber(float64(dg.MaxPage)).Consume())
+	obj.Set("OnCreate", r.NewString(dg.OnCreate).Consume())
+	obj.Set("OnView", r.NewString(dg.OnView).Consume())
+	obj.Set("OnSelect", r.NewString(dg.OnSelect).Consume())
+	obj.Set("OnUpdate", r.NewString(dg.OnUpdate).Consume())
+	obj.Set("OnPage", r.NewString(dg.OnPage).Consume())
+	obj.Set("OnFilter", r.NewString(dg.OnFilter).Consume())
+	obj.Set("OnDelete", r.NewString(dg.OnDelete).Consume())
+
+	obj.Set("append", ui.Functions["DatagridAppend"].Consume())
+	obj.Set("Append", ui.Functions["DatagridAppend"].Consume())
+	obj.Set("publish", ui.Functions["DatagridPublish"].Consume())
+	obj.Set("Publish", ui.Functions["DatagridPublish"].Consume())
+	obj.Set("resetitems", ui.Functions["DatagridResetItems"].Consume())
+	obj.Set("ResetItems", ui.Functions["DatagridResetItems"].Consume())
+	obj.Set("setoncreate", ui.Functions["DatagridSetOnCreate"].Consume())
+	obj.Set("SetOnCreate", ui.Functions["DatagridSetOnCreate"].Consume())
+	obj.Set("setonupdate", ui.Functions["DatagridSetOnUpdate"].Consume())
+	obj.Set("SetOnUpdate", ui.Functions["DatagridSetOnUpdate"].Consume())
+	obj.Set("setonview", ui.Functions["DatagridSetOnView"].Consume())
+	obj.Set("SetOnView", ui.Functions["DatagridSetOnView"].Consume())
+	obj.Set("setonselect", ui.Functions["DatagridSetOnSelect"].Consume())
+	obj.Set("SetOnSelect", ui.Functions["DatagridSetOnSelect"].Consume())
+	obj.Set("setondelete", ui.Functions["DatagridSetOnDelete"].Consume())
+	obj.Set("SetOnDelete", ui.Functions["DatagridSetOnDelete"].Consume())
+	obj.Set("setonfilter", ui.Functions["DatagridSetOnFilter"].Consume())
+	obj.Set("SetOnFilter", ui.Functions["DatagridSetOnFilter"].Consume())
+	obj.Set("setonpage", ui.Functions["DatagridSetOnPage"].Consume())
+	obj.Set("SetOnPage", ui.Functions["DatagridSetOnPage"].Consume())
+	obj.Set("setfilter", ui.Functions["DatagridSetFilter"].Consume())
+	obj.Set("SetFilter", ui.Functions["DatagridSetFilter"].Consume())
+	obj.Set("getfilter", ui.Functions["DatagridGetFilter"].Consume())
+	obj.Set("GetFilter", ui.Functions["DatagridGetFilter"].Consume())
+	obj.Set("setmaxpage", ui.Functions["DatagridSetMaxPage"].Consume())
+	obj.Set("SetMaxPage", ui.Functions["DatagridSetMaxPage"].Consume())
+	obj.Set("setpage", ui.Functions["DatagridSetPage"].Consume())
+	obj.Set("SetPage", ui.Functions["DatagridSetPage"].Consume())
+	obj.Set("getpage", ui.Functions["DatagridGetPage"].Consume())
+	obj.Set("GetPage", ui.Functions["DatagridGetPage"].Consume())
+	obj.Set("hide", ui.Functions["DatagridHide"].Consume())
+	obj.Set("Hide", ui.Functions["DatagridHide"].Consume())
+	obj.Set("Publish", ui.Functions["DatagridPublish"].Consume())
 	return obj
 
 }
@@ -200,44 +251,61 @@ type List struct {
 	bus  *bus.Bus
 }
 
-func (l *List) Publish(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	ui := l.List.Publish(l.bus, call.GetArg(0).String())
-	return call.Context().NewString(ui.ID).Consume()
+func ListPublish(b *bus.Bus) func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	return func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+		l := userinput.CreateList(
+			call.This().Get("Title").String(),
+			call.This().Get("Intro").String(),
+			call.This().Get("WithFilter").Boolean(),
+		)
+		items := call.This().Get("Items")
+		for _, v := range items.Array() {
+			l.Append(v.GetIdx(0).String(), v.GetIdx(1).String())
+		}
+		l.SetMulti(call.This().Get("Multi").Boolean())
+		ui := l.Publish(b, call.GetArg(0).String())
+		return call.Context().NewString(ui.ID).Consume()
+	}
 }
-func (l *List) Append(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	l.List.Append(call.GetArg(0).String(), call.GetArg(1).String())
+func ListAppend(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	items := call.This().Get("Items")
+	items.Get("push").Call(items, call.Context().NewArray(call.GetArg(0), call.GetArg(1)).Consume())
 	return nil
 }
-func (l *List) SetValues(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	v := call.GetArg(0).StringArrry()
-	l.List.SetValues(v)
+func ListSetValues(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("Items", call.GetArg(0))
 	return nil
 }
-func (l *List) SetMulti(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	l.List.SetMulti(call.GetArg(0).Boolean())
+func ListSetMulti(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+	call.This().Set("Multi", call.GetArg(0))
 	return nil
 }
-func (l *List) Convert(r *v8js.Context) *v8js.JsValue {
+func ListConvert(r *v8js.Context, ui *Userinput, title string, intro string, withFilter bool) *v8js.JsValue {
+	l := userinput.CreateList(title, intro, withFilter)
 	obj := r.NewObject()
-	obj.Set("append", r.NewFunction(l.Append).Consume())
-	obj.Set("Append", r.NewFunction(l.Append).Consume())
-	obj.Set("publish", r.NewFunction(l.Publish).Consume())
-	obj.Set("Publish", r.NewFunction(l.Publish).Consume())
-	obj.Set("setmulti", r.NewFunction(l.SetMulti).Consume())
-	obj.Set("SetMulti", r.NewFunction(l.SetMulti).Consume())
-	obj.Set("setmutli", r.NewFunction(l.SetMulti).Consume()) //老api的typo,保持兼容性
-	obj.Set("SetMutli", r.NewFunction(l.SetMulti).Consume()) //老api的typo,保持兼容性
-	obj.Set("setvalues", r.NewFunction(l.SetValues).Consume())
-	obj.Set("SetValues", r.NewFunction(l.SetValues).Consume())
+	obj.Set("Title", r.NewString(l.Title).Consume())
+	obj.Set("Intro", r.NewString(l.Intro).Consume())
+	obj.Set("Items", r.NewArray().Consume())
+	obj.Set("Multi", r.NewBoolean(l.Mutli).Consume())
+	obj.Set("WithFilter", r.NewBoolean(l.WithFilter).Consume())
+
+	obj.Set("append", ui.Functions["ListAppend"].Consume())
+	obj.Set("Append", ui.Functions["ListAppend"].Consume())
+	obj.Set("publish", ui.Functions["ListPublish"].Consume())
+	obj.Set("Publish", ui.Functions["ListPublish"].Consume())
+	obj.Set("setmulti", ui.Functions["ListSetMulti"].Consume())
+	obj.Set("SetMulti", ui.Functions["ListSetMulti"].Consume())
+	obj.Set("setmutli", ui.Functions["ListSetMulti"].Consume()) //老api的typo,保持兼容性
+	obj.Set("SetMutli", ui.Functions["ListSetMulti"].Consume()) //老api的typo,保持兼容性
+	obj.Set("setvalues", ui.Functions["ListSetValues"].Consume())
+	obj.Set("SetValues", ui.Functions["ListSetValues"].Consume())
+	obj.Set("Publish", ui.Functions["ListPublish"].Consume())
 	return obj
 }
 
 type Userinput struct {
-	bus *bus.Bus
+	bus       *bus.Bus
+	Functions map[string]*v8js.Reusable
 }
 
 func (u *Userinput) HideAll(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
@@ -246,28 +314,13 @@ func (u *Userinput) HideAll(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 	return nil
 }
 func (u *Userinput) NewVisualPrompt(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	vp := &VisualPrompt{
-		VisualPrompt: userinput.CreateVisualPrompt(call.GetArg(0).String(), call.GetArg(1).String(), call.GetArg(2).String()),
-		bus:          u.bus,
-	}
-	return vp.Convert(call.Context()).Consume()
+	return VisualPromptConvert(call.Context(), u, call.GetArg(0).String(), call.GetArg(1).String(), call.GetArg(2).String()).Consume()
 }
 func (u *Userinput) NewDatagrid(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	datagrid := &Datagrid{
-		Datagrid: userinput.CreateDatagrid(call.GetArg(0).String(), call.GetArg(1).String()),
-		bus:      u.bus,
-	}
-	return datagrid.Convert(call.Context()).Consume()
+	return DatagridConvert(call.Context(), u, call.GetArg(0).String(), call.GetArg(1).String()).Consume()
 }
 func (u *Userinput) NewList(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-	list := &List{
-		List: userinput.CreateList(call.GetArg(0).String(), call.GetArg(1).String(), call.GetArg(2).Boolean()),
-		bus:  u.bus,
-	}
-	return list.Convert(call.Context()).Consume()
+	return ListConvert(call.Context(), u, call.GetArg(0).String(), call.GetArg(1).String(), call.GetArg(2).Boolean()).Consume()
 }
 func (u *Userinput) Prompt(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 
@@ -323,6 +376,38 @@ func (u *Userinput) Convert(r *v8js.Context) *v8js.JsValue {
 	obj.Set("custom", r.NewFunction(u.Custom).Consume())
 	return obj
 }
+func (u *Userinput) Init(r *v8js.Context) {
+	u.Functions = make(map[string]*v8js.Reusable)
+
+	u.Functions["VisualPromptSetMediaType"] = r.NewFunction(VisualPromptSetMediaType).ConsumeReuseble()
+	u.Functions["VisualPromptSetPortrait"] = r.NewFunction(VisualPromptSetPortrait).ConsumeReuseble()
+	u.Functions["VisualPromptSetValue"] = r.NewFunction(VisualPromptSetValue).ConsumeReuseble()
+	u.Functions["VisualPromptSetRefreshCallback"] = r.NewFunction(VisualPromptSetRefreshCallback).ConsumeReuseble()
+	u.Functions["VisualPromptAppend"] = r.NewFunction(VisualPromptAppend).ConsumeReuseble()
+	u.Functions["VisualPromptPublish"] = r.NewFunction(VisualPromptPublish(u.bus)).ConsumeReuseble()
+
+	u.Functions["DatagridSetPage"] = r.NewFunction(DatagridSetPage).ConsumeReuseble()
+	u.Functions["DatagridGetPage"] = r.NewFunction(DatagridGetPage).ConsumeReuseble()
+	u.Functions["DatagridSetMaxPage"] = r.NewFunction(DatagridSetMaxPage).ConsumeReuseble()
+	u.Functions["DatagridSetFilter"] = r.NewFunction(DatagridSetFilter).ConsumeReuseble()
+	u.Functions["DatagridGetFilter"] = r.NewFunction(DatagridGetFilter).ConsumeReuseble()
+	u.Functions["DatagridSetOnPage"] = r.NewFunction(DatagridSetOnPage).ConsumeReuseble()
+	u.Functions["DatagridSetOnFilter"] = r.NewFunction(DatagridSetOnFilter).ConsumeReuseble()
+	u.Functions["DatagridSetOnDelete"] = r.NewFunction(DatagridSetOnDelete).ConsumeReuseble()
+	u.Functions["DatagridSetOnView"] = r.NewFunction(DatagridSetOnView).ConsumeReuseble()
+	u.Functions["DatagridSetOnSelect"] = r.NewFunction(DatagridSetOnSelect).ConsumeReuseble()
+	u.Functions["DatagridSetOnCreate"] = r.NewFunction(DatagridSetOnCreate).ConsumeReuseble()
+	u.Functions["DatagridSetOnUpdate"] = r.NewFunction(DatagridSetOnUpdate).ConsumeReuseble()
+	u.Functions["DatagridResetItems"] = r.NewFunction(DatagridResetItems).ConsumeReuseble()
+	u.Functions["DatagridAppend"] = r.NewFunction(DatagridAppend).ConsumeReuseble()
+	u.Functions["DatagridPublish"] = r.NewFunction(DatagridPublish(u.bus)).ConsumeReuseble()
+	u.Functions["DatagridHide"] = r.NewFunction(DatagridHide(u.bus)).ConsumeReuseble()
+
+	u.Functions["ListPublish"] = r.NewFunction(ListPublish(u.bus)).ConsumeReuseble()
+	u.Functions["ListAppend"] = r.NewFunction(ListAppend).ConsumeReuseble()
+	u.Functions["ListSetValues"] = r.NewFunction(ListSetValues).ConsumeReuseble()
+	u.Functions["ListSetMulti"] = r.NewFunction(ListSetMulti).ConsumeReuseble()
+}
 func NewUserinputModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("userinput",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
@@ -330,6 +415,7 @@ func NewUserinputModule(b *bus.Bus) *herbplugin.Module {
 			r := jsp.Runtime
 			u := &Userinput{bus: b}
 			global := r.Global()
+			u.Init(r)
 			global.Set("Userinput", u.Convert(r).Consume())
 			global.Release()
 			next(ctx, plugin)
