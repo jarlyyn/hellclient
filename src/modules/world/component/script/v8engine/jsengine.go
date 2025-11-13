@@ -27,7 +27,7 @@ func newJsInitializer(b *bus.Bus) *v8plugin.Initializer {
 		NewHTTPModule(b),
 		NewMetronomeModule(b),
 		NewUserinputModule(b),
-		// NewBinaryModule(b),
+		NewBinaryModule(b),
 	}
 	return i
 }
