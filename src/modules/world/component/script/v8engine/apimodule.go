@@ -254,7 +254,7 @@ func (a *jsapi) Snapshot(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 func (a *jsapi) Debug(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 	debug.FreeOSMemory()
 	v8go.ForceV8GC(call.Context().Raw.Isolate())
-	// a.API.Note(strconv.Itoa(call.Context().Raw.RetainedValueCount()))
+	a.API.Note(strconv.Itoa(call.Context().Raw.RetainedValueCount()))
 	bs, err := json.Marshal(call.Context().Raw.Isolate().GetHeapStatistics())
 	if err != nil {
 		panic(err)

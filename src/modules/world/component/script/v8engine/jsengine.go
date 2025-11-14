@@ -333,16 +333,17 @@ func (s *runScript) Exec() {
 	if fn == nil || fn.IsNull() || !fn.IsFunction() {
 		s.bus.HandleScriptError(errors.New(fmt.Sprintf("js function %s not found", s.source)))
 		s.output = false
+		return
 	}
+	defer fn.Release()
 	var result *v8js.JsValue
 	result = fn.Call(s.ctx.NullValue(), s.args...)
-	fn.Release()
+	defer result.Release()
 	if result.IsBoolean() {
 		s.output = result.Boolean()
 	} else {
 		s.output = false
 	}
-	result.Release()
 }
 func (e *JsEngine) Call(b *bus.Bus, source string, args ...*v8js.Consumed) bool {
 	e.Locker.Lock()
