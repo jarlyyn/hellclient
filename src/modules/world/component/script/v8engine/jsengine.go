@@ -98,16 +98,16 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 		b: b,
 		e: e,
 	}
-	err := util.Catch(s.init)
+	err := formatError(util.Catch(s.init))
 	if err != nil {
 		return err
 	}
-	err = util.Catch(s.lanuch)
+	err = formatError(util.Catch(s.lanuch))
 	if err != nil {
 		return err
 	}
 	if data.OnOpen != "" {
-		b.HandleScriptError(util.Catch(s.onOpen))
+		b.HandleScriptError(formatError(util.Catch(s.onOpen)))
 	}
 	return nil
 }
@@ -119,7 +119,7 @@ func (e *JsEngine) Close(b *bus.Bus) {
 	} else {
 		e.Locker.Unlock()
 	}
-	b.HandleScriptError(util.Catch(e.Plugin.MustClosePlugin))
+	b.HandleScriptError(formatError(util.Catch(e.Plugin.MustClosePlugin)))
 }
 func (e *JsEngine) OnConnect(b *bus.Bus) {
 	if e.onConnect != "" {
@@ -317,7 +317,7 @@ func (e *JsEngine) Run(b *bus.Bus, cmd string) {
 		ctx: e.Plugin.Runtime,
 		cmd: cmd,
 	}
-	b.HandleScriptError(util.Catch(r.Run))
+	b.HandleScriptError(formatError(util.Catch(r.Run)))
 }
 
 type runScript struct {
@@ -345,6 +345,24 @@ func (s *runScript) Exec() {
 		s.output = false
 	}
 }
+
+type ScriptError struct {
+	*v8go.JSError
+}
+
+func (s *ScriptError) Error() string {
+	return s.StackTrace
+}
+
+func formatError(err error) error {
+	if err != nil {
+		jserr, ok := err.(*v8go.JSError)
+		if ok {
+			return &ScriptError{JSError: jserr}
+		}
+	}
+	return err
+}
 func (e *JsEngine) Call(b *bus.Bus, source string, args ...*v8js.Consumed) bool {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()
@@ -365,7 +383,7 @@ func (e *JsEngine) Call(b *bus.Bus, source string, args ...*v8js.Consumed) bool 
 		ctx:    r,
 		args:   args,
 	}
-	b.HandleScriptError(util.Catch(s.Exec))
+	b.HandleScriptError(formatError(util.Catch(s.Exec)))
 	return output
 }
 
