@@ -26,9 +26,9 @@ func initTemplates() {
 	ScriptTomlTemplates[ScriptTypeJavascript] = util.System("template", "script", "jscript.toml")
 	ScriptTemplates[ScriptTypeJavascript] = util.System("template", "script", "main.js")
 	ScriptTargets[ScriptTypeJavascript] = "main.js"
-	ScriptTomlTemplates[ScriptTypeJavascript] = util.System("template", "script", "v8.toml")
-	ScriptTemplates[ScriptTypeJavascript] = util.System("template", "script", "v8.js")
-	ScriptTargets[ScriptTypeJavascript] = "main.js"
+	ScriptTomlTemplates[ScriptTypeV8] = util.System("template", "script", "v8.toml")
+	ScriptTemplates[ScriptTypeV8] = util.System("template", "script", "main.v8.js")
+	ScriptTargets[ScriptTypeV8] = "main.js"
 
 }
 
