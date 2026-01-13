@@ -7,138 +7,138 @@ import (
 	"time"
 
 	"github.com/herb-go/herbplugin"
-	"github.com/jarlyyn/v8js"
-	"github.com/jarlyyn/v8js/v8plugin"
+	"github.com/herb-go/v8local"
+	"github.com/herb-go/v8local/v8plugin"
 )
 
 func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("metronome",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
 			jsp := plugin.(*v8plugin.Plugin).LoadJsPlugin()
-			r := jsp.Runtime
-			m := jsp.Runtime.NewObject()
-			m.Set("getbeats", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			r := jsp.Top
+			m := jsp.Top.NewObject()
+			m.Set("getbeats", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-				return call.Context().NewInt32(int32(b.GetMetronomeBeats())).Consume()
-			}).Consume())
-			m.Set("GetBeats", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+				return call.Local().NewInt32(int32(b.GetMetronomeBeats()))
+			}))
+			m.Set("GetBeats", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-				return call.Context().NewInt32(int32(b.GetMetronomeBeats())).Consume()
-			}).Consume())
-			m.Set("setbeats", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-				b.SetMetronomeBeats(int(call.GetArg(0).Integer()))
-				return nil
-			}).Consume())
-			m.Set("SetBeats", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+				return call.Local().NewInt32(int32(b.GetMetronomeBeats()))
+			}))
+			m.Set("setbeats", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.SetMetronomeBeats(int(call.GetArg(0).Integer()))
 				return nil
-			}).Consume())
-			m.Set("reset", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("SetBeats", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+
+				b.SetMetronomeBeats(int(call.GetArg(0).Integer()))
+				return nil
+			}))
+			m.Set("reset", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.DoResetMetronome()
 				return nil
-			}).Consume())
-			m.Set("Reset", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("Reset", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.DoResetMetronome()
 				return nil
-			}).Consume())
-			m.Set("getspace", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("getspace", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-				return call.Context().NewInt32(int32(b.GetMetronomeSpace())).Consume()
-			}).Consume())
-			m.Set("GetSpace", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+				return call.Local().NewInt32(int32(b.GetMetronomeSpace()))
+			}))
+			m.Set("GetSpace", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-				return call.Context().NewInt32(int32(b.GetMetronomeSpace())).Consume()
-			}).Consume())
-			m.Set("getqueue", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+				return call.Local().NewInt32(int32(b.GetMetronomeSpace()))
+			}))
+			m.Set("getqueue", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-				return call.Context().NewStringArray(b.GetMetronomeQueue()...).Consume()
-			}).Consume())
-			m.Set("GetQueue", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+				return call.Local().NewStringArray(b.GetMetronomeQueue()...)
+			}))
+			m.Set("GetQueue", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-				return call.Context().NewStringArray(b.GetMetronomeQueue()...).Consume()
-			}).Consume())
-			m.Set("discard", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-				b.DoDiscardMetronome(call.GetArg(0).Boolean())
-				return nil
-			}).Consume())
-			m.Set("Discard", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+				return call.Local().NewStringArray(b.GetMetronomeQueue()...)
+			}))
+			m.Set("discard", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.DoDiscardMetronome(call.GetArg(0).Boolean())
 				return nil
-			}).Consume())
-			m.Set("lockqueue", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("Discard", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+
+				b.DoDiscardMetronome(call.GetArg(0).Boolean())
+				return nil
+			}))
+			m.Set("lockqueue", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.DoLockMetronomeQueue()
 				return nil
-			}).Consume())
-			m.Set("Lockqueue", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("Lockqueue", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.DoLockMetronomeQueue()
 				return nil
-			}).Consume())
-			m.Set("full", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("full", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.DoFullMetronome()
 				return nil
-			}).Consume())
-			m.Set("Full", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("Full", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.DoFullMetronome()
 				return nil
-			}).Consume())
-			m.Set("fulltick", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("fulltick", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.DoFullTickMetronome()
 				return nil
-			}).Consume())
-			m.Set("FullTick", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("FullTick", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.DoFullTickMetronome()
 				return nil
-			}).Consume())
-			m.Set("getinterval", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("getinterval", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-				return call.Context().NewInt32(int32(b.GetMetronomeInterval() / time.Millisecond)).Consume()
-			}).Consume())
-			m.Set("GetInterval", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+				return call.Local().NewInt32(int32(b.GetMetronomeInterval() / time.Millisecond))
+			}))
+			m.Set("GetInterval", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-				return call.Context().NewInt32(int32(b.GetMetronomeInterval() / time.Millisecond)).Consume()
-			}).Consume())
-			m.Set("setinterval", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-
-				b.SetMetronomeInterval(time.Duration(call.GetArg(0).Integer()) * time.Millisecond)
-				return nil
-			}).Consume())
-			m.Set("SetInterval", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+				return call.Local().NewInt32(int32(b.GetMetronomeInterval() / time.Millisecond))
+			}))
+			m.Set("setinterval", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.SetMetronomeInterval(time.Duration(call.GetArg(0).Integer()) * time.Millisecond)
 				return nil
-			}).Consume())
-			m.Set("gettick", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("SetInterval", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-				return call.Context().NewInt32(int32(b.GetMetronomeTick() / time.Millisecond)).Consume()
-			}).Consume())
-			m.Set("GetTick", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+				b.SetMetronomeInterval(time.Duration(call.GetArg(0).Integer()) * time.Millisecond)
+				return nil
+			}))
+			m.Set("gettick", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-				return call.Context().NewInt32(int32(b.GetMetronomeTick() / time.Millisecond)).Consume()
-			}).Consume())
-			m.Set("settick", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+				return call.Local().NewInt32(int32(b.GetMetronomeTick() / time.Millisecond))
+			}))
+			m.Set("GetTick", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+
+				return call.Local().NewInt32(int32(b.GetMetronomeTick() / time.Millisecond))
+			}))
+			m.Set("settick", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.SetMetronomeTick(time.Duration(call.GetArg(0).Integer()) * time.Millisecond)
 				return nil
-			}).Consume())
-			m.Set("SetTick", jsp.Runtime.NewFunction(func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			}))
+			m.Set("SetTick", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.SetMetronomeTick(time.Duration(call.GetArg(0).Integer()) * time.Millisecond)
 				return nil
-			}).Consume())
+			}))
 
-			push := func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+			push := func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				args := call.GetArg(0).StringArrry()
 				grouped := call.GetArg(1).Boolean()
@@ -152,11 +152,10 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				b.DoPushMetronome(cmds, grouped)
 				return nil
 			}
-			m.Set("push", jsp.Runtime.NewFunction(push).Consume())
-			m.Set("Push", jsp.Runtime.NewFunction(push).Consume())
+			m.Set("push", jsp.Top.NewFunction(push))
+			m.Set("Push", jsp.Top.NewFunction(push))
 			global := r.Global()
-			global.Set("Metronome", m.Consume())
-			global.Release()
+			global.Set("Metronome", m)
 			next(ctx, plugin)
 		},
 		nil,

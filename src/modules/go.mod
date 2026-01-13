@@ -21,12 +21,12 @@ require (
 	github.com/herb-go/plugins v0.0.0-20251105104654-1ad36b135de5
 	github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531
 	github.com/herb-go/util v0.0.0-20230321163403-6a757b251968
-	github.com/herb-go/v8go v0.0.0-20251114063147-99ce5e20c7c0
+	github.com/herb-go/v8go v0.0.0-20260112134925-daec21175462
+	github.com/herb-go/v8local v0.0.0-20260112154508-b3f7ce7df530
 	github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73
 	github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce
 	github.com/jarlyyn/golang-pkg-pcre v0.0.0-20240621170938-332279f3b0ba
 	github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a
-	github.com/jarlyyn/v8js v0.0.0-20251114070142-5994585d951b
 	github.com/satori/go.uuid v1.2.0
 	github.com/yuin/gopher-lua v1.1.1
 	golang.org/x/net v0.22.0

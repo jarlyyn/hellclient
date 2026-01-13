@@ -5,30 +5,29 @@ import (
 	"modules/mapper"
 	"modules/world/bus"
 
-	"github.com/jarlyyn/v8js"
-
 	"github.com/herb-go/herbplugin"
-	"github.com/jarlyyn/v8js/v8plugin"
+	"github.com/herb-go/v8local"
+	"github.com/herb-go/v8local/v8plugin"
 )
 
 type JsWalkAllResult struct {
 	result *mapper.WalkAllResult
 }
 
-func (result *JsWalkAllResult) Convert(r *v8js.Context) *v8js.Consumed {
+func (result *JsWalkAllResult) Convert(r *v8local.Local) *v8local.JsValue {
 	t := r.NewObject()
-	steps := make([]*v8js.Consumed, 0, len(result.result.Steps))
+	steps := make([]*v8local.JsValue, 0, len(result.result.Steps))
 
 	for _, v := range result.result.Steps {
 		s := &JsStep{step: v}
-		steps = append(steps, s.Convert(r).Consume())
+		steps = append(steps, s.Convert(r))
 	}
-	t.Set("steps", r.NewArray(steps...).Consume())
-	t.Set("walked", r.NewStringArray(result.result.Walked...).Consume())
-	t.Set("notwalked", r.NewStringArray(result.result.NotWalked...).Consume())
-	return t.Consume()
+	t.Set("steps", r.NewArray(steps...))
+	t.Set("walked", r.NewStringArray(result.result.Walked...))
+	t.Set("notwalked", r.NewStringArray(result.result.NotWalked...))
+	return t
 }
-func ConvertJsPath(r *v8js.Context, v *v8js.Consumed) *JsPath {
+func ConvertJsPath(r *v8local.Local, v *v8local.JsValue) *JsPath {
 
 	t := v
 	p := &JsPath{
@@ -36,23 +35,18 @@ func ConvertJsPath(r *v8js.Context, v *v8js.Consumed) *JsPath {
 	}
 	cmd := t.Get("command")
 	p.path.Command = cmd.String()
-	cmd.Release()
 	frm := t.Get("from")
 	p.path.From = frm.String()
-	frm.Release()
 	to := t.Get("to")
 	p.path.To = to.String()
-	to.Release()
 	delay := t.Get("delay")
 	p.path.Delay = int(delay.Integer())
-	delay.Release()
 
 	tags := []string{}
 	tagsvalue := t.Get("tags")
 	if tagsvalue != nil {
 		tags = tagsvalue.StringArrry()
 	}
-	tagsvalue.Release()
 	for _, v := range tags {
 		p.path.Tags[v] = true
 	}
@@ -61,7 +55,6 @@ func ConvertJsPath(r *v8js.Context, v *v8js.Consumed) *JsPath {
 	if etagsvalue != nil {
 		etags = etagsvalue.StringArrry()
 	}
-	etagsvalue.Release()
 	for _, v := range etags {
 		p.path.ExcludeTags[v] = true
 	}
@@ -73,46 +66,42 @@ type JsPath struct {
 	path *mapper.Path
 }
 
-func (p *JsPath) Convert(r *v8js.Context) *v8js.Consumed {
+func (p *JsPath) Convert(r *v8local.Local) *v8local.JsValue {
 	t := r.NewObject()
-	t.Set("command", r.NewString(p.path.Command).Consume())
-	t.Set("from", r.NewString(p.path.From).Consume())
-	t.Set("to", r.NewString(p.path.To).Consume())
-	t.Set("delay", r.NewInt32(int32(p.path.Delay)).Consume())
+	t.Set("command", r.NewString(p.path.Command))
+	t.Set("from", r.NewString(p.path.From))
+	t.Set("to", r.NewString(p.path.To))
+	t.Set("delay", r.NewInt32(int32(p.path.Delay)))
 	tags := []string{}
 	for k, v := range p.path.Tags {
 		if v {
 			tags = append(tags, k)
 		}
 	}
-	t.Set("tags", r.NewStringArray(tags...).Consume())
+	t.Set("tags", r.NewStringArray(tags...))
 	etags := []string{}
 	for k, v := range p.path.ExcludeTags {
 		if v {
 			etags = append(etags, k)
 		}
 	}
-	t.Set("excludetags", r.NewStringArray(etags...).Consume())
-	return t.Consume()
+	t.Set("excludetags", r.NewStringArray(etags...))
+	return t
 }
 
-func ConvertJsStep(r *v8js.Context, v *v8js.JsValue) *JsStep {
+func ConvertJsStep(r *v8local.Context, v *v8local.JsValue) *JsStep {
 	t := v
 	s := &JsStep{
 		step: &mapper.Step{},
 	}
 	cmd := t.Get("command")
 	s.step.Command = cmd.String()
-	cmd.Release()
 	frm := t.Get("from")
 	s.step.From = frm.String()
-	frm.Release()
 	to := t.Get("to")
 	s.step.To = to.String()
-	to.Release()
 	delay := t.Get("delay")
 	s.step.Delay = int(delay.Integer())
-	delay.Release()
 	return s
 }
 
@@ -120,31 +109,31 @@ type JsStep struct {
 	step *mapper.Step
 }
 
-func (s *JsStep) Convert(r *v8js.Context) *v8js.Consumed {
+func (s *JsStep) Convert(r *v8local.Local) *v8local.JsValue {
 	t := r.NewObject()
-	t.Set("command", r.NewString(s.step.Command).Consume())
-	t.Set("from", r.NewString(s.step.From).Consume())
-	t.Set("to", r.NewString(s.step.To).Consume())
-	t.Set("delay", r.NewInt32(int32(s.step.Delay)).Consume())
-	return t.Consume()
+	t.Set("command", r.NewString(s.step.Command))
+	t.Set("from", r.NewString(s.step.From))
+	t.Set("to", r.NewString(s.step.To))
+	t.Set("delay", r.NewInt32(int32(s.step.Delay)))
+	return t
 }
 
 type JsMapper struct {
 	mapper *mapper.Mapper
 }
 
-func (m *JsMapper) Reset(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) Reset(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	m.mapper.Reset()
 	return nil
 }
-func (m *JsMapper) ResetTemporary(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) ResetTemporary(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	m.mapper.ResetTemporary()
 	return nil
 }
 
-func (m *JsMapper) AddTags(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) AddTags(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	tags := []string{}
 	for _, v := range call.Args() {
@@ -153,18 +142,18 @@ func (m *JsMapper) AddTags(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 	m.mapper.AddTags(tags)
 	return nil
 }
-func (m *JsMapper) SetTag(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) SetTag(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	m.mapper.SetTag(call.GetArg(0).String(), call.GetArg(1).Boolean())
 	return nil
 }
-func (m *JsMapper) FlashTags(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) FlashTags(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	m.mapper.FlashTags()
 	return nil
 }
 
-func (m *JsMapper) SetTags(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) SetTags(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	tagsv := call.GetArg(0)
 	if tagsv.IsNull() {
@@ -175,17 +164,17 @@ func (m *JsMapper) SetTags(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 	return nil
 }
 
-func (m *JsMapper) Tags(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) Tags(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-	return call.Context().NewStringArray(m.mapper.Tags()...).Consume()
+	return call.Local().NewStringArray(m.mapper.Tags()...)
 }
-func (m *JsMapper) WalkAll(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) WalkAll(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	targets := call.GetArg(0).StringArrry()
 	fly := int(call.GetArg(1).Integer())
 	maxdistance := int(call.GetArg(2).Integer())
 	v := call.GetArg(3)
-	var option *v8js.Consumed
+	var option *v8local.JsValue
 	if !v.IsNull() {
 		option = call.GetArg(3)
 	}
@@ -196,27 +185,23 @@ func (m *JsMapper) WalkAll(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 		if blacklist != nil {
 			opt.Blacklist = blacklist.StringArrry()
 		}
-		blacklist.Release()
 		whitelist := option.Get("whitelist")
 		if whitelist != nil {
 			opt.Whitelist = whitelist.StringArrry()
 		}
-		whitelist.Release()
 		blockedpath := option.Get("blockedpath")
 		if blockedpath != nil {
 			blocked := blockedpath.Array()
 			for _, v := range blocked {
 				opt.BlockedPath = append(opt.BlockedPath, v.StringArrry())
-				v.Release()
 			}
 		}
-		blockedpath.Release()
 	}
 	result := m.mapper.WalkAll(targets, fly != 0, maxdistance, opt)
 	jsresult := &JsWalkAllResult{result: result}
-	return jsresult.Convert(call.Context())
+	return jsresult.Convert(call.Local())
 }
-func (m *JsMapper) GetPath(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) GetPath(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	if len(call.Args()) < 3 {
 		return nil
@@ -236,119 +221,115 @@ func (m *JsMapper) GetPath(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 			if jbl != nil {
 				opt.Blacklist = jbl.StringArrry()
 			}
-			jbl.Release()
 			jwl := option.Get("whitelist")
 			if jwl != nil {
 				opt.Whitelist = jwl.StringArrry()
 			}
-			jwl.Release()
 			blockedpath := option.Get("blockedpath")
 			if blockedpath != nil {
 				blocked := blockedpath.Array()
 				for _, v := range blocked {
 					opt.BlockedPath = append(opt.BlockedPath, v.StringArrry())
-					v.Release()
 				}
 			}
-			blockedpath.Release()
 		}
 	}
 	steps := m.mapper.GetPath(from, fly != 0, to, opt)
 	if steps == nil {
 		return nil
 	}
-	t := []*v8js.Consumed{}
+	t := []*v8local.JsValue{}
 	for i := range steps {
 		s := &JsStep{step: steps[i]}
-		t = append(t, s.Convert(call.Context()).Consume())
+		t = append(t, s.Convert(call.Local()))
 	}
-	return call.Context().NewArray(t...).Consume()
+	return call.Local().NewArray(t...)
 }
-func (m *JsMapper) AddPath(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) AddPath(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 	if len(call.Args()) < 2 {
 		return nil
 	}
 
 	id := call.GetArg(0).String()
-	path := ConvertJsPath(call.Context(), call.GetArg(1))
+	path := ConvertJsPath(call.Local(), call.GetArg(1))
 	if path == nil {
 		return nil
 	}
-	return call.Context().NewBoolean(m.mapper.AddPath(id, path.path)).Consume()
+	return call.Local().NewBoolean(m.mapper.AddPath(id, path.path))
 }
-func (m *JsMapper) AddTemporaryPath(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) AddTemporaryPath(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	if len(call.Args()) < 2 {
 		return nil
 	}
 
 	id := call.GetArg(0).String()
-	path := ConvertJsPath(call.Context(), call.GetArg(1))
+	path := ConvertJsPath(call.Local(), call.GetArg(1))
 	if path == nil {
 		return nil
 	}
-	return call.Context().NewBoolean(m.mapper.AddTemporaryPath(id, path.path)).Consume()
+	return call.Local().NewBoolean(m.mapper.AddTemporaryPath(id, path.path))
 }
 
-func (m *JsMapper) NewPath(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) NewPath(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	p := &JsPath{
 		path: mapper.NewPath(),
 	}
-	return p.Convert(call.Context())
+	return p.Convert(call.Local())
 }
-func (m *JsMapper) GetRoomID(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) GetRoomID(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	name := call.GetArg(0).String()
 	ids := m.mapper.GetRoomID(name)
-	return call.Context().NewStringArray(ids...).Consume()
+	return call.Local().NewStringArray(ids...)
 }
-func (m *JsMapper) GetRoomName(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) GetRoomName(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	id := call.GetArg(0).String()
-	return call.Context().NewString(m.mapper.GetRoomName(id)).Consume()
+	return call.Local().NewString(m.mapper.GetRoomName(id))
 }
-func (m *JsMapper) SetRoomName(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) SetRoomName(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	id := call.GetArg(0).String()
 	name := call.GetArg(1).String()
 	m.mapper.SetRoomName(id, name)
 	return nil
 }
-func (m *JsMapper) ClearRoom(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) ClearRoom(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	id := call.GetArg(0).String()
 	m.mapper.ClearRoom(id)
 	return nil
 }
-func (m *JsMapper) RemoveRoom(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) RemoveRoom(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	id := call.GetArg(0).String()
-	return call.Context().NewBoolean(m.mapper.RemoveRoom(id)).Consume()
+	return call.Local().NewBoolean(m.mapper.RemoveRoom(id))
 }
-func (m *JsMapper) NewArea(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) NewArea(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	size := int(call.GetArg(0).Integer())
 	ids := m.mapper.NewArea(size)
-	return call.Context().NewStringArray(ids...).Consume()
+	return call.Local().NewStringArray(ids...)
 }
-func (m *JsMapper) GetExits(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) GetExits(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	id := call.GetArg(0).String()
 	exits := m.mapper.GetExits(id, call.GetArg(1).Boolean())
-	t := []*v8js.Consumed{}
+	t := []*v8local.JsValue{}
 	for _, v := range exits {
 		p := &JsPath{
 			path: v,
 		}
-		t = append(t, p.Convert(call.Context()))
+		t = append(t, p.Convert(call.Local()))
 	}
-	return call.Context().NewArray(t...).Consume()
+	return call.Local().NewArray(t...)
 
 }
-func (m *JsMapper) SetFlyList(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) SetFlyList(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-	fl := []*v8js.JsValue{}
+	fl := []*v8local.JsValue{}
 	flv := call.GetArg(0)
 	if flv == nil {
 		return nil
@@ -357,79 +338,77 @@ func (m *JsMapper) SetFlyList(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
 	fl = call.GetArg(0).Array()
 	var result = []*mapper.Path{}
 	for _, v := range fl {
-		p := ConvertJsPath(call.Context(), v.Consume()).path
-		v.Release()
+		p := ConvertJsPath(call.Local(), v).path
 		result = append(result, p)
 	}
 	m.mapper.SetFlyList(result)
 	return nil
 }
-func (m *JsMapper) FlyList(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func (m *JsMapper) FlyList(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-	fl := []*v8js.Consumed{}
+	fl := []*v8local.JsValue{}
 	result := m.mapper.FlyList()
 	for _, v := range result {
-		fl = append(fl, (&JsPath{path: v}).Convert(call.Context()).Consume())
+		fl = append(fl, (&JsPath{path: v}).Convert(call.Local()))
 	}
-	return call.Context().NewArray(fl...).Consume()
+	return call.Local().NewArray(fl...)
 }
-func (m *JsMapper) Convert(r *v8js.Context) *v8js.JsValue {
+func (m *JsMapper) Convert(r *v8local.Local) *v8local.JsValue {
 	t := r.NewObject()
-	t.Set("reset", r.NewFunction(m.Reset).Consume())
-	t.Set("Reset", r.NewFunction(m.Reset).Consume())
-	t.Set("resettemporary", r.NewFunction(m.ResetTemporary).Consume())
-	t.Set("ResetTemporary", r.NewFunction(m.ResetTemporary).Consume())
-	t.Set("addtags", r.NewFunction(m.AddTags).Consume())
-	t.Set("AddTags", r.NewFunction(m.AddTags).Consume())
-	t.Set("settag", r.NewFunction(m.SetTag).Consume())
-	t.Set("SetTag", r.NewFunction(m.SetTag).Consume())
-	t.Set("settags", r.NewFunction(m.SetTags).Consume())
-	t.Set("SetTags", r.NewFunction(m.SetTags).Consume())
-	t.Set("tags", r.NewFunction(m.Tags).Consume())
-	t.Set("Tags", r.NewFunction(m.Tags).Consume())
-	t.Set("getpath", r.NewFunction(m.GetPath).Consume())
-	t.Set("GetPath", r.NewFunction(m.GetPath).Consume())
-	t.Set("addpath", r.NewFunction(m.AddPath).Consume())
-	t.Set("AddPath", r.NewFunction(m.AddPath).Consume())
-	t.Set("addtemporarypath", r.NewFunction(m.AddTemporaryPath).Consume())
-	t.Set("AddTemporaryPath", r.NewFunction(m.AddTemporaryPath).Consume())
+	t.Set("reset", r.NewFunction(m.Reset))
+	t.Set("Reset", r.NewFunction(m.Reset))
+	t.Set("resettemporary", r.NewFunction(m.ResetTemporary))
+	t.Set("ResetTemporary", r.NewFunction(m.ResetTemporary))
+	t.Set("addtags", r.NewFunction(m.AddTags))
+	t.Set("AddTags", r.NewFunction(m.AddTags))
+	t.Set("settag", r.NewFunction(m.SetTag))
+	t.Set("SetTag", r.NewFunction(m.SetTag))
+	t.Set("settags", r.NewFunction(m.SetTags))
+	t.Set("SetTags", r.NewFunction(m.SetTags))
+	t.Set("tags", r.NewFunction(m.Tags))
+	t.Set("Tags", r.NewFunction(m.Tags))
+	t.Set("getpath", r.NewFunction(m.GetPath))
+	t.Set("GetPath", r.NewFunction(m.GetPath))
+	t.Set("addpath", r.NewFunction(m.AddPath))
+	t.Set("AddPath", r.NewFunction(m.AddPath))
+	t.Set("addtemporarypath", r.NewFunction(m.AddTemporaryPath))
+	t.Set("AddTemporaryPath", r.NewFunction(m.AddTemporaryPath))
 
-	t.Set("newpath", r.NewFunction(m.NewPath).Consume())
-	t.Set("NewPath", r.NewFunction(m.NewPath).Consume())
-	t.Set("getroomid", r.NewFunction(m.GetRoomID).Consume())
-	t.Set("GetRoomID", r.NewFunction(m.GetRoomID).Consume())
-	t.Set("removeroom", r.NewFunction(m.RemoveRoom).Consume())
-	t.Set("RemoveRoom", r.NewFunction(m.RemoveRoom).Consume())
+	t.Set("newpath", r.NewFunction(m.NewPath))
+	t.Set("NewPath", r.NewFunction(m.NewPath))
+	t.Set("getroomid", r.NewFunction(m.GetRoomID))
+	t.Set("GetRoomID", r.NewFunction(m.GetRoomID))
+	t.Set("removeroom", r.NewFunction(m.RemoveRoom))
+	t.Set("RemoveRoom", r.NewFunction(m.RemoveRoom))
 
-	t.Set("getroomname", r.NewFunction(m.GetRoomName).Consume())
-	t.Set("GetRoomName", r.NewFunction(m.GetRoomName).Consume())
-	t.Set("setroomname", r.NewFunction(m.SetRoomName).Consume())
-	t.Set("SetRoomName", r.NewFunction(m.SetRoomName).Consume())
-	t.Set("clearroom", r.NewFunction(m.ClearRoom).Consume())
-	t.Set("ClearRoom", r.NewFunction(m.ClearRoom).Consume())
-	t.Set("newarea", r.NewFunction(m.NewArea).Consume())
-	t.Set("NewArea", r.NewFunction(m.NewArea).Consume())
-	t.Set("getexits", r.NewFunction(m.GetExits).Consume())
-	t.Set("GetExits", r.NewFunction(m.GetExits).Consume())
-	t.Set("flashtags", r.NewFunction(m.FlashTags).Consume())
-	t.Set("FlashTags", r.NewFunction(m.FlashTags).Consume())
-	t.Set("flylist", r.NewFunction(m.FlyList).Consume())
-	t.Set("FlyList", r.NewFunction(m.FlyList).Consume())
-	t.Set("setflylist", r.NewFunction(m.SetFlyList).Consume())
-	t.Set("SetFlyList", r.NewFunction(m.SetFlyList).Consume())
-	t.Set("WalkAll", r.NewFunction(m.WalkAll).Consume())
-	t.Set("walkall", r.NewFunction(m.WalkAll).Consume())
+	t.Set("getroomname", r.NewFunction(m.GetRoomName))
+	t.Set("GetRoomName", r.NewFunction(m.GetRoomName))
+	t.Set("setroomname", r.NewFunction(m.SetRoomName))
+	t.Set("SetRoomName", r.NewFunction(m.SetRoomName))
+	t.Set("clearroom", r.NewFunction(m.ClearRoom))
+	t.Set("ClearRoom", r.NewFunction(m.ClearRoom))
+	t.Set("newarea", r.NewFunction(m.NewArea))
+	t.Set("NewArea", r.NewFunction(m.NewArea))
+	t.Set("getexits", r.NewFunction(m.GetExits))
+	t.Set("GetExits", r.NewFunction(m.GetExits))
+	t.Set("flashtags", r.NewFunction(m.FlashTags))
+	t.Set("FlashTags", r.NewFunction(m.FlashTags))
+	t.Set("flylist", r.NewFunction(m.FlyList))
+	t.Set("FlyList", r.NewFunction(m.FlyList))
+	t.Set("setflylist", r.NewFunction(m.SetFlyList))
+	t.Set("SetFlyList", r.NewFunction(m.SetFlyList))
+	t.Set("WalkAll", r.NewFunction(m.WalkAll))
+	t.Set("walkall", r.NewFunction(m.WalkAll))
 	return t
 }
 func NewMapperModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("mapper",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
 			jsp := plugin.(*v8plugin.Plugin).LoadJsPlugin()
-			r := jsp.Runtime
+			r := jsp.Top
 			m := &JsMapper{b.GetMapper()}
 			global := r.Global()
-			global.Set("Mapper", m.Convert(r).Consume())
-			global.Release()
+			global.Set("Mapper", m.Convert(r))
 			next(ctx, plugin)
 		},
 		nil,

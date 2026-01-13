@@ -71,8 +71,10 @@ github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531 h1:api8pHgzqqq99X
 github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531/go.mod h1:Anvh+YXng5fWGXy9Y6oWcTUUYQlXHzgeVh/0as237EM=
 github.com/herb-go/util v0.0.0-20230321163403-6a757b251968 h1:/yee8KpavOOQbKwJY3jhYPebBapXvH985+KzAl9Ljo8=
 github.com/herb-go/util v0.0.0-20230321163403-6a757b251968/go.mod h1:lhVdeH5IRD13aZn8ca5h6lq/ABDC9cFbfuXJfHK3oxo=
-github.com/herb-go/v8go v0.0.0-20251114063147-99ce5e20c7c0 h1:IrFy5FL1TmwHwWsaSqi8a8lbxq3t3JrAaiSLQZr2S5I=
-github.com/herb-go/v8go v0.0.0-20251114063147-99ce5e20c7c0/go.mod h1:NVUDicg84q21+o3zRyGsIxrm2I1leD5xj/XlF8qBuzU=
+github.com/herb-go/v8go v0.0.0-20260112134925-daec21175462 h1:S0sE0I6kGB2G3fzcCJ5gPySCV3Qy89MusQCDWKutM2w=
+github.com/herb-go/v8go v0.0.0-20260112134925-daec21175462/go.mod h1:NVUDicg84q21+o3zRyGsIxrm2I1leD5xj/XlF8qBuzU=
+github.com/herb-go/v8local v0.0.0-20260112154508-b3f7ce7df530 h1:OwBYy+z87WCptNyyq5KTY+Gj18dWxqlohRBNnMB2ouU=
+github.com/herb-go/v8local v0.0.0-20260112154508-b3f7ce7df530/go.mod h1:lOqJ4fVn1v4qDCYysZInX22nkWZUq97IqkMQvCrsNB4=
 github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73 h1:SipUePmeYLlptd3NgikXBg8ebHEo8IZFaq91UdaiWt0=
 github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73/go.mod h1:EuxhyAY14GgxIAKMDACoGzel9Of+11mDhWGrl7fkbQo=
 github.com/ianlancetaylor/demangle v0.0.0-20220319035150-800ac71e25c2/go.mod h1:aYm2/VgdVmcIU8iMfdMvDMsRAQjcfZSKFby6HOFvi/w=
@@ -82,8 +84,6 @@ github.com/jarlyyn/golang-pkg-pcre v0.0.0-20240621170938-332279f3b0ba h1:196wkAL
 github.com/jarlyyn/golang-pkg-pcre v0.0.0-20240621170938-332279f3b0ba/go.mod h1:kKTkas2FilKHjt6BmTj4+i08zQSVODOf3wTEUbkKVWo=
 github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a h1:FbDbIMTprpx/b8QYCxK/tQqOmfAgTsBqG7lws5t9I7Q=
 github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a/go.mod h1:x1s2DpI93+/ZvUVTjXvmKIoB0+nE5Ie/8j8gUhnNyMc=
-github.com/jarlyyn/v8js v0.0.0-20251114070142-5994585d951b h1:M3L1PkRKK2bjHOJLcLFKqSw9NLc24dWOAhhQE4TUICk=
-github.com/jarlyyn/v8js v0.0.0-20251114070142-5994585d951b/go.mod h1:/nvPuIut4yLkc/eDc2CmZDF6DHMH3bJct97PKRk4VY8=
 github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible h1:jdpOPRN1zP63Td1hDQbZW73xKmzDvZHzVdNYxhnTMDA=
 github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible/go.mod h1:1c7szIrayyPPB/987hsnvNzLushdWf4o/79s3P08L8A=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=

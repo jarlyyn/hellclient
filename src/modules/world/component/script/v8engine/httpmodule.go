@@ -6,18 +6,19 @@ import (
 	"modules/world/bus"
 
 	"github.com/herb-go/herbplugin"
-	"github.com/jarlyyn/v8js"
-	"github.com/jarlyyn/v8js/plugins/httpaddon/httpv8"
-	"github.com/jarlyyn/v8js/v8plugin"
+	"github.com/herb-go/v8local"
+	"github.com/herb-go/v8local/plugins/httpaddon/httpv8"
+	"github.com/herb-go/v8local/v8plugin"
 )
 
-func AsyncExecute(a *httpv8.Addon, b *builder) func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
-	return func(call *v8js.FunctionCallbackInfo) *v8js.Consumed {
+func AsyncExecute(a *httpv8.Addon, b *builder) func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+	return func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 		callback := ""
 		if call.GetArg(0).Boolean() {
 			callback = call.GetArg(0).String()
 		}
-		req := a.LoadReq(call.This().Get("id").String())
+		id := call.This().Get("id")
+		req := a.LoadReq(id.String())
 		req.Request.AsyncExecute(func(err error) {
 			if callback != "" {
 				cb := world.NewCallback()
@@ -41,17 +42,17 @@ func AsyncExecute(a *httpv8.Addon, b *builder) func(call *v8js.FunctionCallbackI
 
 type builder struct {
 	bus                  *bus.Bus
-	AsyncExecuteFunction *v8js.Reusable
+	AsyncExecuteFunction *v8local.JsValue
 }
 
-func (b *builder) Init(r *v8js.Context, a *httpv8.Addon) {
-	b.AsyncExecuteFunction = r.NewFunction(AsyncExecute(a, b)).ConsumeReuseble()
+func (b *builder) Init(r *v8local.Local, a *httpv8.Addon) {
+	b.AsyncExecuteFunction = r.NewFunction(AsyncExecute(a, b)).AsExported()
 }
-func (b *builder) Build(r *v8js.Context, a *httpv8.Addon, req *httpv8.Request) *v8js.JsValue {
+func (b *builder) Build(r *v8local.Local, a *httpv8.Addon, req *httpv8.Request) *v8local.JsValue {
 	obj := httpv8.DefaultBuilder(r, a, req)
 	obj.Delete("Execute")
 
-	obj.Set("AsyncExecute", b.AsyncExecuteFunction.Consume())
+	obj.Set("AsyncExecute", b.AsyncExecuteFunction)
 	return obj
 
 }
@@ -60,7 +61,7 @@ func NewHTTPModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("http",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {
 			jsp := plugin.(*v8plugin.Plugin).LoadJsPlugin()
-			r := jsp.Runtime
+			r := jsp.Top
 			addon := httpv8.Create(plugin)
 			builder := &builder{
 				bus: b,
@@ -68,8 +69,7 @@ func NewHTTPModule(b *bus.Bus) *herbplugin.Module {
 			builder.Init(r, addon)
 			addon.Builder = builder.Build
 			global := r.Global()
-			global.Set("HTTP", addon.Convert(r).Consume())
-			global.Release()
+			global.Set("HTTP", addon.Convert(r))
 			next(ctx, plugin)
 		},
 		nil,

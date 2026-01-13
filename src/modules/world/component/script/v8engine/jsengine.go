@@ -11,9 +11,9 @@ import (
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/util"
 	"github.com/herb-go/v8go"
-	"github.com/jarlyyn/v8js"
+	"github.com/herb-go/v8local"
 
-	"github.com/jarlyyn/v8js/v8plugin"
+	"github.com/herb-go/v8local/v8plugin"
 )
 
 func newJsInitializer(b *bus.Bus) *v8plugin.Initializer {
@@ -70,13 +70,11 @@ func (s *openScript) lanuch() {
 	herbplugin.Lanuch(s.e.Plugin, opt)
 }
 func (s *openScript) onOpen() {
-	global := s.e.Plugin.Runtime.Global()
+	global := s.e.Plugin.Top.Global()
 	fn := global.Get(s.e.onOpen)
-	global.Release()
 	if !fn.IsNullOrUndefined() {
-		fn.Call(s.e.Plugin.Runtime.NullValue())
+		fn.Call(s.e.Plugin.Top.NullValue())
 	}
-	fn.Release()
 }
 func (e *JsEngine) Open(b *bus.Bus) error {
 	data := b.GetScriptData()
@@ -115,7 +113,9 @@ func (e *JsEngine) Close(b *bus.Bus) {
 	e.Locker.Lock()
 	if e.onClose != "" {
 		e.Locker.Unlock()
-		e.Call(b, e.onClose)
+		local := e.Plugin.Runtime.NewLocal()
+		e.Call(b, local, e.onClose)
+		local.Close()
 	} else {
 		e.Locker.Unlock()
 	}
@@ -123,12 +123,17 @@ func (e *JsEngine) Close(b *bus.Bus) {
 }
 func (e *JsEngine) OnConnect(b *bus.Bus) {
 	if e.onConnect != "" {
-		e.Call(b, e.onConnect)
+		local := e.Plugin.Runtime.NewLocal()
+		defer local.Close()
+
+		e.Call(b, local, e.onConnect)
 	}
 }
 func (e *JsEngine) OnDisconnect(b *bus.Bus) {
 	if e.onDisconnect != "" {
-		e.Call(b, e.onDisconnect)
+		local := e.Plugin.Runtime.NewLocal()
+		defer local.Close()
+		e.Call(b, local, e.onDisconnect)
 	}
 }
 
@@ -141,23 +146,25 @@ func (e *JsEngine) OnTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigge
 		e.Locker.Unlock()
 		return
 	}
-	model := e.Plugin.Runtime.NewObject()
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+
+	model := local.NewObject()
 	for k, v := range result.Named {
-		model.Set(k, e.Plugin.Runtime.NewString(v).Consume())
+		model.Set(k, local.NewString(v))
 	}
 	for k, v := range result.List {
 		if k == 0 {
-			model.Set("10", e.Plugin.Runtime.NewString(v).Consume())
+			model.Set("10", local.NewString(v))
 			continue
 		} else if k > 9 {
 			break
 		}
-		model.Set(strconv.Itoa(k-1), e.Plugin.Runtime.NewString(v).Consume())
+		model.Set(strconv.Itoa(k-1), local.NewString(v))
 	}
 
 	e.Locker.Unlock()
-	e.Call(b, trigger.Script, e.Plugin.Runtime.NewString(trigger.Name).Consume(), e.Plugin.Runtime.NewString(line.Plain()).Consume(), model.Consume())
-
+	e.Call(b, local, trigger.Script, local.NewString(trigger.Name), local.NewString(line.Plain()), model)
 }
 func (e *JsEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
 	if alias.Script == "" {
@@ -168,21 +175,24 @@ func (e *JsEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, resul
 		e.Locker.Unlock()
 		return
 	}
-	model := e.Plugin.Runtime.NewObject()
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+
+	model := local.NewObject()
 	for k, v := range result.Named {
-		model.Set(k, e.Plugin.Runtime.NewString(v).Consume())
+		model.Set(k, local.NewString(v))
 	}
 	for k, v := range result.List {
 		if k == 0 {
-			model.Set("10", e.Plugin.Runtime.NewString(v).Consume())
+			model.Set("10", local.NewString(v))
 			continue
 		} else if k > 9 {
 			break
 		}
-		model.Set(strconv.Itoa(k-1), e.Plugin.Runtime.NewString(v).Consume())
+		model.Set(strconv.Itoa(k-1), local.NewString(v))
 	}
 	e.Locker.Unlock()
-	go e.Call(b, alias.Script, e.Plugin.Runtime.NewString(alias.Name).Consume(), e.Plugin.Runtime.NewString(message).Consume(), model.Consume())
+	e.Call(b, local, alias.Script, local.NewString(alias.Name), local.NewString(message), model)
 
 }
 func (e *JsEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
@@ -192,7 +202,9 @@ func (e *JsEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
 		return
 	}
 	e.Locker.Unlock()
-	go e.Call(b, timer.Script, e.Plugin.Runtime.NewString(timer.Name).Consume())
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+	e.Call(b, local, timer.Script, local.NewString(timer.Name))
 }
 func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Lock()
@@ -201,7 +213,9 @@ func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 		return
 	}
 	e.Locker.Unlock()
-	go e.Call(b, e.onBroadCast, e.Plugin.Runtime.NewString(bc.Message).Consume(), e.Plugin.Runtime.NewBoolean(bc.Global).Consume(), e.Plugin.Runtime.NewString(bc.Channel).Consume(), e.Plugin.Runtime.NewString(bc.ID).Consume())
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+	e.Call(b, local, e.onBroadCast, local.NewString(bc.Message), local.NewBoolean(bc.Global), local.NewString(bc.Channel), local.NewString(bc.ID))
 }
 func (e *JsEngine) OnHUDClick(b *bus.Bus, c *world.Click) {
 	e.Locker.Lock()
@@ -210,7 +224,9 @@ func (e *JsEngine) OnHUDClick(b *bus.Bus, c *world.Click) {
 		return
 	}
 	e.Locker.Unlock()
-	go e.Call(b, e.onHUDClick, e.Plugin.Runtime.NewNumber(c.X).Consume(), e.Plugin.Runtime.NewNumber(c.Y).Consume())
+	var local = e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+	e.Call(b, local, e.onHUDClick, local.NewNumber(c.X), local.NewNumber(c.Y))
 
 }
 
@@ -221,7 +237,9 @@ func (e *JsEngine) OnResponse(b *bus.Bus, msg *world.Message) {
 		return
 	}
 	e.Locker.Unlock()
-	go e.Call(b, e.onResponse, e.Plugin.Runtime.NewString(msg.Type).Consume(), e.Plugin.Runtime.NewString(msg.ID).Consume(), e.Plugin.Runtime.NewString(msg.Data).Consume())
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+	e.Call(b, local, e.onResponse, local.NewString(msg.Type), local.NewString(msg.ID), local.NewString(msg.Data))
 }
 
 func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
@@ -236,11 +254,14 @@ func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
 		return false
 	}
 	e.Locker.Unlock()
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+
 	var result bool
 	if data != nil {
-		result = e.Call(b, e.onBuffer, e.Plugin.Runtime.NewString(string(data)).Consume(), e.Plugin.Runtime.NewArrayBuffer(data).Consume())
+		result = e.Call(b, local, e.onBuffer, local.NewString(string(data)), local.NewArrayBuffer(data))
 	} else {
-		result = e.Call(b, e.onBuffer, e.Plugin.Runtime.NullValue().Consume(), e.Plugin.Runtime.NullValue().Consume())
+		result = e.Call(b, local, e.onBuffer, local.NullValue(), local.NullValue())
 	}
 	return result
 }
@@ -251,7 +272,9 @@ func (e *JsEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
 		return false
 	}
 	e.Locker.Unlock()
-	result := e.Call(b, e.onSubneg, e.Plugin.Runtime.NewInt32(int32(code)).Consume(), e.Plugin.Runtime.NewString(string(data)).Consume())
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+	result := e.Call(b, local, e.onSubneg, local.NewInt32(int32(code)), local.NewString(string(data)))
 	return result
 }
 func (e *JsEngine) OnFocus(b *bus.Bus) {
@@ -261,7 +284,9 @@ func (e *JsEngine) OnFocus(b *bus.Bus) {
 		return
 	}
 	e.Locker.Unlock()
-	e.Call(b, e.onFocus)
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+	e.Call(b, local, e.onFocus)
 }
 func (e *JsEngine) OnLoseFocus(b *bus.Bus) {
 	e.Locker.Lock()
@@ -270,7 +295,9 @@ func (e *JsEngine) OnLoseFocus(b *bus.Bus) {
 		return
 	}
 	e.Locker.Unlock()
-	e.Call(b, e.onLoseFocus)
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+	e.Call(b, local, e.onLoseFocus)
 }
 func (e *JsEngine) OnKeyUp(b *bus.Bus, key string) {
 	e.Locker.Lock()
@@ -279,7 +306,9 @@ func (e *JsEngine) OnKeyUp(b *bus.Bus, key string) {
 		return
 	}
 	e.Locker.Unlock()
-	e.Call(b, e.onKeyUp, e.Plugin.Runtime.NewString(key).Consume())
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+	e.Call(b, local, e.onKeyUp, local.NewString(key))
 }
 
 func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
@@ -289,7 +318,9 @@ func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
 		return
 	}
 	e.Locker.Unlock()
-	go e.Call(b, cb.Script, e.Plugin.Runtime.NewString(cb.Name).Consume(), e.Plugin.Runtime.NewString(cb.ID).Consume(), e.Plugin.Runtime.NewInt32(int32(cb.Code)).Consume(), e.Plugin.Runtime.NewString(cb.Data).Consume())
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+	e.Call(b, local, cb.Script, local.NewString(cb.Name), local.NewString(cb.ID), local.NewInt32(int32(cb.Code)), local.NewString(cb.Data))
 
 }
 func (e *JsEngine) OnAssist(b *bus.Bus, script string) {
@@ -299,23 +330,28 @@ func (e *JsEngine) OnAssist(b *bus.Bus, script string) {
 		return
 	}
 	e.Locker.Unlock()
-	go e.Call(b, script)
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+	e.Call(b, local, script)
 }
 
 type jsRun struct {
-	ctx *v8js.Context
-	cmd string
+	local *v8local.Local
+	cmd   string
 }
 
 func (r *jsRun) Run() {
-	r.ctx.RunScript(r.cmd, "run").Release()
+	r.local.RunScript(r.cmd, "run")
 }
 func (e *JsEngine) Run(b *bus.Bus, cmd string) {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()
+	local := e.Plugin.Runtime.NewLocal()
+	defer local.Close()
+
 	r := &jsRun{
-		ctx: e.Plugin.Runtime,
-		cmd: cmd,
+		local: local,
+		cmd:   cmd,
 	}
 	b.HandleScriptError(formatError(util.Catch(r.Run)))
 }
@@ -324,26 +360,25 @@ type runScript struct {
 	bus    *bus.Bus
 	output bool
 	source string
-	ctx    *v8js.Context
-	args   []*v8js.Consumed
+	local  *v8local.Local
+	args   []*v8local.JsValue
 }
 
 func (s *runScript) Exec() {
-	fn := s.ctx.RunScript(s.source, "")
+	fn := s.local.RunScript(s.source, "")
 	if fn == nil || fn.IsNull() || !fn.IsFunction() {
 		s.bus.HandleScriptError(errors.New(fmt.Sprintf("js function %s not found", s.source)))
 		s.output = false
 		return
 	}
-	defer fn.Release()
-	var result *v8js.JsValue
-	result = fn.Call(s.ctx.NullValue(), s.args...)
-	defer result.Release()
+	var result *v8local.JsValue
+	result = fn.Call(s.local.NullValue(), s.args...)
 	if result.IsBoolean() {
 		s.output = result.Boolean()
 	} else {
 		s.output = false
 	}
+	s.local.Context().RunIdleTasks(false, 0.005)
 }
 
 type ScriptError struct {
@@ -363,7 +398,7 @@ func formatError(err error) error {
 	}
 	return err
 }
-func (e *JsEngine) Call(b *bus.Bus, source string, args ...*v8js.Consumed) bool {
+func (e *JsEngine) Call(b *bus.Bus, local *v8local.Local, source string, args ...*v8local.JsValue) bool {
 	e.Locker.Lock()
 	defer e.Locker.Unlock()
 	r := e.Plugin.Runtime
@@ -380,7 +415,7 @@ func (e *JsEngine) Call(b *bus.Bus, source string, args ...*v8js.Consumed) bool 
 	s := &runScript{
 		bus:    b,
 		source: source,
-		ctx:    r,
+		local:  local,
 		args:   args,
 	}
 	b.HandleScriptError(formatError(util.Catch(s.Exec)))
