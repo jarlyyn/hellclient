@@ -71,10 +71,10 @@ github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531 h1:api8pHgzqqq99X
 github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531/go.mod h1:Anvh+YXng5fWGXy9Y6oWcTUUYQlXHzgeVh/0as237EM=
 github.com/herb-go/util v0.0.0-20230321163403-6a757b251968 h1:/yee8KpavOOQbKwJY3jhYPebBapXvH985+KzAl9Ljo8=
 github.com/herb-go/util v0.0.0-20230321163403-6a757b251968/go.mod h1:lhVdeH5IRD13aZn8ca5h6lq/ABDC9cFbfuXJfHK3oxo=
-github.com/herb-go/v8go v0.0.0-20260112134925-daec21175462 h1:S0sE0I6kGB2G3fzcCJ5gPySCV3Qy89MusQCDWKutM2w=
-github.com/herb-go/v8go v0.0.0-20260112134925-daec21175462/go.mod h1:NVUDicg84q21+o3zRyGsIxrm2I1leD5xj/XlF8qBuzU=
-github.com/herb-go/v8local v0.0.0-20260112154508-b3f7ce7df530 h1:OwBYy+z87WCptNyyq5KTY+Gj18dWxqlohRBNnMB2ouU=
-github.com/herb-go/v8local v0.0.0-20260112154508-b3f7ce7df530/go.mod h1:lOqJ4fVn1v4qDCYysZInX22nkWZUq97IqkMQvCrsNB4=
+github.com/herb-go/v8go v0.0.0-20260113121009-4dea06db4c75 h1:X05T221CxZqAsp3HvKs0LwKNTDXYCw8rlqRYUAfXCtg=
+github.com/herb-go/v8go v0.0.0-20260113121009-4dea06db4c75/go.mod h1:NVUDicg84q21+o3zRyGsIxrm2I1leD5xj/XlF8qBuzU=
+github.com/herb-go/v8local v0.0.0-20260113121506-c11a948d101e h1:+tM4QCCmJKikSWPPUMaajepZJl6a/Gvux3N3b/AIFPE=
+github.com/herb-go/v8local v0.0.0-20260113121506-c11a948d101e/go.mod h1:uPtDgaCYQYrkLVV6bYocJOHxbxa9NwXhFj+Pj8PqHrk=
 github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73 h1:SipUePmeYLlptd3NgikXBg8ebHEo8IZFaq91UdaiWt0=
 github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73/go.mod h1:EuxhyAY14GgxIAKMDACoGzel9Of+11mDhWGrl7fkbQo=
 github.com/ianlancetaylor/demangle v0.0.0-20220319035150-800ac71e25c2/go.mod h1:aYm2/VgdVmcIU8iMfdMvDMsRAQjcfZSKFby6HOFvi/w=

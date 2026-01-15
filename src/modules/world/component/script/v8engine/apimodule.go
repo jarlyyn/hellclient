@@ -222,6 +222,7 @@ func (a *jsapi) Snapshot(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 func (a *jsapi) Debug(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 	debug.FreeOSMemory()
 	v8go.ForceV8GC(call.Local().Context().Raw.Isolate())
+	a.API.Note("V8 Isolate Count:" + strconv.Itoa(call.Local().Context().Raw.Isolate().RetainedValueCount()))
 	a.API.Note("V8 Context Count:" + strconv.Itoa(call.Local().Context().Raw.RetainedValueCount()))
 	a.API.Note("V8 Local Count:" + strconv.Itoa(a.Plugin.(*v8plugin.Plugin).Top.RetainedValueCount()))
 	bs, err := json.Marshal(call.Local().Context().Raw.Isolate().GetHeapStatistics())

@@ -38,8 +38,6 @@ require (
 	github.com/herb-go/notification v0.0.0-20210302124907-803885c438c3 // indirect
 	github.com/herb-go/notification-drivers v0.0.0-20210822103310-c7c872299d2b // indirect
 	github.com/herb-go/plugins v0.0.0-20251105104654-1ad36b135de5 // indirect
-	github.com/herb-go/v8go v0.0.0-20260109155204-d3cfc0c23cd3 // indirect
-	github.com/herb-go/v8local v0.0.0-20260109165056-1fc852fabb34 // indirect
 	github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73 // indirect
 	github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce // indirect
 	github.com/jarlyyn/golang-pkg-pcre v0.0.0-20240621170938-332279f3b0ba // indirect
