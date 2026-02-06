@@ -386,7 +386,10 @@ type ScriptError struct {
 }
 
 func (s *ScriptError) Error() string {
-	return s.StackTrace
+	if s.StackTrace != "" {
+		return s.StackTrace
+	}
+	return s.Message + "@" + s.Location
 }
 
 func formatError(err error) error {
