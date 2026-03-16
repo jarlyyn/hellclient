@@ -13,16 +13,19 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-const ReconnectDuration = 5 * time.Minute
+const ReconnectDuration = 30 * time.Second
+const PingInterval = 30 * time.Second
 const StatusDisabled = 0
 const StatusDisconnected = 1
 const StatusConnected = 2
 
 var CmdBroadcast = []byte("broadcast ")
 var CmdHello = []byte("hello")
+var CmdPing = []byte("ping")
 
 type Hellswitch struct {
 	ticker               *time.Ticker
+	pingTicker           *time.Ticker
 	c                    chan struct{}
 	locker               sync.Mutex
 	conn                 *websocket.Conn
@@ -40,6 +43,14 @@ func (h *Hellswitch) Status() int {
 		return StatusDisconnected
 	}
 	return StatusConnected
+}
+func (h *Hellswitch) Ping() {
+	h.locker.Lock()
+	defer h.locker.Unlock()
+	if h.conn == nil {
+		return
+	}
+	h.conn.WriteMessage(websocket.TextMessage, CmdPing)
 }
 func (h *Hellswitch) Broadcast(msg []byte) {
 	h.locker.Lock()
@@ -134,11 +145,23 @@ func (h *Hellswitch) reconnect(t *time.Ticker) {
 		}
 	}
 }
-
+func (h *Hellswitch) ping(t *time.Ticker) {
+	for {
+		select {
+		case <-t.C:
+			h.Ping()
+		case <-h.c:
+			t.Stop()
+			return
+		}
+	}
+}
 func New() *Hellswitch {
 	h := &Hellswitch{}
 	h.ticker = time.NewTicker(ReconnectDuration)
+	h.pingTicker = time.NewTicker(PingInterval)
 	h.c = make(chan struct{})
 	go h.reconnect(h.ticker)
+	go h.ping(h.pingTicker)
 	return h
 }

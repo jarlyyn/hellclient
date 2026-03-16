@@ -96,7 +96,7 @@ func (t *Titan) DestoryBus(b *bus.Bus) {
 	b.RaiseBeforeCloseEvent()
 	b.RaiseCloseEvent()
 	t.RemoveFrom(b)
-	b.Dispose()
+	// b.Dispose()
 }
 func (t *Titan) find(id string) *bus.Bus {
 	return t.Worlds[id]
