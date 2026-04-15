@@ -69,6 +69,7 @@ type Bus struct {
 	GetScriptType             func() string
 	GetScriptPath             func() string
 	GetModPath                func() string
+	GetSharedPath             func() string
 	GetScriptModPath          func() string
 	GetLogsPath               func() string
 	GetScriptHome             func() string

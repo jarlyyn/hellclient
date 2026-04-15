@@ -17,6 +17,7 @@ const Ext = ".toml"
 const ScriptsFolder = "/game/scripts"
 const LogsFolder = "/game/logs"
 const ModsFolder = "/game/mods"
+const SharedFolder = "/game/shared"
 
 const GamePrefix = "/game/"
 const GameFolder = "game"
@@ -29,6 +30,7 @@ func CreatePangu() {
 	Pangu.Scriptpath = util.AppData(ScriptsFolder)
 	Pangu.Logpath = util.AppData(LogsFolder)
 	Pangu.Modpath = util.AppData(ModsFolder)
+	Pangu.Sharedpath = util.AppData(SharedFolder)
 	Pangu.MaxHistory = app.System.MaxHistory
 	if Pangu.MaxHistory <= 0 {
 		Pangu.MaxHistory = DefaultMaxHistory
@@ -51,6 +53,7 @@ func CreatePangu() {
 	os.MkdirAll(Pangu.Scriptpath, util.DefaultFolderMode)
 	os.MkdirAll(Pangu.Logpath, util.DefaultFolderMode)
 	os.MkdirAll(Pangu.Modpath, util.DefaultFolderMode)
+	os.MkdirAll(Pangu.Sharedpath, util.DefaultFolderMode)
 }
 
 func NewWebdavServer() http.Handler {

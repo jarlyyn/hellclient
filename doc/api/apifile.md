@@ -464,6 +464,192 @@ local data=ReadModLines("mydata.txt")
 
 字符串列表
 
+## HasSharedFile
+
+检查共享文件
+
+版本 1.2026.04.15 后加入
+
+### 原型
+```
+HasSharedFile(name string) bool
+```
+
+### 描述
+
+判断指定的共享文件是否存在
+
+* name 以共享脚本根目录为基准的文件位置
+
+如果文件在家目录范围外，会报告错误
+  
+如果有任何其他错误，认为文件不存在
+
+### 代码范例
+
+Javascript
+```
+var exists=world.HasSharedFile("myfile")
+```
+
+Lua
+```
+local exists=HasSharedFile("myfile")
+```
+
+### 返回值
+
+布尔值
+
+## ReadSharedFile
+
+读取共享文件
+
+版本 1.2026.04.15 后加入
+
+### 原型
+```
+ReadSharedFile(name string) string
+```
+
+### 描述
+
+读取给定共享文件的文件内容
+
+* name 以共享脚本根目录为基准的文件位置
+
+
+如果文件位置在授权范围外，将会报错
+
+其他的文件操作错误也会报错
+
+### 代码范例
+
+Javascript
+```
+var data=world.ReadSharedFile("mydata.txt")
+```
+
+Lua
+```
+local data=ReadSharedFile("mydata.txt")
+```
+
+### 返回值
+
+文件内容
+
+## WriteSharedFile
+
+写入共享文件
+
+版本 1.2026.04.15 后加入
+
+### 原型
+```
+WriteSharedFile(name string, body []byte)
+```
+
+### 描述
+
+将数据写入给定的共享文件内
+
+* name 以共享脚本根目录为基准的文件位置
+* body 原始数据
+
+如果文件位置在授权范围外，将会报错
+
+其他的文件操作错误也会报错
+
+### 代码范例
+
+Javascript
+```
+world.WriteSharedFile("testfile","testdata")
+```
+
+Lua
+```
+WriteSharedFile("testfile","testdata")
+```
+
+### 返回值
+
+无
+
+## ReadSharedLines
+
+读取脚本文件并分行
+
+版本 1.2026.04.15 后加入
+
+### 原型
+```
+ReadSharedLines(name string) []string
+```
+
+### 描述
+
+读取给定文件的文件内容，并以\n为分割符分割为字符串列表
+
+* name 以共享脚本根目录为基准的文件位置
+
+
+如果文件位置在授权范围外，将会报错
+
+其他的文件操作错误也会报错
+
+### 代码范例
+Javascript
+```
+var data=world.ReadSharedLines("mydata.txt")
+```
+
+Lua
+```
+local data=ReadSharedLines("mydata.txt")
+```
+
+### 返回值
+
+字符串列表
+
+## MakeSharedFolder
+
+创建共享目录
+
+版本 1.2026.04.15 后加入
+
+### 原型
+```
+MakeSharedFolder(name string) bool
+```
+
+### 描述
+
+创建指定的共享目录
+
+* name 以共享脚本根目录为基准的目录名
+
+如果文件在家目录范围外，会报告错误
+
+### 代码范例
+
+Javascript
+```
+var success=world.MakeSharedFolder("myfolder")
+```
+
+Lua
+```
+local success=MakeSharedFolder("myfolder")
+```
+
+### 返回值
+
+布尔值,是否成功创建目录
+
+
 ## WriteLog
 
 写入日志

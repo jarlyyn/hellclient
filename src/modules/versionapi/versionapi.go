@@ -9,9 +9,9 @@ import (
 )
 
 const Major = 1
-const Year = 2025
-const Month = 11
-const Day = 13
+const Year = 2026
+const Month = 04
+const Day = 15
 const Patch = 0
 const Build = ""
 

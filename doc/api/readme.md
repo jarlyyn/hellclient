@@ -150,11 +150,14 @@
 * [WriteHomeFile 写入用户文件](apifile.md#WriteHomeFile)
 * [ReadHomeLines 读取用户文件并分行](apifile.md#ReadHomeLines)
 * [MakeHomeFolder 创建用户目录](apifile.md#MakeHomeFolder)
-
-
 * [HasModFile 检查用户文件](apifile.md#HasModFile)
 * [ReadModFile 读取用户文件](apifile.md#ReadModFile)
 * [ReadModLines 读取用户文件并分行](apifile.md#ReadModLines)
+* [HasSharedFile 检查共享文件](apifile.md#HasSharedFile)
+* [ReadSharedFile 读取共享文件](apifile.md#ReadSharedFile)
+* [WriteSharedFile 写入共享文件](apifile.md#WriteSharedFile)
+* [ReadSharedLines 读取共享文件并分行](apifile.md#ReadSharedLines)
+* [MakeSharedFolder 创建共享目录](apifile.md#MakeSharedFolder)
 * [WriteLog 写入日志](apifile.md#WriteLog)
 * [CloseLog 废弃](apifile.md#CloseLog)
 * [OpenLog 废弃](apifile.md#OpenLog)

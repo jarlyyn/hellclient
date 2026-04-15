@@ -66,6 +66,7 @@ type Titan struct {
 	Scriptpath     string
 	Modpath        string
 	Logpath        string
+	Sharedpath     string
 	MaxHistory     int
 	MaxLines       int
 	MaxRecent      int
@@ -432,7 +433,7 @@ func (t *Titan) InstallTo(b *bus.Bus) {
 
 	b.GetScriptPath = t.GetScriptPath
 	b.GetModPath = t.GetModPath
-
+	b.GetSharedPath = t.GetSharedPath
 	b.GetLogsPath = t.GetLogsPath
 	b.GetScriptHome = b.WrapGetString(t.GetScriptHome)
 	b.RequestPermissions = b.WrapHandleAuthorization(t.RequestPermissions)
@@ -785,6 +786,10 @@ func (t *Titan) GetScriptPath() string {
 func (t *Titan) GetModPath() string {
 	return t.Modpath
 }
+func (t *Titan) GetSharedPath() string {
+	return t.Sharedpath
+}
+
 func (t *Titan) GetLogsPath() string {
 	return t.Logpath
 }

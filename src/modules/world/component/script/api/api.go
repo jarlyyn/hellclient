@@ -763,6 +763,79 @@ func (a *API) ReadModLines(p herbplugin.Plugin, name string) []string {
 	return strings.Split(lineReplacer.Replace(data), "\n")
 }
 
+func (a *API) MustCleanSharedFileInsidePath(name string) string {
+	sid := a.Bus.GetScriptID()
+	if sid == "" {
+		return ""
+	}
+	modpath := filepath.Join(a.Bus.GetSharedPath(), sid)
+	name = herbplugin.MustCleanPath(modpath, name)
+	if name == "" {
+		return name
+	}
+	if !strings.HasPrefix(name, modpath) {
+		return ""
+	}
+	return name
+}
+func (a *API) MakeSharedFolder(p herbplugin.Plugin, name string) bool {
+	a.MustCheckHome()
+	filename := a.MustCleanSharedFileInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("make folder %s not allowed", name))
+	}
+	err := os.MkdirAll(filename, util.DefaultFolderMode)
+	if err != nil {
+		if os.IsExist(err) {
+			return false
+		}
+		panic(err)
+	}
+	return true
+}
+func (a *API) HasSharedFile(p herbplugin.Plugin, name string) bool {
+	if !a.Bus.GetModEnabled() {
+		return false
+	}
+	filename := a.MustCleanSharedFileInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("read %s not allowed", name))
+	}
+	_, err := os.Stat(filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+		panic(err)
+	}
+	return true
+}
+func (a *API) ReadSharedFile(p herbplugin.Plugin, name string) string {
+	filename := a.MustCleanSharedFileInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("read %s not allowed", name))
+	}
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		panic(err)
+	}
+	return string(data)
+}
+func (a *API) ReadSharedLines(p herbplugin.Plugin, name string) []string {
+	data := a.ReadSharedFile(p, name)
+	return strings.Split(lineReplacer.Replace(data), "\n")
+}
+func (a *API) WriteSharedFile(p herbplugin.Plugin, name string, body []byte) {
+	filename := a.MustCleanSharedFileInsidePath(name)
+	if filename == "" {
+		panic(fmt.Errorf("write %s not allowed", name))
+	}
+	err := os.WriteFile(filename, body, util.DefaultFileMode)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func (a *API) HasFile(p herbplugin.Plugin, name string) bool {
 	o := p.PluginOptions()
 	filename := o.GetLocation().MustCleanInsidePath(name)

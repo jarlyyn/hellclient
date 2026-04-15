@@ -207,6 +207,13 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "ReadHomeLines", a.NewReadHomeLinesAPI(p))
 	AppendToWorld(jp.Runtime, world, "WriteHomeFile", a.NewWriteHomeFileAPI(p))
 
+	AppendToWorld(jp.Runtime, world, "MakeSharedFolder", a.NewMakeSharedFolderAPI(p))
+
+	AppendToWorld(jp.Runtime, world, "HasSharedFile", a.NewHasSharedFileAPI(p))
+	AppendToWorld(jp.Runtime, world, "ReadSharedFile", a.NewReadSharedFileAPI(p))
+	AppendToWorld(jp.Runtime, world, "ReadSharedLines", a.NewReadSharedLinesAPI(p))
+	AppendToWorld(jp.Runtime, world, "WriteSharedFile", a.NewWriteSharedFileAPI(p))
+
 	AppendToWorld(jp.Runtime, world, "SplitN", a.SplitNfunc)
 	AppendToWorld(jp.Runtime, world, "UTF8Len", a.UTF8Len)
 	AppendToWorld(jp.Runtime, world, "UTF8Index", a.UTF8Index)
@@ -844,16 +851,62 @@ func (a *jsapi) NewWriteHomeFileAPI(p herbplugin.Plugin) func(call goja.Function
 		return nil
 	}
 }
-func (a *jsapi) NewReadModFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-		return r.ToValue(a.API.ReadModFile(p, call.Argument(0).String()))
-	}
-}
 func (a *jsapi) NewReadHomeFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		return r.ToValue(a.API.ReadHomeFile(p, call.Argument(0).String()))
 	}
 }
+func (a *jsapi) NewReadHomeLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		lines := a.API.ReadHomeLines(p, call.Argument(0).String())
+		t := []interface{}{}
+		for _, v := range lines {
+			t = append(t, v)
+		}
+		return r.NewArray(t...)
+
+	}
+}
+
+func (a *jsapi) NewMakeSharedFolderAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.MakeSharedFolder(p, call.Argument(0).String()))
+	}
+}
+func (a *jsapi) NewHasSharedFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.HasSharedFile(p, call.Argument(0).String()))
+	}
+}
+func (a *jsapi) NewWriteSharedFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		a.API.WriteSharedFile(p, call.Argument(0).String(), []byte(call.Argument(1).String()))
+		return nil
+	}
+}
+func (a *jsapi) NewReadSharedFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.ReadSharedFile(p, call.Argument(0).String()))
+	}
+}
+func (a *jsapi) NewReadSharedLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		lines := a.API.ReadSharedLines(p, call.Argument(0).String())
+		t := []interface{}{}
+		for _, v := range lines {
+			t = append(t, v)
+		}
+		return r.NewArray(t...)
+
+	}
+}
+
+func (a *jsapi) NewReadModFileAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+		return r.ToValue(a.API.ReadModFile(p, call.Argument(0).String()))
+	}
+}
+
 func (a *jsapi) NewReadLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 		lines := a.API.ReadLines(p, call.Argument(0).String())
@@ -876,17 +929,7 @@ func (a *jsapi) NewReadModLinesAPI(p herbplugin.Plugin) func(call goja.FunctionC
 
 	}
 }
-func (a *jsapi) NewReadHomeLinesAPI(p herbplugin.Plugin) func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-	return func(call goja.FunctionCall, r *goja.Runtime) goja.Value {
-		lines := a.API.ReadHomeLines(p, call.Argument(0).String())
-		t := []interface{}{}
-		for _, v := range lines {
-			t = append(t, v)
-		}
-		return r.NewArray(t...)
 
-	}
-}
 func (a *jsapi) SplitNfunc(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	text := call.Argument(0).String()
 	sep := call.Argument(1).String()

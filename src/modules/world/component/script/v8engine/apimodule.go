@@ -141,6 +141,13 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(local, world, "ReadHomeFile", a.NewReadHomeFileAPI)
 	AppendToWorld(local, world, "ReadHomeLines", a.NewReadHomeLinesAPI)
 	AppendToWorld(local, world, "WriteHomeFile", a.NewWriteHomeFileAPI)
+
+	AppendToWorld(local, world, "MakeSharedFolder", a.NewMakeSharedFolderAPI)
+	AppendToWorld(local, world, "HasSharedFile", a.NewHasSharedFileAPI)
+	AppendToWorld(local, world, "ReadSharedFile", a.NewReadSharedFileAPI)
+	AppendToWorld(local, world, "ReadSharedLines", a.NewReadSharedLinesAPI)
+	AppendToWorld(local, world, "WriteSharedFile", a.NewWriteSharedFileAPI)
+
 	AppendToWorld(local, world, "SplitN", a.SplitNfunc)
 	AppendToWorld(local, world, "UTF8Len", a.UTF8Len)
 	AppendToWorld(local, world, "UTF8Index", a.UTF8Index)
@@ -860,12 +867,48 @@ func (a *jsapi) NewWriteHomeFileAPI(call *v8local.FunctionCallbackInfo) *v8local
 	a.API.WriteHomeFile(a.Plugin, call.GetArg(0).String(), []byte(call.GetArg(1).String()))
 	return nil
 }
-func (a *jsapi) NewReadModFileAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
-	return call.Local().NewString(a.API.ReadModFile(a.Plugin, call.GetArg(0).String()))
-}
 func (a *jsapi) NewReadHomeFileAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 	return call.Local().NewString(a.API.ReadHomeFile(a.Plugin, call.GetArg(0).String()))
 }
+func (a *jsapi) NewReadHomeLinesAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+
+	lines := a.API.ReadHomeLines(a.Plugin, call.GetArg(0).String())
+	t := []*v8local.JsValue{}
+	for _, v := range lines {
+		t = append(t, call.Local().NewString(v))
+	}
+	return call.Local().NewArray(t...)
+}
+
+func (a *jsapi) NewMakeSharedFolderAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+
+	return call.Local().NewBoolean(a.API.MakeSharedFolder(a.Plugin, call.GetArg(0).String()))
+}
+func (a *jsapi) NewHasSharedFileAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+	return call.Local().NewBoolean(a.API.HasSharedFile(a.Plugin, call.GetArg(0).String()))
+}
+func (a *jsapi) NewWriteSharedFileAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+
+	a.API.WriteSharedFile(a.Plugin, call.GetArg(0).String(), []byte(call.GetArg(1).String()))
+	return nil
+}
+func (a *jsapi) NewReadSharedFileAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+	return call.Local().NewString(a.API.ReadSharedFile(a.Plugin, call.GetArg(0).String()))
+}
+func (a *jsapi) NewReadSharedLinesAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+
+	lines := a.API.ReadSharedLines(a.Plugin, call.GetArg(0).String())
+	t := []*v8local.JsValue{}
+	for _, v := range lines {
+		t = append(t, call.Local().NewString(v))
+	}
+	return call.Local().NewArray(t...)
+}
+
+func (a *jsapi) NewReadModFileAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+	return call.Local().NewString(a.API.ReadModFile(a.Plugin, call.GetArg(0).String()))
+}
+
 func (a *jsapi) NewReadLinesAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 	lines := a.API.ReadLines(a.Plugin, call.GetArg(0).String())
 	t := []*v8local.JsValue{}
@@ -878,15 +921,6 @@ func (a *jsapi) NewReadLinesAPI(call *v8local.FunctionCallbackInfo) *v8local.JsV
 func (a *jsapi) NewReadModLinesAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 	lines := a.API.ReadModLines(a.Plugin, call.GetArg(0).String())
-	t := []*v8local.JsValue{}
-	for _, v := range lines {
-		t = append(t, call.Local().NewString(v))
-	}
-	return call.Local().NewArray(t...)
-}
-func (a *jsapi) NewReadHomeLinesAPI(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
-
-	lines := a.API.ReadHomeLines(a.Plugin, call.GetArg(0).String())
 	t := []*v8local.JsValue{}
 	for _, v := range lines {
 		t = append(t, call.Local().NewString(v))

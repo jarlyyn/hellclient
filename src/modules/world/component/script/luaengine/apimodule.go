@@ -171,6 +171,18 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("WriteHomeFile", l.NewFunction(a.NewWriteHomeFileAPI(p)))
 	l.SetGlobal("ReadHomeLines", l.NewFunction(a.NewReadHomeLinesAPI(p)))
 
+	l.SetGlobal("MakeSharedFolder", l.NewFunction(a.NewMakeSharedFolderAPI(p)))
+	l.SetGlobal("HasSharedFile", l.NewFunction(a.NewHasSharedFileAPI(p)))
+	l.SetGlobal("ReadSharedFile", l.NewFunction(a.NewReadSharedFileAPI(p)))
+	l.SetGlobal("WriteSharedFile", l.NewFunction(a.NewWriteSharedFileAPI(p)))
+	l.SetGlobal("ReadSharedLines", l.NewFunction(a.NewReadSharedLinesAPI(p)))
+
+	l.SetGlobal("MakeHomeFolder", l.NewFunction(a.NewMakeHomeFolderAPI(p)))
+	l.SetGlobal("HasHomeFile", l.NewFunction(a.NewHasHomeFileAPI(p)))
+	l.SetGlobal("ReadHomeFile", l.NewFunction(a.NewReadHomeFileAPI(p)))
+	l.SetGlobal("WriteHomeFile", l.NewFunction(a.NewWriteHomeFileAPI(p)))
+	l.SetGlobal("ReadHomeLines", l.NewFunction(a.NewReadHomeLinesAPI(p)))
+
 	l.SetGlobal("SplitN", l.NewFunction(a.SplitNfunc))
 	l.SetGlobal("UTF8Len", l.NewFunction(a.UTF8Len))
 	l.SetGlobal("UTF8Index", l.NewFunction(a.UTF8Index))
@@ -886,12 +898,6 @@ func (a *luaapi) NewReadModFileAPI(p herbplugin.Plugin) func(L *lua.LState) int 
 		return 1
 	}
 }
-func (a *luaapi) NewReadHomeFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
-	return func(L *lua.LState) int {
-		L.Push(lua.LString(a.API.ReadHomeFile(p, L.ToString(1))))
-		return 1
-	}
-}
 func (a *luaapi) NewReadModLinesAPI(p herbplugin.Plugin) func(L *lua.LState) int {
 	return func(L *lua.LState) int {
 		lines := a.API.ReadModLines(p, L.ToString(1))
@@ -900,6 +906,18 @@ func (a *luaapi) NewReadModLinesAPI(p herbplugin.Plugin) func(L *lua.LState) int
 			t.Append(lua.LString(v))
 		}
 		L.Push(t)
+		return 1
+	}
+}
+func (a *luaapi) NewHasModFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		L.Push(lua.LBool(a.API.HasModFile(p, L.ToString(1))))
+		return 1
+	}
+}
+func (a *luaapi) NewReadHomeFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		L.Push(lua.LString(a.API.ReadHomeFile(p, L.ToString(1))))
 		return 1
 	}
 }
@@ -920,12 +938,6 @@ func (a *luaapi) NewWriteHomeFileAPI(p herbplugin.Plugin) func(L *lua.LState) in
 		return 0
 	}
 }
-func (a *luaapi) NewHasModFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
-	return func(L *lua.LState) int {
-		L.Push(lua.LBool(a.API.HasModFile(p, L.ToString(1))))
-		return 1
-	}
-}
 
 func (a *luaapi) NewMakeHomeFolderAPI(p herbplugin.Plugin) func(L *lua.LState) int {
 	return func(L *lua.LState) int {
@@ -940,6 +952,45 @@ func (a *luaapi) NewHasHomeFileAPI(p herbplugin.Plugin) func(L *lua.LState) int 
 		return 1
 	}
 }
+
+func (a *luaapi) NewReadSharedFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		L.Push(lua.LString(a.API.ReadSharedFile(p, L.ToString(1))))
+		return 1
+	}
+}
+func (a *luaapi) NewReadSharedLinesAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		lines := a.API.ReadSharedLines(p, L.ToString(1))
+		t := L.NewTable()
+		for _, v := range lines {
+			t.Append(lua.LString(v))
+		}
+		L.Push(t)
+		return 1
+	}
+}
+func (a *luaapi) NewWriteSharedFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		a.API.WriteSharedFile(p, L.ToString(1), []byte(L.ToString(2)))
+		return 0
+	}
+}
+
+func (a *luaapi) NewMakeSharedFolderAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		L.Push(lua.LBool(a.API.MakeSharedFolder(p, L.ToString(1))))
+		return 1
+	}
+}
+
+func (a *luaapi) NewHasSharedFileAPI(p herbplugin.Plugin) func(L *lua.LState) int {
+	return func(L *lua.LState) int {
+		L.Push(lua.LBool(a.API.HasSharedFile(p, L.ToString(1))))
+		return 1
+	}
+}
+
 func (a *luaapi) SplitNfunc(L *lua.LState) int {
 	text := L.ToString(1)
 	sep := L.ToString(2)
