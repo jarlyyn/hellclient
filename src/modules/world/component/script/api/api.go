@@ -794,9 +794,6 @@ func (a *API) MakeSharedFolder(p herbplugin.Plugin, name string) bool {
 	return true
 }
 func (a *API) HasSharedFile(p herbplugin.Plugin, name string) bool {
-	if !a.Bus.GetModEnabled() {
-		return false
-	}
 	filename := a.MustCleanSharedFileInsidePath(name)
 	if filename == "" {
 		panic(fmt.Errorf("read %s not allowed", name))
