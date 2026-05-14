@@ -139,7 +139,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("SetAliasOption", l.NewFunction(a.SetAliasOption))
 
 	l.SetGlobal("AddTrigger", l.NewFunction(a.AddTrigger))
-	l.SetGlobal("AddTriggerEx", l.NewFunction(a.AddTrigger))
+	l.SetGlobal("AddTriggerEx", l.NewFunction(a.AddTriggerEx))
 	l.SetGlobal("DeleteTrigger", l.NewFunction(a.DeleteTrigger))
 	l.SetGlobal("DeleteTemporaryTriggers", l.NewFunction(a.DeleteTemporaryTriggers))
 	l.SetGlobal("DeleteTriggerGroup", l.NewFunction(a.DeleteTriggerGroup))

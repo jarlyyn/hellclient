@@ -174,7 +174,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "SetAliasOption", a.SetAliasOption)
 
 	AppendToWorld(jp.Runtime, world, "AddTrigger", a.AddTrigger)
-	AppendToWorld(jp.Runtime, world, "AddTriggerEx", a.AddTrigger)
+	AppendToWorld(jp.Runtime, world, "AddTriggerEx", a.AddTriggerEx)
 	AppendToWorld(jp.Runtime, world, "DeleteTrigger", a.DeleteTrigger)
 	AppendToWorld(jp.Runtime, world, "DeleteTemporaryTriggers", a.DeleteTemporaryTriggers)
 	AppendToWorld(jp.Runtime, world, "DeleteTriggerGroup", a.DeleteTriggerGroup)
