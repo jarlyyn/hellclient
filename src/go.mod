@@ -2,15 +2,14 @@ module hellclient
 
 replace modules => ./modules
 
-go 1.20
+go 1.23.0
 
 require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/herb-go/uniqueid v0.0.0-20210304163719-ac56f6357531
 	github.com/herb-go/util v0.0.0-20230321163403-6a757b251968
-	golang.org/x/net v0.22.0
+	golang.org/x/net v0.38.0
 	modules v0.0.0-00010101000000-000000000000
-
 )
 
 require github.com/herb-go/herbplugin v0.0.0-20251105104000-ca813dae4fd7
@@ -38,13 +37,15 @@ require (
 	github.com/herb-go/notification v0.0.0-20210302124907-803885c438c3 // indirect
 	github.com/herb-go/notification-drivers v0.0.0-20210822103310-c7c872299d2b // indirect
 	github.com/herb-go/plugins v0.0.0-20251105104654-1ad36b135de5 // indirect
+	github.com/herb-go/v8go v0.0.0-20251113054953-66d4f5c864d0 // indirect
 	github.com/herb-go/worker v0.0.0-20210318151232-dbaf101c7d73 // indirect
 	github.com/jarlyyn/ansi v0.0.0-20190201160528-f316c0e428ce // indirect
 	github.com/jarlyyn/golang-pkg-pcre v0.0.0-20240621170938-332279f3b0ba // indirect
 	github.com/jarlyyn/telnet v0.0.0-20220825184623-f7331809d33a // indirect
+	github.com/jarlyyn/v8js v0.0.0-20251113133005-d7a19a7de3f3 // indirect
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible // indirect
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/yuin/gopher-lua v1.1.1 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.23.0 // indirect
 )
