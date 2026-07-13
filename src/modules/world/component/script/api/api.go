@@ -97,14 +97,14 @@ func (a *API) SendPkt(packet string) int {
 }
 
 func (a *API) Connect() int {
-	a.Bus.HandleConnError(a.Bus.DoConnectServer())
+	go a.Bus.HandleConnError(a.Bus.DoConnectServer())
 	return EOK
 }
 func (a *API) IsConnected() bool {
 	return a.Bus.GetConnConnected()
 }
 func (a *API) Disconnect() int {
-	a.Bus.HandleConnError(a.Bus.DoCloseServer())
+	go a.Bus.HandleConnError(a.Bus.DoCloseServer())
 	return EOK
 }
 func (a *API) Hash(text string) string {

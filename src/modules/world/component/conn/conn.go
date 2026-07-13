@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/herb-go/misc/debounce"
@@ -23,14 +24,16 @@ const TTYPEIs = byte(0)
 const TerminalType = "VT100"
 const MTTS = "MTTS 7"
 const DefaultDebounceDuration = 200 * time.Millisecond
+const DefaultWriteTimeout = 5 * time.Second
 
 // Conn :mud conn
 type Conn struct {
 	telnet      *telnet.Conn
 	c           chan int
-	running     bool
+	running     atomic.Bool
+	connecting  atomic.Bool
 	buffer      []byte
-	RunningLock sync.RWMutex
+	ConnectLock sync.RWMutex
 	BufferLock  sync.RWMutex
 	SendLock    sync.RWMutex
 	Debounce    *debounce.Debounce
@@ -49,7 +52,7 @@ func isClosedError(err error) bool {
 }
 
 func (conn *Conn) InstallTo(b *bus.Bus) {
-	d := debounce.New(DefaultDebounceDuration, func() { conn.UpdatePrompt(b) })
+	d := debounce.New(DefaultDebounceDuration, func() { go conn.UpdatePrompt(b) })
 	d.MaxDuration = 0
 	conn.Debounce = d
 
@@ -64,10 +67,10 @@ func (conn *Conn) C() chan int {
 	return conn.c
 }
 func (conn *Conn) UpdatePrompt(bus *bus.Bus) {
-	conn.RunningLock.Lock()
-	defer conn.RunningLock.Unlock()
-	if conn.running {
-		go bus.HandleConnPrompt(conn.buffer)
+	conn.ConnectLock.Lock()
+	defer conn.ConnectLock.Unlock()
+	if conn.running.Load() {
+		bus.HandleConnPrompt(conn.buffer)
 	}
 }
 func (conn *Conn) Stop(b *bus.Bus) {
@@ -77,12 +80,16 @@ func (conn *Conn) Stop(b *bus.Bus) {
 
 // Connect :connect to mud
 func (conn *Conn) Connect(bus *bus.Bus) error {
-	conn.RunningLock.Lock()
-	if conn.running == true {
-		conn.RunningLock.Unlock()
+	if conn.connecting.Load() {
 		return nil
 	}
-	conn.RunningLock.Unlock()
+	conn.ConnectLock.Lock()
+	defer conn.ConnectLock.Unlock()
+	conn.connecting.Store(true)
+	defer conn.connecting.Store(false)
+	if conn.running.Load() {
+		return nil
+	}
 	timeout := app.System.ConnectTimeout
 	if timeout <= 0 {
 		timeout = 1
@@ -143,9 +150,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 		}
 		bus.HandleSubneg(data)
 	}
-	conn.RunningLock.Lock()
-	conn.running = true
-	conn.RunningLock.Unlock()
+	conn.running.Store(true)
 
 	conn.BufferLock.Lock()
 	conn.c = make(chan int)
@@ -160,13 +165,12 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 
 // Close :close mud conn
 func (conn *Conn) Close(bus *bus.Bus) error {
-	conn.RunningLock.Lock()
-	if conn.running == false {
-		conn.RunningLock.Unlock()
+	conn.ConnectLock.Lock()
+	defer conn.ConnectLock.Unlock()
+	if !conn.running.Load() {
 		return nil
 	}
-	conn.running = false
-	conn.RunningLock.Unlock()
+	conn.running.Store(false)
 	conn.BufferLock.Lock()
 	defer conn.BufferLock.Unlock()
 	conn.SendLock.Lock()
@@ -248,10 +252,7 @@ func (conn *Conn) Connected(bus *bus.Bus) bool {
 	if conn == nil {
 		return false
 	}
-	conn.RunningLock.Lock()
-	defer conn.RunningLock.Unlock()
-
-	return conn.running
+	return conn.running.Load()
 }
 func (conn *Conn) Buffer(bus *bus.Bus) []byte {
 	conn.BufferLock.RLock()
@@ -268,6 +269,7 @@ func (conn *Conn) send(bus *bus.Bus, cmd []byte) {
 	if conn.telnet == nil {
 		return
 	}
+	conn.telnet.SetWriteDeadline(time.Now().Add(DefaultWriteTimeout))
 	_, err := conn.telnet.Conn.Write(cmd)
 	if err != nil {
 		bus.HandleConnError(err)
@@ -279,9 +281,10 @@ func (conn *Conn) Dispose() {
 }
 func New() *Conn {
 	c := &Conn{
-		telnet:  nil,
-		c:       make(chan int),
-		running: false,
+		telnet: nil,
+		c:      make(chan int),
 	}
+	c.running.Store(false)
+	c.connecting.Store(false)
 	return c
 }
