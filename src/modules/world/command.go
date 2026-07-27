@@ -5,7 +5,7 @@ import (
 )
 
 type Command struct {
-	Mesasge     string
+	Message     string
 	Echo        bool
 	Queue       bool
 	Log         bool
@@ -22,14 +22,14 @@ func (c *Command) Clone() *Command {
 
 func (c *Command) Split(sep string) []*Command {
 	var result = []*Command{}
-	if c == nil || c.Mesasge == "" {
+	if c == nil || c.Message == "" {
 		return result
 	}
-	msgs := strings.Split(c.Mesasge, sep)
+	msgs := strings.Split(c.Message, sep)
 	for _, v := range msgs {
 		if v != "" {
 			cmd := c.Clone()
-			cmd.Mesasge = v
+			cmd.Message = v
 			result = append(result, cmd)
 		}
 	}
@@ -37,7 +37,7 @@ func (c *Command) Split(sep string) []*Command {
 }
 func CreateCommand(message string) *Command {
 	return &Command{
-		Mesasge: message,
+		Message: message,
 		Echo:    true,
 	}
 }

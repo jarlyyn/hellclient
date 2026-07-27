@@ -15,6 +15,5 @@ const SendtoSpeedwalk = 11
 const SendtoScript = 12
 const SendtoImmediate = 13
 const SendtoScriptAfterOmit = 14
-
 const SendToMin = 0
 const SendToMax = 14

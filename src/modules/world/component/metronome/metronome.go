@@ -79,7 +79,7 @@ func (m *Metronome) Queue() []string {
 	for e := m.queue.Front(); e != nil; e = e.Next() {
 		cmds := e.Value.([]*world.Command)
 		for k := range cmds {
-			result = append(result, cmds[k].Mesasge)
+			result = append(result, cmds[k].Message)
 		}
 	}
 	return result

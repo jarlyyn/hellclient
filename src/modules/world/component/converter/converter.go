@@ -59,10 +59,10 @@ func (c *Converter) onError(bus *bus.Bus, err error) bool {
 func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
 	c.SendLock.Lock()
 	defer c.SendLock.Unlock()
-	if cmd.Mesasge == "\x0f" {
+	if cmd.Message == "\x0f" {
 		return
 	}
-	b, err := world.FromUTF8(bus.GetCharset(), []byte(cmd.Mesasge))
+	b, err := world.FromUTF8(bus.GetCharset(), []byte(cmd.Message))
 	if err != nil {
 		bus.HandleConverterError(err)
 		return
@@ -71,7 +71,7 @@ func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
 		c.DoPrintEcho(bus, cmd)
 	}
 	if cmd.History {
-		bus.AddHistory(cmd.Mesasge)
+		bus.AddHistory(cmd.Message)
 	}
 	bus.DoSendToConn(b)
 	bus.DoSendToConn([]byte("\n"))
@@ -82,7 +82,7 @@ func (c *Converter) DoPrintEcho(b *bus.Bus, cmd *world.Command) {
 	line.CreatorType = cmd.CreatorType
 	line.Type = world.LineTypeEcho
 	w := &world.Word{
-		Text: cmd.Mesasge,
+		Text: cmd.Message,
 	}
 	line.Append(w)
 	b.RaiseLineEvent(line)
