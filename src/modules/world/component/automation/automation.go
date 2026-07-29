@@ -206,6 +206,7 @@ func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {
 		if r == nil {
 			continue
 		}
+		matched = true
 		var send string
 		var data world.Alias
 		v.Locker.Lock()
@@ -256,9 +257,9 @@ func (a *Automation) executecmd(b *bus.Bus, cmd string) {
 		return
 	}
 	if !a.MatchAlias(b, cmd) {
-		cmd := world.CreateCommand(cmd)
-		cmd.History = false
-		b.DoMetronomeSend(cmd)
+		c := world.CreateCommand(cmd)
+		c.History = false
+		b.DoMetronomeSend(c)
 	}
 
 }

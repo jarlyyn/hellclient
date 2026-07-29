@@ -19,7 +19,6 @@ type Trigger struct {
 	Deleted   bool
 	Data      *world.Trigger
 	Matcher   world.Matcher
-	ByUser    bool
 	RawMatch  string
 	wildcards *world.MatchResult
 }
@@ -240,9 +239,6 @@ func (t *Trigger) SetOption(name string, val string) (bool, bool) {
 	return false, false
 }
 
-func (t *Trigger) OnSuccess(ctx *Context, result *world.MatchResult) {
-
-}
 func (t *Trigger) BuildMatcher(match string) error {
 	matcher, err := BuildMatcher(match, t.Data.Regexp, t.Data.IgnoreCase)
 	if err != nil {
@@ -291,7 +287,6 @@ func (t *Trigger) Clone() *Trigger {
 		Deleted:  t.Deleted,
 		Data:     &d,
 		Matcher:  t.Matcher,
-		ByUser:   t.ByUser,
 		RawMatch: t.RawMatch,
 	}
 }

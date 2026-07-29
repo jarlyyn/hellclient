@@ -122,8 +122,8 @@ func (a *Triggers) Queue() TriggerQueue {
 func (a *Triggers) AddTrigger(tr *world.Trigger, replace bool) bool {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
-	name := tr.PrefixedName()
-	if name != "" {
+	if tr.Name != "" {
+		name := tr.PrefixedName()
 		named := a.Named[name]
 		if named != nil {
 			if !replace {

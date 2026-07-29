@@ -151,8 +151,8 @@ func (a *Aliases) Queue() AliasQueue {
 func (a *Aliases) AddAlias(al *world.Alias, replace bool) bool {
 	a.Locker.Lock()
 	defer a.Locker.Unlock()
-	name := al.PrefixedName()
-	if name != "" {
+	if al.Name != "" {
+		name := al.PrefixedName()
 		named := a.Named[name]
 		if named != nil {
 			if !replace {
@@ -243,7 +243,7 @@ func (a *Aliases) DoDeleteAliasGroup(group string, byUser bool) int {
 	defer a.Locker.Unlock()
 	count := 0
 	for _, v := range a.Grouped[group] {
-		if v.ByUser == byUser {
+		if v.Data.ByUser() == byUser {
 			count++
 			a.removeAlias(v.Data.ID)
 		}
@@ -343,7 +343,7 @@ func (a *Aliases) DoListAliasNames(byUser bool) []string {
 	defer a.Locker.Unlock()
 	result := make([]string, 0, len(a.Named))
 	for _, v := range a.Named {
-		if v.ByUser == byUser {
+		if v.Data.ByUser() == byUser {
 			result = append(result, v.Data.Name)
 		}
 	}

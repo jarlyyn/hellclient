@@ -11,7 +11,6 @@ type Alias struct {
 	Data    *world.Alias
 	Deleted bool
 	Matcher world.Matcher
-	ByUser  bool
 }
 
 func (a *Alias) Match(message string) (*world.MatchResult, error) {
