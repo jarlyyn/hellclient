@@ -762,7 +762,7 @@ func (t *Titan) HandleCmdKeyUp(id string, key string) {
 	}
 }
 
-func (t *Titan) DoSortClients(order []string) string {
+func (t *Titan) DoSortClients(order []string) {
 	t.Locker.Lock()
 	defer t.Locker.Unlock()
 	ordermap := make(map[string]int)
@@ -777,7 +777,7 @@ func (t *Titan) DoSortClients(order []string) string {
 	for k, v := range t.Worlds {
 		v.SetPosition(ordermap[k])
 	}
-	return t.Scriptpath
+	return
 }
 
 func (t *Titan) GetScriptPath() string {
@@ -1107,8 +1107,8 @@ func (t *Titan) HandleCmdUpdateRequiredParams(id string, p []*world.RequiredPara
 	data := t.Worlds[id].GetScriptData()
 	if data != nil {
 		data.SetRequiredParams(p)
+		msg.PublishRequiredParamsMessage(t, id, data.RequiredParams)
 	}
-	msg.PublishRequiredParamsMessage(t, id, data.RequiredParams)
 }
 
 func (t *Titan) HandleCmdBatchCommandScripts() {
