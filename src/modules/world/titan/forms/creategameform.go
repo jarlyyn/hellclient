@@ -43,8 +43,8 @@ func (f *CreateGameForm) ComponentID() string {
 
 // Validate Validate form and return any error if raised.
 func (f *CreateGameForm) Validate() error {
-	f.ValidateFieldf(len(f.ID) > 2, "ID", "名称至少需要2个字符")
-	f.ValidateFieldf(len(f.ID) < 64, "ID", "名称不能超过64个字符")
+	f.ValidateFieldf(len(f.ID) >= 2, "ID", "名称至少需要2个字符")
+	f.ValidateFieldf(len(f.ID) <= 64, "ID", "名称不能超过64个字符")
 
 	f.ValidateFieldf(world.IDRegexp.MatchString(f.ID), "ID", "名称只能包含数字，字母，- _ @ .()[]+")
 	f.ValidateFieldf(f.Host != "", "Host", "网址不能为空")
