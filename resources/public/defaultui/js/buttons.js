@@ -155,7 +155,9 @@ define(function (require) {
     }
     onButton.createTimer = function () {
         vm.createFail = [];
-        vm.timerCreateForm = {};
+        vm.timerCreateForm = {
+            SendTo: "0",
+        };
         vm.timerCreateFormVisible = true;
     }
     onButton.createTimerSubmit = function () {
@@ -304,8 +306,8 @@ define(function (require) {
             OnBufferMin: vm.scriptSettings.OnBufferMin,
             OnBufferMax: vm.scriptSettings.OnBufferMax,
             OnSubneg: vm.scriptSettings.OnSubneg,
-            OnFocus:vm.scriptSettings.OnFocus,
-            OnLoseFocus:vm.scriptSettings.OnLoseFocus,
+            OnFocus: vm.scriptSettings.OnFocus,
+            OnLoseFocus: vm.scriptSettings.OnLoseFocus,
         }
         vm.scriptsettingsUpdateFormVisible = true
     }
@@ -317,18 +319,18 @@ define(function (require) {
         vm.scriptsettingsUpdateForm.ID = vm.current
         send("updateScriptSettings", vm.scriptsettingsUpdateForm);
     }
-    onButton.batchcommand=function(){
+    onButton.batchcommand = function () {
         send("batchcommandscripts");
     }
-    onButton.batchcommandsend=function(){
-        var result=[]
-        for (var i=0;i<vm.BatchCommandForm.Scripts.length;i++){
-            if (vm.BatchCommandForm.Scripts[i].value){
-            result.push(vm.BatchCommandForm.Scripts[i].key)
+    onButton.batchcommandsend = function () {
+        var result = []
+        for (var i = 0; i < vm.BatchCommandForm.Scripts.length; i++) {
+            if (vm.BatchCommandForm.Scripts[i].value) {
+                result.push(vm.BatchCommandForm.Scripts[i].key)
             }
         }
-        send('batchcommand',{Scripts:result,Command:vm.BatchCommandForm.Command});
-        vm.BatchCommandFormVisible=false;
+        send('batchcommand', { Scripts: result, Command: vm.BatchCommandForm.Command });
+        vm.BatchCommandFormVisible = false;
     }
     onButton.requiredParams = function () {
         vm.requiredParams = null;

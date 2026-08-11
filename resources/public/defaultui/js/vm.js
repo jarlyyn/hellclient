@@ -4,6 +4,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
         typeclass: {
             0: " print",
             1: " system",
+            2: " real",
             3: " echo",
             4: " prompt",
             5: " localbcout",
