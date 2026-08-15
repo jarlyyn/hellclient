@@ -660,7 +660,7 @@ func (a *jsapi) GetAliasOption(call *v8local.FunctionCallbackInfo) *v8local.JsVa
 
 	name := call.GetArg(0).String()
 	option := call.GetArg(1).String()
-	result, code := a.API.GetTimerOption(name, option)
+	result, code := a.API.GetAliasOption(name, option)
 	if code != api.EOK {
 		return nil
 	} else {
@@ -729,7 +729,7 @@ func (a *jsapi) DeleteTrigger(call *v8local.FunctionCallbackInfo) *v8local.JsVal
 }
 func (a *jsapi) DeleteTemporaryTriggers(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-	return call.Local().NewInt32(int32(a.API.DeleteTemporaryTimers()))
+	return call.Local().NewInt32(int32(a.API.DeleteTemporaryTriggers()))
 
 }
 func (a *jsapi) DeleteTriggerGroup(call *v8local.FunctionCallbackInfo) *v8local.JsValue {

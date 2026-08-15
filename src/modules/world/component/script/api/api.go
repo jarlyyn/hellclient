@@ -320,6 +320,9 @@ func (a *API) AddTimer(timerName string, hour int, minute int, second float64, r
 func (a *API) DeleteTemporaryTimers() int {
 	return a.Bus.DoDeleteTemporaryTimers()
 }
+func (a *API) DeleteTemporaryTriggers() int {
+	return a.Bus.DoDeleteTemporaryTriggers()
+}
 func (a *API) DeleteTimer(name string) int {
 	name = world.PrefixedName(name, false)
 	if !a.Bus.DoDeleteTimerByName(name) {

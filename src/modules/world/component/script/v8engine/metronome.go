@@ -76,7 +76,7 @@ func NewMetronomeModule(b *bus.Bus) *herbplugin.Module {
 				b.DoLockMetronomeQueue()
 				return nil
 			}))
-			m.Set("Lockqueue", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+			m.Set("LockQueue", jsp.Top.NewFunction(func(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
 				b.DoLockMetronomeQueue()
 				return nil

@@ -70,7 +70,6 @@ type Bus struct {
 	GetScriptPath             func() string
 	GetModPath                func() string
 	GetSharedPath             func() string
-	GetScriptModPath          func() string
 	GetLogsPath               func() string
 	GetScriptHome             func() string
 	DoLog                     func(string)
@@ -304,7 +303,6 @@ func (b *Bus) Dispose() {
 	b.GetScriptType = nil
 	b.GetScriptPath = nil
 	b.GetModPath = nil
-	b.GetScriptModPath = nil
 	b.GetLogsPath = nil
 	b.GetScriptHome = nil
 	b.DoLog = nil

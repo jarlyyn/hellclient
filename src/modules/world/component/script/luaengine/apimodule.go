@@ -734,7 +734,7 @@ func (a *luaapi) DeleteTrigger(L *lua.LState) int {
 	return 1
 }
 func (a *luaapi) DeleteTemporaryTriggers(L *lua.LState) int {
-	L.Push(lua.LNumber(a.API.DeleteTemporaryTimers()))
+	L.Push(lua.LNumber(a.API.DeleteTemporaryTriggers()))
 	return 1
 
 }
