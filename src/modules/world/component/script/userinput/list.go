@@ -5,9 +5,10 @@ import (
 )
 
 type List struct {
-	Title      string
-	Intro      string
-	Items      []*Item
+	Title string
+	Intro string
+	Items []*Item
+	//typo保留
 	Mutli      bool
 	Values     []string
 	WithFilter bool

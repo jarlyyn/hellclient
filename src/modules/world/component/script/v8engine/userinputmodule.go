@@ -378,7 +378,7 @@ func (u *Userinput) Note(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 }
 func (u *Userinput) Custom(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 
-	ui := userinput.SendCustom(u.bus, call.GetArg(0).String(), call.GetArg(1).String(), call.GetArg(1).String())
+	ui := userinput.SendCustom(u.bus, call.GetArg(0).String(), call.GetArg(1).String(), call.GetArg(2).String())
 	return call.Local().NewString(ui.ID)
 }
 func (u *Userinput) Convert(r *v8local.Local) *v8local.JsValue {
