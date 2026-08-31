@@ -8,10 +8,10 @@ import (
 	"github.com/herb-go/misc/version"
 )
 
-const Major = 1
+const Major = 2
 const Year = 2026
-const Month = 05
-const Day = 14
+const Month = 8
+const Day = 31
 const Patch = 0
 const Build = ""
 
