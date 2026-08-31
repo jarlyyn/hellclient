@@ -52,6 +52,9 @@ type ScriptSettings struct {
 	OnSubneg     string
 	OnFocus      string
 	OnLoseFocus  string
+	OnLine       string
+	OnAfterLine  string
+	OnSend       string
 	Channel      string
 }
 
@@ -74,6 +77,9 @@ type ScriptData struct {
 	OnSubneg       string
 	OnBufferMin    int
 	OnBufferMax    int
+	OnLine         string
+	OnAfterLine    string
+	OnSend         string
 	Channel        string
 	Triggers       []*Trigger
 	Timers         []*Timer
@@ -116,6 +122,9 @@ func (d *ScriptData) ConvertSettings(name string) *ScriptSettings {
 		settings.OnFocus = d.OnFocus
 		settings.OnLoseFocus = d.OnLoseFocus
 		settings.OnSubneg = d.OnSubneg
+		settings.OnLine = d.OnLine
+		settings.OnAfterLine = d.OnAfterLine
+		settings.OnSend = d.OnSend
 
 	}
 	return settings
@@ -143,6 +152,9 @@ func (d *ScriptData) ConvertInfo(id string) *ScriptInfo {
 		info.OnHUDClick = d.OnHUDClick
 		info.OnFocus = d.OnFocus
 		info.OnLoseFocus = d.OnLoseFocus
+		info.OnLine = d.OnLine
+		info.OnAfterLine = d.OnAfterLine
+		info.OnSend = d.OnSend
 	}
 	return info
 }
@@ -170,4 +182,7 @@ type ScriptInfo struct {
 	OnFocus      string
 	OnLoseFocus  string
 	OnSubneg     string
+	OnLine       string
+	OnAfterLine  string
+	OnSend       string
 }
