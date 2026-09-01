@@ -27,3 +27,13 @@ var onResponse=function(type,id,data){
 var onKeyup=function(key){
 
 }
+
+var onLine=function(line){
+
+}
+var onAfterLine=function(line){
+
+}
+var onSend=function(data){
+
+}

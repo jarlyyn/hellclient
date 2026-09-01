@@ -21,3 +21,9 @@ end
 onKeyUp=function (string)
     
 end
+onLine=function(line)
+end
+onAfterLine=function(line)
+end
+onSend=function(data)
+end

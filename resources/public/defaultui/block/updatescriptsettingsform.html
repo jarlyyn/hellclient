@@ -62,6 +62,15 @@
     <el-form-item label="失去焦点函数">
       <el-input v-model="scriptsettingsUpdateForm.OnLoseFocus"></el-input>
     </el-form-item>
+    <el-form-item label="开始匹配函数">
+      <el-input v-model="scriptsettingsUpdateForm.OnLine"></el-input>
+    </el-form-item>
+    <el-form-item label="结束匹配函数">
+      <el-input v-model="scriptsettingsUpdateForm.OnAfterLine"></el-input>
+    </el-form-item>
+    <el-form-item label="开始发送函数">
+      <el-input v-model="scriptsettingsUpdateForm.OnSend"></el-input>
+    </el-form-item>
     <el-form-item label="简介">
       <el-input v-model="scriptsettingsUpdateForm.Intro" type="textarea"></el-input>
     </el-form-item>

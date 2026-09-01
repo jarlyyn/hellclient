@@ -308,6 +308,9 @@ define(function (require) {
             OnSubneg: vm.scriptSettings.OnSubneg,
             OnFocus: vm.scriptSettings.OnFocus,
             OnLoseFocus: vm.scriptSettings.OnLoseFocus,
+            OnLine:vm.scriptSettings.OnLine,
+            OnAfterLine:vm.scriptSettings.OnAfterLine,
+            OnSend: vm.scriptSettings.OnSend,
         }
         vm.scriptsettingsUpdateFormVisible = true
     }
