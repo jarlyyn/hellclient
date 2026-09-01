@@ -290,8 +290,8 @@ func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
 		} else {
 			s.SetCreator("timer", "#"+timer.ID)
 		}
-		//s.EngineLocker.Lock()
-		//defer s.EngineLocker.Unlock()
+		s.EngineLocker.Lock()
+		defer s.EngineLocker.Unlock()
 		e.OnTimer(b, timer)
 		// }()
 	}
