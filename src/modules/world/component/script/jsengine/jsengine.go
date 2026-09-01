@@ -49,6 +49,9 @@ type JsEngine struct {
 	onFocus      string
 	onLoseFocus  string
 	onKeyUp      string
+	onLine       string
+	onAfterLine  string
+	onSend       string
 }
 
 func NewJsEngine() *JsEngine {
@@ -73,6 +76,9 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 	e.onFocus = data.OnFocus
 	e.onLoseFocus = data.OnLoseFocus
 	e.onKeyUp = data.OnKeyUp
+	e.onLine = data.OnLine
+	e.onAfterLine = data.OnAfterLine
+	e.onSend = data.OnSend
 	err := util.Catch(func() {
 		newJsInitializer(b).MustApplyInitializer(e.Plugin)
 	})
@@ -272,6 +278,41 @@ func (e *JsEngine) OnKeyUp(b *bus.Bus, key string) {
 	}
 	e.Locker.Unlock()
 	e.Call(b, e.onKeyUp, key)
+}
+func (e *JsEngine) OnLine(b *bus.Bus, line string) bool {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil || e.onLine == "" {
+		e.Locker.Unlock()
+		return false
+	}
+	e.Locker.Unlock()
+	result := e.Call(b, e.onLine, line)
+	if result == nil {
+		return false
+	}
+	return result.ToBoolean()
+}
+func (e *JsEngine) OnAfterLine(b *bus.Bus, line string) {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil || e.onAfterLine == "" {
+		e.Locker.Unlock()
+		return
+	}
+	e.Locker.Unlock()
+	e.Call(b, e.onAfterLine, line)
+}
+func (e *JsEngine) OnSend(b *bus.Bus, line string) bool {
+	e.Locker.Lock()
+	if e.Plugin.Runtime == nil || e.onSend == "" {
+		e.Locker.Unlock()
+		return false
+	}
+	e.Locker.Unlock()
+	result := e.Call(b, e.onSend, line)
+	if result == nil {
+		return false
+	}
+	return result.ToBoolean()
 }
 
 func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {

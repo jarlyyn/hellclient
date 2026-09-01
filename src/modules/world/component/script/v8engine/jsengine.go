@@ -49,6 +49,9 @@ type JsEngine struct {
 	onFocus      string
 	onLoseFocus  string
 	onKeyUp      string
+	onLine       string
+	onAfterLine  string
+	onSend       string
 }
 
 func NewJsEngine() *JsEngine {
@@ -92,6 +95,9 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 	e.onFocus = data.OnFocus
 	e.onLoseFocus = data.OnLoseFocus
 	e.onKeyUp = data.OnKeyUp
+	e.onLine = data.OnLine
+	e.onAfterLine = data.OnAfterLine
+	e.onSend = data.OnSend
 	s := &openScript{
 		b: b,
 		e: e,
@@ -135,6 +141,30 @@ func (e *JsEngine) OnDisconnect(b *bus.Bus) {
 		defer local.Close()
 		e.Call(b, local, e.onDisconnect)
 	}
+}
+func (e *JsEngine) OnLine(b *bus.Bus, line string) bool {
+	if e.onLine != "" {
+		local := e.Plugin.Runtime.NewLocal()
+		defer local.Close()
+		return e.Call(b, local, e.onLine, local.NewString(line))
+	}
+	return false
+}
+func (e *JsEngine) OnAfterLine(b *bus.Bus, line string) {
+	if e.onAfterLine != "" {
+		local := e.Plugin.Runtime.NewLocal()
+		defer local.Close()
+		e.Call(b, local, e.onAfterLine, local.NewString(line))
+	}
+}
+
+func (e *JsEngine) OnSend(b *bus.Bus, line string) bool {
+	if e.onSend != "" {
+		local := e.Plugin.Runtime.NewLocal()
+		defer local.Close()
+		return e.Call(b, local, e.onSend, local.NewString(line))
+	}
+	return false
 }
 
 func (e *JsEngine) OnTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigger, result *world.MatchResult) {
@@ -402,8 +432,6 @@ func formatError(err error) error {
 	return err
 }
 func (e *JsEngine) Call(b *bus.Bus, local *v8local.Local, source string, args ...*v8local.JsValue) bool {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
 	r := e.Plugin.Runtime
 	if r == nil {
 		return false

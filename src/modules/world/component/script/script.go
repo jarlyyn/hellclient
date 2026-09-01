@@ -132,8 +132,8 @@ func (s *Script) save(b *bus.Bus) error {
 
 }
 func (s *Script) OpenScript(b *bus.Bus) error {
-	s.EngineLocker.Lock()
-	defer s.EngineLocker.Unlock()
+	//s.EngineLocker.Lock()
+	//defer s.EngineLocker.Unlock()
 	return s.open(b)
 }
 func (s *Script) open(b *bus.Bus) error {
@@ -164,8 +164,8 @@ func (s *Script) open(b *bus.Bus) error {
 	return nil
 }
 func (s *Script) Unload(b *bus.Bus) {
-	s.EngineLocker.Lock()
-	defer s.EngineLocker.Unlock()
+	//s.EngineLocker.Lock()
+	//defer s.EngineLocker.Unlock()
 	s.unload(b)
 
 }
@@ -200,8 +200,8 @@ func (s *Script) unload(b *bus.Bus) {
 }
 
 func (s *Script) Load(b *bus.Bus) error {
-	s.EngineLocker.Lock()
-	defer s.EngineLocker.Unlock()
+	//s.EngineLocker.Lock()
+	//defer s.EngineLocker.Unlock()
 	return s.load(b)
 }
 func (s *Script) load(b *bus.Bus) error {
@@ -230,8 +230,8 @@ func (s *Script) load(b *bus.Bus) error {
 }
 func (s *Script) Reload(b *bus.Bus) error {
 	b.DoMultiLinesFlush()
-	s.EngineLocker.Lock()
-	defer s.EngineLocker.Unlock()
+	//s.EngineLocker.Lock()
+	//defer s.EngineLocker.Unlock()
 	s.unload(b)
 	return s.load(b)
 }
@@ -244,24 +244,24 @@ func (s *Script) beforeClose(b *bus.Bus) {
 }
 func (s *Script) connected(b *bus.Bus) {
 	b.DoMultiLinesFlush()
-	s.EngineLocker.Lock()
-	defer s.EngineLocker.Unlock()
+	//s.EngineLocker.Lock()
+	//defer s.EngineLocker.Unlock()
 	if s.engine != nil {
 		s.SetCreator("system", "connected")
 		s.engine.OnConnect(b)
 	}
 }
 func (s *Script) disconnected(b *bus.Bus) {
-	s.EngineLocker.Lock()
-	defer s.EngineLocker.Unlock()
+	//s.EngineLocker.Lock()
+	//defer s.EngineLocker.Unlock()
 	if s.engine != nil {
 		s.SetCreator("system", "disconnected")
 		s.engine.OnDisconnect(b)
 	}
 }
 func (s *Script) UseScript(b *bus.Bus, id string) {
-	s.EngineLocker.Lock()
-	defer s.EngineLocker.Unlock()
+	//s.EngineLocker.Lock()
+	//defer s.EngineLocker.Unlock()
 	s.unload(b)
 	b.SetScriptID(id)
 	err := s.load(b)
@@ -290,15 +290,15 @@ func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
 		} else {
 			s.SetCreator("timer", "#"+timer.ID)
 		}
-		s.EngineLocker.Lock()
-		defer s.EngineLocker.Unlock()
+		//s.EngineLocker.Lock()
+		//defer s.EngineLocker.Unlock()
 		e.OnTimer(b, timer)
 		// }()
 	}
 }
 func (s *Script) getEngine() Engine {
-	s.EngineLocker.Lock()
-	defer s.EngineLocker.Unlock()
+	//s.EngineLocker.Lock()
+	//defer s.EngineLocker.Unlock()
 	return s.engine
 }
 func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
@@ -443,8 +443,32 @@ func (s *Script) HandleSubneg(b *bus.Bus, data []byte) bool {
 	if b.GetShowSubneg() && len(data) > 1 {
 		b.DoPrintSubneg(fmt.Sprintf("%d %s", data[0], string(data[1:])))
 	}
-	s.SetCreator("buffer", "")
+	s.SetCreator("subneg", "")
 	return e.OnSubneg(b, data[0], data[1:])
+}
+func (s *Script) HandleLine(b *bus.Bus, line string) bool {
+	e := s.getEngine()
+	if e == nil {
+		return false
+	}
+	s.SetCreator("online", "")
+	return e.OnLine(b, line)
+}
+func (s *Script) HandleAfterLine(b *bus.Bus, line string) {
+	e := s.getEngine()
+	if e == nil {
+		return
+	}
+	s.SetCreator("onafterline", "")
+	e.OnAfterLine(b, line)
+}
+func (s *Script) HandleSend(b *bus.Bus, line string) bool {
+	e := s.getEngine()
+	if e == nil {
+		return false
+	}
+	s.SetCreator("onsend", "")
+	return e.OnSend(b, line)
 }
 
 func (s *Script) Run(b *bus.Bus, cmd string) {
@@ -501,6 +525,9 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.HandleSubneg = b.WrapHandleBytesForBool(s.HandleSubneg)
 	b.HandleFocus = b.Wrap(s.HandleFocus)
 	b.HandleLoseFocus = b.Wrap(s.HandleLoseFocus)
+	b.HandleLine = b.WrapHandleStringForBool(s.HandleLine)
+	b.HandleAfterLine = b.WrapHandleString(s.HandleAfterLine)
+	b.HandleSend = b.WrapHandleStringForBool(s.HandleSend)
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
 	b.BindConnectedEvent(s, s.connected)

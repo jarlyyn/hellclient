@@ -62,6 +62,9 @@ func (c *Converter) Send(bus *bus.Bus, cmd *world.Command) {
 	if cmd.Message == "\x0f" {
 		return
 	}
+	if bus.HandleSend(cmd.Message) {
+		return
+	}
 	b, err := world.FromUTF8(bus.GetCharset(), []byte(cmd.Message))
 	if err != nil {
 		bus.HandleConverterError(err)

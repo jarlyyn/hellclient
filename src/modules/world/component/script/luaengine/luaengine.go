@@ -48,6 +48,9 @@ type LuaEngine struct {
 	onKeyUp      string
 	onBufferMin  int
 	onBufferMax  int
+	onLine       string
+	onAfterLine  string
+	onSend       string
 }
 
 func NewLuaEngine() *LuaEngine {
@@ -72,6 +75,9 @@ func (e *LuaEngine) Open(b *bus.Bus) error {
 	e.onKeyUp = data.OnKeyUp
 	e.onFocus = data.OnFocus
 	e.onLoseFocus = data.OnLoseFocus
+	e.onLine = data.OnLine
+	e.onAfterLine = data.OnAfterLine
+	e.onSend = data.OnSend
 	err := util.Catch(func() {
 		newLuaInitializer(b).MustApplyInitializer(e.Plugin)
 	})
@@ -110,7 +116,23 @@ func (e *LuaEngine) OnDisconnect(b *bus.Bus) {
 		// b.HandleScriptError(e.Plugin.LState.DoString(e.onDisconnect + "()"))
 	}
 }
-
+func (e *LuaEngine) OnLine(b *bus.Bus, line string) bool {
+	if e.onLine != "" {
+		return lua.LVAsBool(e.Call(b, e.Plugin.LState.GetGlobal(e.onLine), lua.LString(line)))
+	}
+	return false
+}
+func (e *LuaEngine) OnAfterLine(b *bus.Bus, line string) {
+	if e.onAfterLine != "" {
+		e.Call(b, e.Plugin.LState.GetGlobal(e.onAfterLine), lua.LString(line))
+	}
+}
+func (e *LuaEngine) OnSend(b *bus.Bus, line string) bool {
+	if e.onSend != "" {
+		return lua.LVAsBool(e.Call(b, e.Plugin.LState.GetGlobal(e.onSend), lua.LString(line)))
+	}
+	return false
+}
 func (e *LuaEngine) ConvertStyle(L *lua.LState, line *world.Line) *lua.LTable {
 	result := L.NewTable()
 	for _, v := range line.Words {

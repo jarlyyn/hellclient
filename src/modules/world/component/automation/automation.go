@@ -132,6 +132,9 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 	}
 	a.ReadyForLine()
 	b.DoMultiLinesAppend(line.Plain())
+	if b.HandleLine(line.Plain()) {
+		return
+	}
 	queue := a.Triggers.Queue()
 	ctx := &Context{
 		Line: line,
@@ -189,9 +192,10 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 			b.DoSendTriggerToScript(line, &data, r)
 		}
 		if !data.KeepEvaluating || a.EvaluatingTriggersStop() {
-			return
+			break
 		}
 	}
+	b.HandleAfterLine(line.Plain())
 }
 
 func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {
