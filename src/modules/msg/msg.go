@@ -4,6 +4,8 @@ import (
 	"modules/world"
 	"strconv"
 
+	"modules/world/component/script"
+
 	"github.com/herb-go/connections/room/message"
 	"github.com/herb-go/herb/ui/validator"
 	herbversion "github.com/herb-go/misc/version"
@@ -26,6 +28,7 @@ const MsgTypeClients = "clients"
 const MsgTypeNotOpened = "notopened"
 const MsgTypeScriptInfo = "scriptinfo"
 const MsgTypeScriptInfoList = "scriptinfoList"
+const MsgTypeScriptTypes = "scriptTypes"
 const MsgTypeStatus = "status"
 const MsgTypeHistory = "history"
 const MsgTypeUserTimers = "usertimers"
@@ -149,6 +152,9 @@ func PublishScriptInfo(p Publisher, id string, info *world.ScriptInfo) {
 }
 func PublishScriptInfoList(p Publisher, info []*world.ScriptInfo) {
 	p.Publish(New(MsgTypeScriptInfoList, "", info))
+}
+func PublishScriptTypes(p Publisher, types []script.ScriptType) {
+	p.Publish(New(MsgTypeScriptTypes, "", types))
 }
 
 func PublishStatus(p Publisher, id string, status string) {

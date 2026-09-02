@@ -335,6 +335,11 @@ func (t *Titan) HandleCmdListScriptInfo() {
 	}
 	msg.PublishScriptInfoList(t, info)
 }
+func (t *Titan) HandleCmdListScriptTypes() {
+	types := t.ListScriptTypes()
+	msg.PublishScriptTypes(t, types)
+}
+
 func (t *Titan) HandleCmdUseScript(id string, script string) {
 	w := t.World(id)
 	if w != nil {
@@ -863,6 +868,9 @@ func (t *Titan) listWorlds() ([]string, error) {
 		}
 	}
 	return result, nil
+}
+func (t *Titan) ListScriptTypes() []script.ScriptType {
+	return script.ScriptTypes
 }
 func (t *Titan) ListScripts() ([]*world.ScriptInfo, error) {
 	t.Locker.RLock()

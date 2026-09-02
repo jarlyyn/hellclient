@@ -22,6 +22,26 @@ import (
 	"github.com/herb-go/util"
 )
 
+type ScriptType struct {
+	Label string
+	Key   string
+}
+
+var ScriptTypes = []ScriptType{
+	{
+		Label: "Javascript(V8)",
+		Key:   "v8",
+	},
+	{
+		Label: "Javascript",
+		Key:   "jscript",
+	},
+	{
+		Label: "Lua",
+		Key:   "lua",
+	},
+}
+
 type Script struct {
 	CreatorLocker sync.Mutex
 	creator       string

@@ -110,6 +110,8 @@ func initAdapter(p *Prophet, adapter *message.Adapter) {
 	adapter.Register("defaultServer", p.newUserAdapter("defaultServer"))
 	//默认编码信息，预期客户端在创建游戏时填入默认编码信息
 	adapter.Register("defaultCharset", p.newUserAdapter("defaultCharset"))
+	//返回所有支持的脚本类型
+	adapter.Register("scriptTypes", p.newUserAdapter("scriptTypes"))
 	//授权请求，预期客户端弹授权界面
 	adapter.Register("requestPermissions", p.newRoomAdapter("requestPermissions"))
 	//授权域名信息，预期客户端弹出授权域名界面

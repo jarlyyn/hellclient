@@ -241,6 +241,9 @@ define(function (require) {
             vm.gameCreateForm.Charset = data.toUpperCase()
         }
     }
+    handlers.scriptTypes = function (data) {
+        vm.scriptCreateForm.Types = data || []
+    }
     handlers.defaultServer = function (data) {
         var server = data.split(":")
         var host = server[0]
