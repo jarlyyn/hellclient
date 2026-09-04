@@ -138,10 +138,6 @@ func (p *Prophet) onCmdListScriptinfo(conn connections.OutputConnection, cmd com
 	p.Titan.HandleCmdListScriptInfo()
 	return nil
 }
-func (p *Prophet) onCmdListScriptTypes(conn connections.OutputConnection, cmd command.Command) error {
-	p.Titan.HandleCmdListScriptTypes()
-	return nil
-}
 
 func (p *Prophet) onCmdListStatus(conn connections.OutputConnection, cmd command.Command) error {
 	var msg string
@@ -571,8 +567,6 @@ func initHandlers(p *Prophet, handlers *command.Handlers) {
 	handlers.Register("createScript", p.onCmdCreateScript)
 	//列出全部脚本指令
 	handlers.Register("listScriptinfo", p.onCmdListScriptinfo)
-	//列出脚本类型指令
-	handlers.Register("listScriptTypes", p.onCmdListScriptTypes)
 	//使用脚本指令
 	handlers.Register("usescript", p.onCmdUseScript)
 	//保存脚本指令

@@ -217,6 +217,7 @@ func (p *Prophet) OnOpen(conn connections.OutputConnection) {
 		r.Join(crid)
 	}
 	p.Titan.ExecAPIversion()
+	p.Titan.ExecListScriptTypes()
 	p.Titan.ExecClients()
 	p.Titan.ExecSwitchStatus()
 	p.onCurrent(crid)

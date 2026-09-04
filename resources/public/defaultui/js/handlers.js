@@ -242,7 +242,7 @@ define(function (require) {
         }
     }
     handlers.scriptTypes = function (data) {
-        vm.scriptCreateForm.Types = data || []
+        vm.scriptTypes = data || []
     }
     handlers.defaultServer = function (data) {
         var server = data.split(":")

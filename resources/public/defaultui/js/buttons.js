@@ -128,7 +128,6 @@ define(function (require) {
     onButton.createScript = function () {
         vm.createScriptFail = [];
         vm.scriptCreateForm = {
-            Types: []
         };
         vm.scriptCreateFormVisible = true;
         send("listScriptTypes")

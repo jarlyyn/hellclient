@@ -75,21 +75,29 @@
         <p><a target="_blank" href="https://forum.hellclient.com">社区</a></p>
         <p>服务版本:{{version}}</p>
         <p>界面版本:{{uiversion}}</p>
+        <div v-if="scriptTypes && scriptTypes.length">脚本支持:
+          <ul>
+            <li v-for="type in scriptTypes" v-if="type">{{type.Label}}</li>
+          </ul>
+        </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="aboutVisible = false">关闭</el-button>
       </span>
     </el-dialog>
     <div id="alllines"></div>
-    <div v-if="suggestion && suggestion.length"id="history-suggestion" @click="hideSuggestion"><ul>
-      <li @click="onSuggest(cmd)" v-for="cmd in suggestion" v-if="cmd">{{cmd}}</li>
-    </ul></div>
+    <div v-if="suggestion && suggestion.length" id="history-suggestion" @click="hideSuggestion">
+      <ul>
+        <li @click="onSuggest(cmd)" v-for="cmd in suggestion" v-if="cmd">{{cmd}}</li>
+      </ul>
+    </div>
     <div v-if="current" id="footer">
       <div id="current">
         {{current}}
       </div>
-      <div id="user-input" v-on:keyup.esc="onEsc" v-on:keyup.down="onDown" v-on:keyup.up="onUp" v-on:keyup.13="send" v-on:keydown="onInputKeyDown">
-        <el-input v-on:input="onInputChange" id="mud-input" size="small" placeholder="请输入命令" v-model="cmd" >
+      <div id="user-input" v-on:keyup.esc="onEsc" v-on:keyup.down="onDown" v-on:keyup.up="onUp" v-on:keyup.13="send"
+        v-on:keydown="onInputKeyDown">
+        <el-input v-on:input="onInputChange" id="mud-input" size="small" placeholder="请输入命令" v-model="cmd">
           <el-tooltip slot="prepend" effect="light" content="助理" placement="top">
             <el-button icon="el-icon-user" @click="assist"></el-button>
           </el-tooltip>
@@ -99,19 +107,20 @@
         </el-input>
       </div>
       <div id="footer-home">
-        <el-tooltip slot="append" effect="light" content="游戏一览" placement="top"><i id="footer-home-button" class="el-icon-s-home" @click="onButton('overview')"></i></el-tooltip>
+        <el-tooltip slot="append" effect="light" content="游戏一览" placement="top"><i id="footer-home-button"
+            class="el-icon-s-home" @click="onButton('overview')"></i></el-tooltip>
       </div>
     </div>
     <div id="dashboard"></div>
   </div>
   <script>
-    var MD=markdownit()
+    var MD = markdownit()
     MD.disable("image")
   </script>
   <script>
     var body = document.getElementsByTagName("html")[0]
   </script>
-  
+
 </body>
 
 </html>

@@ -335,10 +335,6 @@ func (t *Titan) HandleCmdListScriptInfo() {
 	}
 	msg.PublishScriptInfoList(t, info)
 }
-func (t *Titan) HandleCmdListScriptTypes() {
-	types := t.ListScriptTypes()
-	msg.PublishScriptTypes(t, types)
-}
 
 func (t *Titan) HandleCmdUseScript(id string, script string) {
 	w := t.World(id)
@@ -378,6 +374,10 @@ func (t *Titan) HandleCmdDefaultCharset() {
 
 func (t *Titan) ExecAPIversion() {
 	msg.PublishAPIVersionMessage(t, versionapi.Version)
+}
+func (t *Titan) ExecListScriptTypes() {
+	types := t.ListScriptTypes()
+	msg.PublishScriptTypes(t, types)
 }
 func (t *Titan) ExecClients() {
 	t.Locker.RLock()

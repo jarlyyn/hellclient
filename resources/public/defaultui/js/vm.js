@@ -26,6 +26,7 @@ define(["vue", "/public/defaultui/js/app.js", "lodash", "/public/defaultui/js/ca
         cmd: "",
         info: {},
         clients: [],
+        scriptTypes: [],
         gameCreateFormVisible: false,
         gameCreateForm: null,
         allLines: [],
