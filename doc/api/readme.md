@@ -194,7 +194,7 @@
 * [CheckTrustedDomains 检查信任域名](apiauth.md#CheckTrustedDomains)
 * [RequestTrustDomains 请求信任域名](apiauth.md#RequestTrustDomains)
 
-## 地图接口
+## 地图接口（已废弃）
 * [术语](apimapper.md#术语)
 * [Mapper.Reset 重置地图](apimapper.md#MapperReset)
 * [Mapper.ResetTemporary 重置临时路径](apimapper.md#MapperResetTemporary)
@@ -273,7 +273,7 @@
 * [VisualPrompt.Append 列表追加](apiuserinput.md#VisualPromptpublish#Append) 
 * [VisualPrompt.Publish 可视化输入发布](apiuserinput.md#VisualPromptpublish#Publish)
 
-## http请求
+## http请求（仅无风险引擎实现）
 * [术语](apihttp.md#术语)
 * [HTTP.PraseURL 解析URL地址](apihttp.md#HTTPPraseURL)
 * [HTTP.New 创建新请求](apihttp.md#HTTPNew)

@@ -3,6 +3,7 @@
 
 * 与hellclient.net保持兼容升级
 * 废弃Prompt行
+* Mapper系列接口进入废弃模式
 
 ## 1.2025-05-41
 
