@@ -374,8 +374,8 @@ func (r *jsRun) Run() {
 	r.local.RunScript(r.cmd, "run")
 }
 func (e *JsEngine) Run(b *bus.Bus, cmd string) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 

@@ -7,9 +7,10 @@ import (
 )
 
 type Converter struct {
-	SendLock  sync.RWMutex
-	InputLock sync.RWMutex
-	Last      *world.Word
+	SendLock     sync.RWMutex
+	InputLock    sync.RWMutex
+	Last         *world.Word
+	PendingLines []*world.Line
 }
 
 func nopOnError(err error) bool {
@@ -29,27 +30,55 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 	b.DoPrintSubneg = b.WrapHandleString(c.DoPrintSubneg)
 	b.DoPrintRequest = b.WrapHandleString(c.DoPrintRequest)
 	b.DoPrintResponse = b.WrapHandleString(c.DoPrintResponse)
+	b.InsertAnsi = b.WrapHandleString(c.InsertAnsi)
 }
-
-func (c *Converter) onPrompt(bus *bus.Bus, msg []byte) {
+func (c *Converter) ExecLines(bus *bus.Bus) {
+	for len(c.PendingLines) > 0 {
+		line := c.PendingLines[0]
+		newSlice := make([]*world.Line, len(c.PendingLines)-1)
+		copy(newSlice, c.PendingLines[1:])
+		c.PendingLines = newSlice
+		bus.RaiseLineEvent(line)
+	}
+}
+func (c *Converter) InsertAnsi(bus *bus.Bus, msg string) {
+	var needStart = len(c.PendingLines) == 0
+	line := c.ConvertToLine(bus, msg, func(err error) bool { return c.onError(bus, err) })
+	if line != nil {
+		line.Type = world.LineTypeReal
+		c.PendingLines = append(c.PendingLines, line)
+		if needStart {
+			c.ExecLines(bus)
+		}
+	}
+}
+func (c *Converter) onPrompt(bus *bus.Bus, data []byte) {
 	c.InputLock.Lock()
 	defer c.InputLock.Unlock()
-	line := c.ConvertToLine(bus, msg, nopOnError)
+	charset := bus.GetCharset()
+	var msg, err = world.ToUTF8(charset, data)
+	if err != nil {
+		c.onError(bus, err)
+		return
+	}
+	line := c.ConvertToLine(bus, string(msg), nopOnError)
 	if line != nil {
 		bus.RaisePromptEvent(line)
 	}
 }
-func (c *Converter) onMsg(bus *bus.Bus, msg []byte) {
+func (c *Converter) onMsg(bus *bus.Bus, data []byte) {
 	c.InputLock.Lock()
 	defer c.InputLock.Unlock()
-	if len(msg) == 0 {
+	if len(data) == 0 {
 		return
 	}
-	line := c.ConvertToLine(bus, msg, func(err error) bool { return c.onError(bus, err) })
-	if line != nil {
-		line.Type = world.LineTypeReal
-		bus.RaiseLineEvent(line)
+	charset := bus.GetCharset()
+	var msg, err = world.ToUTF8(charset, data)
+	if err != nil {
+		c.onError(bus, err)
+		return
 	}
+	c.InsertAnsi(bus, string(msg))
 }
 func (c *Converter) onError(bus *bus.Bus, err error) bool {
 	bus.HandleConverterError(err)
@@ -133,16 +162,14 @@ func (c *Converter) print(b *bus.Bus, linetype int, msg string) {
 	b.RaiseLineEvent(line)
 
 }
-func (c *Converter) ConvertToLine(bus *bus.Bus, msg []byte, onError func(err error) bool) *world.Line {
-	if bus.GetCharset == nil {
-		return nil
-	}
-	charset := bus.GetCharset()
-	l, last := ConvertToLine(c.Last, msg, charset, onError)
+func (c *Converter) ConvertToLine(bus *bus.Bus, msg string, onError func(err error) bool) *world.Line {
+	l, last := ConvertToLine(c.Last, []byte(msg), onError)
 	c.Last = last
 	return l
 }
 
 func New() *Converter {
-	return &Converter{}
+	return &Converter{
+		PendingLines: []*world.Line{},
+	}
 }

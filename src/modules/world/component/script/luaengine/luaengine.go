@@ -323,8 +323,6 @@ func (e *LuaEngine) OnKeyUp(b *bus.Bus, key string) {
 }
 
 func (e *LuaEngine) Run(b *bus.Bus, cmd string) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
 	b.HandleScriptError(e.Plugin.LState.DoString(cmd))
 }
 

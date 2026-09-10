@@ -1608,3 +1608,7 @@ func (a *API) Milliseconds() int64 {
 func (a *API) OmitOutput() {
 	a.Bus.DoOmitOutput()
 }
+
+func (a *API) InsertAnsi(data string) {
+	a.Bus.InsertAnsi(data)
+}

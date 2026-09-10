@@ -226,6 +226,8 @@ type Bus struct {
 	GetHUDContent    func() []*world.Line
 	UpdateHUDContent func(start int, content []*world.Line) bool
 
+	InsertAnsi func(string)
+
 	RequestEvent           busevent.Event
 	BroadcastEvent         busevent.Event
 	LineEvent              busevent.Event

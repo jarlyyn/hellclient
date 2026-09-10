@@ -100,8 +100,8 @@ func (i *Info) onPrompt(b *bus.Bus, line *world.Line) {
 	i.Prompt = line
 }
 func (i *Info) onNewLine(b *bus.Bus, line *world.Line) {
-	i.Lock.Lock()
-	defer i.Lock.Unlock()
+	// i.Lock.Lock()
+	// defer i.Lock.Unlock()
 	i.Lines = i.Lines.Next()
 	i.Lines.Value = line
 	if line.Type == world.LineTypeReal {

@@ -335,8 +335,6 @@ func (e *JsEngine) OnAssist(b *bus.Bus, script string) {
 	go e.Call(b, script)
 }
 func (e *JsEngine) Run(b *bus.Bus, cmd string) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
 	b.HandleScriptError(util.Catch(func() {
 		_, err := e.Plugin.Runtime.RunString(cmd)
 		b.HandleScriptError(err)

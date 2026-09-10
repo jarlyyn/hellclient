@@ -6,7 +6,7 @@ import (
 	"github.com/jarlyyn/ansi"
 )
 
-func ConvertToLine(last *world.Word, msg []byte, charset string, errhandler func(err error) bool) (*world.Line, *world.Word) {
+func ConvertToLine(last *world.Word, msg []byte, errhandler func(err error) bool) (*world.Line, *world.Word) {
 	line := world.NewLine()
 	if len(msg) == 0 {
 		return line, last
@@ -14,17 +14,11 @@ func ConvertToLine(last *world.Word, msg []byte, charset string, errhandler func
 	w := last.Inherit()
 	var s *ansi.S
 	var err error
-	var b []byte
 	for len(msg) > 0 {
 		msg, s, err = ansi.Decode(msg)
 		if s != nil {
 			if s.Type == "" {
-				b, err = world.ToUTF8(charset, []byte(s.Code))
-				if err != nil {
-					errhandler(err)
-					continue
-				}
-				w.Text = string(b)
+				w.Text = string(s.Code)
 				line.Append(w)
 				w = w.Inherit()
 			} else if s.Type == "CSI" {
