@@ -11,7 +11,6 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/herb-go/misc/debounce"
 	"github.com/herb-go/util"
 	"github.com/jarlyyn/telnet"
 	"golang.org/x/net/proxy"
@@ -33,10 +32,10 @@ type Conn struct {
 	running     atomic.Bool
 	connecting  atomic.Bool
 	buffer      []byte
+	prompt      []byte
 	ConnectLock sync.RWMutex
 	BufferLock  sync.RWMutex
 	SendLock    sync.RWMutex
-	Debounce    *debounce.Debounce
 }
 
 func isClosedError(err error) bool {
@@ -52,10 +51,6 @@ func isClosedError(err error) bool {
 }
 
 func (conn *Conn) InstallTo(b *bus.Bus) {
-	d := debounce.New(DefaultDebounceDuration, func() { go conn.UpdatePrompt(b) })
-	d.MaxDuration = 0
-	conn.Debounce = d
-
 	b.DoSendToConn = b.WrapHandleBytes(conn.Send)
 	b.DoConnectServer = b.WrapDo(conn.Connect)
 	b.DoCloseServer = b.WrapDo(conn.Close)
@@ -70,7 +65,7 @@ func (conn *Conn) UpdatePrompt(bus *bus.Bus) {
 	conn.ConnectLock.Lock()
 	defer conn.ConnectLock.Unlock()
 	if conn.running.Load() {
-		bus.HandleConnPrompt(conn.buffer)
+		bus.HandleConnPrompt(conn.prompt)
 	}
 }
 func (conn *Conn) Stop(b *bus.Bus) {
@@ -133,9 +128,10 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	t.OnGA = func() {
 		conn.BufferLock.Lock()
 		conn.flushBuffer(bus)
-		bus.HandleBuffer(nil)
 	}
 	t.OnSubneg = func(data []byte) {
+		conn.BufferLock.Lock()
+		conn.flushBuffer(bus)
 		if len(data) > 1 {
 			if data[0] == TTYPE && data[1] == TTYPESend {
 				conn.BufferLock.Lock()
@@ -156,8 +152,8 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 	conn.c = make(chan int)
 	conn.buffer = make([]byte, 0, 1024)
 	conn.telnet = t
+	conn.prompt = []byte{}
 	conn.BufferLock.Unlock()
-
 	go conn.Receiver(bus)
 	go bus.RaiseConnectedEvent()
 	return nil
@@ -182,7 +178,6 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 	conn.telnet = nil
 
 	go bus.HandleConnPrompt(buffer)
-	go conn.Debounce.Discard()
 	go bus.RaiseDisconnectedEvent()
 	go bus.RaiseServerCloseEvent()
 
@@ -190,7 +185,6 @@ func (conn *Conn) Close(bus *bus.Bus) error {
 }
 func (conn *Conn) flushBuffer(bus *bus.Bus) {
 	buf := conn.buffer
-	conn.Debounce.Reset()
 	conn.buffer = []byte{}
 	conn.BufferLock.Unlock()
 	bus.HandleConnReceive(buf)
@@ -245,7 +239,6 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 			continue
 		}
 		conn.BufferLock.Unlock()
-		conn.Debounce.Exec()
 	}
 }
 func (conn *Conn) Connected(bus *bus.Bus) bool {
@@ -277,7 +270,6 @@ func (conn *Conn) send(bus *bus.Bus, cmd []byte) {
 
 }
 func (conn *Conn) Dispose() {
-	conn.Debounce.Discard()
 }
 func New() *Conn {
 	c := &Conn{

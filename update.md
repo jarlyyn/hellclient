@@ -1,4 +1,9 @@
 # 更新记录
+## 2.2026-08-31
+
+* 与hellclient.net保持兼容升级
+* 废弃Prompt行
+
 ## 1.2025-05-41
 
 * 修正AddTriggerEX错误的调用了AddTrigger的问题
