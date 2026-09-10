@@ -42,7 +42,7 @@ type Mapper struct {
 func (m *Mapper) FlyList() []*Path {
 	m.Locker.Lock()
 	defer m.Locker.Unlock()
-	return append(m.fly)
+	return append([]*Path{}, m.fly...)
 }
 func (m *Mapper) SetFlyList(fly []*Path) {
 	m.Locker.Lock()
