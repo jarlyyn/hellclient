@@ -14,14 +14,6 @@ Mushclient自带一个固定间隔发送指令的speedwork queeu来实现限流�
 
 接口详见 [API文档](../api/apimetronome.md)
 
-## Mapper地图组件
-
-Hellclient 自带一个简单的地图组件
-
-地图组件的可以供脚本添加房间和路径，设置标签，然后获取路径/搜索房间/获取房间出口信息
-
-接口详见 [API文档](../api/apimapper.md)
-
 ## Javascript脚本支持
 
 Hellclient通过使用 [goja库](https://github.com/dop251/goja) 提供 ECMAScript 5.1 的兼容

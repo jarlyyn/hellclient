@@ -20,8 +20,8 @@ mushclient是mud活跃时代的一款非常杰出，优秀的客户端。
 
 当前的hellclient ui的系统支持为
 
-* windows 7 sp2/windows 2008 +
-* centos 7/debian 10 +
+* windows 10/windows 2008 +
+* debian 12 +
 
 服务器自启动，Linux可以使用systemd,参考 [/system/system.d/hellclient.service](/system/system.d/hellclient.service),注意调整user,windows建议使用NSSM[https://nssm.cc/](https://nssm.cc/)。
 
@@ -43,7 +43,6 @@ Hellclient拥有以下特性
 
 * [游戏/脚本分离](doc/features/features.md#游戏/脚本分离)
 * [Metronome限流器](doc/features/features.md#Metronome限流器)
-* [Mapper地图组件](doc/features/features.md#Mapper地图组件)
 * [Javascript脚本支持](doc/features/features.md#Javascript脚本支持)
 * [Lua支持](doc/features/features.md#Lua支持)
 * [用户授权](doc/features/features.md#用户授权)
@@ -60,5 +59,6 @@ Hellclient拥有以下特性
 
 * [Helllua](https://github.com/hellclient-scripts/helllua) 原Mushclient机器人移植
 * [zsz-self.jvs](https://github.com/hellclient-scripts/zsz-self.jvs) 原Mushclient机器人移植
-* [helljs](https://github.com/hellclient-scripts/helljs) 针对 终极地狱 mud 全新制作的机器人
+* [newhelljs](https://github.com/hellclient-scripts/newhelljs) 针对 终极地狱 mud 全新制作的机器人
+* [hongchenjs](https://github.com/hellclient-scripts/hongchenjs) 针对 红尘 mud 全新制作的机器人
 * [pkpxkx.noob](https://github.com/hellclient-scripts/pkuxkx.noob) 针对 北大侠客行 mud 全新制作的机器人
