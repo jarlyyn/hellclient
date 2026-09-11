@@ -36,7 +36,7 @@ type Walking struct {
 	to          []string
 	fly         []*Path
 	walked      map[string]*Step
-	forwading   *list.List
+	forwarding  *list.List
 	blacklist   map[string]bool
 	whitelist   map[string]bool
 	blockedpath map[string]map[string]bool
@@ -90,23 +90,23 @@ func (w *Walking) Walk() []*Step {
 	if room != nil {
 		for _, v := range room.Exits {
 			if w.walked[v.To] == nil && w.validateExit(v) {
-				w.forwading.PushBack(w.step(v))
+				w.forwarding.PushBack(w.step(v))
 			}
 		}
 	}
 	if texits != nil {
 		for _, v := range texits {
 			if w.walked[v.To] == nil && w.validateExit(v) {
-				w.forwading.PushBack(w.step(v))
+				w.forwarding.PushBack(w.step(v))
 			}
 		}
 	}
 	for _, v := range w.fly {
 		if w.walked[v.To] == nil && w.validateExit(v) {
-			w.forwading.PushBack(w.FlyStep(v))
+			w.forwarding.PushBack(w.FlyStep(v))
 		}
 	}
-	if w.forwading.Len() == 0 {
+	if w.forwarding.Len() == 0 {
 		return nil
 	}
 	for _, v := range w.to {
@@ -130,12 +130,12 @@ Matching:
 			break
 		}
 		for {
-			v := w.forwading.Front()
+			v := w.forwarding.Front()
 			if v == nil {
 				break
 			}
 			step := v.Value.(*Step)
-			w.forwading.Remove(v)
+			w.forwarding.Remove(v)
 			room := rooms.GetRoom(step.To)
 			texits := rooms.GetTemporaryPaths(step.To)
 
@@ -171,8 +171,8 @@ Matching:
 			}
 
 		}
-		w.forwading.PushBackList(newExits)
-		if w.forwading.Len() == 0 {
+		w.forwarding.PushBackList(newExits)
+		if w.forwarding.Len() == 0 {
 			break Matching
 		}
 	}
@@ -208,7 +208,7 @@ func NewWalking(option *Option) *Walking {
 		to:          []string{},
 		fly:         []*Path{},
 		walked:      map[string]*Step{},
-		forwading:   list.New(),
+		forwarding:  list.New(),
 		blacklist:   map[string]bool{},
 		whitelist:   map[string]bool{},
 		blockedpath: map[string]map[string]bool{},
