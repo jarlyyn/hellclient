@@ -238,27 +238,6 @@ func (e *LuaEngine) OnHUDClick(b *bus.Bus, c *world.Click) {
 	e.Locker.Unlock()
 	go e.Call(b, fn, lua.LNumber(c.X), lua.LNumber(c.Y))
 }
-func (e *LuaEngine) OnBuffer(b *bus.Bus, data []byte) bool {
-	e.Locker.Lock()
-	if e.Plugin.LState == nil || e.onBuffer == "" {
-		e.Locker.Unlock()
-		return false
-	}
-	l := len(data)
-	if data != nil && (l < e.onBufferMin || (e.onBufferMax > 0 && l > e.onBufferMax)) {
-		e.Locker.Unlock()
-		return false
-	}
-	fn := e.Plugin.LState.GetGlobal(e.onBuffer)
-	e.Locker.Unlock()
-	var v lua.LValue
-	if data != nil {
-		v = e.Call(b, fn, lua.LString(data))
-	} else {
-		v = e.Call(b, fn, lua.LNil, lua.LNil)
-	}
-	return lua.LVAsBool(v)
-}
 func (e *LuaEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
 	e.Locker.Lock()
 	if e.Plugin.LState == nil || e.onSubneg == "" {

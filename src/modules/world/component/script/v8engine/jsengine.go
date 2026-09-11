@@ -272,29 +272,6 @@ func (e *JsEngine) OnResponse(b *bus.Bus, msg *world.Message) {
 	e.Call(b, local, e.onResponse, local.NewString(msg.Type), local.NewString(msg.ID), local.NewString(msg.Data))
 }
 
-func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
-	e.Locker.Lock()
-	if e.Plugin.Runtime == nil || e.onBuffer == "" {
-		e.Locker.Unlock()
-		return false
-	}
-	l := len(data)
-	if data != nil && (l < e.onBufferMin || (e.onBufferMax > 0 && l > e.onBufferMax)) {
-		e.Locker.Unlock()
-		return false
-	}
-	e.Locker.Unlock()
-	local := e.Plugin.Runtime.NewLocal()
-	defer local.Close()
-
-	var result bool
-	if data != nil {
-		result = e.Call(b, local, e.onBuffer, local.NewString(string(data)), local.NewArrayBuffer(data))
-	} else {
-		result = e.Call(b, local, e.onBuffer, local.NullValue(), local.NullValue())
-	}
-	return result
-}
 func (e *JsEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
 	e.Locker.Lock()
 	if e.Plugin.Runtime == nil || e.onSubneg == "" {

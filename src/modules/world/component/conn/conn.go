@@ -234,10 +234,6 @@ func (conn *Conn) Receiver(bus *bus.Bus) {
 			continue
 		}
 		conn.buffer = append(conn.buffer, s)
-		if bus.HandleBuffer(conn.buffer) {
-			conn.flushBuffer(bus)
-			continue
-		}
 		conn.BufferLock.Unlock()
 	}
 }

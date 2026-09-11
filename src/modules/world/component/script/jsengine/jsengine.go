@@ -216,29 +216,6 @@ func (e *JsEngine) OnResponse(b *bus.Bus, msg *world.Message) {
 	go e.Call(b, e.onResponse, msg.Type, msg.ID, msg.Data)
 }
 
-func (e *JsEngine) OnBuffer(b *bus.Bus, data []byte) bool {
-	e.Locker.Lock()
-	if e.Plugin.Runtime == nil || e.onBuffer == "" {
-		e.Locker.Unlock()
-		return false
-	}
-	l := len(data)
-	if data != nil && (l < e.onBufferMin || (e.onBufferMax > 0 && l > e.onBufferMax)) {
-		e.Locker.Unlock()
-		return false
-	}
-	e.Locker.Unlock()
-	var result goja.Value
-	if data != nil {
-		result = e.Call(b, e.onBuffer, string(data), data)
-	} else {
-		result = e.Call(b, e.onBuffer, nil, nil)
-	}
-	if result == nil {
-		return false
-	}
-	return result.ToBoolean()
-}
 func (e *JsEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
 	e.Locker.Lock()
 	if e.Plugin.Runtime == nil || e.onSubneg == "" {

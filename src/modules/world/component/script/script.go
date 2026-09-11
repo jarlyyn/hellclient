@@ -443,14 +443,6 @@ func (s *Script) HandleLoseFocus(b *bus.Bus) {
 	s.SetCreator("losefocus", "")
 	e.OnLoseFocus(b)
 }
-func (s *Script) HandleBuffer(b *bus.Bus, data []byte) bool {
-	e := s.getEngine()
-	if e == nil {
-		return false
-	}
-	s.SetCreator("buffer", "")
-	return e.OnBuffer(b, data)
-}
 
 func (s *Script) HandleSubneg(b *bus.Bus, data []byte) bool {
 	if len(data) < 2 {
@@ -541,7 +533,6 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.GetScriptType = s.GetScriptType
 	b.GetScriptCaller = s.CreatorAndType
 	b.DoAssist = b.Wrap(s.Assist)
-	b.HandleBuffer = b.WrapHandleBytesForBool(s.HandleBuffer)
 	b.HandleSubneg = b.WrapHandleBytesForBool(s.HandleSubneg)
 	b.HandleFocus = b.Wrap(s.HandleFocus)
 	b.HandleLoseFocus = b.Wrap(s.HandleLoseFocus)

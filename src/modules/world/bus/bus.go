@@ -106,7 +106,6 @@ type Bus struct {
 	GetLineCount            func() int
 	DoSendHUDClickToScript  func(*world.Click)
 	DoSendBroadcastToScript func(*world.Broadcast)
-	HandleBuffer            func([]byte) bool
 	HandleSubneg            func([]byte) bool
 	HandleFocus             func()
 	HandleLoseFocus         func()
@@ -346,7 +345,6 @@ func (b *Bus) Dispose() {
 	b.GetLineCount = nil
 	b.DoSendHUDClickToScript = nil
 	b.DoSendBroadcastToScript = nil
-	b.HandleBuffer = nil
 	b.HandleSubneg = nil
 	b.HandleFocus = nil
 	b.HandleLoseFocus = nil

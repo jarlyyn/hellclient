@@ -18,7 +18,6 @@ type Engine interface {
 	OnHUDClick(b *bus.Bus, c *world.Click)
 	OnResponse(b *bus.Bus, msg *world.Message)
 	OnAssist(b *bus.Bus, script string)
-	OnBuffer(b *bus.Bus, data []byte) bool
 	OnFocus(b *bus.Bus)
 	OnLoseFocus(b *bus.Bus)
 	OnKeyUp(b *bus.Bus, key string)
