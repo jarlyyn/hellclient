@@ -31,7 +31,7 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 	b.DoPrintSubneg = b.WrapHandleString(c.DoPrintSubneg)
 	b.DoPrintRequest = b.WrapHandleString(c.DoPrintRequest)
 	b.DoPrintResponse = b.WrapHandleString(c.DoPrintResponse)
-	b.InsertAnsi = b.WrapHandleString(c.InsertAnsi)
+	b.AddAnsi = b.WrapHandleString(c.AddAnsi)
 	b.LastAnsi = c.GetLastAnsi
 	b.ResetConverter = c.Reset
 }
@@ -48,7 +48,7 @@ func (c *Converter) ExecLines(bus *bus.Bus) {
 func (c *Converter) GetLastAnsi() string {
 	return c.LastAnsi
 }
-func (c *Converter) InsertAnsi(bus *bus.Bus, msg string) {
+func (c *Converter) AddAnsi(bus *bus.Bus, msg string) {
 	var needStart = len(c.PendingLines) == 0
 	line := c.ConvertToLine(bus, msg, func(err error) bool { return c.onError(bus, err) })
 	if line != nil {
@@ -85,7 +85,7 @@ func (c *Converter) onMsg(bus *bus.Bus, data []byte) {
 		c.onError(bus, err)
 		return
 	}
-	c.InsertAnsi(bus, string(msg))
+	c.AddAnsi(bus, string(msg))
 }
 func (c *Converter) onError(bus *bus.Bus, err error) bool {
 	bus.HandleConverterError(err)

@@ -263,7 +263,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("Save", l.NewFunction(a.Save))
 
 	l.SetGlobal("OmitOutput", l.NewFunction(a.OmitOutput))
-	l.SetGlobal("InsertAnsi", l.NewFunction(a.InsertAnsi))
+	l.SetGlobal("AddAnsi", l.NewFunction(a.AddAnsi))
 	l.SetGlobal("LastAnsi", l.NewFunction(a.LastAnsi))
 	l.SetGlobal("PrintSystem", l.NewFunction(a.PrintSystem))
 
@@ -1647,9 +1647,9 @@ func (a *luaapi) OmitOutput(L *lua.LState) int {
 	a.API.OmitOutput()
 	return 0
 }
-func (a *luaapi) InsertAnsi(L *lua.LState) int {
+func (a *luaapi) AddAnsi(L *lua.LState) int {
 	data := L.ToString(1)
-	a.API.InsertAnsi(data)
+	a.API.AddAnsi(data)
 	return 0
 }
 func (a *luaapi) LastAnsi(L *lua.LState) int {

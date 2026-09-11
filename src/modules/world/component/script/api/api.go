@@ -1609,8 +1609,8 @@ func (a *API) OmitOutput() {
 	a.Bus.DoOmitOutput()
 }
 
-func (a *API) InsertAnsi(data string) {
-	a.Bus.InsertAnsi(data)
+func (a *API) AddAnsi(data string) {
+	a.Bus.AddAnsi(data)
 }
 
 func (a *API) LastAnsi() string {
