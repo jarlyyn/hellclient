@@ -30,3 +30,11 @@ hellclient.net是为了解决go版本在windows下与msvc生态不兼容的问�
 ## 破坏性变更：废除 OnBuffer的hook
 
 对性能影响极大，功能极弱，可以通过OnLine和AddAnsi实现大部分功能
+
+## 引入 风险型 脚本引擎
+
+通过hellclient.net引入可以自行调用dll/so的脚本殷勤 
+
+## 不过定脚本引擎支持
+
+脚本引擎数量由编译时决定，不再固定
