@@ -214,6 +214,7 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(local, world, "OmitOutput", a.OmitOutput)
 	AppendToWorld(local, world, "PrintSystem", a.PrintSystem)
 	AppendToWorld(local, world, "InsertAnsi", a.InsertAnsi)
+	AppendToWorld(local, world, "LastAnsi", a.LastAnsi)
 	AppendToWorld(local, world, "V8Debug", a.Debug)
 	AppendToWorld(local, world, "Snapshot", a.Snapshot)
 	global := local.Global()
@@ -1499,6 +1500,9 @@ func (a *jsapi) InsertAnsi(call *v8local.FunctionCallbackInfo) *v8local.JsValue 
 	data := call.GetArg(0).String()
 	a.API.InsertAnsi(data)
 	return nil
+}
+func (a *jsapi) LastAnsi(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+	return call.Local().NewString(a.API.LastAnsi())
 }
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",

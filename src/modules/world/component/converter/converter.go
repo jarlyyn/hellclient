@@ -10,7 +10,8 @@ type Converter struct {
 	SendLock     sync.RWMutex
 	InputLock    sync.RWMutex
 	Last         *world.Word
-	PendingLines []*world.Line
+	LastAnsi     string
+	PendingLines []*world.AnsiLine
 }
 
 func nopOnError(err error) bool {
@@ -31,22 +32,28 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 	b.DoPrintRequest = b.WrapHandleString(c.DoPrintRequest)
 	b.DoPrintResponse = b.WrapHandleString(c.DoPrintResponse)
 	b.InsertAnsi = b.WrapHandleString(c.InsertAnsi)
+	b.LastAnsi = c.GetLastAnsi
+	b.ResetConverter = c.Reset
 }
 func (c *Converter) ExecLines(bus *bus.Bus) {
 	for len(c.PendingLines) > 0 {
 		line := c.PendingLines[0]
-		newSlice := make([]*world.Line, len(c.PendingLines)-1)
+		newSlice := make([]*world.AnsiLine, len(c.PendingLines)-1)
 		copy(newSlice, c.PendingLines[1:])
 		c.PendingLines = newSlice
-		bus.RaiseLineEvent(line)
+		c.LastAnsi = line.Ansi
+		bus.RaiseLineEvent(line.Line)
 	}
+}
+func (c *Converter) GetLastAnsi() string {
+	return c.LastAnsi
 }
 func (c *Converter) InsertAnsi(bus *bus.Bus, msg string) {
 	var needStart = len(c.PendingLines) == 0
 	line := c.ConvertToLine(bus, msg, func(err error) bool { return c.onError(bus, err) })
 	if line != nil {
 		line.Type = world.LineTypeReal
-		c.PendingLines = append(c.PendingLines, line)
+		c.PendingLines = append(c.PendingLines, world.NewAnsiLine(line, msg))
 		if needStart {
 			c.ExecLines(bus)
 		}
@@ -167,9 +174,13 @@ func (c *Converter) ConvertToLine(bus *bus.Bus, msg string, onError func(err err
 	c.Last = last
 	return l
 }
-
+func (c *Converter) Reset() {
+	c.PendingLines = []*world.AnsiLine{}
+	c.LastAnsi = ""
+	c.Last = nil
+}
 func New() *Converter {
 	return &Converter{
-		PendingLines: []*world.Line{},
+		PendingLines: []*world.AnsiLine{},
 	}
 }

@@ -147,7 +147,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 		bus.HandleSubneg(data)
 	}
 	conn.running.Store(true)
-
+	bus.ResetConverter()
 	conn.BufferLock.Lock()
 	conn.c = make(chan int)
 	conn.buffer = make([]byte, 0, 1024)

@@ -41,40 +41,40 @@ func NewWord() *Word {
 	return &Word{}
 }
 
-//通过Print打印
+// 通过Print打印
 const LineTypePrint = 0
 
-//系统信息
+// 系统信息
 const LineTypeSystem = 1
 
-//收到的真实信息
+// 收到的真实信息
 const LineTypeReal = 2
 
-//输入回显
+// 输入回显
 const LineTypeEcho = 3
 
-//输入行类型
+// 输入行类型
 const LineTypePrompt = 4
 
-//发出的本地广播
+// 发出的本地广播
 const LineTypeLocalBroadcastOut = 5
 
-//发出的全局广播
+// 发出的全局广播
 const LineTypeGlobalBroadcastOut = 6
 
-//收到的本地广播
+// 收到的本地广播
 const LineTypeLocalBroadcastIn = 7
 
-//收到的全局广播
+// 收到的全局广播
 const LineTypeGlobalBroadcastIn = 8
 
-//Websocket发出的请求的信息
+// Websocket发出的请求的信息
 const LineTypeRequest = 9
 
-//Websocket收到的响应的信息
+// Websocket收到的响应的信息
 const LineTypeResponse = 10
 
-//收到mud发来的非文本信息
+// 收到mud发来的非文本信息
 const LineTypeSubneg = 11
 
 type Line struct {
@@ -238,5 +238,17 @@ var CreateDiffLines = func(start int, content []*Line) *DiffLines {
 	return &DiffLines{
 		Start:   start,
 		Content: content,
+	}
+}
+
+type AnsiLine struct {
+	Line *Line
+	Ansi string
+}
+
+func NewAnsiLine(line *Line, ansi string) *AnsiLine {
+	return &AnsiLine{
+		Line: line,
+		Ansi: ansi,
 	}
 }

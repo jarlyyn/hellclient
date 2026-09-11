@@ -1612,3 +1612,7 @@ func (a *API) OmitOutput() {
 func (a *API) InsertAnsi(data string) {
 	a.Bus.InsertAnsi(data)
 }
+
+func (a *API) LastAnsi() string {
+	return a.Bus.LastAnsi()
+}
