@@ -130,9 +130,10 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 	if line == nil || line.Type != world.LineTypeReal {
 		return
 	}
+	var ansi = b.LastAnsi()
 	a.ReadyForLine()
 	b.DoMultiLinesAppend(line.Plain())
-	if b.HandleLine(line.Plain()) {
+	if b.HandleLine(line.Plain(), ansi) {
 		return
 	}
 	queue := a.Triggers.Queue()
@@ -195,7 +196,7 @@ func (a *Automation) OnLine(b *bus.Bus, line *world.Line) {
 			break
 		}
 	}
-	b.HandleAfterLine(line.Plain())
+	b.HandleAfterLine(line.Plain(), ansi)
 }
 
 func (a *Automation) MatchAlias(b *bus.Bus, message string) bool {

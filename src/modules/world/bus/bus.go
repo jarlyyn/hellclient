@@ -109,8 +109,8 @@ type Bus struct {
 	HandleSubneg            func([]byte) bool
 	HandleFocus             func()
 	HandleLoseFocus         func()
-	HandleLine              func(line string) bool
-	HandleAfterLine         func(line string)
+	HandleLine              func(line string, ansi string) bool
+	HandleAfterLine         func(line string, ansi string)
 	HandleSend              func(line string) bool
 	DoSendTimerToScript     func(*world.Timer)
 	DoDeleteTimer           func(string) bool
@@ -578,6 +578,12 @@ func (b *Bus) WrapHandleString(f func(bus *Bus, s string)) func(s string) {
 		f(b, s)
 	}
 }
+func (b *Bus) WrapHandleStringString(f func(bus *Bus, s string, s2 string)) func(s string, s2 string) {
+	return func(s string, s2 string) {
+		f(b, s, s2)
+	}
+}
+
 func (b *Bus) WrapHandleInt(f func(bus *Bus, i int)) func(i int) {
 	return func(i int) {
 		f(b, i)
@@ -638,6 +644,12 @@ func (b *Bus) WrapHandleStringForBool(f func(bus *Bus, str string) bool) func(st
 		return f(b, str)
 	}
 }
+func (b *Bus) WrapHandleStringStringForBool(f func(bus *Bus, str string, str2 string) bool) func(str string, str2 string) bool {
+	return func(str string, str2 string) bool {
+		return f(b, str, str2)
+	}
+}
+
 func (b *Bus) WrapHandleBytesForBool(f func(bus *Bus, data []byte) bool) func(data []byte) bool {
 	return func(data []byte) bool {
 		return f(b, data)

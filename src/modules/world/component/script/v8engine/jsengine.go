@@ -142,19 +142,19 @@ func (e *JsEngine) OnDisconnect(b *bus.Bus) {
 		e.Call(b, local, e.onDisconnect)
 	}
 }
-func (e *JsEngine) OnLine(b *bus.Bus, line string) bool {
+func (e *JsEngine) OnLine(b *bus.Bus, line string, ansi string) bool {
 	if e.onLine != "" {
 		local := e.Plugin.Runtime.NewLocal()
 		defer local.Close()
-		return e.Call(b, local, e.onLine, local.NewString(line))
+		return e.Call(b, local, e.onLine, local.NewString(line), local.NewString(ansi))
 	}
 	return false
 }
-func (e *JsEngine) OnAfterLine(b *bus.Bus, line string) {
+func (e *JsEngine) OnAfterLine(b *bus.Bus, line string, ansi string) {
 	if e.onAfterLine != "" {
 		local := e.Plugin.Runtime.NewLocal()
 		defer local.Close()
-		e.Call(b, local, e.onAfterLine, local.NewString(line))
+		e.Call(b, local, e.onAfterLine, local.NewString(line), local.NewString(ansi))
 	}
 }
 

@@ -22,8 +22,8 @@ type Engine interface {
 	OnLoseFocus(b *bus.Bus)
 	OnKeyUp(b *bus.Bus, key string)
 	OnSubneg(b *bus.Bus, code byte, data []byte) bool
-	OnLine(b *bus.Bus, line string) bool
-	OnAfterLine(b *bus.Bus, line string)
+	OnLine(b *bus.Bus, line string, ansi string) bool
+	OnAfterLine(b *bus.Bus, line string, ansi string)
 	OnSend(b *bus.Bus, line string) bool
 	Run(*bus.Bus, string)
 }

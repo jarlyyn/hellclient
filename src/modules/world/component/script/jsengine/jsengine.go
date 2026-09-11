@@ -256,27 +256,27 @@ func (e *JsEngine) OnKeyUp(b *bus.Bus, key string) {
 	e.Locker.Unlock()
 	e.Call(b, e.onKeyUp, key)
 }
-func (e *JsEngine) OnLine(b *bus.Bus, line string) bool {
+func (e *JsEngine) OnLine(b *bus.Bus, line string, ansi string) bool {
 	e.Locker.Lock()
 	if e.Plugin.Runtime == nil || e.onLine == "" {
 		e.Locker.Unlock()
 		return false
 	}
 	e.Locker.Unlock()
-	result := e.Call(b, e.onLine, line)
+	result := e.Call(b, e.onLine, line, ansi)
 	if result == nil {
 		return false
 	}
 	return result.ToBoolean()
 }
-func (e *JsEngine) OnAfterLine(b *bus.Bus, line string) {
+func (e *JsEngine) OnAfterLine(b *bus.Bus, line string, ansi string) {
 	e.Locker.Lock()
 	if e.Plugin.Runtime == nil || e.onAfterLine == "" {
 		e.Locker.Unlock()
 		return
 	}
 	e.Locker.Unlock()
-	e.Call(b, e.onAfterLine, line)
+	e.Call(b, e.onAfterLine, line, ansi)
 }
 func (e *JsEngine) OnSend(b *bus.Bus, line string) bool {
 	e.Locker.Lock()

@@ -116,15 +116,15 @@ func (e *LuaEngine) OnDisconnect(b *bus.Bus) {
 		// b.HandleScriptError(e.Plugin.LState.DoString(e.onDisconnect + "()"))
 	}
 }
-func (e *LuaEngine) OnLine(b *bus.Bus, line string) bool {
+func (e *LuaEngine) OnLine(b *bus.Bus, line string, ansi string) bool {
 	if e.onLine != "" {
-		return lua.LVAsBool(e.Call(b, e.Plugin.LState.GetGlobal(e.onLine), lua.LString(line)))
+		return lua.LVAsBool(e.Call(b, e.Plugin.LState.GetGlobal(e.onLine), lua.LString(line), lua.LString(ansi)))
 	}
 	return false
 }
-func (e *LuaEngine) OnAfterLine(b *bus.Bus, line string) {
+func (e *LuaEngine) OnAfterLine(b *bus.Bus, line string, ansi string) {
 	if e.onAfterLine != "" {
-		e.Call(b, e.Plugin.LState.GetGlobal(e.onAfterLine), lua.LString(line))
+		e.Call(b, e.Plugin.LState.GetGlobal(e.onAfterLine), lua.LString(line), lua.LString(ansi))
 	}
 }
 func (e *LuaEngine) OnSend(b *bus.Bus, line string) bool {

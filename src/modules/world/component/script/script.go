@@ -458,21 +458,21 @@ func (s *Script) HandleSubneg(b *bus.Bus, data []byte) bool {
 	s.SetCreator("subneg", "")
 	return e.OnSubneg(b, data[0], data[1:])
 }
-func (s *Script) HandleLine(b *bus.Bus, line string) bool {
+func (s *Script) HandleLine(b *bus.Bus, line string, ansi string) bool {
 	e := s.getEngine()
 	if e == nil {
 		return false
 	}
 	s.SetCreator("online", "")
-	return e.OnLine(b, line)
+	return e.OnLine(b, line, ansi)
 }
-func (s *Script) HandleAfterLine(b *bus.Bus, line string) {
+func (s *Script) HandleAfterLine(b *bus.Bus, line string, ansi string) {
 	e := s.getEngine()
 	if e == nil {
 		return
 	}
 	s.SetCreator("onafterline", "")
-	e.OnAfterLine(b, line)
+	e.OnAfterLine(b, line, ansi)
 }
 func (s *Script) HandleSend(b *bus.Bus, line string) bool {
 	e := s.getEngine()
@@ -536,8 +536,8 @@ func (s *Script) InstallTo(b *bus.Bus) {
 	b.HandleSubneg = b.WrapHandleBytesForBool(s.HandleSubneg)
 	b.HandleFocus = b.Wrap(s.HandleFocus)
 	b.HandleLoseFocus = b.Wrap(s.HandleLoseFocus)
-	b.HandleLine = b.WrapHandleStringForBool(s.HandleLine)
-	b.HandleAfterLine = b.WrapHandleString(s.HandleAfterLine)
+	b.HandleLine = b.WrapHandleStringStringForBool(s.HandleLine)
+	b.HandleAfterLine = b.WrapHandleStringString(s.HandleAfterLine)
 	b.HandleSend = b.WrapHandleStringForBool(s.HandleSend)
 	b.BindReadyEvent(s, s.ready)
 	b.BindBeforeCloseEvent(s, s.beforeClose)
