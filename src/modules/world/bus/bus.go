@@ -228,6 +228,7 @@ type Bus struct {
 
 	AddAnsi        func(string)
 	LastAnsi       func() string
+	ResetAnsi      func()
 	ResetConverter func()
 
 	RequestEvent           busevent.Event

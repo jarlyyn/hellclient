@@ -33,6 +33,7 @@ func (c *Converter) InstallTo(b *bus.Bus) {
 	b.DoPrintResponse = b.WrapHandleString(c.DoPrintResponse)
 	b.AddAnsi = b.WrapHandleString(c.AddAnsi)
 	b.LastAnsi = c.GetLastAnsi
+	b.ResetAnsi = c.ResetAnsi
 	b.ResetConverter = c.Reset
 }
 func (c *Converter) ExecLines(bus *bus.Bus) {
@@ -47,6 +48,9 @@ func (c *Converter) ExecLines(bus *bus.Bus) {
 }
 func (c *Converter) GetLastAnsi() string {
 	return c.LastAnsi
+}
+func (c *Converter) ResetAnsi() {
+	c.LastAnsi = ""
 }
 func (c *Converter) AddAnsi(bus *bus.Bus, msg string) {
 	var needStart = len(c.PendingLines) == 0

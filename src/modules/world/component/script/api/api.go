@@ -1423,6 +1423,7 @@ func (a *API) Simulate(text string) {
 			word := world.NewWord()
 			word.Text = t
 			line.Words = append(line.Words, word)
+			a.Bus.ResetAnsi()
 			a.Bus.RaiseLineEvent(line)
 		}
 	}()
@@ -1437,6 +1438,7 @@ func (a *API) SimulateOutput(output string) {
 	go func() {
 		for _, line := range list {
 			line.ID = uniqueid.MustGenerateID()
+			a.Bus.ResetAnsi()
 			a.Bus.RaiseLineEvent(line)
 		}
 	}()
