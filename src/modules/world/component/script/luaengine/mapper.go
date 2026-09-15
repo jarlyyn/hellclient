@@ -421,6 +421,8 @@ func (m *LuaMapper) Convert(L *lua.LState) lua.LValue {
 	t.RawSetString("NewArea", L.NewFunction(m.NewArea))
 	t.RawSetString("getexits", L.NewFunction(m.GetExits))
 	t.RawSetString("GetExits", L.NewFunction(m.GetExits))
+	t.RawSetString("flushtags", L.NewFunction(m.FlashTags))
+	t.RawSetString("FlushTags", L.NewFunction(m.FlashTags))
 	t.RawSetString("flashtags", L.NewFunction(m.FlashTags))
 	t.RawSetString("FlashTags", L.NewFunction(m.FlashTags))
 	t.RawSetString("flylist", L.NewFunction(m.FlyList))

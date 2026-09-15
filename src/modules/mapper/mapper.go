@@ -99,6 +99,7 @@ func (m *Mapper) GetPath(from string, fly bool, to []string, option *Option) []*
 	w := m.newWalking(option)
 	w.from = from
 	w.to = to
+	w.fly = m.fly
 	if !fly {
 		w.fly = nil
 	}

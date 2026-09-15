@@ -391,6 +391,8 @@ func (m *JsMapper) Convert(r *v8local.Local) *v8local.JsValue {
 	t.Set("NewArea", r.NewFunction(m.NewArea))
 	t.Set("getexits", r.NewFunction(m.GetExits))
 	t.Set("GetExits", r.NewFunction(m.GetExits))
+	t.Set("flushtags", r.NewFunction(m.FlashTags))
+	t.Set("FlushTags", r.NewFunction(m.FlashTags))
 	t.Set("flashtags", r.NewFunction(m.FlashTags))
 	t.Set("FlashTags", r.NewFunction(m.FlashTags))
 	t.Set("flylist", r.NewFunction(m.FlyList))

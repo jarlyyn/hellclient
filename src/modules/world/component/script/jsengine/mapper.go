@@ -373,6 +373,8 @@ func (m *JsMapper) Convert(r *goja.Runtime) goja.Value {
 	t.Set("NewArea", m.NewArea)
 	t.Set("getexits", m.GetExits)
 	t.Set("GetExits", m.GetExits)
+	t.Set("flushtags", m.FlashTags)
+	t.Set("FlushTags", m.FlashTags)
 	t.Set("flashtags", m.FlashTags)
 	t.Set("FlashTags", m.FlashTags)
 	t.Set("flylist", m.FlyList)
