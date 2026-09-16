@@ -193,7 +193,7 @@ func (m *LuaMapper) Tags(L *lua.LState) int {
 	L.Push(t)
 	return 1
 }
-func (m *LuaMapper) toOption(L *lua.LState, option *lua.LTable) *mapper.Option {
+func (m *LuaMapper) ToOption(L *lua.LState, option *lua.LTable) *mapper.Option {
 	var opt *mapper.Option
 	if option != nil {
 		opt = mapper.NewOption()
@@ -235,7 +235,7 @@ func (m *LuaMapper) WalkAll(L *lua.LState) int {
 	fly := L.ToInt(3)
 	maxdistance := L.ToInt(4)
 	option := L.ToTable(5)
-	opt := m.toOption(L, option)
+	opt := m.ToOption(L, option)
 	result := m.mapper.WalkAll(targets, fly != 0, maxdistance, opt)
 	luaresult := &LuaWalkAllResult{result: result}
 	L.Push(luaresult.Convert(L))
@@ -252,7 +252,7 @@ func (m *LuaMapper) GetPath(L *lua.LState) int {
 		to = append(to, L.ToString(i+1))
 	}
 	option := L.ToTable(5)
-	opt := m.toOption(L, option)
+	opt := m.ToOption(L, option)
 	steps := m.mapper.GetPath(from, fly != 0, to, opt)
 	if steps == nil {
 		L.Push(lua.LNil)
