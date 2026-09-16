@@ -296,6 +296,8 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(jp.Runtime, world, "OmitOutput", a.OmitOutput)
 	AppendToWorld(jp.Runtime, world, "AddAnsi", a.AddAnsi)
 	AppendToWorld(jp.Runtime, world, "LastAnsi", a.LastAnsi)
+	AppendToWorld(jp.Runtime, world, "GetScriptPath", a.GetScriptPath)
+
 	AppendToWorld(jp.Runtime, world, "PrintSystem", a.PrintSystem)
 
 }
@@ -1460,6 +1462,10 @@ func (a *jsapi) AddAnsi(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 func (a *jsapi) LastAnsi(call goja.FunctionCall, r *goja.Runtime) goja.Value {
 	return r.ToValue(a.API.LastAnsi())
 }
+func (a *jsapi) GetScriptPath(call goja.FunctionCall, r *goja.Runtime) goja.Value {
+	return r.ToValue(a.API.GetScriptPath())
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

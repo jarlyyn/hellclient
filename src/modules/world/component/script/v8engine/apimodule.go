@@ -215,6 +215,8 @@ func (a *jsapi) InstallAPIs(p herbplugin.Plugin) {
 	AppendToWorld(local, world, "PrintSystem", a.PrintSystem)
 	AppendToWorld(local, world, "AddAnsi", a.AddAnsi)
 	AppendToWorld(local, world, "LastAnsi", a.LastAnsi)
+	AppendToWorld(local, world, "GetScriptPath", a.GetScriptPath)
+
 	AppendToWorld(local, world, "V8Debug", a.Debug)
 	AppendToWorld(local, world, "Snapshot", a.Snapshot)
 	global := local.Global()
@@ -1504,6 +1506,10 @@ func (a *jsapi) AddAnsi(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 func (a *jsapi) LastAnsi(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
 	return call.Local().NewString(a.API.LastAnsi())
 }
+func (a *jsapi) GetScriptPath(call *v8local.FunctionCallbackInfo) *v8local.JsValue {
+	return call.Local().NewString(a.API.GetScriptPath())
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

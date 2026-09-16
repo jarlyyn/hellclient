@@ -299,3 +299,9 @@
 * [Request.ResponseHeader 获取响应头](apihttp.md#RequestResponseHeader)
 * [Request.ResponseHeaderValues 获取响应头全部值](apihttp.md#RequestResponseHeaderValues)
 * [Request.ResponseHeaderFields 获取响应头全部字段](apihttp.md#RequestResponseHeaderFields)
+
+## 底层接口
+
+* [LastAnsi 获取Ansi行信息](apilowlevel.md#LastAnsi)
+* [AddAnsi 插入Ansi行信息](apilowlevel.md#AddAnsi)
+* [GetScriptPath 获取脚本目录信息](apilowlevel.md#GetScriptPath)

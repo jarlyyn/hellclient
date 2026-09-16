@@ -12,6 +12,7 @@ import (
 	"modules/world"
 	"modules/world/bus"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -1617,4 +1618,8 @@ func (a *API) AddAnsi(data string) {
 
 func (a *API) LastAnsi() string {
 	return a.Bus.LastAnsi()
+}
+
+func (a *API) GetScriptPath() string {
+	return path.Join(a.Bus.GetScriptPath(), a.Bus.GetScriptID())
 }

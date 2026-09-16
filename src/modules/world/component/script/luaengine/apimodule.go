@@ -265,6 +265,7 @@ func (a *luaapi) InstallAPIs(p herbplugin.Plugin, l *lua.LState) {
 	l.SetGlobal("OmitOutput", l.NewFunction(a.OmitOutput))
 	l.SetGlobal("AddAnsi", l.NewFunction(a.AddAnsi))
 	l.SetGlobal("LastAnsi", l.NewFunction(a.LastAnsi))
+	l.SetGlobal("GetScriptPath", l.NewFunction(a.GetScriptPath))
 	l.SetGlobal("PrintSystem", l.NewFunction(a.PrintSystem))
 
 }
@@ -1656,6 +1657,11 @@ func (a *luaapi) LastAnsi(L *lua.LState) int {
 	L.Push(lua.LString(a.API.LastAnsi()))
 	return 1
 }
+func (a *luaapi) GetScriptPath(L *lua.LState) int {
+	L.Push(lua.LString(a.API.GetScriptPath()))
+	return 1
+}
+
 func NewAPIModule(b *bus.Bus) *herbplugin.Module {
 	return herbplugin.CreateModule("worldapi",
 		func(ctx context.Context, plugin herbplugin.Plugin, next func(ctx context.Context, plugin herbplugin.Plugin)) {

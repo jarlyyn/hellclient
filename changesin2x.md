@@ -12,6 +12,7 @@ hellclient.net是为了解决go版本在windows下与msvc生态不兼容的问�
 
 * AddAnsi函数 添加一个Ansi行
 * LastAnsi 函数，获取最新的Ansi行信息
+* GetScriptPath 函数，获取当前脚本目录
 
 ## Mapper 进入废弃状态
 
