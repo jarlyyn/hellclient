@@ -4,10 +4,6 @@ define(function (require) {
     Canvas.width = settings.linewidth
     Canvas.lineheight = settings.lineheight
     Canvas.height = settings.maxlines * settings.lineheight
-    var PromptCanvas = document.getElementById("prompt-output")
-    PromptCanvas.width = settings.linewidth
-    PromptCanvas.lineheight = settings.lineheight
-    PromptCanvas.height = settings.lineheight
 
     var Lines = []
     var createLine = function (id, index, bcolor) {
@@ -161,14 +157,6 @@ define(function (require) {
         Render()
     }
     var DrawPrompt = function (line) {
-        var ctx = document.getElementById("prompt-output").getContext('2d');
-        if (line) {
-            var promptline = RenderLine(line, true, true)[0]
-            ctx.drawImage(promptline.Canvas, 0, 0, settings.linewidth, settings.lineheight)
-        } else {
-            ctx.fillStyle = settings.background
-            ctx.fillRect(0, 0, settings.linewidth, settings.lineheight)
-        }
     }
     var RenderHUD = function (content) {
         var hudwrapper = document.getElementById("hudwrapper")

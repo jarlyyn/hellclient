@@ -165,6 +165,5 @@
 #hudwrapper{position: absolute;z-index: 1;top:108px;left:0;background-color: #333333;width: 100%;border-bottom:2px #666666 solid;min-width: 600px;overflow: hidden;}
 #hud{width:1120px;height:0px}
 #output{width:1120px;height:1200px}
-#prompt-output{width:1120px;height:20px}
 
 #visualPrompt-alllines{background: black;}
