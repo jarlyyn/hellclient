@@ -4,7 +4,7 @@
     <el-alert v-for="err in createFail" :title="err.Msg" type="error" show-icon> </el-alert>
 
   </div>
-  <el-form :model="scriptsettingsUpdateForm" label-width="120px">
+  <el-form :model="scriptsettingsUpdateForm" label-width="200px">
     <el-form-item label="名称">
       <span>{{scriptsettingsUpdateForm.Name}}</span>
     </el-form-item>
@@ -45,13 +45,13 @@
       <el-input v-model="scriptsettingsUpdateForm.OnHUDClick"></el-input>
     </el-form-item>
     <el-form-item label="Buffer处理函数(无效)">
-      <el-input v-model="scriptsettingsUpdateForm.OnBuffer"></el-input>
+      <el-input v-model="scriptsettingsUpdateForm.OnBuffer" :disabled="true"></el-input>
     </el-form-item>
-    <el-form-item label="Buffer处理函数最小响应字数(无效)">
-      <el-input-number v-model="scriptsettingsUpdateForm.OnBufferMin"></el-input-number>
+    <el-form-item label="Buffer最小响应字数(无效)">
+      <el-input-number v-model="scriptsettingsUpdateForm.OnBufferMin" :disabled="true"></el-input-number>
     </el-form-item>
-    <el-form-item label="Buffer处理函数最大响应字数(无效)">
-      <el-input-number v-model="scriptsettingsUpdateForm.OnBufferMax"></el-input-number>
+    <el-form-item label="Buffer最大响应字数(无效)">
+      <el-input-number v-model="scriptsettingsUpdateForm.OnBufferMax" :disabled="true"></el-input-number>
     </el-form-item>
     <el-form-item label="SubNegotiation处理函数">
       <el-input v-model="scriptsettingsUpdateForm.OnSubneg"></el-input>
