@@ -36,6 +36,6 @@ hellclient.net是为了解决go版本在windows下与msvc生态不兼容的问�
 
 通过hellclient.net引入可以自行调用dll/so的脚本殷勤 
 
-## 不过定脚本引擎支持
+## 不固定脚本引擎支持
 
 脚本引擎数量由编译时决定，不再固定
