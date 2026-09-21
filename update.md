@@ -4,6 +4,7 @@
 * 与hellclient.net保持兼容升级
 * 废弃Prompt行
 * Mapper系列接口进入废弃模式
+更多内容[参考](./changesin2x.md)
 
 ## 1.2025-05-41
 
