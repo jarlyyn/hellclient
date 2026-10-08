@@ -119,6 +119,7 @@ func (conn *Conn) Connect(bus *bus.Bus) error {
 		go bus.RaiseServerCloseEvent()
 		return err
 	}
+	t.Compress = !app.System.DisableCompress
 	t.GMCP = true
 	var ttype []string
 	if app.System.TerminalType != "" {
