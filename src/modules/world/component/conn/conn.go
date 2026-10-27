@@ -1,6 +1,7 @@
 package conn
 
 import (
+	"errors"
 	"io"
 	"modules/app"
 	"modules/world/bus"
@@ -39,7 +40,10 @@ type Conn struct {
 }
 
 func isClosedError(err error) bool {
-	if err == io.EOF {
+	if errors.Is(err, io.EOF) {
+		return true
+	}
+	if errors.Is(err, io.ErrUnexpectedEOF) {
 		return true
 	}
 	if operr, ok := err.(*net.OpError); ok {

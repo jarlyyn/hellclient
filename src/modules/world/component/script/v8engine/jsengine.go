@@ -238,22 +238,20 @@ func (e *JsEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
 }
 func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Locker.Lock()
+	defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil {
-		e.Locker.Unlock()
 		return
 	}
-	e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 	e.Call(b, local, e.onBroadCast, local.NewString(bc.Message), local.NewBoolean(bc.Global), local.NewString(bc.Channel), local.NewString(bc.ID))
 }
 func (e *JsEngine) OnHUDClick(b *bus.Bus, c *world.Click) {
 	e.Locker.Lock()
+	defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil {
-		e.Locker.Unlock()
 		return
 	}
-	e.Locker.Unlock()
 	var local = e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 	e.Call(b, local, e.onHUDClick, local.NewNumber(c.X), local.NewNumber(c.Y))
@@ -262,11 +260,10 @@ func (e *JsEngine) OnHUDClick(b *bus.Bus, c *world.Click) {
 
 func (e *JsEngine) OnResponse(b *bus.Bus, msg *world.Message) {
 	e.Locker.Lock()
+	defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil {
-		e.Locker.Unlock()
 		return
 	}
-	e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 	e.Call(b, local, e.onResponse, local.NewString(msg.Type), local.NewString(msg.ID), local.NewString(msg.Data))
@@ -274,11 +271,10 @@ func (e *JsEngine) OnResponse(b *bus.Bus, msg *world.Message) {
 
 func (e *JsEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
 	e.Locker.Lock()
+	defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil || e.onSubneg == "" {
-		e.Locker.Unlock()
 		return false
 	}
-	e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 	result := e.Call(b, local, e.onSubneg, local.NewInt32(int32(code)), local.NewString(string(data)))
@@ -286,33 +282,30 @@ func (e *JsEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
 }
 func (e *JsEngine) OnFocus(b *bus.Bus) {
 	e.Locker.Lock()
+	defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil || e.onFocus == "" {
-		e.Locker.Unlock()
 		return
 	}
-	e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 	e.Call(b, local, e.onFocus)
 }
 func (e *JsEngine) OnLoseFocus(b *bus.Bus) {
 	e.Locker.Lock()
+	defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil || e.onLoseFocus == "" {
-		e.Locker.Unlock()
 		return
 	}
-	e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 	e.Call(b, local, e.onLoseFocus)
 }
 func (e *JsEngine) OnKeyUp(b *bus.Bus, key string) {
 	e.Locker.Lock()
+	defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil || e.onKeyUp == "" {
-		e.Locker.Unlock()
 		return
 	}
-	e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 	e.Call(b, local, e.onKeyUp, local.NewString(key))
@@ -320,11 +313,10 @@ func (e *JsEngine) OnKeyUp(b *bus.Bus, key string) {
 
 func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
 	e.Locker.Lock()
+	defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil {
-		e.Locker.Unlock()
 		return
 	}
-	e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 	e.Call(b, local, cb.Script, local.NewString(cb.Name), local.NewString(cb.ID), local.NewInt32(int32(cb.Code)), local.NewString(cb.Data))
@@ -332,11 +324,10 @@ func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
 }
 func (e *JsEngine) OnAssist(b *bus.Bus, script string) {
 	e.Locker.Lock()
+	defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil {
-		e.Locker.Unlock()
 		return
 	}
-	e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 	e.Call(b, local, script)

@@ -152,8 +152,8 @@ func (s *Script) save(b *bus.Bus) error {
 
 }
 func (s *Script) OpenScript(b *bus.Bus) error {
-	//s.EngineLocker.Lock()
-	//defer s.EngineLocker.Unlock()
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	return s.open(b)
 }
 func (s *Script) open(b *bus.Bus) error {
@@ -184,8 +184,8 @@ func (s *Script) open(b *bus.Bus) error {
 	return nil
 }
 func (s *Script) Unload(b *bus.Bus) {
-	//s.EngineLocker.Lock()
-	//defer s.EngineLocker.Unlock()
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	s.unload(b)
 
 }
@@ -220,8 +220,8 @@ func (s *Script) unload(b *bus.Bus) {
 }
 
 func (s *Script) Load(b *bus.Bus) error {
-	//s.EngineLocker.Lock()
-	//defer s.EngineLocker.Unlock()
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	return s.load(b)
 }
 func (s *Script) load(b *bus.Bus) error {
@@ -250,8 +250,8 @@ func (s *Script) load(b *bus.Bus) error {
 }
 func (s *Script) Reload(b *bus.Bus) error {
 	b.DoMultiLinesFlush()
-	//s.EngineLocker.Lock()
-	//defer s.EngineLocker.Unlock()
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	s.unload(b)
 	return s.load(b)
 }
