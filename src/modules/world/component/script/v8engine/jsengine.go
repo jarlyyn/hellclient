@@ -6,7 +6,6 @@ import (
 	"modules/world"
 	"modules/world/bus"
 	"strconv"
-	"sync"
 
 	"github.com/herb-go/herbplugin"
 	"github.com/herb-go/util"
@@ -33,7 +32,7 @@ func newJsInitializer(b *bus.Bus) *v8plugin.Initializer {
 }
 
 type JsEngine struct {
-	Locker       sync.RWMutex
+	// Locker       sync.RWMutex
 	Plugin       *v8plugin.Plugin
 	onOpen       string
 	onClose      string
@@ -80,6 +79,7 @@ func (s *openScript) onOpen() {
 	}
 }
 func (e *JsEngine) Open(b *bus.Bus) error {
+
 	data := b.GetScriptData()
 	e.onOpen = data.OnOpen
 	e.onClose = data.OnClose
@@ -116,18 +116,19 @@ func (e *JsEngine) Open(b *bus.Bus) error {
 	return nil
 }
 func (e *JsEngine) Close(b *bus.Bus) {
-	e.Locker.Lock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	if e.onClose != "" {
-		e.Locker.Unlock()
 		local := e.Plugin.Runtime.NewLocal()
 		e.Call(b, local, e.onClose)
 		local.Close()
-	} else {
-		e.Locker.Unlock()
 	}
 	b.HandleScriptError(formatError(util.Catch(e.Plugin.MustClosePlugin)))
 }
 func (e *JsEngine) OnConnect(b *bus.Bus) {
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
+
 	if e.onConnect != "" {
 		local := e.Plugin.Runtime.NewLocal()
 		defer local.Close()
@@ -136,6 +137,9 @@ func (e *JsEngine) OnConnect(b *bus.Bus) {
 	}
 }
 func (e *JsEngine) OnDisconnect(b *bus.Bus) {
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
+
 	if e.onDisconnect != "" {
 		local := e.Plugin.Runtime.NewLocal()
 		defer local.Close()
@@ -143,6 +147,9 @@ func (e *JsEngine) OnDisconnect(b *bus.Bus) {
 	}
 }
 func (e *JsEngine) OnLine(b *bus.Bus, line string, ansi string) bool {
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
+
 	if e.onLine != "" {
 		local := e.Plugin.Runtime.NewLocal()
 		defer local.Close()
@@ -151,6 +158,9 @@ func (e *JsEngine) OnLine(b *bus.Bus, line string, ansi string) bool {
 	return false
 }
 func (e *JsEngine) OnAfterLine(b *bus.Bus, line string, ansi string) {
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
+
 	if e.onAfterLine != "" {
 		local := e.Plugin.Runtime.NewLocal()
 		defer local.Close()
@@ -159,6 +169,9 @@ func (e *JsEngine) OnAfterLine(b *bus.Bus, line string, ansi string) {
 }
 
 func (e *JsEngine) OnSend(b *bus.Bus, line string) bool {
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
+
 	if e.onSend != "" {
 		local := e.Plugin.Runtime.NewLocal()
 		defer local.Close()
@@ -171,11 +184,9 @@ func (e *JsEngine) OnTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigge
 	if trigger.Script == "" {
 		return
 	}
-	e.Locker.Lock()
-	if e.Plugin.Runtime == nil {
-		e.Locker.Unlock()
-		return
-	}
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
+
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 
@@ -192,19 +203,14 @@ func (e *JsEngine) OnTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigge
 		}
 		model.Set(strconv.Itoa(k-1), local.NewString(v))
 	}
-
-	e.Locker.Unlock()
 	e.Call(b, local, trigger.Script, local.NewString(trigger.Name), local.NewString(line.Plain()), model)
 }
 func (e *JsEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
 	if alias.Script == "" {
 		return
 	}
-	e.Locker.Lock()
-	if e.Plugin.Runtime == nil {
-		e.Locker.Unlock()
-		return
-	}
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 
@@ -221,24 +227,19 @@ func (e *JsEngine) OnAlias(b *bus.Bus, message string, alias *world.Alias, resul
 		}
 		model.Set(strconv.Itoa(k-1), local.NewString(v))
 	}
-	e.Locker.Unlock()
 	e.Call(b, local, alias.Script, local.NewString(alias.Name), local.NewString(message), model)
 
 }
 func (e *JsEngine) OnTimer(b *bus.Bus, timer *world.Timer) {
-	e.Locker.Lock()
-	if e.Plugin.Runtime == nil {
-		e.Locker.Unlock()
-		return
-	}
-	e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	local := e.Plugin.Runtime.NewLocal()
 	defer local.Close()
 	e.Call(b, local, timer.Script, local.NewString(timer.Name))
 }
 func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil {
 		return
 	}
@@ -247,8 +248,8 @@ func (e *JsEngine) OnBroadCast(b *bus.Bus, bc *world.Broadcast) {
 	e.Call(b, local, e.onBroadCast, local.NewString(bc.Message), local.NewBoolean(bc.Global), local.NewString(bc.Channel), local.NewString(bc.ID))
 }
 func (e *JsEngine) OnHUDClick(b *bus.Bus, c *world.Click) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil {
 		return
 	}
@@ -259,8 +260,8 @@ func (e *JsEngine) OnHUDClick(b *bus.Bus, c *world.Click) {
 }
 
 func (e *JsEngine) OnResponse(b *bus.Bus, msg *world.Message) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil {
 		return
 	}
@@ -270,8 +271,8 @@ func (e *JsEngine) OnResponse(b *bus.Bus, msg *world.Message) {
 }
 
 func (e *JsEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil || e.onSubneg == "" {
 		return false
 	}
@@ -281,8 +282,8 @@ func (e *JsEngine) OnSubneg(b *bus.Bus, code byte, data []byte) bool {
 	return result
 }
 func (e *JsEngine) OnFocus(b *bus.Bus) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil || e.onFocus == "" {
 		return
 	}
@@ -291,8 +292,8 @@ func (e *JsEngine) OnFocus(b *bus.Bus) {
 	e.Call(b, local, e.onFocus)
 }
 func (e *JsEngine) OnLoseFocus(b *bus.Bus) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil || e.onLoseFocus == "" {
 		return
 	}
@@ -301,8 +302,8 @@ func (e *JsEngine) OnLoseFocus(b *bus.Bus) {
 	e.Call(b, local, e.onLoseFocus)
 }
 func (e *JsEngine) OnKeyUp(b *bus.Bus, key string) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil || e.onKeyUp == "" {
 		return
 	}
@@ -312,8 +313,8 @@ func (e *JsEngine) OnKeyUp(b *bus.Bus, key string) {
 }
 
 func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil {
 		return
 	}
@@ -323,8 +324,8 @@ func (e *JsEngine) OnCallback(b *bus.Bus, cb *world.Callback) {
 
 }
 func (e *JsEngine) OnAssist(b *bus.Bus, script string) {
-	e.Locker.Lock()
-	defer e.Locker.Unlock()
+	// e.Locker.Lock()
+	// defer e.Locker.Unlock()
 	if e.Plugin.Runtime == nil {
 		return
 	}

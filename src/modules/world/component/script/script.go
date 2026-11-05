@@ -264,24 +264,24 @@ func (s *Script) beforeClose(b *bus.Bus) {
 }
 func (s *Script) connected(b *bus.Bus) {
 	b.DoMultiLinesFlush()
-	//s.EngineLocker.Lock()
-	//defer s.EngineLocker.Unlock()
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	if s.engine != nil {
 		s.SetCreator("system", "connected")
 		s.engine.OnConnect(b)
 	}
 }
 func (s *Script) disconnected(b *bus.Bus) {
-	//s.EngineLocker.Lock()
-	//defer s.EngineLocker.Unlock()
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	if s.engine != nil {
 		s.SetCreator("system", "disconnected")
 		s.engine.OnDisconnect(b)
 	}
 }
 func (s *Script) UseScript(b *bus.Bus, id string) {
-	//s.EngineLocker.Lock()
-	//defer s.EngineLocker.Unlock()
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	s.unload(b)
 	b.SetScriptID(id)
 	err := s.load(b)
@@ -302,6 +302,8 @@ func (s *Script) SetStatus(b *bus.Bus, val string) {
 }
 
 func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e != nil {
 		// go func() {
@@ -310,8 +312,6 @@ func (s *Script) SendTimer(b *bus.Bus, timer *world.Timer) {
 		} else {
 			s.SetCreator("timer", "#"+timer.ID)
 		}
-		s.EngineLocker.Lock()
-		defer s.EngineLocker.Unlock()
 		e.OnTimer(b, timer)
 		// }()
 	}
@@ -322,6 +322,8 @@ func (s *Script) getEngine() Engine {
 	return s.engine
 }
 func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, result *world.MatchResult) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e != nil {
 		// go func() {
@@ -335,6 +337,8 @@ func (s *Script) SendAlias(b *bus.Bus, message string, alias *world.Alias, resul
 	}
 }
 func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigger, result *world.MatchResult) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e != nil {
 		if trigger.Script != "" {
@@ -346,6 +350,8 @@ func (s *Script) SendTrigger(b *bus.Bus, line *world.Line, trigger *world.Trigge
 	}
 }
 func (s *Script) Assist(b *bus.Bus) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	s.Locker.Lock()
 	if s.Data == nil {
 		s.Locker.Unlock()
@@ -363,6 +369,8 @@ func (s *Script) Assist(b *bus.Bus) {
 	}
 }
 func (s *Script) KeyUp(b *bus.Bus, key string) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e != nil {
 		// go func() {
@@ -374,6 +382,8 @@ func (s *Script) KeyUp(b *bus.Bus, key string) {
 }
 
 func (s *Script) SendCallback(b *bus.Bus, cb *world.Callback) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e != nil {
 		if cb.Script == "" {
@@ -393,6 +403,8 @@ func (s *Script) verifyChannel(channel string) bool {
 	return channel == s.Data.Channel
 }
 func (s *Script) SendResponse(b *bus.Bus, msg *world.Message) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e != nil {
 		s.SetCreator("response", msg.Type)
@@ -403,6 +415,8 @@ func (s *Script) SendResponse(b *bus.Bus, msg *world.Message) {
 	}
 }
 func (s *Script) SendHUDClick(b *bus.Bus, c *world.Click) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e != nil {
 		s.SetCreator("hudclick", "")
@@ -414,6 +428,8 @@ func (s *Script) SendBroadcast(b *bus.Bus, bc *world.Broadcast) {
 	if !s.verifyChannel(bc.Channel) {
 		return
 	}
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e != nil {
 		s.SetCreator("broadcast", bc.Message)
@@ -428,6 +444,8 @@ func (s *Script) SendBroadcast(b *bus.Bus, bc *world.Broadcast) {
 	}
 }
 func (s *Script) HandleFocus(b *bus.Bus) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e == nil {
 		return
@@ -436,6 +454,8 @@ func (s *Script) HandleFocus(b *bus.Bus) {
 	e.OnFocus(b)
 }
 func (s *Script) HandleLoseFocus(b *bus.Bus) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e == nil {
 		return
@@ -448,6 +468,8 @@ func (s *Script) HandleSubneg(b *bus.Bus, data []byte) bool {
 	if len(data) < 2 {
 		return false
 	}
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e == nil {
 		return false
@@ -459,6 +481,8 @@ func (s *Script) HandleSubneg(b *bus.Bus, data []byte) bool {
 	return e.OnSubneg(b, data[0], data[1:])
 }
 func (s *Script) HandleLine(b *bus.Bus, line string, ansi string) bool {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e == nil {
 		return false
@@ -467,6 +491,8 @@ func (s *Script) HandleLine(b *bus.Bus, line string, ansi string) bool {
 	return e.OnLine(b, line, ansi)
 }
 func (s *Script) HandleAfterLine(b *bus.Bus, line string, ansi string) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e == nil {
 		return
@@ -484,6 +510,8 @@ func (s *Script) HandleSend(b *bus.Bus, line string) bool {
 }
 
 func (s *Script) Run(b *bus.Bus, cmd string) {
+	s.EngineLocker.Lock()
+	defer s.EngineLocker.Unlock()
 	e := s.getEngine()
 	if e != nil {
 		s.SetCreator("run", "")
